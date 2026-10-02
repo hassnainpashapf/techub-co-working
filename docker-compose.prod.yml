@@ -1,6 +1,8 @@
-# Production deployment for Techub Co-Working
+# Production BACKEND for Techub Co-Working (API + PostgreSQL on VPS)
+# The frontend (Next.js) is deployed separately on Cloudflare Pages (static export).
+#
 # Usage:
-#   cp .env.prod.example .env.prod   # then fill in real secrets/URLs
+#   cp .env.prod.example .env.prod   # then fill in real secrets
 #   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
 
 services:
@@ -41,27 +43,10 @@ services:
     expose:
       - "4000"
 
-  web:
-    build:
-      context: .
-      dockerfile: apps/web/Dockerfile
-      args:
-        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:?PUBLIC_API_URL missing in .env.prod}
-    container_name: techub-web
-    restart: unless-stopped
-    depends_on:
-      - api
-    environment:
-      PORT: 3000
-      HOSTNAME: "0.0.0.0"
-    expose:
-      - "3000"
-
-  # Optional: Cloudflare Tunnel (recommended — no open ports needed).
-  # 1) In Cloudflare Zero Trust dashboard: create a Tunnel, copy its token.
-  # 2) Add public hostnames, e.g. app.example.com -> http://web:3000
-  #    and api.example.com -> http://api:4000
-  # 3) Set TUNNEL_TOKEN in .env.prod and uncomment below.
+  # Cloudflare Tunnel (recommended — API ko public karo, koi port kholne ki zaroorat nahi).
+  # 1) Cloudflare Zero Trust dashboard → Networks → Tunnels → Create a Tunnel → token copy karo
+  # 2) Public hostname add karo:  api.example.com -> http://api:4000
+  # 3) .env.prod me TUNNEL_TOKEN set karo aur neeche uncomment karo.
   #
   # tunnel:
   #   image: cloudflare/cloudflared:latest
@@ -69,7 +54,6 @@ services:
   #   restart: unless-stopped
   #   command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
   #   depends_on:
-  #     - web
   #     - api
 
 volumes:
