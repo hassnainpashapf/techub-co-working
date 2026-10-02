@@ -1,0 +1,76 @@
+# Production deployment for Techub Co-Working
+# Usage:
+#   cp .env.prod.example .env.prod   # then fill in real secrets/URLs
+#   docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: techub-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-coworking}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD missing in .env.prod}
+      POSTGRES_DB: ${POSTGRES_DB:-coworking}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-coworking}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    container_name: techub-api
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      TZ: ${TZ:-Asia/Karachi}
+      DATABASE_URL: postgres://${POSTGRES_USER:-coworking}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-coworking}
+      JWT_ACCESS_SECRET: ${JWT_ACCESS_SECRET:?JWT_ACCESS_SECRET missing in .env.prod}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:?JWT_REFRESH_SECRET missing in .env.prod}
+      JWT_ACCESS_TTL: ${JWT_ACCESS_TTL:-15m}
+      JWT_REFRESH_TTL: ${JWT_REFRESH_TTL:-7d}
+    expose:
+      - "4000"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${PUBLIC_API_URL:?PUBLIC_API_URL missing in .env.prod}
+    container_name: techub-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    environment:
+      PORT: 3000
+      HOSTNAME: "0.0.0.0"
+    expose:
+      - "3000"
+
+  # Optional: Cloudflare Tunnel (recommended — no open ports needed).
+  # 1) In Cloudflare Zero Trust dashboard: create a Tunnel, copy its token.
+  # 2) Add public hostnames, e.g. app.example.com -> http://web:3000
+  #    and api.example.com -> http://api:4000
+  # 3) Set TUNNEL_TOKEN in .env.prod and uncomment below.
+  #
+  # tunnel:
+  #   image: cloudflare/cloudflared:latest
+  #   container_name: techub-tunnel
+  #   restart: unless-stopped
+  #   command: tunnel --no-autoupdate run --token ${TUNNEL_TOKEN}
+  #   depends_on:
+  #     - web
+  #     - api
+
+volumes:
+  pgdata:
