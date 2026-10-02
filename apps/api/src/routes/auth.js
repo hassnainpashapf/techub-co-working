@@ -1,0 +1,117 @@
+const express = require('express');
+const { z } = require('zod');
+
+const prisma = require('../lib/prisma');
+const {
+  comparePassword,
+  signAccessToken,
+  signRefreshToken,
+  verifyRefreshToken,
+} = require('../lib/auth');
+const { authenticate } = require('../middleware/auth');
+const { validateBody } = require('../middleware/validate');
+
+const router = express.Router();
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+const refreshSchema = z.object({
+  refreshToken: z.string().min(1),
+});
+
+function safeUser(user) {
+  if (!user) return null;
+  const { passwordHash: _omit, ...rest } = user;
+  return rest;
+}
+
+function issuePair(user) {
+  return {
+    accessToken: signAccessToken(user),
+    refreshToken: signRefreshToken(user),
+  };
+}
+
+router.post('/login', validateBody(loginSchema), async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    const user = await prisma.user.findUnique({
+      where: { email },
+      include: { tenant: { select: { id: true, name: true, slug: true } } },
+    });
+    if (!user || !user.isActive) {
+      return res.status(401).json({ error: { message: 'Invalid credentials' } });
+    }
+    const ok = await comparePassword(password, user.passwordHash);
+    if (!ok) {
+      return res.status(401).json({ error: { message: 'Invalid credentials' } });
+    }
+    const tokens = issuePair(user);
+    return res.json({
+      ...tokens,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        tenantId: user.tenantId,
+        memberId: user.memberId,
+        tenant: user.tenant ? user.tenant.name : null,
+      },
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.post('/refresh', validateBody(refreshSchema), async (req, res, next) => {
+  try {
+    let payload;
+    try {
+      payload = verifyRefreshToken(req.body.refreshToken);
+    } catch (_err) {
+      return res.status(401).json({ error: { message: 'Invalid refresh token' } });
+    }
+    if (!payload || payload.type !== 'refresh') {
+      return res.status(401).json({ error: { message: 'Invalid refresh token' } });
+    }
+    const user = await prisma.user.findUnique({ where: { id: payload.sub } });
+    if (!user || !user.isActive) {
+      return res.status(401).json({ error: { message: 'Invalid refresh token' } });
+    }
+    const tokens = issuePair(user);
+    return res.json({
+      ...tokens,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        tenantId: user.tenantId,
+        memberId: user.memberId,
+      },
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.get('/me', authenticate, async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({
+      where: { id: req.user.sub },
+      include: { tenant: { select: { id: true, name: true, slug: true } } },
+    });
+    if (!user) {
+      return res.status(401).json({ error: { message: 'Unauthorized' } });
+    }
+    return res.json({ user: safeUser(user) });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+module.exports = router;
