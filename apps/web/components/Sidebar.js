@@ -77,6 +77,7 @@ const NAV_MAIN = [
   { key: 'launchpad', label: 'Launchpad', path: '/tasks', icon: 'launchpad',
     children: [
       { label: 'Tasks', path: '/tasks' },
+      { label: 'Tickets', path: '/tickets' },
       { label: 'Reminders', path: '/reminders' },
     ],
   },
