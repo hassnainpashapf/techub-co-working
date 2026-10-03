@@ -56,6 +56,9 @@ model Tenant {
   ticketComments TicketComment[]
   visitors      Visitor[]
   maintenanceOrders MaintenanceOrder[]
+  inventoryItems InventoryItem[]
+  inventoryMovements InventoryMovement[]
+  assets Asset[]
   settings      Setting[]
   auditLogs     AuditLog[]
 
@@ -96,6 +99,7 @@ model User {
   createdVisitors   Visitor[]
   assignedMaintenance MaintenanceOrder[]
   createdMaintenance  MaintenanceOrder[] @relation("MaintenanceCreator")
+  inventoryMovements  InventoryMovement[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -183,6 +187,7 @@ model Unit {
   bookings  Booking[]
   tickets   Ticket[]
   maintenanceOrders MaintenanceOrder[]
+  assets Asset[]
 
   @@unique([tenantId, code])
   @@index([tenantId, type, status])
@@ -591,6 +596,73 @@ model MaintenanceOrder {
   @@unique([tenantId, orderNumber])
   @@index([tenantId, status])
   @@map("maintenance_orders")
+}
+
+// ------------------------------------------------------------ inventory ---
+model InventoryItem {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  sku         String?
+  category    String   @default("general") // stationery | pantry | cleaning | it | furniture | general
+  quantity    Int      @default(0)
+  unit        String   @default("pcs") // pcs | boxes | liters | kg
+  reorderLevel Int     @default(5) @map("reorder_level")
+  unitPrice   Decimal? @map("unit_price") @db.Decimal(12, 2)
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  movements InventoryMovement[]
+
+  @@index([tenantId, category])
+  @@map("inventory_items")
+}
+
+model InventoryMovement {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  itemId    String        @map("item_id")
+  item      InventoryItem @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  type      String // in | out | adjustment
+  quantity  Int
+  note      String?
+  createdById String?     @map("created_by_id")
+  createdBy User?         @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt DateTime      @default(now()) @map("created_at")
+
+  @@index([itemId, createdAt])
+  @@map("inventory_movements")
+}
+
+// ----------------------------------------------------------------- assets ---
+enum AssetStatus {
+  active
+  in_repair
+  retired
+  lost
+}
+
+model Asset {
+  id          String      @id @default(cuid())
+  tenantId    String      @map("tenant_id")
+  tenant      Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  assetTag    String?     @map("asset_tag")
+  category    String      @default("general") // furniture | it | appliance | vehicle | general
+  status      AssetStatus @default(active)
+  unitId      String?     @map("unit_id")
+  unit        Unit?       @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  purchaseDate DateTime?  @map("purchase_date") @db.Date
+  purchaseCost Decimal?   @map("purchase_cost") @db.Decimal(12, 2)
+  notes       String?
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@map("assets")
 }
 
 // --------------------------------------------------------------- settings ---
