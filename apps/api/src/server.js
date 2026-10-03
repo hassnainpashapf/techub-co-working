@@ -377,6 +377,21 @@ app.use('/api/utilities-dashboard', require('./routes/utilities-dashboard'));
 try {
   require('./lib/utilityAlerts').ensureUtilityAlertsScheduled();
 } catch (e) { console.error('[phase51] utility alerts schedule failed:', e.message); }
+// Phase 52: Custom Report Builder Pack (additive)
+app.use('/api/custom-reports', require('./routes/custom-reports'));
+app.use('/api/report-charts', require('./routes/report-charts'));
+app.use('/api/report-exports', require('./routes/report-exports'));
+app.use('/api/report-schedules', require('./routes/report-schedules'));
+app.use('/api/report-pivot', require('./routes/report-pivot'));
+app.use('/api/report-templates', require('./routes/report-templates'));
+app.use('/api/report-alerts', require('./routes/report-alerts'));
+app.use('/api/reports-hub', require('./routes/reports-hub'));
+try {
+  require('./lib/reportScheduler').ensureReportScheduler();
+} catch (e) { console.error('[phase52] report scheduler schedule failed:', e.message); }
+try {
+  require('./lib/reportAlerts').ensureReportAlertsScheduled();
+} catch (e) { console.error('[phase52] report alerts schedule failed:', e.message); }
 // Phase 50: legal jobs (additive)
 try {
   require('./lib/legalVaultExpiry').ensureLegalVaultExpiryScheduled();

@@ -8,8 +8,12 @@ import {
   StatCard,
   Spinner,
   ErrorBanner,
+  Badge,
+  EmptyState,
 } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+import Link from 'next/link';
+import { useCallback } from 'react';
 
 const money = (n) => `Rs ${Number(n || 0).toLocaleString()}`;
 
@@ -18,6 +22,7 @@ const TABS = [
   { key: 'occupancy', label: 'Occupancy' },
   { key: 'members', label: 'Members' },
   { key: 'bookings', label: 'Bookings' },
+  { key: 'custom', label: '🛠️ Custom Reports' },
 ];
 
 const defaultRange = () => {
@@ -144,6 +149,21 @@ export default function ReportsPage() {
   const [groupBy, setGroupBy] = useState('month');
   const [data, setData] = useState(null);
 
+  // Phase 52 Track 10: Reports Hub state
+  const [hub, setHub] = useState(null);
+  const [hubLoading, setHubLoading] = useState(false);
+  const loadHub = useCallback(async () => {
+    setHubLoading(true);
+    try {
+      const d = await api.get('/api/reports-hub/stats');
+      setHub(d);
+    } catch (e) {
+      setHub({ error: e.message });
+    } finally {
+      setHubLoading(false);
+    }
+  }, []);
+
   const fetchData = async () => {
     setLoading(true);
     setError('');
@@ -162,7 +182,9 @@ export default function ReportsPage() {
   };
 
   useEffect(() => {
-    if (allowed) fetchData();
+    if (!allowed) return;
+    if (tab === 'custom') { loadHub(); return; }
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [tab, allowed]);
 
@@ -192,7 +214,12 @@ export default function ReportsPage() {
       </div>
 
       <ErrorBanner message={error} onRetry={fetchData} />
-      <RangeBar
+      {tab === 'custom' && (
+        <CustomReportsHub hub={hub} loading={hubLoading} onRetry={loadHub} />
+      )}
+      {tab !== 'custom' && (
+        <>
+          <RangeBar
         from={from} to={to}
         setFrom={(v) => setRange((r) => ({ ...r, from: v }))}
         setTo={(v) => setRange((r) => ({ ...r, to: v }))}
@@ -369,6 +396,72 @@ export default function ReportsPage() {
           )}
         </>
       )}
+        </>
+      )}
+    </div>
+  );
+}
+
+function CustomReportsHub({ hub, loading, onRetry }) {
+  if (loading) return <Spinner />;
+  if (hub?.error) return <ErrorBanner message={hub.error} onRetry={onRetry} />;
+  const stats = hub || {};
+  const QUICK_LINKS = [
+    { label: '🛠️ Report Builder', path: '/reports/builder', desc: 'Nayi custom report banayein' },
+    { label: '📋 Templates', path: '/reports/builder?tab=templates', desc: 'Ready report templates' },
+    { label: '📊 Pivot & Charts', path: '/reports/builder', desc: 'Kisi bhi report ke Pivot/Chart tab me' },
+    { label: '📧 Schedules & Alerts', path: '/reports/builder', desc: 'Har report ke Schedule/Alerts tab me' },
+  ];
+  return (
+    <div className="space-y-6">
+      {stats?.missing?.length > 0 && (
+        <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200">
+          Kuch modules abhi migrate nahi hue: {stats.missing.join(', ')}.
+        </div>
+      )}
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+        <StatCard label="Total Reports" value={stats.totalReports ?? 0} accent="blue" />
+        <StatCard label="Meri Reports" value={stats.myReports ?? 0} accent="indigo" />
+        <StatCard label="Scheduled (active)" value={stats.scheduledActive ?? 0} accent="green" />
+        <StatCard label="KPI Alerts" value={stats.alertsActive ?? 0} accent="red" />
+        <StatCard label="Runs (30d)" value={stats.runs30d ?? '—'} accent="violet" />
+      </div>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="card">
+          <div className="flex items-center justify-between mb-3">
+            <h2 className="font-semibold text-white">🔥 Recent Reports</h2>
+            <Link href="/reports/builder" className="btn-primary">+ Nayi Report</Link>
+          </div>
+          {stats?.popular?.length ? (
+            <ul className="space-y-2">
+              {stats.popular.map((r) => (
+                <li key={r.id}>
+                  <Link href={`/reports/builder/${r.id}`} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2 hover:bg-white/10">
+                    <span className="font-medium text-white">{r.name}</span>
+                    <span className="flex items-center gap-2">
+                      <Badge tone="slate">{r.entity}</Badge>
+                      {r.isPublic && <Badge tone="green">shared</Badge>}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <EmptyState title="Abhi koi custom report nahi" desc="Builder se pehli report banayein ya template clone karein" />
+          )}
+        </div>
+        <div className="card">
+          <h2 className="font-semibold text-white mb-3">⚡ Quick Links</h2>
+          <div className="grid grid-cols-2 gap-3">
+            {QUICK_LINKS.map((q) => (
+              <Link key={q.label} href={q.path} className="rounded-xl bg-white/5 p-4 hover:bg-white/10 transition">
+                <div className="font-semibold text-white">{q.label}</div>
+                <div className="text-sm text-slate-400 mt-1">{q.desc}</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

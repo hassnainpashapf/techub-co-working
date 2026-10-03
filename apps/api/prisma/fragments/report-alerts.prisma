@@ -1,0 +1,61 @@
+// Phase 52 Track 8: KPI Threshold Alerts — schema fragment.
+// Coordinator merge karega: schema.prisma me ReportAlert model +
+// Tenant me `reportAlerts ReportAlert[]` back-relation + CustomReport me `alerts ReportAlert[]`.
+
+model ReportAlert {
+  id             String       @id @default(cuid())
+  tenantId       String       @map("tenant_id")
+  tenant         Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reportId       String       @map("report_id")
+  report         CustomReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  name           String? // alert ka label (default: "<report> · <metricField> <op> <threshold>")
+  metricField    String       @map("metric_field") // report column jiska aggregate nikle
+  aggregate      String       @default("sum") @map("aggregate") // sum | count | avg
+  operator       String       @map("operator") // gt | lt | eq
+  threshold      Decimal      @map("threshold") @db.Decimal(14, 2)
+  checkFrequency String       @default("daily") @map("check_frequency") // daily | weekly
+  lastRunAt      DateTime?    @map("last_run_at")
+  lastTriggeredAt DateTime?   @map("last_triggered_at")
+  lastValue      Decimal?     @map("last_value") @db.Decimal(14, 2)
+  isActive       Boolean      @default(true) @map("is_active")
+  createdBy      String?      @map("created_by")
+  createdAt      DateTime     @default(now()) @map("created_at")
+  updatedAt      DateTime     @updatedAt @map("updated_at")
+
+  @@index([tenantId, isActive])
+  @@index([reportId])
+  @@map("report_alerts")
+}
+
+// --- Coordinator: schema.prisma merge ---
+// model Tenant me add karein:
+//   reportAlerts ReportAlert[]
+// model CustomReport me add karein:
+//   alerts ReportAlert[]
+
+// --- Coordinator: migration SQL ---
+// CREATE TABLE "report_alerts" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "report_id" TEXT NOT NULL,
+//     "name" TEXT,
+//     "metric_field" TEXT NOT NULL,
+//     "aggregate" TEXT NOT NULL DEFAULT 'sum',
+//     "operator" TEXT NOT NULL,
+//     "threshold" DECIMAL(14,2) NOT NULL,
+//     "check_frequency" TEXT NOT NULL DEFAULT 'daily',
+//     "last_run_at" TIMESTAMP(3),
+//     "last_triggered_at" TIMESTAMP(3),
+//     "last_value" DECIMAL(14,2),
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "created_by" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "report_alerts_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "report_alerts_tenant_id_is_active_idx" ON "report_alerts"("tenant_id", "is_active");
+// CREATE INDEX "report_alerts_report_id_idx" ON "report_alerts"("report_id");
+// ALTER TABLE "report_alerts" ADD CONSTRAINT "report_alerts_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "report_alerts" ADD CONSTRAINT "report_alerts_report_id_fkey"
+//   FOREIGN KEY ("report_id") REFERENCES "custom_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;

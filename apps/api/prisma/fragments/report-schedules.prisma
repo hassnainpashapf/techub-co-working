@@ -1,0 +1,56 @@
+// Phase 52 Track 4: Scheduled delivery for custom reports.
+// Coordinator merge karega — IMPORTANT: Track 1 ka `reports-builder.prisma`
+// (CustomReport model) PEHLE merge hona chahiye, us ke baad ye fragment.
+
+model ReportSchedule {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  reportId    String    @map("report_id")
+  frequency   String    @default("weekly") @map("frequency") // daily | weekly | monthly
+  dayOfWeek   Int?      @map("day_of_week")  // 0-6 (weekly) — default 1 (Monday)
+  dayOfMonth  Int?      @map("day_of_month") // 1-28 (monthly) — default 1
+  recipients  Json      @default("[]") @map("recipients") // ["a@x.com", ...]
+  format      String    @default("pdf") @map("format") // csv | pdf
+  isActive    Boolean   @default(true) @map("is_active")
+  lastSentAt  DateTime? @map("last_sent_at")
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  report CustomReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([isActive, lastSentAt])
+  @@map("report_schedules")
+}
+
+// --- Coordinator: schema.prisma merge (Track 1 ke baad) ---
+// model Tenant me add karein:
+//   reportSchedules ReportSchedule[]
+// model CustomReport me add karein:
+//   schedules ReportSchedule[]
+
+// --- Coordinator: migration SQL ---
+// CREATE TABLE "report_schedules" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "report_id" TEXT NOT NULL,
+//     "frequency" TEXT NOT NULL DEFAULT 'weekly',
+//     "day_of_week" INTEGER,
+//     "day_of_month" INTEGER,
+//     "recipients" JSONB NOT NULL DEFAULT '[]',
+//     "format" TEXT NOT NULL DEFAULT 'pdf',
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "last_sent_at" TIMESTAMP(3),
+//     "created_by" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "report_schedules_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "report_schedules_tenant_id_idx" ON "report_schedules"("tenant_id");
+// CREATE INDEX "report_schedules_is_active_last_sent_at_idx" ON "report_schedules"("is_active", "last_sent_at");
+// ALTER TABLE "report_schedules" ADD CONSTRAINT "report_schedules_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "report_schedules" ADD CONSTRAINT "report_schedules_report_id_fkey"
+//   FOREIGN KEY ("report_id") REFERENCES "custom_reports"("id") ON DELETE CASCADE ON UPDATE CASCADE;

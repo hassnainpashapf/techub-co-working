@@ -91,6 +91,8 @@ const NAV_MAIN = [
       { label: 'Documents & Credits', path: '/documents' },
       { label: 'Refunds', path: '/refunds' },
       { label: 'Reports', path: '/reports' },
+      { label: 'Custom Reports', path: '/reports' },
+      { label: 'Report Builder', path: '/reports/builder' },
       { label: 'Scheduled Reports', path: '/reports/scheduled' },
       { label: 'Locations', path: '/investor/locations' },
       { label: 'P&L Statement', path: '/investor/pnl' },

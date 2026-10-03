@@ -228,6 +228,10 @@ model Tenant {
   utilityRates         UtilityRate[]
   utilityBills         UtilityBill[]
   greenInitiatives     GreenInitiative[]
+  // Phase 52: Custom Report Builder Pack
+  customReports        CustomReport[]
+  reportSchedules      ReportSchedule[]
+  reportAlerts         ReportAlert[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -4341,4 +4345,77 @@ model GreenInitiative {
   @@index([tenantId, status])
   @@index([tenantId, category])
   @@map("green_initiatives")
+}
+
+// ------------------------------------------------ Phase 52: Custom Report Builder Pack ---
+model CustomReport {
+  id              String   @id @default(cuid())
+  tenantId        String   @map("tenant_id")
+  name            String
+  entity          String // members | invoices | bookings | payments | contracts | expenses | tickets | vendors | leads
+  columns         Json // [{ field, label }] — field allowlist se validate hota hai
+  filters         Json? // [{ field, op, value }]
+  sorts           Json? // [{ field, dir }] — dir: asc | desc
+  groupBy         String?  @map("group_by")
+  isPublic        Boolean  @default(false) @map("is_public")
+  ownerId         String?  @map("owner_id")
+  sharedWithRoles Json?    @map("shared_with_roles") // Phase 52: null = sirf owner; ["manager","finance"] = in roles ko view
+  createdAt       DateTime @default(now()) @map("created_at")
+  updatedAt       DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  schedules ReportSchedule[]
+  alerts    ReportAlert[]
+
+  @@index([tenantId, entity])
+  @@map("custom_reports")
+}
+
+model ReportSchedule {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  reportId    String    @map("report_id")
+  frequency   String    @default("weekly") @map("frequency") // daily | weekly | monthly
+  dayOfWeek   Int?      @map("day_of_week") // 0-6 (weekly) — default 1 (Monday)
+  dayOfMonth  Int?      @map("day_of_month") // 1-28 (monthly) — default 1
+  recipients  Json      @default("[]") @map("recipients") // ["a@x.com", ...]
+  format      String    @default("pdf") @map("format") // csv | pdf
+  isActive    Boolean   @default(true) @map("is_active")
+  lastSentAt  DateTime? @map("last_sent_at")
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  report CustomReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId])
+  @@index([isActive, lastSentAt])
+  @@map("report_schedules")
+}
+
+model ReportAlert {
+  id              String    @id @default(cuid())
+  tenantId        String    @map("tenant_id")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  reportId        String    @map("report_id")
+  report          CustomReport @relation(fields: [reportId], references: [id], onDelete: Cascade)
+  name            String? // alert ka label (default: "<report> · <metricField> <op> <threshold>")
+  metricField     String    @map("metric_field")
+  aggregate       String    @default("sum") @map("aggregate") // sum | count | avg
+  operator        String    @map("operator") // gt | lt | eq
+  threshold       Decimal   @map("threshold") @db.Decimal(14, 2)
+  checkFrequency  String    @default("daily") @map("check_frequency") // daily | weekly
+  lastRunAt       DateTime? @map("last_run_at")
+  lastTriggeredAt DateTime? @map("last_triggered_at")
+  lastValue       Decimal?  @map("last_value") @db.Decimal(14, 2)
+  isActive        Boolean   @default(true) @map("is_active")
+  createdBy       String?   @map("created_by")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, isActive])
+  @@index([reportId])
+  @@map("report_alerts")
 }

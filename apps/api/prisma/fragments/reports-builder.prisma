@@ -1,0 +1,42 @@
+// Phase 52 Track 1/10: Custom Report Builder — CustomReport fragment.
+// COORDINATOR: schema.prisma me merge karein:
+//   1. Ye model copy karein
+//   2. Tenant model me back-relation jorein: customReports CustomReport[]
+//   3. Migration 20261003610000_phase52_reports me neeche wali SQL lagayein
+
+model CustomReport {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  entity    String // members | invoices | bookings | payments | contracts | expenses | tickets | vendors | leads
+  columns   Json // [{ field, label }] — field allowlist se validate hota hai
+  filters   Json? // [{ field, op, value }]
+  sorts     Json? // [{ field, dir }] — dir: asc | desc
+  groupBy   String?  @map("group_by")
+  isPublic  Boolean  @default(false) @map("is_public")
+  ownerId   String?  @map("owner_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, entity])
+  @@map("custom_reports")
+}
+
+// ---- Migration SQL (20261003610000_phase52_reports) ----
+// CREATE TABLE "custom_reports" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "entity" TEXT NOT NULL,
+//   "columns" JSONB NOT NULL,
+//   "filters" JSONB,
+//   "sorts" JSONB,
+//   "group_by" TEXT,
+//   "is_public" BOOLEAN NOT NULL DEFAULT false,
+//   "owner_id" TEXT,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "custom_reports_tenant_id_entity_idx" ON "custom_reports"("tenant_id", "entity");

@@ -1,0 +1,15 @@
+// Phase 52 Track 9: Report Sharing & Permissions — schema fragment (DELTA).
+// Coordinator merge karega: Track 1 (reports-builder.prisma) ke CustomReport model me
+// neeche wali line jorein + migration SQL.
+//
+// Track 1 ka CustomReport (brief ke mutabiq) — VERIFY note:
+//   - `isPublic Boolean @default(false)` — Track 1 ke fragment me hona chahiye
+//   - `ownerId String?` (User link) — Track 1 ke fragment me hona chahiye
+// Agar Track 1 me ye fields alag naam se hon, coordinator usi naam se align kare
+// aur lib/reportAccess.js me bhi wahi naam use ho.
+
+// --- Coordinator: schema.prisma — CustomReport model me add karein ---
+// sharedWithRoles Json? // null = sirf owner; ["manager","finance"] = in roles ko view
+
+// --- Coordinator: migration SQL ---
+// ALTER TABLE "custom_reports" ADD COLUMN "shared_with_roles" JSONB;
