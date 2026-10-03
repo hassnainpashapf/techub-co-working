@@ -89,6 +89,7 @@ const NAV_MAIN = [
 ];
 
 const NAV_OTHERS = [
+  { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', roles: ['super_admin'] },
   { key: 'settings', label: 'Settings', path: '/settings', icon: 'settings' },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },
 ];
@@ -202,7 +203,7 @@ export default function Sidebar() {
         <p className="px-3.5 pb-2 text-[12px] font-medium text-slate-600">Main</p>
         {NAV_MAIN.map(renderItem)}
         <p className="px-3.5 pt-5 pb-2 text-[12px] font-medium text-slate-600">Others</p>
-        {NAV_OTHERS.map(renderItem)}
+        {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
       </nav>
     </aside>
   );

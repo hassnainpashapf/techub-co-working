@@ -40,10 +40,36 @@ router.get('/', async (_req, res, next) => {
     const tenants = await prisma.tenant.findMany({
       orderBy: { createdAt: 'desc' },
       include: {
-        _count: { select: { users: true, members: true } },
+        _count: { select: { users: true, members: true, units: true, bookings: true } },
       },
     });
     return res.json({ tenants });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// SaaS overview stats (super_admin only)
+router.get('/overview', async (_req, res, next) => {
+  try {
+    const [tenantCount, userCount, memberCount, bookingCount] = await Promise.all([
+      prisma.tenant.count(),
+      prisma.user.count(),
+      prisma.member.count(),
+      prisma.booking.count(),
+    ]);
+    const revenue = await prisma.payment.aggregate({ _sum: { amount: true } });
+    const tenantsByPlan = await prisma.tenant.groupBy({ by: ['plan'], _count: true });
+    res.json({
+      overview: {
+        tenants: tenantCount,
+        users: userCount,
+        members: memberCount,
+        bookings: bookingCount,
+        totalRevenue: Number(revenue._sum.amount || 0),
+        byPlan: Object.fromEntries(tenantsByPlan.map((t) => [t.plan, t._count])),
+      },
+    });
   } catch (err) {
     return next(err);
   }
