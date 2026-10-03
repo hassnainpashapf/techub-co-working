@@ -13,6 +13,7 @@ import {
   ErrorBanner,
 } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+import CurrencyWidget from './_components/CurrencyWidget'; // Phase 46
 
 const money = (n) => `Rs ${Number(n || 0).toLocaleString()}`;
 
@@ -177,6 +178,11 @@ export default function FinancePage() {
         <StatCard label="Income" value={money(income)} sub={`collected in ${month}`} accent="green" />
         <StatCard label="Expenses" value={money(totalExpenses)} sub={`${expenses.length} expense(s)`} accent="red" />
         <StatCard label="Net profit" value={money(net)} sub={net >= 0 ? 'in the green' : 'in the red'} accent={net >= 0 ? 'indigo' : 'amber'} />
+      </div>
+
+      {/* Phase 46: multi-currency overview widget */}
+      <div className="mb-6">
+        <CurrencyWidget />
       </div>
 
       <div className="card">

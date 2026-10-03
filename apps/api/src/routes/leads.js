@@ -209,6 +209,7 @@ const convertSchema = z.object({
   startDate: z.coerce.date().optional(),
   endDate: z.coerce.date().optional().nullable(),
   rentAmount: z.number().nonnegative().optional().nullable(),
+  rentCurrency: z.string().regex(/^[A-Z]{3}$/).optional().default('PKR'), // Phase 46
 });
 router.post('/:id/convert', salesWrite, validateBody(convertSchema), async (req, res, next) => {
   try {
@@ -285,6 +286,7 @@ router.post('/:id/convert', salesWrite, validateBody(convertSchema), async (req,
             // ContractStatus has no 'draft' enum value (migration out of scope),
             // so the contract is created active exactly like the normal contract flow.
             rentAmount: rentAmount != null ? rentAmount : (unit.monthlyPrice != null ? Number(unit.monthlyPrice) : 0),
+            rentCurrency: req.body.rentCurrency || 'PKR', // Phase 46
           },
         });
         await tx.unit.update({ where: { id: unit.id }, data: { status: 'occupied' } });

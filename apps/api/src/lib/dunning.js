@@ -41,6 +41,11 @@ function fmtDate(d) {
 // Overdue invoices for a tenant, each annotated with daysOverdue + level.
 async function findOverdue(tenantId) {
   const today = startOfToday();
+  // Phase 46 Track 3: base currency for dual display (merge pending → PKR)
+  let baseCurrency = 'PKR';
+  try {
+    baseCurrency = (await require('./invoiceCurrency').getTenantCurrencies(tenantId)).base || 'PKR';
+  } catch { /* safe default */ }
   const invoices = await prisma.invoice.findMany({
     where: {
       tenantId,
@@ -56,6 +61,10 @@ async function findOverdue(tenantId) {
   return invoices.map((inv) => {
     const daysOverdue = Math.max(daysBetween(inv.dueDate, today), 0);
     const sentLevels = (inv.dunningLogs || []).map((l) => l.level);
+    // Phase 46 Track 3: base currency balance — merge pending ho to invoice currency balance hi
+    const fxRate = inv.fxRate != null ? Number(inv.fxRate) : 1;
+    const balance = Number(inv.amount) - Number(inv.amountPaid || 0);
+    const baseBalance = Math.round(balance * fxRate * 100) / 100;
     return {
       id: inv.id,
       number: inv.number,
@@ -64,7 +73,10 @@ async function findOverdue(tenantId) {
       memberEmail: inv.member?.email || '',
       amount: Number(inv.amount),
       amountPaid: Number(inv.amountPaid || 0),
-      balance: Number(inv.amount) - Number(inv.amountPaid || 0),
+      balance,
+      currency: inv.currency || 'PKR',
+      baseBalance,
+      baseCurrency,
       dueDate: inv.dueDate,
       status: inv.status,
       daysOverdue,
@@ -86,6 +98,9 @@ async function sendReminder(tenantId, inv) {
     dueDate: fmtDate(inv.dueDate),
     daysOverdue: inv.daysOverdue,
     level: inv.level,
+    // Phase 46 Track 3: dual currency display data for templates
+    currency: inv.currency || 'PKR',
+    baseBalance: inv.baseBalance,
   };
   let result;
   try {
@@ -96,10 +111,17 @@ async function sendReminder(tenantId, inv) {
   // Fallback: if the template is missing, send a generic email directly.
   if (result && result.reason === 'unknown-template') {
     try {
+      // Phase 46 Track 3: currency symbol + base-currency dual display
+      const { currencySymbol } = require('./invoiceCurrency');
+      const sym = currencySymbol(inv.currency);
+      const baseSym = currencySymbol(inv.baseCurrency);
+      const dual = (inv.currency && inv.currency !== inv.baseCurrency && inv.baseBalance != null)
+        ? ` (≈ ${baseSym}${Number(inv.baseBalance).toLocaleString()} ${inv.baseCurrency})`
+        : '';
       result = await sendEmail(tenantId, {
         to,
         subject: `Payment reminder — invoice ${inv.number}`,
-        html: `<p>Hi ${inv.memberName || 'there'},</p><p>Invoice <b>${inv.number}</b> for <b>Rs ${inv.balance.toLocaleString()}</b> is ${inv.daysOverdue} days overdue (due ${fmtDate(inv.dueDate)}). Please pay at your earliest convenience.</p>`,
+        html: `<p>Hi ${inv.memberName || 'there'},</p><p>Invoice <b>${inv.number}</b> for <b>${sym}${inv.balance.toLocaleString()}${dual}</b> is ${inv.daysOverdue} days overdue (due ${fmtDate(inv.dueDate)}). Please pay at your earliest convenience.</p>`,
       });
     } catch (err) {
       result = { sent: false, reason: String((err && err.message) || err) };

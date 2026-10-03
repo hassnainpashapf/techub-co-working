@@ -1,0 +1,20 @@
+// Phase 46 Track 3: Multi-Currency Invoices — schema fragment (DELTA).
+// Coordinator: yeh fields Invoice model me merge kare aur matching migration banaye.
+// server.js / Sidebar.js nahi chhune. schema.prisma yahan mat edit karo.
+
+// --- ADD TO Invoice model in apps/api/prisma/schema.prisma ---
+//   currency   String  @default("PKR") @map("currency") // ISO-4217 invoice currency
+//   fxRate     Decimal? @map("fx_rate") @db.Decimal(18, 6) // snapshot: 1 <currency> = fxRate <baseCurrency>
+//   baseAmount Decimal? @map("base_amount") @db.Decimal(12, 2) // total converted to base currency at snapshot rate
+//
+// Behavior: currency === baseCurrency → fxRate = 1, baseAmount = amount.
+// Base currency Track 1 ke CurrencySetting.baseCurrency se aata hai (default "PKR").
+// Payments hamesha invoice ki `currency` me record hote hain (Track 4); reports `baseAmount` use karein (Track 7).
+
+// MIGRATION SQL (coordinator migration file me dale):
+// ALTER TABLE "invoices" ADD COLUMN "currency" TEXT NOT NULL DEFAULT 'PKR';
+// ALTER TABLE "invoices" ADD COLUMN "fx_rate" DECIMAL(18, 6);
+// ALTER TABLE "invoices" ADD COLUMN "base_amount" DECIMAL(12, 2);
+// CREATE INDEX "invoices_currency_idx" ON "invoices"("tenant_id", "currency");
+// -- Backfill (purani invoices base currency me thin):
+// UPDATE "invoices" SET "fx_rate" = 1, "base_amount" = "amount" WHERE "fx_rate" IS NULL;

@@ -9,12 +9,24 @@ const fmtDate = (d) => (d ? new Date(d).toLocaleDateString('en-PK', { year: 'num
  * invoice: full invoice record with member, contract, payments, tenant
  */
 function generateInvoicePdf(invoice) {
-  return new Promise((resolve, reject) => {
+  return (async () => {
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
     const chunks = [];
     doc.on('data', (c) => chunks.push(c));
-    doc.on('end', () => resolve(Buffer.concat(chunks)));
-    doc.on('error', reject);
+    const bufPromise = new Promise((resolve, reject) => {
+      doc.on('end', () => resolve(Buffer.concat(chunks)));
+      doc.on('error', reject);
+    });
+
+    // Phase 46: base currency for dual display (fail-safe → PKR)
+    let baseCur = 'PKR';
+    try {
+      const { getTenantCurrencies, currencySymbol } = require('./invoiceCurrency');
+      const c = await getTenantCurrencies(invoice.tenantId);
+      baseCur = (c?.base || 'PKR').toUpperCase();
+      invoice.__baseCurrency = baseCur;
+      invoice.__currencySymbol = currencySymbol;
+    } catch { invoice.__baseCurrency = 'PKR'; }
 
     const tenant = invoice.tenant || {};
     const member = invoice.member || {};
@@ -86,6 +98,15 @@ function generateInvoicePdf(invoice) {
     totalRow('Total:', total, false);
     totalRow('Paid:', paid, false);
     totalRow('Balance due:', due, true);
+    // Phase 46: base-currency dual display
+    const invCur46 = invoice.currency || 'PKR';
+    const baseCur46 = invoice.__baseCurrency || 'PKR';
+    if (invCur46 !== baseCur46 && invoice.baseAmount != null) {
+      const sym46 = invoice.__currencySymbol ? invoice.__currencySymbol(baseCur46) : `${baseCur46} `;
+      doc.fontSize(9).font('Helvetica').fillColor('#64748b');
+      doc.text(`≈ ${sym46}${Number(invoice.baseAmount).toLocaleString()} in base currency`, 330, y, { width: 215, align: 'right' });
+      y += 16;
+    }
 
     // Payments
     if (invoice.payments && invoice.payments.length > 0) {
@@ -94,7 +115,9 @@ function generateInvoicePdf(invoice) {
       y += 18;
       doc.fontSize(10).font('Helvetica').fillColor('#334155');
       for (const p of invoice.payments) {
-        doc.text(`${fmtDate(p.paidAt)} — ${fmtMoney(p.amount)}${p.method ? ` (${p.method})` : ''}`, 50, y);
+        // Phase 46: payment currency display
+        const pCur = p.currency && p.currency !== (invoice.__baseCurrency || 'PKR') ? ` ${p.currency}` : '';
+        doc.text(`${fmtDate(p.paidAt)} — ${fmtMoney(p.amount)}${pCur}${p.method ? ` (${p.method})` : ''}`, 50, y);
         y += 15;
       }
     }
@@ -111,7 +134,8 @@ function generateInvoicePdf(invoice) {
     doc.text(`Generated on ${new Date().toLocaleDateString('en-PK')}`, 50, 775, { align: 'center', width: 495 });
 
     doc.end();
-  });
+    return bufPromise;
+  })();
 }
 
 module.exports = { generateInvoicePdf };

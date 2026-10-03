@@ -1,0 +1,27 @@
+// Phase 46 Track 4: Multi-Currency Payments — schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma and create the matching
+// migration. DO NOT edit schema.prisma here (10 parallel agents — merge conflicts
+// se bachne ke liye).
+//
+// NOTE: Payment model schema.prisma me pehle se hai (line ~589) — yahan sirf DELTA hai.
+
+// DELTA — Payment model par 3 naye fields:
+model Payment {
+  // ... (existing fields: id, tenantId, invoiceId, amount, method, receiptNo, paidAt, note, createdAt, refunds)
+
+  // Payment kis currency me hui (ISO-4217, e.g. PKR | USD | EUR)
+  currency String @default("PKR")
+
+  // Payment ke waqt ka FX snapshot: 1 <currency> = fxRate <base currency>
+  // Base currency me ho to fxRate = 1. Track 2 (fx-rates) se snapshot lena.
+  fxRate Decimal? @map("fx_rate") @db.Decimal(18, 6)
+
+  // Payment ka base-currency me converted amount (reports/allocation isi par)
+  baseAmount Decimal? @map("base_amount") @db.Decimal(12, 2)
+}
+
+// Migration SQL (coordinator):
+// ALTER TABLE "payments" ADD COLUMN "currency" TEXT NOT NULL DEFAULT 'PKR';
+// ALTER TABLE "payments" ADD COLUMN "fx_rate" DECIMAL(18,6);
+// ALTER TABLE "payments" ADD COLUMN "base_amount" DECIMAL(12,2);
+// CREATE INDEX "payments_tenant_currency_idx" ON "payments"("tenant_id","currency");

@@ -17,18 +17,23 @@ const write = requireRole(...WRITE_ROLES);
 
 const CONTRACT_STATUSES = ['active', 'expired', 'cancelled'];
 
+const ISO_CURRENCY = z.string().regex(/^[A-Z]{3}$/, 'Currency must be a 3-letter ISO-4217 code');
+
 const createContractSchema = z.object({
   memberId: z.string().min(1),
   unitId: z.string().min(1),
   startDate: z.coerce.date(),
   endDate: z.coerce.date().optional().nullable(),
   rentAmount: z.number().nonnegative(),
+  // Phase 46: rent currency (default PKR) — contract se banne wali invoices isi currency me banti hain
+  rentCurrency: ISO_CURRENCY.optional().default('PKR'),
 });
 const updateContractSchema = z
   .object({
     startDate: z.coerce.date().optional(),
     endDate: z.coerce.date().optional().nullable(),
     rentAmount: z.number().nonnegative().optional(),
+    rentCurrency: ISO_CURRENCY.optional(), // Phase 46
     status: z.enum(CONTRACT_STATUSES).optional(),
   })
   .refine((d) => Object.keys(d).length > 0, { message: 'No fields to update' })
@@ -63,7 +68,7 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', write, validateBody(createContractSchema), async (req, res, next) => {
   try {
-    const { memberId, unitId, startDate, endDate, rentAmount } = req.body;
+    const { memberId, unitId, startDate, endDate, rentAmount, rentCurrency } = req.body;
     const tf = tenantFilter(req);
 
     const member = await prisma.member.findFirst({ where: { id: memberId, ...tf } });
@@ -89,7 +94,7 @@ router.post('/', write, validateBody(createContractSchema), async (req, res, nex
 
     const contract = await prisma.$transaction(async (tx) => {
       const created = await tx.contract.create({
-        data: { ...tf, memberId, unitId, startDate, endDate: endDate || null, rentAmount },
+        data: { ...tf, memberId, unitId, startDate, endDate: endDate || null, rentAmount, rentCurrency: rentCurrency || 'PKR' }, // Phase 46
       });
       await tx.unit.update({ where: { id: unitId }, data: { status: 'occupied' } });
       return created;

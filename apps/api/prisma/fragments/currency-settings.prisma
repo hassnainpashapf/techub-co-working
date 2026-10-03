@@ -1,0 +1,35 @@
+// Phase 46 Track 1: Currency Settings — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model CurrencySetting {
+  id                   String   @id @default(cuid())
+  tenantId             String   @unique @map("tenant_id")
+  tenant               Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  baseCurrency         String   @default("PKR") @map("base_currency") // ISO-4217, reporting currency
+  enabledCurrencies    Json?    @map("enabled_currencies") // ["PKR","USD","EUR"] — must include base
+  defaultInvoiceCurrency String? @map("default_invoice_currency") // must be in enabledCurrencies
+  fxSource             String   @default("manual") @map("fx_source") // manual | auto
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
+
+  @@map("currency_settings")
+}
+
+// ADD TO Tenant model:
+//   currencySetting CurrencySetting?
+
+// MIGRATION SQL:
+// CREATE TABLE "currency_settings" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "base_currency" TEXT NOT NULL DEFAULT 'PKR',
+//   "enabled_currencies" JSONB,
+//   "default_invoice_currency" TEXT,
+//   "fx_source" TEXT NOT NULL DEFAULT 'manual',
+//   "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMPTZ(6) NOT NULL,
+//   CONSTRAINT "currency_settings_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "currency_settings_tenant_id_key" ON "currency_settings"("tenant_id");

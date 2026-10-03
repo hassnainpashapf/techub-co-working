@@ -347,7 +347,18 @@ export default function PortalInvoicesPage() {
 
   return (
     <div className="p-4 sm:p-6 max-w-5xl mx-auto">
-      <PageHeader title="Invoices & Payments" sub="Your bills, receipts and payment history" />
+      <PageHeader
+        title="Invoices & Payments"
+        sub="Your bills, receipts and payment history"
+        actions={
+          <button
+            className="btn-secondary btn-sm"
+            onClick={() => apiDownload('/api/member-statements/me/pdf', 'my-statement.pdf')}
+          >
+            📄 My Statement
+          </button>
+        }
+      />
 
       {error && <ErrorBanner message={error} />}
       {claimSent && (

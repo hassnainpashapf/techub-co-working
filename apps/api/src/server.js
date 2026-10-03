@@ -308,6 +308,18 @@ try {
   require('./lib/churnActions').ensureChurnActionsScheduled();
   require('./lib/managerDigest').ensureDigestScheduled();
 } catch (e) { console.error('[phase45] AI jobs schedule failed:', e.message); }
+// Phase 46: Multi-Currency & International Pack (additive) — route mounts
+app.use('/api/currency-settings', require('./routes/currency-settings'));
+app.use('/api/fx-rates', require('./routes/fx-rates'));
+app.use('/api/fx-gainloss', require('./routes/fx-gainloss'));
+app.use('/api/currency-reports', require('./routes/currency-reports'));
+app.use('/api/member-statements', require('./routes/member-statements'));
+app.use('/api/currency-dashboard', require('./routes/currency-dashboard'));
+// Phase 46: FX jobs (additive) — daily auto rate refresh + FX alerts
+try {
+  require('./lib/fx').ensureFxScheduled();
+  require('./lib/fxAlerts').ensureFxAlertsScheduled();
+} catch (e) { console.error('[phase46] FX jobs schedule failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

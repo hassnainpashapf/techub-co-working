@@ -203,9 +203,9 @@ const templates = {
     subject: `You're expected — check-in code ${code}`,
     html: wrap('Visitor Invitation', `<p>Hi ${visitorName || 'there'},</p><p><b>${hostName || 'Your host'}</b> has pre-registered your visit${expectedAt ? ` on <b>${expectedAt}</b>` : ''}.</p><p>Show this code at reception:</p><p style="font-size:28px;font-weight:800;letter-spacing:6px;">${code}</p>`),
   }),
-  paymentReceived: ({ memberName, amount, invoiceNumber }) => ({
-    subject: `Payment received — Rs ${Number(amount).toLocaleString()}`,
-    html: wrap('Payment Received', `<p>Hi ${memberName || 'there'},</p><p>We received your payment of <b>Rs ${Number(amount).toLocaleString()}</b>${invoiceNumber ? ` for invoice <b>${invoiceNumber}</b>` : ''}. Thank you!</p>`),
+  paymentReceived: ({ memberName, amount, currencyLine, invoiceNumber }) => ({
+    subject: `Payment received — ${currencyLine || `Rs ${Number(amount).toLocaleString()}`}`,
+    html: wrap('Payment Received', `<p>Hi ${memberName || 'there'},</p><p>We received your payment of <b>${currencyLine || `Rs ${Number(amount).toLocaleString()}`}</b>${invoiceNumber ? ` for invoice <b>${invoiceNumber}</b>` : ''}. Thank you!</p>`),
   }),
   emailVerification: ({ name, verifyUrl }) => ({
     subject: 'Verify your email address',
@@ -402,7 +402,7 @@ const TEMPLATE_VARS = {
   ticketUpdate: ['memberName', 'ticketNo', 'status'],
   visitorCheckin: ['hostName', 'visitorName'],
   visitorInvite: ['visitorName', 'hostName', 'code', 'expectedAt'],
-  paymentReceived: ['memberName', 'amount', 'invoiceNumber'],
+  paymentReceived: ['memberName', 'amount', 'currencyLine', 'invoiceNumber'],
   emailVerification: ['name', 'verifyUrl'],
   passwordReset: ['name', 'resetUrl'],
   referralInvite: ['name', 'referrerName', 'joinUrl', 'rewardNote'],

@@ -1,0 +1,42 @@
+// Phase 46 Track 5: FX Gain/Loss Tracking — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+// --- Model (add to schema.prisma) ---
+// model FxGainLoss {
+//   id          String    @id @default(cuid())
+//   tenantId    String    @map("tenant_id")
+//   tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+//   invoiceId   String?   @map("invoice_id")
+//   invoice     Invoice?  @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+//   paymentId   String?   @map("payment_id")
+//   payment     Payment?  @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+//   amount      Decimal   @db.Decimal(12, 2) // base currency; +gain | -loss
+//   reason      String    // rate_change | rounding
+//   expenseId   String?   @map("expense_id") // loss auto-booked as Expense (no relation — loose link)
+//   createdAt   DateTime  @default(now()) @map("created_at")
+//
+//   @@index([tenantId, createdAt])
+//   @@index([tenantId, invoiceId])
+//   @@index([tenantId, paymentId])
+//   @@map("fx_gain_loss")
+// }
+
+// --- Back-relations (add) ---
+// Tenant:  fxGainLoss  FxGainLoss[]
+// Invoice: fxGainLoss  FxGainLoss[]
+// Payment: fxGainLoss  FxGainLoss[]
+
+// --- Migration SQL (append to phase migration) ---
+// CREATE TABLE "fx_gain_loss" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "invoice_id" TEXT REFERENCES "invoices"("id") ON DELETE SET NULL,
+//   "payment_id" TEXT REFERENCES "payments"("id") ON DELETE SET NULL,
+//   "amount" DECIMAL(12,2) NOT NULL,
+//   "reason" TEXT NOT NULL,
+//   "expense_id" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "fx_gain_loss_tenant_id_created_at_idx" ON "fx_gain_loss"("tenant_id", "created_at");
+// CREATE INDEX "fx_gain_loss_tenant_id_invoice_id_idx" ON "fx_gain_loss"("tenant_id", "invoice_id");
+// CREATE INDEX "fx_gain_loss_tenant_id_payment_id_idx" ON "fx_gain_loss"("tenant_id", "payment_id");

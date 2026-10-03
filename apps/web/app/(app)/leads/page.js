@@ -91,10 +91,12 @@ function ConvertModal({ lead, onClose, onDone }) {
     unitId: '',
     startDate: new Date().toISOString().slice(0, 10),
     rentAmount: lead?.budget != null ? String(lead.budget) : '',
+    rentCurrency: 'PKR', // Phase 46
   });
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [result, setResult] = useState(null);
+  const [currencies, setCurrencies] = useState(['PKR']); // Phase 46
 
   useEffect(() => {
     Promise.all([api.get('/membership-plans?isActive=true'), api.get('/spaces/units?status=vacant')])
@@ -103,6 +105,9 @@ function ConvertModal({ lead, onClose, onDone }) {
         setUnits((u.units || []).filter((x) => x.type !== 'meeting_room'));
       })
       .catch((e) => setError(e.message));
+    api.get('/api/currency-settings').then((c) => {
+      if (Array.isArray(c.enabledCurrencies) && c.enabledCurrencies.length) setCurrencies(c.enabledCurrencies);
+    }).catch(() => {});
   }, []);
 
   const submit = async (e) => {
@@ -115,6 +120,7 @@ function ConvertModal({ lead, onClose, onDone }) {
         unitId: f.unitId || null,
         startDate: f.startDate || undefined,
         rentAmount: f.rentAmount === '' ? null : Number(f.rentAmount),
+        rentCurrency: f.rentCurrency || 'PKR', // Phase 46
       };
       const data = await api.post(`/leads/${lead.id}/convert`, body);
       setResult(data);
@@ -160,8 +166,13 @@ function ConvertModal({ lead, onClose, onDone }) {
             <Field label="Start date">
               <input type="date" className="input" value={f.startDate} onChange={(e) => setF({ ...f, startDate: e.target.value })} />
             </Field>
-            <Field label="Rent amount (Rs)">
-              <input type="number" min="0" className="input" value={f.rentAmount} onChange={(e) => setF({ ...f, rentAmount: e.target.value })} placeholder="0" />
+            <Field label="Rent amount">
+              <div className="flex gap-2">
+                <input type="number" min="0" className="input flex-1" value={f.rentAmount} onChange={(e) => setF({ ...f, rentAmount: e.target.value })} placeholder="0" />
+                <select className="input w-24" value={f.rentCurrency} onChange={(e) => setF({ ...f, rentCurrency: e.target.value })}>
+                  {currencies.map((c) => <option key={c} value={c}>{c}</option>)}
+                </select>
+              </div>
             </Field>
           </div>
           {!lead?.phone && <div className="text-xs text-amber-400 mb-3">⚠️ Lead has no phone — add one first (phone is required for members).</div>}

@@ -1,0 +1,18 @@
+// ------------------------------------------------- Phase 46: Contracts in Foreign Currency
+// DELTA fragment — existing `Contract` model par naya field (coordinator schema.prisma me merge kare).
+//
+// Schema.prisma me `Contract` model me ye line add karni hai:
+//
+//   rentCurrency String   @default("PKR") @map("rent_currency") // ISO-4217 code, e.g. PKR/USD/EUR
+//
+// Migration SQL (coordinator 20261003550000_phase46_currency migration me jode):
+//   ALTER TABLE "contracts" ADD COLUMN "rent_currency" TEXT NOT NULL DEFAULT 'PKR';
+//
+// Notes:
+// - Existing contracts automatically get 'PKR' (base currency default).
+// - `/api/billing/invoices/generate` (monthly rent invoice job) is contract se
+//   invoice banate waqt `rentCurrency` ko invoice ki `currency` banata hai +
+//   `fxRate` snapshot aur `baseAmount` compute karta hai (Track 3 fields).
+// - Contract create/update API `rentCurrency` accept karti hai (ISO-4217, 3 uppercase letters).
+// - Mount path: koi naya route nahi — existing `/api/contracts` + `/api/billing` extend hue.
+// - Sidebar link: nahi — contracts section extend hai.

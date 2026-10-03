@@ -10,6 +10,8 @@ const { writeAudit } = require('../middleware/audit');
 const { tenantFilter, todayDateOnly, refreshOverdue } = require('../lib/tenant');
 const { generateInvoicePdf } = require('../lib/invoice-pdf');
 const { invalidateTenantCache } = require('../middleware/cache');
+// Phase 46 Track 3: multi-currency invoice fields
+const { resolveInvoiceCurrency } = require('../lib/invoiceCurrency');
 
 const router = express.Router();
 
@@ -61,6 +63,8 @@ const createInvoiceSchema = z.object({
   periodEnd: z.coerce.date().optional(),
   notes: z.string().optional().nullable(),
   invoiceType: z.enum(['standard', 'proforma']).default('standard'),
+  // Phase 46 Track 3: optional ISO-4217 currency — diya na jaye to tenant default/base
+  currency: z.string().regex(/^[A-Z]{3}$/, 'currency must be ISO-4217 (e.g. USD)').optional(),
 });
 
 const paymentSchema = z.object({
@@ -70,6 +74,7 @@ const paymentSchema = z.object({
   paidAt: z.coerce.date().optional(),
   receiptNo: z.string().optional().nullable(),
   note: z.string().optional().nullable(),
+  currency: z.string().regex(/^[A-Z]{3}$/).optional().default('PKR'), // Phase 46
 });
 
 // -------------------------------------------------------------- invoices ---
@@ -148,19 +153,55 @@ router.post('/invoices/generate', billingWrite, validateBody(generateSchema), as
       });
       const seq = String(countForMonth + 1).padStart(4, '0');
 
-      await prisma.invoice.create({
-        data: {
-          tenantId: tf.tenantId,
-          memberId: contract.memberId,
-          contractId: contract.id,
-          number: `INV-${yyyymm}-${seq}`,
-          periodStart,
-          periodEnd,
-          dueDate,
-          amount: contract.rentAmount,
-          status: 'unpaid',
-        },
-      });
+      // Phase 46 Track 6: contract ki rentCurrency invoice currency banti hai + fx snapshot.
+      // rentCurrency na ho (purana data) to tenant default/base use hota hai.
+      let genCurrencyData = {};
+      try {
+        genCurrencyData = await resolveInvoiceCurrency(tf.tenantId, contract.rentCurrency || null, contract.rentAmount);
+      } catch (e) {
+        if (e.status === 422) {
+          // FX rate missing ya disabled → base currency fallback (billing kabhi na ruke)
+          const { getTenantCurrencies } = require('../lib/invoiceCurrency');
+          const { base } = await getTenantCurrencies(tf.tenantId);
+          genCurrencyData = { currency: base, fxRate: 1, baseAmount: Math.round(Number(contract.rentAmount) * 100) / 100 };
+        } else {
+          genCurrencyData = {};
+        }
+      }
+      try {
+        await prisma.invoice.create({
+          data: {
+            tenantId: tf.tenantId,
+            memberId: contract.memberId,
+            contractId: contract.id,
+            number: `INV-${yyyymm}-${seq}`,
+            periodStart,
+            periodEnd,
+            dueDate,
+            amount: contract.rentAmount,
+            status: 'unpaid',
+            ...genCurrencyData,
+          },
+        });
+      } catch (err) {
+        if (err.code === 'P2022') {
+          await prisma.invoice.create({
+            data: {
+              tenantId: tf.tenantId,
+              memberId: contract.memberId,
+              contractId: contract.id,
+              number: `INV-${yyyymm}-${seq}`,
+              periodStart,
+              periodEnd,
+              dueDate,
+              amount: contract.rentAmount,
+              status: 'unpaid',
+            },
+          });
+        } else {
+          throw err;
+        }
+      }
       created += 1;
     }
 
@@ -176,10 +217,20 @@ router.post('/invoices/generate', billingWrite, validateBody(generateSchema), as
 router.post('/invoices', billingWrite, validateBody(createInvoiceSchema), async (req, res, next) => {
   try {
     const tf = tenantFilter(req);
-    const { memberId, amount, dueDate, periodStart, periodEnd, notes, invoiceType } = req.body;
+    const { memberId, amount, dueDate, periodStart, periodEnd, notes, invoiceType, currency } = req.body;
 
     const member = await prisma.member.findFirst({ where: { id: memberId, ...tf } });
     if (!member) return res.status(404).json({ error: { message: 'Member not found' } });
+
+    // Phase 46 Track 3: currency resolve — fxRate snapshot + baseAmount compute.
+    // Merge pending ho to (P2022) purane behavior par fallback.
+    let currencyData = {};
+    try {
+      currencyData = await resolveInvoiceCurrency(tf.tenantId, currency, amount);
+    } catch (e) {
+      if (e.status === 422) return res.status(422).json({ error: { message: e.message } });
+      return next(e);
+    }
 
     const now = new Date();
     const yyyymm = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}`;
@@ -189,21 +240,45 @@ router.post('/invoices', billingWrite, validateBody(createInvoiceSchema), async 
     });
     const seq = String(countForMonth + 1).padStart(4, '0');
 
-    const invoice = await prisma.invoice.create({
-      data: {
-        tenantId: tf.tenantId,
-        memberId: member.id,
-        number: `${prefix}-${yyyymm}-${seq}`,
-        periodStart: periodStart || now,
-        periodEnd: periodEnd || now,
-        dueDate,
-        amount,
-        status: 'unpaid',
-        invoiceType,
-        notes: notes || null,
-      },
-    });
-    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'invoice.created', entity: 'Invoice', entityId: invoice.id, newValue: { number: invoice.number, invoiceType }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    let invoice;
+    try {
+      invoice = await prisma.invoice.create({
+        data: {
+          tenantId: tf.tenantId,
+          memberId: member.id,
+          number: `${prefix}-${yyyymm}-${seq}`,
+          periodStart: periodStart || now,
+          periodEnd: periodEnd || now,
+          dueDate,
+          amount,
+          status: 'unpaid',
+          invoiceType,
+          notes: notes || null,
+          ...currencyData, // Phase 46: currency, fxRate, baseAmount (P2022 par fallback neeche)
+        },
+      });
+    } catch (err) {
+      // Schema merge pending (currency columns nahi) → purane fields se retry
+      if (err.code === 'P2022') {
+        invoice = await prisma.invoice.create({
+          data: {
+            tenantId: tf.tenantId,
+            memberId: member.id,
+            number: `${prefix}-${yyyymm}-${seq}`,
+            periodStart: periodStart || now,
+            periodEnd: periodEnd || now,
+            dueDate,
+            amount,
+            status: 'unpaid',
+            invoiceType,
+            notes: notes || null,
+          },
+        });
+      } else {
+        throw err;
+      }
+    }
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'invoice.created', entity: 'Invoice', entityId: invoice.id, newValue: { number: invoice.number, invoiceType, currency: invoice.currency || currencyData.currency }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ invoice });
   } catch (err) {
     return next(err);
@@ -330,13 +405,25 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
     }
 
     const remaining = Number(invoice.amount) - Number(invoice.amountPaid);
-    if (amount > remaining) {
-      return res.status(400).json({
-        error: { message: `Payment exceeds remaining balance of ${remaining}` },
-      });
+    // Phase 46: FX snapshot + cross-currency overpay check (base currency me)
+    const { snapshotPaymentCurrency, checkOverpay, finalizeAllocation, receiptCurrencyLine } =
+      require('../lib/paymentCurrency');
+    const snap = await snapshotPaymentCurrency(req.user.tenantId, {
+      amount, currency: req.body.currency, paidAt: paidAt || new Date(),
+    });
+    const over = await checkOverpay(req.user.tenantId, invoice, snap);
+    if (over.exceeds) {
+      return res.status(400).json({ error: { message: over.message } });
+    }
+    // Phase 46: payment amount ko invoice currency me convert karo (amountPaid ke liye)
+    const invoiceCur = invoice.currency || 'PKR';
+    let amountInInvoiceCur = amount;
+    if (snap.currency !== invoiceCur && snap.baseAmount != null) {
+      const invFx = invoice.fxRate != null && Number(invoice.fxRate) > 0 ? Number(invoice.fxRate) : null;
+      if (invFx) amountInInvoiceCur = Math.round((snap.baseAmount / invFx) * 100) / 100;
     }
 
-    const newAmountPaid = Number(invoice.amountPaid) + amount;
+    const newAmountPaid = Number(invoice.amountPaid) + amountInInvoiceCur;
     const result = await prisma.$transaction(async (tx) => {
       const payment = await tx.payment.create({
         data: {
@@ -347,6 +434,9 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
           receiptNo: receiptNo || `RCP-${Date.now()}`,
           paidAt: paidAt || new Date(),
           note: note || null,
+          currency: snap.currency, // Phase 46
+          fxRate: snap.fxRate,
+          baseAmount: snap.baseAmount,
         },
       });
       const updatedInvoice = await tx.invoice.update({
@@ -361,6 +451,21 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
       return { payment, invoice: updatedInvoice };
     });
 
+    // Phase 46: finalize allocation (FX rounding tolerance se paid flip) + FX gain/loss
+    const alloc = await finalizeAllocation(req.user.tenantId, invoice.id);
+    if (alloc.fullyPaid && result.invoice.status !== 'paid') {
+      await prisma.invoice.update({ where: { id: invoice.id }, data: { status: 'paid' } });
+      result.invoice.status = 'paid';
+    }
+    const { recordFxGainLoss } = require('../lib/fxGainLoss');
+    recordFxGainLoss({
+      tenantId: req.user.tenantId,
+      paymentId: result.payment.id,
+      invoiceId: invoice.id,
+      settledAmountInvCur: amountInInvoiceCur,
+      actorId: req.user?.sub || null,
+    }).catch(() => {});
+
     // Email receipt notification (non-blocking)
     const member = await prisma.member.findFirst({
       where: { id: invoice.memberId, ...tenantFilter(req) },
@@ -371,6 +476,7 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
       notify(req.user.tenantId, member.email, 'paymentReceived', {
         memberName: member.name,
         amount,
+        currencyLine: receiptCurrencyLine(result.payment, snap.baseCurrency), // Phase 46
         invoiceNumber: invoice.number,
       }).catch(() => {});
     }
