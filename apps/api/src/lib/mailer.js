@@ -161,9 +161,32 @@ const templates = {
 };
 
 async function notify(tenantId, to, templateName, data) {
+  // Phase 30: custom tenant templates override built-ins (graceful fallback).
+  try {
+    if (prisma.emailTemplate && tenantId) {
+      const custom = await prisma.emailTemplate.findUnique({
+        where: { tenantId_key: { tenantId, key: templateName } },
+      });
+      if (custom && custom.isActive) {
+        return sendEmail(tenantId, { to, ...renderCustom(custom, data || {}) });
+      }
+    }
+  } catch {
+    /* fall through to built-in template (model/table may not exist yet) */
+  }
   const tpl = templates[templateName];
   if (!tpl) return { sent: false, reason: 'unknown-template' };
   return sendEmail(tenantId, { to, ...tpl(data) });
+}
+
+// Mustache-style {{variable}} replace against the notify() data object.
+function renderCustom(custom, data) {
+  const fill = (s) =>
+    String(s || '').replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, k) => {
+      const v = k.split('.').reduce((o, p) => (o == null ? o : o[p]), data);
+      return v == null ? '' : String(v);
+    });
+  return { subject: fill(custom.subject), html: fill(custom.htmlBody) };
 }
 
 // Register the background email handler (idempotent — handlers keyed by type).
@@ -190,4 +213,19 @@ async function notify(tenantId, to, templateName, data) {
   });
 })();
 
-module.exports = { sendEmail, sendEmailDirect, notify, invalidateTransporter, getTransporter };
+// Built-in template keys + their variable names (for the template-editor UI).
+const TEMPLATE_VARS = {
+  invoiceCreated: ['memberName', 'number', 'amount', 'dueDate'],
+  bookingConfirmed: ['memberName', 'unitCode', 'date', 'startTime'],
+  ticketUpdate: ['memberName', 'ticketNo', 'status'],
+  visitorCheckin: ['hostName', 'visitorName'],
+  paymentReceived: ['memberName', 'amount', 'invoiceNumber'],
+  emailVerification: ['name', 'verifyUrl'],
+  announcement: ['title', 'body', 'name'],
+};
+
+function listBuiltinTemplates() {
+  return Object.keys(templates).map((key) => ({ key, variables: TEMPLATE_VARS[key] || [] }));
+}
+
+module.exports = { sendEmail, sendEmailDirect, notify, invalidateTransporter, getTransporter, listBuiltinTemplates, renderCustom };

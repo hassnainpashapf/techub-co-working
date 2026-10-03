@@ -1,0 +1,25 @@
+// Phase 30 Track 9: Saved Filter Views — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model SavedView {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  page      String   // e.g. 'members', 'bookings'
+  name      String
+  filters   Json     @default("{}")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([userId, page, name])
+  @@index([tenantId])
+  @@index([userId, page])
+  @@map("saved_views")
+}
+
+// ADD TO Tenant model:
+//   savedViews SavedView[]
+
+// ADD TO User model:
+//   savedViews SavedView[]

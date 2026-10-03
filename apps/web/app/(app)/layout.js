@@ -4,6 +4,8 @@ import { useState } from 'react';
 import Protected from '../../components/Protected';
 import Sidebar from '../../components/Sidebar';
 import Topbar from '../../components/Topbar';
+import Shortcuts from '../../components/Shortcuts';
+import OnboardingTour from '../../components/OnboardingTour';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../lib/api';
 
@@ -45,10 +47,12 @@ export default function AppLayout({ children }) {
           <Sidebar />
           <div className="flex-1 min-w-0 flex flex-col">
             <Topbar />
+            <Shortcuts />
             <VerifyBanner />
             <main className="flex-1 p-6 max-w-7xl w-full mx-auto">{children}</main>
           </div>
         </div>
+        <OnboardingTour />
       </div>
     </Protected>
   );

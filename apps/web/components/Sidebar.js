@@ -50,6 +50,7 @@ const NAV_MAIN = [
     children: [
       { label: 'Discover Booking', path: '/discover' },
       { label: 'Booking History', path: '/bookings' },
+      { label: 'Requests', path: '/bookings/requests' },
       { label: 'Recurring', path: '/bookings/recurring' },
       { label: 'Booking Calendar', path: '/bookings/calendar' },
       { label: 'Floor Plan', path: '/spaces/floorplan' },
@@ -127,6 +128,8 @@ const NAV_OTHERS = [
       { label: 'Subscription', path: '/settings/subscription' },
       { label: 'Cache', path: '/settings/cache' },
       { label: 'Audit Logs', path: '/settings/audit-logs' },
+      { label: 'Import', path: '/settings/import' },
+      { label: 'Email Templates', path: '/settings/email-templates' },
     ],
   },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },

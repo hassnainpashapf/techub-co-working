@@ -75,6 +75,12 @@ app.use('/api/contract-renewals', require('./routes/contract-renewals'));
 app.use('/api/member-qr', require('./routes/member-qr'));
 app.use('/api/feedback', require('./routes/feedback'));
 app.use('/api/activity', require('./routes/activity'));
+app.use('/api/search', require('./routes/search'));
+app.use('/api/import', require('./routes/import'));
+app.use('/api/print', require('./routes/print'));
+app.use('/api/email-templates', require('./routes/email-templates'));
+app.use('/api/saved-views', require('./routes/saved-views'));
+app.use('/api/public', require('./routes/public-bookings'));
 require('./lib/renewalAlerts');
 
 // Public tenant branding (for login page) — lookup by slug, no auth

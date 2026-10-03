@@ -12,6 +12,7 @@ import {
   ErrorBanner,
 } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+import SavedViews from '../../../components/SavedViews';
 
 const STATUS_TONE = { confirmed: 'green', pending: 'amber', cancelled: 'red' };
 
@@ -136,7 +137,7 @@ export default function BookingsPage() {
       <PageHeader
         title="Bookings"
         sub="Meeting room reservations"
-        actions={<button className="btn-primary" onClick={() => { setFormError(''); setModalOpen(true); }}>+ New booking</button>}
+        actions={<button data-tour="new-booking" className="btn-primary" onClick={() => { setFormError(''); setModalOpen(true); }}>+ New booking</button>}
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
@@ -150,6 +151,14 @@ export default function BookingsPage() {
           </select>
           <input type="date" className="input max-w-[200px]" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
           {dateFilter && <button className="btn-ghost btn-sm" onClick={() => setDateFilter('')}>Clear date</button>}
+          <SavedViews
+            page="bookings"
+            currentFilters={{ roomFilter, dateFilter }}
+            onApply={(f) => {
+              if (typeof f.roomFilter === 'string') setRoomFilter(f.roomFilter);
+              if (typeof f.dateFilter === 'string') setDateFilter(f.dateFilter);
+            }}
+          />
         </div>
       </div>
 

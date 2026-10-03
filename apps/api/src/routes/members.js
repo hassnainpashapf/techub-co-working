@@ -23,6 +23,49 @@ const write = requireRole(...WRITE_ROLES);
 
 const MEMBER_STATUSES = ['active', 'trial', 'on_hold', 'exited'];
 
+// ------------------------------------------------------------ bulk actions ---
+// Phase 30: bulk member operations (ceo/admin/manager only)
+const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
+const bulkWrite = requireRole(...BULK_ROLES);
+
+const bulkStatusSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(200),
+  status: z.enum(['active', 'trial', 'on_hold']),
+});
+
+router.post('/bulk/status', bulkWrite, validateBody(bulkStatusSchema), async (req, res, next) => {
+  try {
+    const { ids, status } = req.body;
+    const result = await prisma.member.updateMany({
+      where: { id: { in: ids }, ...tenantFilter(req) },
+      data: { status },
+    });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.bulk_status', entity: 'Member', newValue: { count: result.count, status }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    return res.json({ updated: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+const bulkDeleteSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(200),
+});
+
+router.post('/bulk/delete', bulkWrite, validateBody(bulkDeleteSchema), async (req, res, next) => {
+  try {
+    const { ids } = req.body;
+    // Soft delete: mark exited (hard delete nahi)
+    const result = await prisma.member.updateMany({
+      where: { id: { in: ids }, ...tenantFilter(req) },
+      data: { status: 'exited' },
+    });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.bulk_delete', entity: 'Member', newValue: { count: result.count }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    return res.json({ updated: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 const memberSchema = z.object({
   name: z.string().min(1),
   email: z.string().email().optional().nullable(),

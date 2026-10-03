@@ -1,0 +1,29 @@
+// Phase 30 Track 10: Public booking requests — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model BookingRequest {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  email     String
+  phone     String
+  unitId    String   @map("unit_id")
+  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  date      DateTime @db.Date
+  startTime String   @map("start_time") // "HH:mm"
+  endTime   String   @map("end_time")   // "HH:mm"
+  notes     String?  @db.Text
+  status    String   @default("pending") // pending | approved | rejected
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, status])
+  @@map("booking_requests")
+}
+
+// ADD TO Tenant model:
+//   bookingRequests BookingRequest[]
+//
+// ADD TO Unit model:
+//   bookingRequests BookingRequest[]

@@ -12,8 +12,11 @@ import {
   ErrorBanner,
 } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+import SavedViews from '../../../components/SavedViews';
+import { useAuth } from '../../../context/AuthContext';
 
 const STATUS_TONE = { active: 'green', inactive: 'slate', suspended: 'red', pending: 'amber' };
+const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
 
 function MemberForm({ initial, onSave, saving }) {
   const [form, setForm] = useState({
@@ -197,6 +200,8 @@ function MemberDetail({ member, onClose }) {
 
 export default function MembersPage() {
   const { allowed } = useRequireRoles('ceo', 'admin', 'operations_manager', 'manager', 'receptionist');
+  const { user } = useAuth();
+  const canBulk = BULK_ROLES.includes(user?.role);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [members, setMembers] = useState([]);
@@ -204,6 +209,10 @@ export default function MembersPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [modal, setModal] = useState(null); // {mode:'add'|'edit', data} | {mode:'detail', data}
   const [saving, setSaving] = useState(false);
+  // Phase 30: bulk selection
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [bulkStatus, setBulkStatus] = useState('active');
+  const [bulkBusy, setBulkBusy] = useState(false);
   // Phase 29 Track 4: expiring contracts
   const [expiring, setExpiring] = useState([]);
   const [renewTarget, setRenewTarget] = useState(null);
@@ -292,6 +301,53 @@ export default function MembersPage() {
     }
   }
 
+  // Phase 30: bulk actions
+  const toggleSelect = (id) => {
+    setSelectedIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+  const toggleSelectAll = () => {
+    setSelectedIds((prev) => (prev.length === filtered.length ? [] : filtered.map((m) => m.id)));
+  };
+  async function handleBulkStatus() {
+    if (selectedIds.length === 0) return;
+    setBulkBusy(true);
+    try {
+      const d = await api.post('/members/bulk/status', { ids: selectedIds, status: bulkStatus });
+      setSelectedIds([]);
+      await refresh();
+      setError('');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+  async function handleBulkDelete() {
+    if (selectedIds.length === 0) return;
+    if (!window.confirm(`Mark ${selectedIds.length} member(s) as exited?`)) return;
+    setBulkBusy(true);
+    try {
+      await api.post('/members/bulk/delete', { ids: selectedIds });
+      setSelectedIds([]);
+      await refresh();
+      setError('');
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
+  const selectColumn = canBulk
+    ? [
+        {
+          key: '__select',
+          label: <input type="checkbox" checked={filtered.length > 0 && selectedIds.length === filtered.length} onChange={toggleSelectAll} title="Select all" />,
+          render: (r) => <input type="checkbox" checked={selectedIds.includes(r.id)} onChange={() => toggleSelect(r.id)} />,
+        },
+      ]
+    : [];
+
   if (allowed === null) return <Spinner />;
   if (allowed === false) return <AccessDenied />;
   if (loading) return <Spinner />;
@@ -352,12 +408,39 @@ export default function MembersPage() {
             <option value="suspended">Suspended</option>
             <option value="pending">Pending</option>
           </select>
+          <SavedViews
+            page="members"
+            currentFilters={{ search, statusFilter }}
+            onApply={(f) => {
+              if (typeof f.search === 'string') setSearch(f.search);
+              if (typeof f.statusFilter === 'string') setStatusFilter(f.statusFilter);
+            }}
+          />
         </div>
       </div>
 
       <div className="card">
+        {/* Phase 30: bulk actions bar */}
+        {canBulk && selectedIds.length > 0 && (
+          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
+            <span className="text-sm font-semibold text-blue-200">{selectedIds.length} selected</span>
+            <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
+              <option value="active">Active</option>
+              <option value="trial">Trial</option>
+              <option value="on_hold">On hold</option>
+            </select>
+            <button className="btn-primary btn-sm" onClick={handleBulkStatus} disabled={bulkBusy}>
+              {bulkBusy ? 'Applying…' : 'Apply status'}
+            </button>
+            <button className="btn-danger btn-sm" onClick={handleBulkDelete} disabled={bulkBusy}>
+              Mark exited
+            </button>
+            <button className="btn-ghost btn-sm" onClick={() => setSelectedIds([])}>Clear</button>
+          </div>
+        )}
         <DataTable
           columns={[
+            ...selectColumn,
             { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-white">{r.name}</span> },
             { key: 'phone', label: 'Phone' },
             { key: 'company', label: 'Company', render: (r) => r.companyName || '—' },

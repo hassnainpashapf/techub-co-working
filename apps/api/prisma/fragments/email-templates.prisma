@@ -1,0 +1,23 @@
+// Phase 30 Track 5: Email template editor — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel agents — merge conflicts se bachne ke liye).
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key       String   // e.g. 'bookingConfirmed' — matches mailer's notify() template names
+  subject   String
+  htmlBody  String   @map("html_body") @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+  @@map("email_templates")
+}
+
+// ADD TO Tenant model:
+//   emailTemplates EmailTemplate[]

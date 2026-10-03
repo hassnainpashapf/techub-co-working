@@ -82,7 +82,13 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
       ) : (
         <div>
           {error && <ErrorBanner message={error} />}
-          <div className="flex justify-end mb-3">
+          <div className="flex justify-end mb-3 gap-2">
+            <button
+              className="btn-secondary text-xs px-3 py-1.5"
+              onClick={() => window.open(`/print/invoice/${inv.id}`, '_blank')}
+            >
+              🖨️ Print invoice
+            </button>
             <button
               className="btn-secondary text-xs px-3 py-1.5"
               onClick={() => {
@@ -121,6 +127,7 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
               { key: 'amount', label: 'Amount', render: (r) => money(r.amount) },
               { key: 'method', label: 'Method', render: (r) => <span className="capitalize">{r.method || '—'}</span> },
               { key: 'note', label: 'Note', render: (r) => r.note || '—' },
+              { key: 'receipt', label: '', render: (r) => <button className="btn-secondary btn-sm" onClick={() => window.open(`/print/receipt/${r.id}`, '_blank')}>🧾 Receipt</button> },
             ]}
             rows={payments}
             empty={{ title: 'No payments recorded' }}
@@ -154,6 +161,7 @@ export default function BillingPage() {
   const { allowed } = useRequireRoles('ceo', 'admin', 'finance_officer', 'member');
   const { user } = useAuth();
   const isMember = user?.role === 'member';
+  const canBulk = ['ceo', 'admin', 'manager', 'super_admin'].includes(user?.role);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [tab, setTab] = useState('invoices');
@@ -161,6 +169,10 @@ export default function BillingPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [monthFilter, setMonthFilter] = useState('');
   const [selected, setSelected] = useState(null);
+  // Phase 30: bulk selection
+  const [bulkIds, setBulkIds] = useState([]);
+  const [bulkStatus, setBulkStatus] = useState('paid');
+  const [bulkBusy, setBulkBusy] = useState(false);
   const [genMonth, setGenMonth] = useState(() => new Date().toISOString().slice(0, 7));
   const [generating, setGenerating] = useState(false);
   const [genResult, setGenResult] = useState('');
@@ -216,6 +228,38 @@ export default function BillingPage() {
     }
   }
 
+  // Phase 30: bulk invoice status
+  const toggleBulk = (id) => {
+    setBulkIds((prev) => (prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]));
+  };
+  const toggleBulkAll = () => {
+    setBulkIds((prev) => (prev.length === filtered.length ? [] : filtered.map((i) => i.id)));
+  };
+  async function handleBulkStatus() {
+    if (bulkIds.length === 0) return;
+    if (!window.confirm(`Set ${bulkIds.length} invoice(s) to "${bulkStatus}"? No payment records will be created.`)) return;
+    setBulkBusy(true);
+    try {
+      await api.post('/billing/invoices/bulk/status', { ids: bulkIds, status: bulkStatus });
+      setBulkIds([]);
+      await refresh();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+
+  const bulkSelectColumn = canBulk
+    ? [
+        {
+          key: '__select',
+          label: <input type="checkbox" checked={filtered.length > 0 && bulkIds.length === filtered.length} onChange={toggleBulkAll} title="Select all" />,
+          render: (r) => <input type="checkbox" checked={bulkIds.includes(r.id)} onChange={() => toggleBulk(r.id)} />,
+        },
+      ]
+    : [];
+
   if (allowed === null) return <Spinner />;
   if (allowed === false) return <AccessDenied />;
   if (loading) return <Spinner />;
@@ -264,8 +308,24 @@ export default function BillingPage() {
             <input type="month" className="input max-w-[180px]" value={monthFilter} onChange={(e) => setMonthFilter(e.target.value)} placeholder="Filter by month" />
             {monthFilter && <button className="btn-ghost btn-sm" onClick={() => setMonthFilter('')}>Clear</button>}
           </div>
+          {/* Phase 30: bulk actions bar */}
+          {canBulk && bulkIds.length > 0 && (
+            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
+              <span className="text-sm font-semibold text-blue-200">{bulkIds.length} selected</span>
+              <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
+                <option value="paid">Paid</option>
+                <option value="unpaid">Unpaid</option>
+                <option value="cancelled">Cancelled</option>
+              </select>
+              <button className="btn-primary btn-sm" onClick={handleBulkStatus} disabled={bulkBusy}>
+                {bulkBusy ? 'Applying…' : 'Apply status'}
+              </button>
+              <button className="btn-ghost btn-sm" onClick={() => setBulkIds([])}>Clear</button>
+            </div>
+          )}
           <DataTable
             columns={[
+              ...bulkSelectColumn,
               { key: 'no', label: 'Invoice', render: (r) => <a className="text-violet-400 font-medium cursor-pointer hover:underline" onClick={() => setSelected(r)}>{r.number || r.id?.slice(0, 8) || '—'}</a> },
               { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
               { key: 'month', label: 'Month', render: (r) => r.month || (r.dueDate ? String(r.dueDate).slice(0, 7) : '—') },
@@ -273,7 +333,12 @@ export default function BillingPage() {
               { key: 'balance', label: 'Balance', render: (r) => money(r.balance ?? r.amount) },
               { key: 'due', label: 'Due date', render: (r) => (r.dueDate ? String(r.dueDate).slice(0, 10) : '—') },
               { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status || '—'}</Badge> },
-              { key: 'open', label: '', render: (r) => <button className="btn-secondary btn-sm" onClick={() => setSelected(r)}>Open</button> },
+              { key: 'open', label: '', render: (r) => (
+                <div className="flex gap-2">
+                  <button className="btn-secondary btn-sm" onClick={() => window.open(`/print/invoice/${r.id}`, '_blank')}>🖨️ Print</button>
+                  <button className="btn-secondary btn-sm" onClick={() => setSelected(r)}>Open</button>
+                </div>
+              ) },
             ]}
             rows={filtered}
             empty={{ title: 'No invoices', hint: 'Generate monthly invoices to get started.' }}

@@ -21,6 +21,29 @@ const paymentWrite = requireRole(...BILLING_ROLES, 'receptionist');
 
 const OPEN_INVOICE_STATUSES = ['unpaid', 'partial', 'overdue'];
 
+// ------------------------------------------------------------ bulk actions ---
+// Phase 30: bulk invoice status (ceo/admin/manager only — sirf status, koi payment record nahi)
+const bulkInvoiceWrite = requireRole('ceo', 'admin', 'manager', 'super_admin');
+
+const bulkInvoiceStatusSchema = z.object({
+  ids: z.array(z.string().min(1)).min(1).max(200),
+  status: z.enum(['paid', 'unpaid', 'cancelled']),
+});
+
+router.post('/invoices/bulk/status', bulkInvoiceWrite, validateBody(bulkInvoiceStatusSchema), async (req, res, next) => {
+  try {
+    const { ids, status } = req.body;
+    const result = await prisma.invoice.updateMany({
+      where: { id: { in: ids }, ...tenantFilter(req) },
+      data: { status },
+    });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'invoice.bulk_status', entity: 'Invoice', newValue: { count: result.count, status }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    return res.json({ updated: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 const generateSchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/, 'month must be YYYY-MM'),
 });
