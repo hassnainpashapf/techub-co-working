@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -119,6 +120,7 @@ router.post('/invoices/generate', billingWrite, validateBody(generateSchema), as
       created += 1;
     }
 
+    if (created > 0) emitWebhook(tf.tenantId, 'invoice.created', { count: created, month: yyyymm });
     return res.status(201).json({ created });
   } catch (err) {
     return next(err);
@@ -249,6 +251,7 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
         invoiceNumber: invoice.number,
       }).catch(() => {});
     }
+    emitWebhook(req.user.tenantId, 'payment.received', { id: result.payment.id, amount: result.payment.amount, method: result.payment.method, invoiceNumber: invoice.number });
 
     return res.status(201).json(result);
   } catch (err) {

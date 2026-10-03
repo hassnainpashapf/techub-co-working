@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -94,6 +95,7 @@ router.post('/', write, validateBody(createContractSchema), async (req, res, nex
       return created;
     });
 
+    emitWebhook(req.user.tenantId, 'contract.created', { id: contract.id, memberId: contract.memberId, unitId: contract.unitId });
     return res.status(201).json({ contract });
   } catch (err) {
     return next(err);

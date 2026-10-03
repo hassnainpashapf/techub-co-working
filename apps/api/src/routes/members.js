@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -78,6 +79,7 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
     const member = await prisma.member.create({
       data: { ...tenantFilter(req), ...req.body },
     });
+    emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
     return res.status(201).json({ member });
   } catch (err) {
     return next(err);

@@ -95,6 +95,7 @@ const NAV_OTHERS = [
     children: [
       { label: 'General', path: '/settings' },
       { label: 'Email', path: '/settings/email' },
+      { label: 'Webhooks', path: '/settings/webhooks' },
     ],
   },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },

@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -153,6 +154,7 @@ router.post('/', validateBody(ticketSchema), async (req, res, next) => {
     }
     const ticket = await prisma.ticket.create({ data, include: includeTicket });
     await writeAudit(req, 'ticket.create', 'Ticket', ticket.id, null, { title: ticket.title });
+    emitWebhook(req.user.tenantId, 'ticket.created', { id: ticket.id, title: ticket.title, priority: ticket.priority });
     res.status(201).json({ ticket });
   } catch (e) { next(e); }
 });
@@ -178,6 +180,7 @@ router.patch('/:id', write, validateBody(ticketUpdateSchema), async (req, res, n
       },
     });
     await writeAudit(req, 'ticket.update', 'Ticket', ticket.id, { status: existing.status }, { status: ticket.status });
+    emitWebhook(req.user.tenantId, 'ticket.updated', { id: ticket.id, title: ticket.title, status: ticket.status, prevStatus: existing.status });
     // Email notification on status change (non-blocking)
     if (data.status && data.status !== existing.status && ticket.member?.email) {
       const { notify } = require('../lib/mailer');

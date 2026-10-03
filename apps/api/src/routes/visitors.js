@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -72,6 +73,7 @@ router.post('/check-in', write, validateBody(visitorSchema), async (req, res, ne
       },
     });
     await writeAudit(req, 'visitor.checkin', 'Visitor', visitor.id, null, { name: visitor.name });
+    emitWebhook(req.user.tenantId, 'visitor.checkin', { id: visitor.id, name: visitor.name, host: visitor.hostMember?.name || visitor.hostName });
     // Notify host member by email (non-blocking)
     if (visitor.hostMember?.email) {
       const { notify } = require('../lib/mailer');

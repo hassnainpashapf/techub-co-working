@@ -64,6 +64,8 @@ model Tenant {
   refunds Refund[]
   rides Ride[]
   rideRequests RideRequest[]
+  webhooks Webhook[]
+  webhookDeliveries WebhookDelivery[]
   emailSetting EmailSetting?
   settings      Setting[]
   auditLogs     AuditLog[]
@@ -809,6 +811,42 @@ model RideRequest {
   @@unique([rideId, requesterUserId])
   @@index([tenantId, rideId])
   @@map("ride_requests")
+}
+
+// ---------------------------------------------------------------- webhooks ---
+model Webhook {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  url       String
+  events    String[] // e.g. ["booking.created","payment.received"]
+  secret    String? // for HMAC signature
+  active    Boolean  @default(true)
+  deliveries WebhookDelivery[]
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, active])
+  @@map("webhooks")
+}
+
+model WebhookDelivery {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  webhookId    String   @map("webhook_id")
+  webhook      Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event        String
+  payload      Json
+  status       String   @default("pending") // pending | success | failed
+  attempts     Int      @default(0)
+  responseCode Int?     @map("response_code")
+  error        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, webhookId, createdAt])
+  @@map("webhook_deliveries")
 }
 
 // ---------------------------------------------------------- email settings ---

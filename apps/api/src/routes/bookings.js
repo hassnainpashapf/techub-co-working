@@ -2,6 +2,7 @@ const express = require('express');
 const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
+const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
@@ -137,6 +138,7 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
         startTime: new Date(booking.startAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       }).catch(() => {});
     }
+    emitWebhook(tf.tenantId, 'booking.created', { id: booking.id, title: booking.title, unitCode: booking.unit?.code, startAt: booking.startAt, endAt: booking.endAt });
     return res.status(201).json({ booking });
   } catch (err) {
     return next(err);
@@ -197,6 +199,7 @@ router.delete('/:id', async (req, res, next) => {
       data: { status: 'cancelled' },
       include: includeBooking,
     });
+    emitWebhook(req.user.tenantId, 'booking.cancelled', { id: booking.id, title: booking.title });
     return res.json({ booking });
   } catch (err) {
     return next(err);
