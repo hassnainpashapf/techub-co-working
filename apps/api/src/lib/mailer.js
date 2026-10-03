@@ -68,6 +68,10 @@ const templates = {
     subject: `Payment received — Rs ${Number(amount).toLocaleString()}`,
     html: wrap('Payment Received', `<p>Hi ${memberName || 'there'},</p><p>We received your payment of <b>Rs ${Number(amount).toLocaleString()}</b>${invoiceNumber ? ` for invoice <b>${invoiceNumber}</b>` : ''}. Thank you!</p>`),
   }),
+  emailVerification: ({ name, verifyUrl }) => ({
+    subject: 'Verify your email address',
+    html: wrap('Verify Your Email', `<p>Hi ${name || 'there'},</p><p>Please verify your email address by clicking the link below:</p><p><a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Verify Email</a></p><p>This link expires in 24 hours.</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {

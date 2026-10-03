@@ -93,6 +93,99 @@ router.post('/reset-password', strictLimiter, validateBody(resetSchema), async (
 });
 
 // ---------------------------------------------------------------------------
+// Email verification
+// ---------------------------------------------------------------------------
+const WEB_URL = process.env.WEB_URL || 'https://techub-co-working.pages.dev';
+
+async function createVerificationToken(userId) {
+  // Invalidate old unused tokens
+  await prisma.emailVerification.updateMany({
+    where: { userId, usedAt: null },
+    data: { usedAt: new Date() },
+  });
+  const token = crypto.randomBytes(32).toString('hex');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  await prisma.emailVerification.create({
+    data: {
+      userId,
+      tokenHash,
+      expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000), // 24 hours
+    },
+  });
+  return token;
+}
+
+// Send verification email (authenticated user)
+router.post('/send-verification', authenticate, strictLimiter, async (req, res, next) => {
+  try {
+    const user = await prisma.user.findUnique({ where: { id: req.user.sub } });
+    if (!user) return res.status(404).json({ error: { message: 'User not found.' } });
+    if (user.emailVerifiedAt) return res.json({ message: 'Email already verified.' });
+    const token = await createVerificationToken(user.id);
+    const verifyUrl = `${WEB_URL}/verify-email?token=${token}`;
+    const { notify } = require('../lib/mailer');
+    await notify(user.tenantId, user.email, 'emailVerification', { name: user.name, verifyUrl }).catch(() => {});
+    if (process.env.NODE_ENV !== 'production') {
+      console.log(`[auth] email verification for ${user.email}: ${verifyUrl}`);
+    }
+    return res.json({ message: 'Verification email sent.' });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Resend verification (public, by email — no enumeration)
+router.post('/resend-verification', strictLimiter, validateBody(forgotSchema), async (req, res, next) => {
+  try {
+    const { email } = req.body;
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (user && user.isActive && !user.emailVerifiedAt) {
+      const token = await createVerificationToken(user.id);
+      const verifyUrl = `${WEB_URL}/verify-email?token=${token}`;
+      const { notify } = require('../lib/mailer');
+      await notify(user.tenantId, user.email, 'emailVerification', { name: user.name, verifyUrl }).catch(() => {});
+    }
+    return res.json({ message: 'If the email exists and is unverified, a verification link has been sent.' });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Verify email (public)
+router.get('/verify-email', strictLimiter, async (req, res, next) => {
+  try {
+    const { token } = req.query;
+    if (!token || typeof token !== 'string') {
+      return res.status(400).json({ error: { message: 'Verification token is required.' } });
+    }
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+    const record = await prisma.emailVerification.findFirst({
+      where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
+      include: { user: true },
+    });
+    if (!record) {
+      return res.status(400).json({ error: { message: 'Invalid or expired verification link.' } });
+    }
+    await prisma.$transaction([
+      prisma.user.update({ where: { id: record.userId }, data: { emailVerifiedAt: new Date() } }),
+      prisma.emailVerification.update({ where: { id: record.id }, data: { usedAt: new Date() } }),
+    ]);
+    await writeAudit({
+      tenantId: record.user.tenantId,
+      actorId: record.userId,
+      action: 'auth.email_verified',
+      entity: 'User',
+      entityId: record.userId,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+    return res.json({ message: 'Email verified successfully. You can now log in.' });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// ---------------------------------------------------------------------------
 // 2FA (TOTP)
 // ---------------------------------------------------------------------------
 router.post('/2fa/setup', authenticate, async (req, res, next) => {
