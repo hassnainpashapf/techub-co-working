@@ -1,0 +1,52 @@
+// Phase 34 Track 10: Housekeeping / Cleaning Schedule — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model CleaningTask {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title       String
+  description String?   @db.Text
+  area        String? // free-text location, e.g. "Lobby", "Floor 2 washrooms"
+  unitId      String?   @map("unit_id")
+  unit        Unit?     @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  frequency   String    @default("one-time") // daily | weekly | monthly | one-time
+  assignedToId String?  @map("assigned_to_id")
+  assignedTo  User?     @relation("CleaningTaskAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  dueDate     DateTime? @map("due_date")
+  status      String    @default("pending") // pending | done | skipped
+  notes       String?   @db.Text
+  completedAt DateTime? @map("completed_at")
+  completedById String? @map("completed_by_id")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, dueDate])
+  @@map("cleaning_tasks")
+}
+
+// ADD TO Tenant model:
+//   cleaningTasks CleaningTask[]
+//
+// ADD TO User model:
+//   assignedCleaningTasks CleaningTask[] @relation("CleaningTaskAssignee")
+
+// Migration SQL (coordinator: add to phase34 migration):
+// CREATE TABLE "cleaning_tasks" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "title" TEXT NOT NULL,
+//     "description" TEXT, "area" TEXT, "unit_id" TEXT,
+//     "frequency" TEXT NOT NULL DEFAULT 'one-time',
+//     "assigned_to_id" TEXT, "due_date" TIMESTAMP(3),
+//     "status" TEXT NOT NULL DEFAULT 'pending', "notes" TEXT,
+//     "completed_at" TIMESTAMP(3), "completed_by_id" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "cleaning_tasks_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "cleaning_tasks_tenant_id_status_idx" ON "cleaning_tasks"("tenant_id", "status");
+// CREATE INDEX "cleaning_tasks_tenant_id_due_date_idx" ON "cleaning_tasks"("tenant_id", "due_date");
+// ALTER TABLE "cleaning_tasks" ADD CONSTRAINT "cleaning_tasks_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "cleaning_tasks" ADD CONSTRAINT "cleaning_tasks_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "cleaning_tasks" ADD CONSTRAINT "cleaning_tasks_assigned_to_id_fkey" FOREIGN KEY ("assigned_to_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

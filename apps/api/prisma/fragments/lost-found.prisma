@@ -1,0 +1,48 @@
+// Phase 34 Track 9: Lost & Found — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model LostFoundItem {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  type        String                // lost | found
+  title       String
+  description String?   @db.Text
+  location    String?
+  imageUrl    String?   @map("image_url")
+  status      String    @default("open") // open | claimed | expired
+  // reporter: member (prefer) ya staff user
+  memberId    String?   @map("member_id")
+  member      Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  reportedBy  String?   @map("reported_by") // user id (staff) fallback
+  claimedBy   String?   @map("claimed_by")  // member id ya user id
+  claimedAt   DateTime? @map("claimed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, type, status])
+  @@map("lost_found_items")
+}
+
+// ADD TO Tenant model:
+//   lostFoundItems LostFoundItem[]
+//
+// ADD TO Member model:
+//   lostFoundItems LostFoundItem[]
+
+// Migration SQL (coordinator: add to phase34 migration):
+// CREATE TABLE "lost_found_items" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "type" TEXT NOT NULL,
+//     "title" TEXT NOT NULL, "description" TEXT, "location" TEXT, "image_url" TEXT,
+//     "status" TEXT NOT NULL DEFAULT 'open', "member_id" TEXT,
+//     "reported_by" TEXT, "claimed_by" TEXT, "claimed_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "lost_found_items_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "lost_found_items_tenant_id_status_idx" ON "lost_found_items"("tenant_id", "status");
+// CREATE INDEX "lost_found_items_tenant_id_type_status_idx" ON "lost_found_items"("tenant_id", "type", "status");
+// ALTER TABLE "lost_found_items" ADD CONSTRAINT "lost_found_items_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lost_found_items" ADD CONSTRAINT "lost_found_items_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE;

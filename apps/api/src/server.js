@@ -109,6 +109,17 @@ app.use('/api/visitor-invites', require('./routes/visitor-invites'));
 app.use('/api/push', require('./routes/push'));
 app.use('/api/directory', require('./routes/directory'));
 app.use('/api/displays', require('./routes/displays'));
+// Phase 34: facility operations
+app.use('/api/shifts', require('./routes/shifts'));
+app.use('/api/assets', require('./routes/assets'));
+app.use('/api/maintenance-requests', require('./routes/maintenance-requests'));
+app.use('/api/parking', require('./routes/parking'));
+app.use('/api/mail', require('./routes/mail'));
+app.use('/api/printing', require('./routes/printing'));
+app.use('/api/wifi', require('./routes/wifi'));
+app.use('/api/lost-found', require('./routes/lost-found'));
+app.use('/api/housekeeping', require('./routes/housekeeping'));
+app.use('/api/booking-rules', require('./routes/booking-rules'));
 require('./lib/healthCheck');
 require('./lib/healthCheck').startHealthScheduler();
 require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler
@@ -137,6 +148,45 @@ try {
   scheduleCommunityJobs();
   setInterval(scheduleCommunityJobs, 24 * 60 * 60 * 1000).unref();
 } catch (e) { console.error('[phase33] scheduler init failed:', e.message); }
+
+// Phase 34: facility jobs (auto-register handlers) + schedules
+require('./lib/shiftReminderJob'); // 'shift-reminder'
+require('./lib/assetAlerts'); // 'asset-overdue'
+require('./lib/parkingRelease'); // 'parking-release'
+require('./lib/mailReminderJob'); // 'mail-reminder'
+require('./lib/printingReset'); // 'printing-reset'
+require('./lib/lostFoundExpiry'); // 'lostfound-expiry'
+try {
+  const { enqueue } = require('./lib/jobs');
+  const prisma = require('./lib/prisma');
+  const FACILITY_DAILY = ['asset-overdue', 'parking-release', 'mail-reminder', 'lostfound-expiry'];
+  const scheduleFacilityJobs = async () => {
+    try {
+      for (const type of FACILITY_DAILY) {
+        const pending = await prisma.job.count({ where: { type, status: 'pending' } }).catch(() => 1);
+        if (!pending) await enqueue(type, {}, { runAt: new Date(Date.now() + 24 * 60 * 60 * 1000) }).catch(() => {});
+      }
+    } catch (e) { console.error('[phase34] daily schedule failed:', e.message); }
+  };
+  const scheduleShiftReminders = async () => {
+    try {
+      const { enqueue: enq } = require('./lib/jobs');
+      await enq('shift-reminder', {}).catch(() => {});
+    } catch (e) { console.error('[phase34] shift-reminder enqueue failed:', e.message); }
+  };
+  const schedulePrintingReset = async () => {
+    try {
+      const { enqueue: enq } = require('./lib/jobs');
+      const pending = await prisma.job.count({ where: { type: 'printing-reset', status: 'pending' } }).catch(() => 1);
+      if (!pending) await enq('printing-reset', {}).catch(() => {});
+    } catch (e) { console.error('[phase34] printing-reset enqueue failed:', e.message); }
+  };
+  scheduleFacilityJobs();
+  scheduleShiftReminders();
+  setInterval(scheduleFacilityJobs, 24 * 60 * 60 * 1000).unref();
+  setInterval(scheduleShiftReminders, 30 * 60 * 1000).unref();
+  setInterval(schedulePrintingReset, 6 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase34] scheduler init failed:', e.message); }
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

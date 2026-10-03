@@ -1,0 +1,80 @@
+// Phase 34 Track 6: Printing Credits — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model PrintCredit {
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId      String   @map("member_id")
+  member        Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  month         String   // "2026-10"
+  includedPages Int      @map("included_pages")
+  usedPages     Int      @default(0) @map("used_pages")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@unique([memberId, month])
+  @@index([tenantId, month])
+  @@map("print_credits")
+}
+
+model PrintJob {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  pages     Int
+  cost      Decimal? @db.Decimal(12, 2) // overage charge, null = covered by quota
+  loggedBy  String?  @map("logged_by") // user id of staff who logged it
+  note      String?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, memberId])
+  @@index([tenantId, createdAt])
+  @@map("print_jobs")
+}
+
+// ADD TO Tenant model:
+//   printCredits PrintCredit[]
+//   printJobs    PrintJob[]
+//
+// ADD TO Member model:
+//   printCredits PrintCredit[]
+//   printJobs    PrintJob[]
+
+// --- Migration SQL ---
+// CREATE TABLE "print_credits" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "month" TEXT NOT NULL,
+//     "included_pages" INTEGER NOT NULL,
+//     "used_pages" INTEGER NOT NULL DEFAULT 0,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "print_credits_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "print_credits_member_id_month_key" ON "print_credits"("member_id", "month");
+// CREATE INDEX "print_credits_tenant_id_month_idx" ON "print_credits"("tenant_id", "month");
+// ALTER TABLE "print_credits" ADD CONSTRAINT "print_credits_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "print_credits" ADD CONSTRAINT "print_credits_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "print_jobs" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "pages" INTEGER NOT NULL,
+//     "cost" DECIMAL(12,2),
+//     "logged_by" TEXT,
+//     "note" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "print_jobs_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "print_jobs_tenant_id_member_id_idx" ON "print_jobs"("tenant_id", "member_id");
+// CREATE INDEX "print_jobs_tenant_id_created_at_idx" ON "print_jobs"("tenant_id", "created_at");
+// ALTER TABLE "print_jobs" ADD CONSTRAINT "print_jobs_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "print_jobs" ADD CONSTRAINT "print_jobs_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;

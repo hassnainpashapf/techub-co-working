@@ -1,0 +1,63 @@
+// Phase 34 Track 3: Maintenance Requests (member-facing fault reports) — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+//
+// NOTE: is se alag `MaintenanceOrder` (staff work orders, /api/maintenance)
+// pehle se maujood hai — ye member-facing requests ke liye hai.
+
+model MaintenanceRequest {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?
+  location     String? // e.g. "Floor 2 — washroom", ya unit code
+  unitId       String?  @map("unit_id")
+  unit         Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  priority     String   @default("medium") // low | medium | high | urgent
+  status       String   @default("open") // open | in_progress | resolved | closed
+  memberId     String?  @map("member_id")
+  member       Member?  @relation("RequestingMember", fields: [memberId], references: [id], onDelete: SetNull)
+  reportedById String   @map("reported_by_id")
+  reportedBy   User     @relation("RequestReporter", fields: [reportedById], references: [id], onDelete: Cascade)
+  assignedToId String?  @map("assigned_to_id")
+  assignedTo   User?    @relation("RequestAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  resolvedAt   DateTime? @map("resolved_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, priority])
+  @@map("maintenance_requests")
+}
+
+// ADD TO Tenant model:
+//   maintenanceRequests MaintenanceRequest[]
+// ADD TO User model:
+//   reportedMaintenanceRequests MaintenanceRequest[] @relation("RequestReporter")
+//   assignedMaintenanceRequests  MaintenanceRequest[] @relation("RequestAssignee")
+// ADD TO Member model:
+//   maintenanceRequests MaintenanceRequest[] @relation("RequestingMember")
+// ADD TO Unit model:
+//   maintenanceRequests MaintenanceRequest[]
+
+// --- migration SQL (coordinator: 20261003440000_phase34 migration me) ---
+// CREATE TABLE "maintenance_requests" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL,
+//     "title" TEXT NOT NULL, "description" TEXT, "location" TEXT,
+//     "unit_id" TEXT, "priority" TEXT NOT NULL DEFAULT 'medium',
+//     "status" TEXT NOT NULL DEFAULT 'open',
+//     "member_id" TEXT, "reported_by_id" TEXT NOT NULL, "assigned_to_id" TEXT,
+//     "resolved_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "maintenance_requests_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "maintenance_requests_tenant_id_status_idx" ON "maintenance_requests"("tenant_id", "status");
+// CREATE INDEX "maintenance_requests_tenant_id_priority_idx" ON "maintenance_requests"("tenant_id", "priority");
+// ALTER TABLE "maintenance_requests" ADD CONSTRAINT "maintenance_requests_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "maintenance_requests" ADD CONSTRAINT "maintenance_requests_unit_id_fkey" FOREIGN KEY ("unit_id") REFERENCES "units"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "maintenance_requests" ADD CONSTRAINT "maintenance_requests_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "maintenance_requests" ADD CONSTRAINT "maintenance_requests_reported_by_id_fkey" FOREIGN KEY ("reported_by_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "maintenance_requests" ADD CONSTRAINT "maintenance_requests_assigned_to_id_fkey" FOREIGN KEY ("assigned_to_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

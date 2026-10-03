@@ -5,6 +5,7 @@ import { api } from '../../../lib/api';
 import { useAuth } from '../../../context/AuthContext';
 import { PageHeader, StatCard, Modal, Field, Badge, Spinner, EmptyState, ErrorBanner } from '../../../components/ui';
 import SurveyBanner from '../../../components/SurveyBanner';
+import MailBanner from '../../../components/MailBanner';
 
 function fmtMoney(n) {
   return `Rs ${Number(n || 0).toLocaleString()}`;
@@ -289,6 +290,7 @@ export default function PortalPage() {
       />
 
       <SurveyBanner />
+      <MailBanner />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard label="Upcoming Bookings" value={upcomingBookings.length} accent="blue" />

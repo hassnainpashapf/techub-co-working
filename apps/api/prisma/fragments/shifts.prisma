@@ -1,0 +1,76 @@
+// Phase 34 Track 1: Staff Shift Scheduling — schema fragment.
+// Coordinator: merge these models into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model Shift {
+  id             String   @id @default(cuid())
+  tenantId       String   @map("tenant_id")
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId         String   @map("user_id")
+  user           User     @relation("ShiftUser", fields: [userId], references: [id], onDelete: Cascade)
+  date           DateTime @map("date") // shift day (midnight UTC)
+  startTime      String   @map("start_time") // "09:00"
+  endTime        String   @map("end_time")   // "17:00"
+  role           String?  // e.g. "reception", "cleaning" — label for this shift
+  notes          String?  @db.Text
+  reminderSentAt DateTime? @map("reminder_sent_at") // idempotency for 2h reminder
+  createdAt      DateTime @default(now()) @map("created_at")
+  updatedAt      DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, date]) // one shift per user per day
+  @@index([tenantId, date])
+  @@map("shifts")
+}
+
+model ShiftTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation("ShiftTemplateUser", fields: [userId], references: [id], onDelete: Cascade)
+  dayOfWeek Int      @map("day_of_week") // 0 = Sunday … 6 = Saturday
+  startTime String   @map("start_time")
+  endTime   String   @map("end_time")
+  role      String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, userId, dayOfWeek])
+  @@index([tenantId])
+  @@map("shift_templates")
+}
+
+// ADD TO Tenant model:
+//   shifts Shift[]
+//   shiftTemplates ShiftTemplate[]
+//
+// ADD TO User model:
+//   shifts Shift[] @relation("ShiftUser")
+//   shiftTemplates ShiftTemplate[] @relation("ShiftTemplateUser")
+
+// Migration SQL (coordinator):
+// CREATE TABLE "shifts" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "user_id" TEXT NOT NULL,
+//     "date" TIMESTAMP(3) NOT NULL, "start_time" TEXT NOT NULL, "end_time" TEXT NOT NULL,
+//     "role" TEXT, "notes" TEXT, "reminder_sent_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "shifts_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "shifts_user_id_date_key" ON "shifts"("user_id", "date");
+// CREATE INDEX "shifts_tenant_id_date_idx" ON "shifts"("tenant_id", "date");
+// ALTER TABLE "shifts" ADD CONSTRAINT "shifts_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "shifts" ADD CONSTRAINT "shifts_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "shift_templates" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "user_id" TEXT NOT NULL,
+//     "day_of_week" INTEGER NOT NULL, "start_time" TEXT NOT NULL, "end_time" TEXT NOT NULL,
+//     "role" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "shift_templates_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "shift_templates_tenant_id_user_id_day_of_week_key" ON "shift_templates"("tenant_id", "user_id", "day_of_week");
+// CREATE INDEX "shift_templates_tenant_id_idx" ON "shift_templates"("tenant_id");
+// ALTER TABLE "shift_templates" ADD CONSTRAINT "shift_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "shift_templates" ADD CONSTRAINT "shift_templates_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

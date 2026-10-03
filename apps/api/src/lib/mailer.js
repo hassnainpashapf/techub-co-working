@@ -191,6 +191,30 @@ const templates = {
     subject: `🎉 Reminder: ${eventTitle} tomorrow`,
     html: wrap('Event Reminder', `<p>Hi ${memberName || 'there'},</p><p>Just a reminder that <b>${eventTitle}</b> is happening <b>tomorrow</b>:</p><p>📅 ${eventWhen || ''}<br/>📍 ${eventLocation || ''}</p><p>We look forward to seeing you!</p>`),
   }),
+  mailReceived: ({ memberName, itemType, sender, trackingNumber, receivedAt }) => ({
+    subject: `📦 You have mail — ${itemType === 'letter' ? 'letter' : 'package'} received`,
+    html: wrap('Mail Received', `<p>Hi ${memberName || 'there'},</p><p>A <b>${itemType === 'letter' ? 'letter' : 'package'}</b>${sender ? ` from <b>${sender}</b>` : ''} has arrived for you at reception${receivedAt ? ` (${receivedAt})` : ''}.</p>${trackingNumber ? `<p>Tracking: <b>${trackingNumber}</b></p>` : ''}<p>Please collect it at your convenience.</p>`),
+  }),
+  mailReminder: ({ memberName, itemType, sender, trackingNumber, receivedAt, daysWaiting }) => ({
+    subject: `⏰ Reminder: uncollected ${itemType === 'letter' ? 'letter' : 'package'} (${daysWaiting} days)`,
+    html: wrap('Mail Pickup Reminder', `<p>Hi ${memberName || 'there'},</p><p>This is a friendly reminder that your <b>${itemType === 'letter' ? 'letter' : 'package'}</b>${sender ? ` from <b>${sender}</b>` : ''} received <b>${receivedAt || ''}</b> (${daysWaiting} day${daysWaiting === 1 ? '' : 's'} ago) is still waiting at reception.</p>${trackingNumber ? `<p>Tracking: <b>${trackingNumber}</b></p>` : ''}<p>Please collect it soon.</p>`),
+  }),
+  shiftReminder: ({ name, shiftWhen, startTime, endTime, shiftRole }) => ({
+    subject: `⏰ Shift reminder — ${startTime} today`,
+    html: wrap('Shift Reminder', `<p>Hi ${name || 'there'},</p><p>This is a reminder that <b>${shiftRole || 'your shift'}</b> starts in about <b>2 hours</b>:</p><p>📅 ${shiftWhen || ''}<br/>🕐 ${startTime || ''} – ${endTime || ''}</p><p>Please be on time!</p>`),
+  }),
+  wifiVoucher: ({ memberName, code, durationHours, maxDevices }) => ({
+    subject: '📶 Your WiFi voucher code',
+    html: wrap('WiFi Voucher', `<p>Hi ${memberName || 'there'},</p><p>Here is your WiFi access voucher:</p><p style="font-size:28px;font-weight:800;letter-spacing:6px;">${code}</p><p>Valid for <b>${durationHours || '24'} hours</b> on up to <b>${maxDevices || '2'} devices</b>.</p><p style="color:#6b7280;font-size:13px">Show this code at reception if you need help connecting.</p>`),
+  }),
+  maintenanceUrgent: ({ name, title, priority, location, reporter, createdAt }) => ({
+    subject: `🚨 Urgent maintenance request: ${title}`,
+    html: wrap('Urgent Maintenance Request', `<p>Hi ${name || 'there'},</p><p>An <b style="color:#dc2626">URGENT</b> maintenance request needs attention:</p><p><b>${title}</b><br/>Priority: <b>${priority || 'urgent'}</b><br/>${location ? `Location: <b>${location}</b><br/>` : ''}Reported by: ${reporter || 'a member'}<br/>${createdAt ? `Reported at: ${createdAt}` : ''}</p><p>Please assign it to the ops team as soon as possible.</p>`),
+  }),
+  assetOverdue: ({ name, count, list }) => ({
+    subject: `📦 ${count} overdue asset checkout${count === 1 ? '' : 's'}`,
+    html: wrap('Overdue Assets', `<p>Hi ${name || 'Admin'},</p><p>The following asset checkout(s) are past their due date:</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${list || 'n/a'}</pre><p>Please follow up on the Assets page.</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -261,6 +285,12 @@ const TEMPLATE_VARS = {
   invoiceOverdue: ['memberName', 'number', 'amount', 'dueDate', 'daysOverdue', 'level'],
   systemHealthAlert: ['name', 'issues'],
   eventReminder: ['memberName', 'eventTitle', 'eventWhen', 'eventLocation'],
+  mailReceived: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt'],
+  mailReminder: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt', 'daysWaiting'],
+  shiftReminder: ['name', 'shiftWhen', 'startTime', 'endTime', 'shiftRole'],
+  wifiVoucher: ['memberName', 'code', 'durationHours', 'maxDevices'],
+  maintenanceUrgent: ['name', 'title', 'priority', 'location', 'reporter', 'createdAt'],
+  assetOverdue: ['name', 'count', 'list'],
 };
 
 function listBuiltinTemplates() {

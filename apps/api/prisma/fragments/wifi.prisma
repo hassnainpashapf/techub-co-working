@@ -1,0 +1,28 @@
+// Phase 34 Track 7: WiFi Voucher Management — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model WifiVoucher {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  code         String   @unique
+  memberId     String?  @map("member_id")
+  member       Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  durationHours Int     @map("duration_hours")
+  maxDevices   Int      @default(2) @map("max_devices")
+  status       String   @default("active") // active | used | expired | revoked
+  expiresAt    DateTime? @map("expires_at")
+  usedAt       DateTime? @map("used_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, status])
+  @@index([memberId])
+  @@map("wifi_vouchers")
+}
+
+// ADD TO Tenant model:
+//   wifiVouchers WifiVoucher[]
+// ADD TO Member model:
+//   wifiVouchers WifiVoucher[]

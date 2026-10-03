@@ -118,6 +118,20 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
       });
     }
 
+    // Booking rules (buffer / max duration / advance window / min notice).
+    const { validateBookingRules } = require('../lib/bookingRules');
+    const rules = await validateBookingRules({
+      tenantId: tf.tenantId,
+      unitId,
+      startAt,
+      endAt,
+    });
+    if (!rules.valid) {
+      return res.status(422).json({
+        error: { message: rules.message, code: rules.code },
+      });
+    }
+
     // Phase 31: credit limit enforcement — block booking if member exceeded limit.
     if (finalMemberId) {
       try {

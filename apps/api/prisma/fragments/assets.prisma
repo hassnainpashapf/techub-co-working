@@ -1,0 +1,54 @@
+// Phase 34 Track 2: Asset Management — schema fragment.
+// Coordinator: merge these models into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model Asset {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name         String
+  category     String    // furniture | it | av | other
+  serialNumber String?   @map("serial_number")
+  purchaseDate DateTime? @map("purchase_date")
+  value        Decimal?  @db.Decimal(12, 2)
+  status       String    @default("available") // available | in_use | maintenance | retired
+  location     String?
+  checkouts    AssetCheckout[]
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, category])
+  @@map("assets")
+}
+
+model AssetCheckout {
+  id           String    @id @default(cuid())
+  assetId      String    @map("asset_id")
+  asset        Asset     @relation(fields: [assetId], references: [id], onDelete: Cascade)
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId     String?   @map("member_id")
+  member       Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  userId       String?   @map("user_id")
+  user         User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  checkedOutAt DateTime  @default(now()) @map("checked_out_at")
+  dueAt        DateTime? @map("due_at")
+  returnedAt   DateTime? @map("returned_at")
+  condition    String?   // return condition note
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([tenantId, returnedAt])
+  @@index([assetId, returnedAt])
+  @@map("asset_checkouts")
+}
+
+// ADD TO Tenant model:
+//   assets Asset[]
+//   assetCheckouts AssetCheckout[]
+//
+// ADD TO Member model:
+//   assetCheckouts AssetCheckout[]
+//
+// ADD TO User model:
+//   assetCheckouts AssetCheckout[]

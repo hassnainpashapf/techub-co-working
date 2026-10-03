@@ -1,0 +1,49 @@
+// Phase 34 Track 5: Mail & Package Handling.
+// Coordinator: merge into schema.prisma — add model MailItem + back-relations:
+//   Tenant: mailItems MailItem[]
+//   Member: mailItems MailItem[]
+//
+// Migration SQL (coordinator: put in the phase-34 migration folder):
+// ---------------------------------------------------------------
+// CREATE TABLE "mail_items" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "type" TEXT NOT NULL DEFAULT 'package',
+//     "sender" TEXT,
+//     "tracking_number" TEXT,
+//     "received_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "notified_at" TIMESTAMP(3),
+//     "collected_at" TIMESTAMP(3),
+//     "collected_by" TEXT,
+//     "reminder_sent_at" TIMESTAMP(3),
+//     "status" TEXT NOT NULL DEFAULT 'received',
+//     "notes" TEXT,
+//     CONSTRAINT "mail_items_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "mail_items_tenant_id_status_idx" ON "mail_items"("tenant_id", "status");
+// CREATE INDEX "mail_items_member_id_idx" ON "mail_items"("member_id");
+// ALTER TABLE "mail_items" ADD CONSTRAINT "mail_items_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "mail_items" ADD CONSTRAINT "mail_items_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+model MailItem {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId       String    @map("member_id")
+  member         Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  type           String    @default("package") // letter | package
+  sender         String?
+  trackingNumber String?   @map("tracking_number")
+  receivedAt     DateTime  @default(now()) @map("received_at")
+  notifiedAt     DateTime? @map("notified_at")
+  collectedAt    DateTime? @map("collected_at")
+  collectedBy    String?   @map("collected_by")
+  reminderSentAt DateTime? @map("reminder_sent_at")
+  status         String    @default("received") // received | notified | collected
+  notes          String?
+
+  @@index([tenantId, status])
+  @@index([memberId])
+  @@map("mail_items")
+}

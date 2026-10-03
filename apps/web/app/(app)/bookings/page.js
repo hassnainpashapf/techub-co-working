@@ -24,6 +24,10 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
     startTime: initial?.startTime ? String(initial.startTime).slice(0, 16) : '',
     endTime: initial?.endTime ? String(initial.endTime).slice(0, 16) : '',
   });
+  const [rules, setRules] = useState(null);
+  useEffect(() => {
+    api.get('/booking-rules').then((d) => setRules(d.settings)).catch(() => {});
+  }, []);
   return (
     <form
       onSubmit={(e) => {
@@ -53,6 +57,11 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
         <Field label="Starts"><input type="datetime-local" className="input" value={form.startTime} onChange={(e) => setForm({ ...form, startTime: e.target.value })} required /></Field>
         <Field label="Ends"><input type="datetime-local" className="input" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required /></Field>
       </div>
+      {rules && (
+        <p className="text-xs text-slate-400 mb-4">
+          ℹ️ Max {rules.bookingMaxHours}h per booking · {rules.bookingBufferMinutes} min gap between bookings · book up to {rules.bookingAdvanceDays} days ahead · {rules.bookingMinNoticeMinutes} min notice required.
+        </p>
+      )}
       <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Book room'}</button>
     </form>
   );
