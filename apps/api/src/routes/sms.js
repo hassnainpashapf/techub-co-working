@@ -27,10 +27,10 @@ router.post('/send', canSend, validateBody(sendSchema), async (req, res, next) =
   try {
     const { to, body } = req.body;
     const result = await sendSms(req.user.tenantId, to, body);
-    await writeAudit(req, 'sms.sent', 'SmsLog', null, null, {
-      to,
-      provider: result.provider,
-      sent: result.sent,
+    await writeAudit({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'sms.sent',
+      entity: 'SmsLog', newValue: { to, provider: result.provider, sent: result.sent },
+      ip: req.ip, userAgent: req.headers['user-agent'],
     });
     if (!result.sent) {
       return res.status(502).json({ error: { message: result.error || 'SMS failed to send.' } });

@@ -85,6 +85,13 @@ router.post('/', validateBody(createUserSchema), async (req, res, next) => {
     if (!tenantId) return;
     const { name, email, password, role, phone, memberId } = req.body;
 
+    // Phase 28: password policy
+    const { validatePassword } = require('../lib/password');
+    const pwCheck = validatePassword(password);
+    if (!pwCheck.valid) {
+      return res.status(400).json({ error: { message: pwCheck.errors.join(' ') } });
+    }
+
     if (role === 'super_admin' && req.user.role !== 'super_admin') {
       return res
         .status(403)
@@ -140,7 +147,15 @@ router.patch('/:id', validateBody(updateUserSchema), async (req, res, next) => {
       });
     }
     const data = { ...rest };
-    if (password) data.passwordHash = await hashPassword(password);
+    if (password) {
+      // Phase 28: password policy
+      const { validatePassword } = require('../lib/password');
+      const pwCheck = validatePassword(password);
+      if (!pwCheck.valid) {
+        return res.status(400).json({ error: { message: pwCheck.errors.join(' ') } });
+      }
+      data.passwordHash = await hashPassword(password);
+    }
     if (role) data.role = role;
     const user = await prisma.user.update({ where: { id: existing.id }, data });
     return res.json({ user: sanitize(user) });

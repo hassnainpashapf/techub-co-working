@@ -1,0 +1,26 @@
+// Phase 28 Track 1: DB-backed Job Queue — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (5 parallel agents — merge conflicts se bachne ke liye).
+
+model Job {
+  id          String   @id @default(cuid())
+  tenantId    String?  @map("tenant_id")
+  tenant      Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  type        String   // email | webhook | sms | whatsapp | report
+  payload     Json
+  status      String   @default("pending") // pending | processing | completed | failed
+  attempts    Int      @default(0)
+  maxAttempts Int      @default(5) @map("max_attempts")
+  runAt       DateTime @default(now()) @map("run_at")
+  lastError   String?  @map("last_error") @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([status, runAt])
+  @@index([tenantId])
+  @@map("jobs")
+}
+
+// ADD TO Tenant model:
+//   jobs Job[]

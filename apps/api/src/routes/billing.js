@@ -8,10 +8,12 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter, todayDateOnly, refreshOverdue } = require('../lib/tenant');
 const { generateInvoicePdf } = require('../lib/invoice-pdf');
+const { invalidateTenantCache } = require('../middleware/cache');
 
 const router = express.Router();
 
 router.use(authenticate, requireTenantUser);
+router.use(invalidateTenantCache);
 
 const BILLING_ROLES = ['ceo', 'admin', 'finance_officer'];
 const billingWrite = requireRole(...BILLING_ROLES);

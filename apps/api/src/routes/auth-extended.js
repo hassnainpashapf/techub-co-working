@@ -62,6 +62,12 @@ const resetSchema = z.object({
 router.post('/reset-password', strictLimiter, validateBody(resetSchema), async (req, res, next) => {
   try {
     const { token, password } = req.body;
+    // Phase 28: password policy
+    const { validatePassword } = require('../lib/password');
+    const pwCheck = validatePassword(password);
+    if (!pwCheck.valid) {
+      return res.status(400).json({ error: { message: pwCheck.errors.join(' ') } });
+    }
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
     const reset = await prisma.passwordReset.findFirst({
       where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },

@@ -7,6 +7,9 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { createNotification } = require('../lib/notify');
+// Phase 28: audit coverage
+const { writeAudit } = require('../middleware/audit');
+const auditAsync = (data) => writeAudit(data).catch(() => {});
 
 const router = express.Router();
 
@@ -102,6 +105,7 @@ router.post('/', validateBody(createTaskSchema), async (req, res, next) => {
       });
     }
 
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'task.create', entity: 'Task', entityId: task.id, newValue: { title: task.title }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ task });
   } catch (err) {
     return next(err);
@@ -131,6 +135,7 @@ router.patch('/:id', validateBody(updateTaskSchema), async (req, res, next) => {
       data: req.body,
       include: includeTask,
     });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'task.update', entity: 'Task', entityId: task.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ task });
   } catch (err) {
     return next(err);
@@ -164,6 +169,7 @@ router.patch('/:id/status', validateBody(statusSchema), async (req, res, next) =
       data: { status: to, completedAt: to === 'done' ? new Date() : existing.completedAt },
       include: includeTask,
     });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'task.status', entity: 'Task', entityId: task.id, newValue: { status: to }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ task });
   } catch (err) {
     return next(err);
@@ -180,6 +186,7 @@ router.delete('/:id', async (req, res, next) => {
       return res.status(403).json({ error: { message: 'Forbidden' } });
     }
     await prisma.task.delete({ where: { id: existing.id } });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'task.delete', entity: 'Task', entityId: existing.id, oldValue: { title: existing.title }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ deleted: true });
   } catch (err) {
     return next(err);

@@ -55,7 +55,11 @@ router.post('/', canWrite, validateBody(companySchema), async (req, res, next) =
     const company = await prisma.company.create({
       data: { ...req.body, tenantId: req.user.tenantId },
     });
-    await writeAudit(req, 'company.create', 'Company', company.id, null, { name: company.name });
+    await writeAudit({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'company.create',
+      entity: 'Company', entityId: company.id, newValue: { name: company.name },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    });
     res.status(201).json({ company });
   } catch (e) {
     if (e.code === 'P2002') {
@@ -101,7 +105,11 @@ router.patch('/:id', canWrite, validateBody(companySchema.partial()), async (req
         data: { companyName: req.body.name },
       });
     }
-    await writeAudit(req, 'company.update', 'Company', company.id, null, { name: company.name });
+    await writeAudit({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'company.update',
+      entity: 'Company', entityId: company.id, newValue: { name: company.name },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    });
     res.json({ company });
   } catch (e) {
     if (e.code === 'P2002') {
@@ -124,7 +132,12 @@ router.delete('/:id', canWrite, async (req, res, next) => {
       data: { companyId: null },
     });
     await prisma.company.delete({ where: { id: req.params.id } });
-    await writeAudit(req, 'company.delete', 'Company', req.params.id, { name: existing.name, unlinkedMembers: existing._count.members }, null);
+    await writeAudit({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'company.delete',
+      entity: 'Company', entityId: req.params.id,
+      oldValue: { name: existing.name, unlinkedMembers: existing._count.members },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    });
     res.json({ ok: true, unlinkedMembers: existing._count.members });
   } catch (e) { next(e); }
 });

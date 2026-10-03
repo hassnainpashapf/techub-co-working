@@ -14,6 +14,8 @@ const {
 const { authenticate } = require('../middleware/auth');
 const { validateBody } = require('../middleware/validate');
 const { loginLimiter } = require('../middleware/rateLimit');
+// Phase 28: brute-force lockout
+const { checkLockout, recordFailure, recordSuccess } = require('../lib/loginAttempts');
 const { writeAudit } = require('../middleware/audit');
 
 const router = express.Router();
@@ -43,17 +45,27 @@ function issuePair(user) {
 router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, next) => {
   try {
     const { email, password } = req.body;
+    // Phase 28: brute-force lockout (per email+IP)
+    const lock = checkLockout(email, req.ip);
+    if (lock.locked) {
+      return res.status(429).json({
+        error: { message: `Too many failed attempts. Try again in ${lock.retryMin} minute(s).` },
+      });
+    }
     const user = await prisma.user.findUnique({
       where: { email },
       include: { tenant: { select: { id: true, name: true, slug: true } } },
     });
     if (!user || !user.isActive) {
+      recordFailure(email, req.ip);
       return res.status(401).json({ error: { message: 'Invalid credentials' } });
     }
     const ok = await comparePassword(password, user.passwordHash);
     if (!ok) {
+      recordFailure(email, req.ip);
       return res.status(401).json({ error: { message: 'Invalid credentials' } });
     }
+    recordSuccess(email, req.ip);
     // 2FA check — if enabled, require TOTP code before issuing tokens
     if (user.totpEnabled && user.totpSecret) {
       // Issue a short-lived pre-2FA token (5 min) to authorize the 2FA verify step

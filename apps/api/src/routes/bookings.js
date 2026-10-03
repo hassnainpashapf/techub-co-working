@@ -7,10 +7,15 @@ const { authenticateAny, requireScope } = require('../middleware/apiKey');
 const { requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
+const { invalidateTenantCache } = require('../middleware/cache');
+// Phase 28: audit coverage
+const { writeAudit } = require('../middleware/audit');
+const auditAsync = (data) => writeAudit(data).catch(() => {});
 
 const router = express.Router();
 
 router.use(authenticateAny, requireTenantUser);
+router.use(invalidateTenantCache);
 
 const PRIVILEGED = ['ceo', 'admin', 'operations_manager', 'manager', 'receptionist'];
 const isPrivileged = (role) => PRIVILEGED.includes(role);
@@ -139,6 +144,7 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
       }).catch(() => {});
     }
     emitWebhook(tf.tenantId, 'booking.created', { id: booking.id, title: booking.title, unitCode: booking.unit?.code, startAt: booking.startAt, endAt: booking.endAt });
+    auditAsync({ tenantId: tf.tenantId, actorId: req.user.sub, action: 'booking.create', entity: 'Booking', entityId: booking.id, newValue: { title: booking.title }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ booking });
   } catch (err) {
     return next(err);
@@ -174,6 +180,7 @@ router.patch('/:id', validateBody(bookingUpdateSchema), async (req, res, next) =
       data: req.body,
       include: includeBooking,
     });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'booking.update', entity: 'Booking', entityId: booking.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ booking });
   } catch (err) {
     return next(err);
@@ -200,6 +207,7 @@ router.delete('/:id', async (req, res, next) => {
       include: includeBooking,
     });
     emitWebhook(req.user.tenantId, 'booking.cancelled', { id: booking.id, title: booking.title });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'booking.cancel', entity: 'Booking', entityId: booking.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ booking });
   } catch (err) {
     return next(err);

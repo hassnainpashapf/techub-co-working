@@ -8,10 +8,15 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { checkLimit } = require('../lib/limits');
+const { invalidateTenantCache } = require('../middleware/cache');
+// Phase 28: audit coverage
+const { writeAudit } = require('../middleware/audit');
+const auditAsync = (data) => writeAudit(data).catch(() => {});
 
 const router = express.Router();
 
 router.use(authenticateAny, requireTenantUser);
+router.use(invalidateTenantCache);
 
 const WRITE_ROLES = ['ceo', 'admin', 'manager', 'receptionist', 'operations_manager'];
 const write = requireRole(...WRITE_ROLES);
@@ -105,6 +110,7 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
       data: { ...tenantFilter(req), ...data },
     });
     emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.create', entity: 'Member', entityId: member.id, newValue: { name: member.name }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ member });
   } catch (err) {
     return next(err);
@@ -212,6 +218,7 @@ router.patch('/:id', write, validateBody(memberUpdateSchema), async (req, res, n
     if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
     const data = await resolveCompany(req.user.tenantId, req.body);
     const member = await prisma.member.update({ where: { id: existing.id }, data });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.update', entity: 'Member', entityId: member.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ member });
   } catch (err) {
     return next(err);
@@ -233,6 +240,7 @@ router.delete('/:id', write, async (req, res, next) => {
       });
     }
     await prisma.member.delete({ where: { id: existing.id } });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.delete', entity: 'Member', entityId: existing.id, oldValue: { name: existing.name }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ deleted: true });
   } catch (err) {
     return next(err);

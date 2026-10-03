@@ -1,8 +1,52 @@
 // Central mailer: per-tenant SMTP settings, graceful no-op when disabled.
+// Phase 28 Track 3: sends go through the DB job queue (lib/jobs.js) so API
+// responses never block on SMTP. Falls back to direct send when the queue is
+// unavailable (e.g. jobs schema fragment not merged yet).
 const nodemailer = require('nodemailer');
 const prisma = require('./prisma');
 
 const transporters = new Map();
+
+// Lazy job-queue handle (Track 1). Guarded so the mailer keeps working even
+// if lib/jobs.js is absent or its API differs.
+//
+// Loop protection: the worker's email handler must send DIRECTLY, never via
+// the public sendEmail() (which enqueues). To make this bulletproof across
+// tracks, we wrap jobs.registerHandler once: any handler registered for
+// 'email' runs with inEmailHandler=true, and sendEmail() short-circuits to
+// direct SMTP while the flag is set. So even if another module registers an
+// email handler that calls sendEmail(), no infinite enqueue loop can form.
+let inEmailHandler = false;
+
+function getJobs() {
+  try {
+    const j = require('./jobs');
+    if (j && typeof j.enqueue === 'function' && typeof j.registerHandler === 'function') {
+      if (!j.__mailerLoopGuard) {
+        j.__mailerLoopGuard = true;
+        const origRegister = j.registerHandler;
+        j.registerHandler = (type, fn) => {
+          if (type === 'email' && typeof fn === 'function') {
+            const wrapped = async (jobOrPayload) => {
+              inEmailHandler = true;
+              try {
+                return await fn(jobOrPayload);
+              } finally {
+                inEmailHandler = false;
+              }
+            };
+            return origRegister(type, wrapped);
+          }
+          return origRegister(type, fn);
+        };
+      }
+      return j;
+    }
+  } catch {
+    /* ignore */
+  }
+  return null;
+}
 
 async function getTransporter(tenantId) {
   if (transporters.has(tenantId)) return transporters.get(tenantId);
@@ -22,7 +66,9 @@ function invalidateTransporter(tenantId) {
   transporters.delete(tenantId);
 }
 
-async function sendEmail(tenantId, { to, subject, html, text }) {
+// Direct SMTP send — used by the queue worker and as a fallback when the
+// queue is unavailable. Never enqueues (no recursion).
+async function sendEmailDirect(tenantId, { to, subject, html, text }) {
   if (!to) return { sent: false, reason: 'no-recipient' };
   const entry = await getTransporter(tenantId);
   if (!entry) return { sent: false, reason: 'email-disabled' };
@@ -37,6 +83,42 @@ async function sendEmail(tenantId, { to, subject, html, text }) {
     console.error('[mailer] send failed:', err.message);
     return { sent: false, reason: err.message };
   }
+}
+
+// Rate safety: max 5 emails per minute per recipient (in-memory, per process).
+const rateBuckets = new Map();
+function isRateLimited(to) {
+  const key = String(to || '').toLowerCase();
+  if (!key) return false;
+  const now = Date.now();
+  const recent = (rateBuckets.get(key) || []).filter((t) => now - t < 60000);
+  if (recent.length >= 5) return true;
+  recent.push(now);
+  rateBuckets.set(key, recent);
+  if (rateBuckets.size > 5000) {
+    const first = rateBuckets.keys().next();
+    if (!first.done) rateBuckets.delete(first.value);
+  }
+  return false;
+}
+
+// Public send: enqueue a background job and return immediately.
+// Falls back to direct SMTP when the queue is unavailable.
+// If called from inside the email worker itself (loop guard), sends directly.
+async function sendEmail(tenantId, { to, subject, html, text }) {
+  if (!to) return { sent: false, reason: 'no-recipient' };
+  if (inEmailHandler) return sendEmailDirect(tenantId, { to, subject, html, text });
+  if (isRateLimited(to)) return { sent: false, reason: 'rate-limited' };
+  const jobs = getJobs();
+  if (jobs) {
+    try {
+      await jobs.enqueue('email', { to, subject, html, text }, { tenantId });
+      return { queued: true };
+    } catch (err) {
+      console.error('[mailer] enqueue failed, sending directly:', err.message);
+    }
+  }
+  return sendEmailDirect(tenantId, { to, subject, html, text });
 }
 
 function wrap(title, body) {
@@ -84,4 +166,28 @@ async function notify(tenantId, to, templateName, data) {
   return sendEmail(tenantId, { to, ...tpl(data) });
 }
 
-module.exports = { sendEmail, notify, invalidateTransporter, getTransporter };
+// Register the background email handler (idempotent — handlers keyed by type).
+// Accepts either the raw payload or the full job row (jobs.js passes the job).
+(function registerEmailHandler() {
+  const jobs = getJobs();
+  if (!jobs) return;
+  jobs.registerHandler('email', async (jobOrPayload) => {
+    const p = (jobOrPayload && jobOrPayload.payload) || jobOrPayload || {};
+    if (!p.tenantId || !p.to) throw new Error('email job needs {tenantId, to, subject, html}');
+    const result = await sendEmailDirect(p.tenantId, {
+      to: p.to,
+      subject: p.subject || '',
+      html: p.html || '',
+      text: p.text,
+    });
+    // Permanent failures — don't burn retries on them.
+    if (!result.sent && (result.reason === 'email-disabled' || result.reason === 'no-recipient')) {
+      console.log(`[mailer] not retrying (${result.reason}) for ${p.to}`);
+      return result;
+    }
+    if (!result.sent) throw new Error(result.reason || 'smtp send failed');
+    return result;
+  });
+})();
+
+module.exports = { sendEmail, sendEmailDirect, notify, invalidateTransporter, getTransporter };

@@ -3,11 +3,13 @@ const express = require('express');
 const prisma = require('../lib/prisma');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
+const { cacheMiddleware } = require('../middleware/cache');
 const { tenantFilter } = require('../lib/tenant');
 
 const router = express.Router();
 
 router.use(authenticate, requireTenantUser, requireRole('ceo', 'admin', 'manager', 'finance_officer'));
+router.use(cacheMiddleware({ ttl: 120 }));
 
 const num = (v) => Number(v);
 

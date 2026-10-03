@@ -5,10 +5,24 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const { securityHeaders } = require('./middleware/security');
 
 const app = express();
 
-app.use(cors());
+// Phase 28: security headers first, before everything else
+app.use(securityHeaders);
+
+// Phase 28: tightened CORS — WEB_URL + *.pages.dev in production, open in dev
+const WEB_URL = process.env.WEB_URL || 'https://techub-co-working.pages.dev';
+const corsOptions = {
+  origin: (origin, cb) => {
+    if (process.env.NODE_ENV !== 'production') return cb(null, true);
+    if (!origin) return cb(null, true); // same-origin / server-to-server
+    if (origin === WEB_URL || origin.endsWith('.pages.dev')) return cb(null, true);
+    return cb(new Error('Not allowed by CORS'));
+  },
+};
+app.use(cors(corsOptions));
 app.use(morgan('dev'));
 app.use(express.json());
 
@@ -52,6 +66,8 @@ app.use('/api/settings', require('./routes/settings'));
 app.use('/api/portal', require('./routes/portal'));
 app.use('/api/sms', require('./routes/sms'));
 app.use('/api/announcements', require('./routes/announcements'));
+app.use('/api/cache', require('./routes/cache'));
+app.use('/api/jobs', require('./routes/jobs'));
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {
@@ -102,4 +118,6 @@ app.use((err, _req, res, _next) => {
 const PORT = Number(process.env.PORT) || 4000;
 app.listen(PORT, () => {
   console.log(`coworking-saas API ready on http://localhost:${PORT}`);
+  // Phase 28: start DB-backed job queue worker (once per process)
+  try { require('./lib/jobs').startWorker(); } catch (e) { console.error('[jobs] failed to start worker:', e.message); }
 });

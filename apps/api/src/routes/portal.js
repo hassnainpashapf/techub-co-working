@@ -196,6 +196,14 @@ router.post('/bookings', validateBody(portalBookingSchema), async (req, res, nex
       }).catch(() => {});
     }
 
+    // Phase 28: audit (fire-and-forget)
+    const { writeAudit } = require('../middleware/audit');
+    writeAudit({
+      tenantId: tf.tenantId, actorId: req.user.sub, action: 'portal.booking.create',
+      entity: 'Booking', entityId: booking.id, newValue: { unitId: booking.unitId },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    }).catch(() => {});
+
     return res.status(201).json({ booking });
   } catch (err) {
     return next(err);
@@ -220,6 +228,13 @@ router.delete('/bookings/:id', async (req, res, next) => {
       data: { status: 'cancelled' },
     });
     emitWebhook(tf.tenantId, 'booking.cancelled', { bookingId: booking.id }).catch(() => {});
+    // Phase 28: audit (fire-and-forget)
+    const { writeAudit } = require('../middleware/audit');
+    writeAudit({
+      tenantId: tf.tenantId, actorId: req.user.sub, action: 'portal.booking.cancel',
+      entity: 'Booking', entityId: booking.id,
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    }).catch(() => {});
     return res.json({ booking: updated });
   } catch (err) {
     return next(err);

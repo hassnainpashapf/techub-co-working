@@ -2,11 +2,13 @@ const express = require('express');
 
 const prisma = require('../lib/prisma');
 const { authenticate } = require('../middleware/auth');
+const { cacheMiddleware } = require('../middleware/cache');
 const { tenantFilter, refreshOverdue } = require('../lib/tenant');
 
 const router = express.Router();
 
 router.use(authenticate);
+router.use(cacheMiddleware({ ttl: 30 }));
 
 const OPEN_INVOICE_STATUSES = ['unpaid', 'partial', 'overdue'];
 

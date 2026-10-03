@@ -91,7 +91,7 @@ router.post('/', senderOnly, validateBody(announcementSchema), async (req, res, 
         if (!r.email) continue;
         try {
           const result = await notify(tenantId, r.email, 'announcement', { title, body, name: r.name });
-          if (result && result.sent) emailed += 1;
+          if (result && (result.sent || result.queued)) emailed += 1;
         } catch { /* ignore per-recipient failures */ }
       }
     }

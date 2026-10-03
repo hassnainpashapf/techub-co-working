@@ -89,6 +89,13 @@ router.post('/', validateBody(createTenantSchema), async (req, res, next) => {
       adminPassword,
     } = req.body;
 
+    // Phase 28: password policy
+    const { validatePassword } = require('../lib/password');
+    const pwCheck = validatePassword(adminPassword);
+    if (!pwCheck.valid) {
+      return res.status(400).json({ error: { message: pwCheck.errors.join(' ') } });
+    }
+
     const existing = await prisma.user.findUnique({ where: { email: adminEmail } });
     if (existing) {
       return res

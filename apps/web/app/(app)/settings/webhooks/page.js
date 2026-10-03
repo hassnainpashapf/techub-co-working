@@ -54,6 +54,7 @@ function Deliveries({ webhookId }) {
     { key: 'event', label: 'Event', render: (r) => <span className="font-mono text-xs text-slate-300">{r.event}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'success' ? 'green' : r.status === 'failed' ? 'red' : 'amber'}>{r.status}</Badge> },
     { key: 'code', label: 'HTTP', render: (r) => <span className="text-xs text-slate-400">{r.responseCode || '—'}</span> },
+    { key: 'attempts', label: 'Attempts', render: (r) => <span className="text-xs text-slate-400">{r.attempts ?? 1}{r.status === 'failed' && (r.attempts ?? 1) > 1 ? ' (retrying)' : ''}</span> },
     { key: 'error', label: 'Error', render: (r) => <span className="text-xs text-red-300 truncate max-w-[200px] block">{r.error || '—'}</span> },
     { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleString()}</span> },
   ];

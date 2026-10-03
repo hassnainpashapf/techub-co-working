@@ -7,6 +7,7 @@ const prisma = require('../lib/prisma');
 const { authenticate } = require('../middleware/auth');
 const { requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
+const { writeAudit } = require('../middleware/audit');
 const { getUserPreferences } = require('../lib/preferences');
 const {
   NOTIFICATION_EVENTS,
@@ -55,6 +56,13 @@ router.put('/', validateBody(prefSchema), async (req, res, next) => {
       },
     });
     res.json({ preference: pref });
+    // Phase 28: audit (fire-and-forget)
+    writeAudit({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'notification_preference.update',
+      entity: 'NotificationPreference', entityId: pref.id,
+      newValue: { eventType, channel, enabled },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    }).catch(() => {});
   } catch (e) { next(e); }
 });
 
