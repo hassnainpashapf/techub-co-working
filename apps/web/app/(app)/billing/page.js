@@ -82,6 +82,30 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
       ) : (
         <div>
           {error && <ErrorBanner message={error} />}
+          <div className="flex justify-end mb-3">
+            <button
+              className="btn-secondary text-xs px-3 py-1.5"
+              onClick={() => {
+                const token = typeof window !== 'undefined' ? localStorage.getItem('cw_access') : '';
+                const base = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+                fetch(`${base}/billing/invoices/${inv.id}/pdf`, {
+                  headers: token ? { Authorization: `Bearer ${token}` } : {},
+                })
+                  .then((r) => { if (!r.ok) throw new Error('Download failed'); return r.blob(); })
+                  .then((blob) => {
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${inv.number || 'invoice'}.pdf`;
+                    a.click();
+                    URL.revokeObjectURL(url);
+                  })
+                  .catch(() => alert('PDF download failed'));
+              }}
+            >
+              ⬇ Download PDF
+            </button>
+          </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm mb-4">
             <div><p className="text-xs text-slate-400">Member</p><p className="font-medium">{inv.memberName || inv.member?.name || '—'}</p></div>
             <div><p className="text-xs text-slate-400">Total</p><p className="font-medium">{money(inv.amount)}</p></div>

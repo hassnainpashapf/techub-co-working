@@ -6,6 +6,7 @@ const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter, todayDateOnly, refreshOverdue } = require('../lib/tenant');
+const { generateInvoicePdf } = require('../lib/invoice-pdf');
 
 const router = express.Router();
 
@@ -138,6 +139,31 @@ router.get('/invoices/:id', async (req, res, next) => {
     });
     if (!invoice) return res.status(404).json({ error: { message: 'Invoice not found' } });
     return res.json({ invoice });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Download invoice as PDF
+router.get('/invoices/:id/pdf', async (req, res, next) => {
+  try {
+    const where = { id: req.params.id, ...tenantFilter(req) };
+    if (req.user.role === 'member') where.memberId = req.user.memberId;
+    const invoice = await prisma.invoice.findFirst({
+      where,
+      include: {
+        tenant: { select: { name: true, address: true, phone: true, email: true } },
+        member: { select: { id: true, name: true, phone: true, companyName: true } },
+        contract: true,
+        payments: { orderBy: { paidAt: 'desc' } },
+      },
+    });
+    if (!invoice) return res.status(404).json({ error: { message: 'Invoice not found' } });
+    const pdf = await generateInvoicePdf(invoice);
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${invoice.number}.pdf"`);
+    res.setHeader('Content-Length', pdf.length);
+    return res.send(pdf);
   } catch (err) {
     return next(err);
   }
