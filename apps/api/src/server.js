@@ -99,6 +99,15 @@ app.use('/api/event-agenda', require('./routes/event-agenda').publicRouter);
 app.use('/api/event-analytics', require('./routes/event-analytics'));
 app.use('/api/events-dashboard', require('./routes/events-dashboard'));
 app.use('/api/events', require('./routes/event-checkins').router); // events.js ke baad
+// Phase 47: custom forms & surveys builder pack (additive)
+// form-public AUTH-FREE hai — /api/forms ke auth routes se PEHLE mount karein.
+app.use('/api/forms', require('./routes/form-public'));
+app.use('/api/forms', require('./routes/forms'));
+app.use('/api/form-uploads', require('./routes/form-uploads'));
+app.use('/api/form-analytics', require('./routes/form-analytics'));
+app.use('/api/form-templates', require('./routes/form-templates'));
+app.use('/api/form-inbox', require('./routes/form-inbox'));
+app.use('/api/forms-dashboard', require('./routes/forms-dashboard'));
 app.use('/api/newsletters', require('./routes/newsletters'));
 app.use('/api/intros', require('./routes/intros'));
 app.use('/api/milestones', require('./routes/milestones'));

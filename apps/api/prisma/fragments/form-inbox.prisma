@@ -1,0 +1,20 @@
+// Phase 47 Track 8/10: Submission Inbox & Workflow — FormSubmission par DELTA fields.
+// Track 2 ka form-submissions.prisma fragment PEHLE merge ho — us me FormSubmission model hai.
+// Coordinator: agar Track 2 ke model me ye fields na hon to schema.prisma me FormSubmission
+// model par ye teen fields jor do + neeche wali migration SQL apni migration file me daalo.
+//
+// status: new | reviewed | actioned | spam
+// assignedToId: User (staff) jise follow-up assign ho
+// notes: staff ki internal notes
+//
+// Back-relations (FormSubmission model me jorne hain):
+//   assignedTo User? @relation("FormSubmissionAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+// Aur User model me opposite: assignedSubmissions FormSubmission[] @relation("FormSubmissionAssignee")
+//
+// Migration SQL (coordinator apni migration file me daale):
+// ALTER TABLE "FormSubmission" ADD COLUMN "status" TEXT NOT NULL DEFAULT 'new';
+// ALTER TABLE "FormSubmission" ADD COLUMN "assignedToId" TEXT;
+// ALTER TABLE "FormSubmission" ADD COLUMN "notes" TEXT;
+// CREATE INDEX "FormSubmission_tenantId_status_idx" ON "FormSubmission"("tenantId", "status");
+// CREATE INDEX "FormSubmission_formId_status_idx" ON "FormSubmission"("formId", "status");
+// -- backfill: sab purani submissions 'new' (DEFAULT se auto)

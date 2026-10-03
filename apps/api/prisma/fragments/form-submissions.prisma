@@ -1,0 +1,40 @@
+// Phase 47 Track 2/10: Public Form Rendering + Submissions — FormSubmission model.
+// Coordinator: schema.prisma me merge karo + back-relations joro:
+//   Tenant:  formSubmissions FormSubmission[]
+//   CustomForm: submissions (pehle se forms.prisma fragment me hai)
+//   Member:  formSubmissions FormSubmission[]
+model FormSubmission {
+  id             String    @id @default(cuid())
+  tenantId       String
+  formId         String
+  form           CustomForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  answers        Json      // {fieldId: value} — file fields: [{name, size, mime, dataUrl}]
+  submitterName  String?
+  submitterEmail String?
+  memberId       String?
+  member         Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  ipHash         String?   // sha256(ip + tenant salt) — privacy-safe
+  createdAt      DateTime  @default(now())
+
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, formId])
+  @@index([formId, createdAt])
+  @@index([tenantId, submitterEmail])
+}
+
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "FormSubmission" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "formId" TEXT NOT NULL REFERENCES "CustomForm"("id") ON DELETE CASCADE,
+//   "answers" JSONB NOT NULL DEFAULT '{}',
+//   "submitterName" TEXT,
+//   "submitterEmail" TEXT,
+//   "memberId" TEXT,
+//   "ipHash" TEXT,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "FormSubmission_tenantId_formId_idx" ON "FormSubmission"("tenantId", "formId");
+// CREATE INDEX "FormSubmission_formId_createdAt_idx" ON "FormSubmission"("formId", "createdAt");
+// CREATE INDEX "FormSubmission_tenantId_submitterEmail_idx" ON "FormSubmission"("tenantId", "submitterEmail");

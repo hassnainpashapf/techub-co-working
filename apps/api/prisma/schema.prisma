@@ -198,6 +198,9 @@ model Tenant {
   currencySetting      CurrencySetting?
   fxRates              FxRate[]
   fxGainLoss           FxGainLoss[]
+  // Phase 47: Custom Forms & Surveys Builder Pack
+  customForms          CustomForm[]
+  formSubmissions      FormSubmission[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -289,6 +292,8 @@ model User {
   reviewsGiven           PerformanceReview[] @relation("ReviewReviewer")
   salaryAdvancesDecided  SalaryAdvance[] @relation("AdvanceDecidedBy")
   initiatedExits         EmployeeExit[]  @relation("ExitInitiator")
+  // Phase 47: Custom Forms & Surveys Builder Pack
+  assignedSubmissions    FormSubmission[] @relation("FormSubmissionAssignee")
 }
 
 // ---------------------------------------------------------------- space ---
@@ -471,6 +476,8 @@ model Member {
   foodRatings                FoodRating[]
   // Phase 44: Events & Ticketing Pro Pack
   eventTickets               EventTicket[]
+  // Phase 47: Custom Forms & Surveys Builder Pack
+  formSubmissions            FormSubmission[]
 }
 
 // ------------------------------------------------------------ company ------
@@ -3744,4 +3751,56 @@ model Insight {
   @@index([tenantId, week])
   @@index([tenantId, isRead])
   @@map("insights")
+}
+
+// -------------------------------------------------- Phase 47: Custom Forms & Surveys Builder Pack ---
+model CustomForm {
+  id               String   @id @default(cuid())
+  tenantId         String
+  title            String
+  slug             String
+  description      String?
+  fields           Json     // [{id, type, label, required, options?, placeholder?}]
+  isPublic         Boolean  @default(false)
+  status           String   @default("draft") // draft | published | archived
+  submitButtonText String?  @default("Submit")
+  successMessage   String?  @default("Shukriya! Aapka response mil gaya.")
+  notifyEmails     Json?    // ["email@..."] — submission par email alert
+  autoCreateLead   Boolean  @default(false) // Phase 47 Track 7: submission par CRM Lead auto-create
+  createdById      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  submissions      FormSubmission[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, status])
+  @@index([tenantId, isPublic, status])
+}
+
+model FormSubmission {
+  id             String    @id @default(cuid())
+  tenantId       String
+  formId         String
+  form           CustomForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  answers        Json      // {fieldId: value}
+  submitterName  String?
+  submitterEmail String?
+  memberId       String?
+  member         Member?   @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  ipHash         String?   // sha256(ip + tenant salt) — privacy-safe
+  status         String    @default("new") // new | reviewed | actioned | spam — Phase 47 Track 8
+  assignedToId   String?
+  assignedTo     User?     @relation("FormSubmissionAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  notes          String?
+  createdAt      DateTime  @default(now())
+
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, formId])
+  @@index([formId, createdAt])
+  @@index([tenantId, submitterEmail])
+  @@index([tenantId, status])
+  @@index([formId, status])
 }

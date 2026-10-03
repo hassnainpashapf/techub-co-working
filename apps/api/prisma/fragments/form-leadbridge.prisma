@@ -1,0 +1,11 @@
+// Phase 47 Track 7 — DELTA fragment (coordinator merge kare, koi migration mujh se nahi).
+// CustomForm (apps/api/prisma/fragments/forms.prisma) me ye field jorna hai:
+//
+//   autoCreateLead Boolean @default(false) // Track 7: submission par CRM Lead auto-create
+//
+// Migration SQL (coordinator apni migration file me daale):
+//   ALTER TABLE "CustomForm" ADD COLUMN "autoCreateLead" BOOLEAN NOT NULL DEFAULT false;
+//
+// NOTE: Track 2 (form-submissions) ka fragment tree me abhi nahi mila —
+// FormSubmission model merge hote hi lib/formLeadBridge.js kaam kare ga
+// (form-public.js submit handler se fire-and-forget call par).

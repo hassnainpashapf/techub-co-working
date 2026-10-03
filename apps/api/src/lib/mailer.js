@@ -325,6 +325,16 @@ const templates = {
     subject: `📊 Daily digest — ${dateLine}`,
     html: wrap('Daily Manager Digest', `<p>Hi ${name || 'there'},</p>${summaryHtml || ''}`),
   }),
+  // Phase 47 Track 9: new form submission — staff notifyEmails ko answers summary.
+  formSubmission: ({ formTitle, submittedAt, answersHtml }) => ({
+    subject: `📝 New submission — ${formTitle}`,
+    html: wrap('New Form Submission', `<p>Hi,</p><p>A new response was submitted for <b>${formTitle || ''}</b>${submittedAt ? ` at <b>${submittedAt}</b>` : ''}.</p><div style="margin:16px 0;border:1px solid #e5e7eb;border-radius:8px;overflow:hidden">${answersHtml || ''}</div><p style="color:#6b7280;font-size:13px">Review it in the Forms inbox.</p>`),
+  }),
+  // Phase 47 Track 9: submitter confirmation.
+  formConfirmation: ({ formTitle, successMessage }) => ({
+    subject: `✅ Received — ${formTitle}`,
+    html: wrap('Submission Received', `<p>Hi,</p><p>Thank you! Your response for <b>${formTitle || ''}</b> has been received.</p>${successMessage ? `<p>${successMessage}</p>` : ''}<p style="color:#6b7280;font-size:13px">We will get back to you if needed.</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -429,6 +439,8 @@ const TEMPLATE_VARS = {
   maintenanceReminder: ['name', 'title', 'location', 'daysOpen'],
   documentReminder: ['memberName', 'title', 'expiresAt'],
   managerDigest: ['name', 'dateLine', 'summaryHtml'],
+  formSubmission: ['formTitle', 'submittedAt', 'answersHtml'],
+  formConfirmation: ['formTitle', 'successMessage'],
 };
 
 function listBuiltinTemplates() {

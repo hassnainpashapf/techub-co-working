@@ -129,6 +129,12 @@ const NAV_MAIN = [
     ],
   },
   { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
+  { key: 'forms', label: 'Forms & Surveys', path: '/forms', icon: 'message',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'All Forms', path: '/forms' },
+    ],
+  },
   { key: 'intelligence', label: 'Intelligence', path: '/intelligence', icon: 'insights',
     roles: ['ceo', 'admin', 'super_admin', 'manager'] },
   { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
