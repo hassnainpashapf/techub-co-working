@@ -1,0 +1,90 @@
+// Phase 41 Track 2: Purchase Orders — schema fragment.
+// Coordinator: merge this into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model PurchaseOrder {
+  id          String  @id @default(cuid())
+  tenantId    String  @map("tenant_id")
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  number      String  // PO-YYYYMM-NNNN series, unique per tenant
+  vendorId    String  @map("vendor_id")
+  vendor      Vendor  @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  items       Json    // [{ desc, qty, price }]
+  subtotal    Decimal @db.Decimal(12, 2)
+  tax         Decimal @db.Decimal(12, 2) @default(0)
+  total       Decimal @db.Decimal(12, 2)
+  status      String  @default("draft") // draft | pending_approval | approved | rejected | ordered | received | closed
+  requestedBy String? @map("requested_by")
+  requester   User?   @relation("PORequester", fields: [requestedBy], references: [id], onDelete: SetNull)
+  approvedBy  String? @map("approved_by")
+  approver    User?   @relation("POApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+  notes       String? @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  approvals POApproval[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId, vendorId])
+  @@index([tenantId, status])
+  @@map("purchase_orders")
+}
+
+model POApproval {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  poId      String        @map("po_id")
+  po        PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  approverId String       @map("approver_id")
+  approver   User         @relation("POApprovalApprover", fields: [approverId], references: [id], onDelete: Cascade)
+  decision   String       // approved | rejected
+  note       String?      @db.Text
+  decidedAt  DateTime     @default(now()) @map("decided_at")
+
+  @@index([tenantId, poId])
+  @@map("po_approvals")
+}
+
+// ADD TO Tenant model:
+//   purchaseOrders PurchaseOrder[]
+//   poApprovals    POApproval[] (via PurchaseOrder cascade — optional)
+//
+// ADD TO Vendor model:
+//   purchaseOrders PurchaseOrder[]
+//
+// ADD TO User model:
+//   requestedPOs   PurchaseOrder[] @relation("PORequester")
+//   approvedPOs    PurchaseOrder[] @relation("POApprover")
+//   poDecisions    POApproval[]    @relation("POApprovalApprover")
+
+// --- Migration SQL (for coordinator's migration file) ---
+// CREATE TABLE "purchase_orders" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "number" TEXT NOT NULL,
+//   "vendor_id" TEXT NOT NULL REFERENCES "vendors"("id") ON DELETE RESTRICT,
+//   "items" JSONB NOT NULL,
+//   "subtotal" DECIMAL(12,2) NOT NULL,
+//   "tax" DECIMAL(12,2) NOT NULL DEFAULT 0,
+//   "total" DECIMAL(12,2) NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'draft',
+//   "requested_by" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+//   "approved_by" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+//   "notes" TEXT,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   UNIQUE ("tenant_id", "number")
+// );
+// CREATE TABLE "po_approvals" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "po_id" TEXT NOT NULL REFERENCES "purchase_orders"("id") ON DELETE CASCADE,
+//   "approver_id" TEXT NOT NULL REFERENCES "users"("id") ON DELETE CASCADE,
+//   "decision" TEXT NOT NULL,
+//   "note" TEXT,
+//   "decided_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "purchase_orders_tenant_id_vendor_id_idx" ON "purchase_orders"("tenant_id", "vendor_id");
+// CREATE INDEX "purchase_orders_tenant_id_status_idx" ON "purchase_orders"("tenant_id", "status");
+// CREATE INDEX "po_approvals_tenant_id_po_id_idx" ON "po_approvals"("tenant_id", "po_id");

@@ -88,6 +88,8 @@ router.post('/items/:id/movements', write, validateBody(movementSchema), async (
     res.status(201).json({ item: updated, movement });
     // Phase 29: low-stock auto-check (fire-and-forget, never blocks the response)
     checkLowStock(req.user.tenantId, item.id).catch(() => {});
+    // Phase 41: restock timestamp (stock "in" hua to lastRestockedAt update)
+    if (type === 'in') { try { await require('../lib/reorderAlerts').touchRestockedAt(item.id); } catch {} }
   } catch (e) { next(e); }
 });
 

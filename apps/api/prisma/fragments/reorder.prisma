@@ -1,0 +1,10 @@
+// Phase 41 Track 7: Inventory reorder alerts.
+// Delta fragment — InventoryItem model already has `reorderLevel Int @default(5)`.
+// Sirf `lastRestockedAt` naya hai; dobara reorderLevel add mat karna.
+//
+// Coordinator merge: schema.prisma ke InventoryItem model me ye field jodein:
+//
+//   lastRestockedAt DateTime? @map("last_restocked_at")
+//
+// --- Migration SQL (2026100349xxxx_phase41_procurement) ---
+// ALTER TABLE "inventory_items" ADD COLUMN IF NOT EXISTS "last_restocked_at" TIMESTAMPTZ NULL;

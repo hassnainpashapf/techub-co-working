@@ -193,6 +193,17 @@ const NAV_OTHERS = [
       { label: 'Waiting List', path: '/sales/waiting-list' },
     ],
   },
+  { key: 'procurement', label: 'Procurement', path: '/procurement/dashboard', icon: 'investor', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'finance'],
+    children: [
+      { label: 'Dashboard', path: '/procurement/dashboard' },
+      { label: 'Vendors', path: '/procurement/vendors' },
+      { label: 'Purchase Orders', path: '/procurement/purchase-orders' },
+      { label: 'Goods Receiving', path: '/procurement/receiving' },
+      { label: 'Vendor Bills', path: '/procurement/bills' },
+      { label: 'Vendor Payments', path: '/procurement/payments' },
+      { label: 'Vendor Contracts', path: '/procurement/contracts' },
+    ],
+  },
   { key: 'compliance', label: 'Compliance', path: '/compliance/documents', icon: 'settings', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Documents', path: '/compliance/documents' },

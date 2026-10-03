@@ -1,0 +1,45 @@
+// Phase 41 Track 1: Vendor Management
+// COORDINATOR: merge into schema.prisma + add back-relation:
+//   Tenant { vendors Vendor[] }
+// schema.prisma untouched by this track.
+
+model Vendor {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  name        String
+  company     String?
+  email       String?
+  phone       String?
+  address     String?
+  category    String   @default("other") // maintenance | food | it | office | other
+  paymentTerms String  @default("net_30") @map("payment_terms") // net_15 | net_30 | cod
+  taxId       String?  @map("tax_id")
+  rating      Decimal? @db.Decimal(3, 2) // 0.00 - 5.00, Track 8 vendor performance update karega
+  isActive    Boolean  @default(true) @map("is_active")
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, category])
+  @@map("vendors")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase41_vendors) ---
+// CREATE TABLE "vendors" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "company" TEXT,
+//   "email" TEXT,
+//   "phone" TEXT,
+//   "address" TEXT,
+//   "category" TEXT NOT NULL DEFAULT 'other',
+//   "payment_terms" TEXT NOT NULL DEFAULT 'net_30',
+//   "tax_id" TEXT,
+//   "rating" DECIMAL(3,2),
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "notes" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "vendors_tenant_id_is_active_idx" ON "vendors"("tenant_id", "is_active");
+// CREATE INDEX "vendors_tenant_id_category_idx" ON "vendors"("tenant_id", "category");

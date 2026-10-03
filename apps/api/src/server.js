@@ -92,6 +92,17 @@ app.use('/api/intros', require('./routes/intros'));
 app.use('/api/milestones', require('./routes/milestones'));
 app.use('/api/engagement', require('./routes/engagement'));
 require('./lib/celebrations'); // 'celebrations' (self-schedule via ensure)
+// Phase 41: vendor & procurement pack (additive)
+app.use('/api/vendors', require('./routes/vendors'));
+app.use('/api/purchase-orders', require('./routes/purchase-orders'));
+app.use('/api/goods-receipts', require('./routes/goods-receipts'));
+app.use('/api/vendor-bills', require('./routes/vendor-bills'));
+app.use('/api/vendor-payments', require('./routes/vendor-payments'));
+app.use('/api/vendor-contracts', require('./routes/vendor-contracts'));
+app.use('/api/procurement', require('./routes/procurement-dashboard'));
+app.use('/api/inventory/reorder-alerts', require('./routes/reorder-alerts'));
+require('./lib/vendorContractExpiry'); // 'vendor-contract-expiry' (self-schedule via ensure)
+require('./lib/reorderAlerts'); // 'reorder-alerts' (self-schedule via ensure)
 require('./lib/milestones'); // 'milestones' (self-schedule via ensure)
 require('./lib/badges'); // 'badges-run' auto-register on require
 require('./lib/newsletterJob'); // 'newsletter-send' auto-register on require
@@ -232,6 +243,12 @@ try {
   schedulePhase40Jobs();
   setInterval(schedulePhase40Jobs, 24 * 60 * 60 * 1000).unref();
 } catch (e) { console.error('[phase40] scheduler init failed:', e.message); }
+
+// Phase 41: procurement jobs (additive) — vendor contract expiry + reorder alerts (daily self-schedule)
+try {
+  require('./lib/vendorContractExpiry').ensureVendorContractExpiryScheduled();
+  require('./lib/reorderAlerts').ensureReorderAlertsScheduled();
+} catch (e) { console.error('[phase41] scheduler init failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

@@ -1,0 +1,51 @@
+// Phase 41 Track 9: Vendor Contract Expiry Tracking — schema fragment.
+//
+// COORDINATOR: merge into schema.prisma + back-relations jodein:
+//   Tenant { vendorContracts VendorContract[] }
+//   Vendor { contracts VendorContract[] }   (Track 1 ke Vendor model par)
+// schema.prisma untouched by this track.
+
+model VendorContract {
+  id              String   @id @default(cuid())
+  tenantId        String   @map("tenant_id")
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vendorId        String   @map("vendor_id")
+  vendor          Vendor   @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  title           String
+  startDate       DateTime? @map("start_date")
+  endDate         DateTime @map("end_date")
+  value           Decimal? @db.Decimal(12, 2)
+  autoRenew       Boolean  @default(false) @map("auto_renew")
+  documentUrl     String?  @map("document_url")
+  reminderDays    Int      @default(30) @map("reminder_days") // endDate se pehle kitne din par remind ho
+  status          String   @default("active") @map("status") // active | expired
+  lastReminderKey String?  @map("last_reminder_key") // dedupe: "<endDateISO>:<days>" ya "...:expired"
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, endDate])
+  @@map("vendor_contracts")
+}
+
+// --- migration SQL (coordinator: 20261003490000_phase41_procurement) ---
+// CREATE TABLE "vendor_contracts" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "vendor_id" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "start_date" TIMESTAMP(3),
+//   "end_date" TIMESTAMP(3) NOT NULL,
+//   "value" DECIMAL(12,2),
+//   "auto_renew" BOOLEAN NOT NULL DEFAULT false,
+//   "document_url" TEXT,
+//   "reminder_days" INTEGER NOT NULL DEFAULT 30,
+//   "status" TEXT NOT NULL DEFAULT 'active',
+//   "last_reminder_key" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "vendor_contracts_vendor_id_fkey" FOREIGN KEY ("vendor_id") REFERENCES "vendors"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "vendor_contracts_tenant_id_status_idx" ON "vendor_contracts"("tenant_id", "status");
+// CREATE INDEX "vendor_contracts_tenant_id_end_date_idx" ON "vendor_contracts"("tenant_id", "end_date");

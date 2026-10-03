@@ -154,6 +154,15 @@ model Tenant {
   badges           Badge[]
   newsletters      Newsletter[]
   memberIntros     MemberIntro[]
+  // Phase 41: Vendor & Procurement Pack
+  vendors          Vendor[]
+  vendorContracts  VendorContract[]
+  vendorBills      VendorBill[]
+  vendorPayments   VendorPayment[]
+  vendorRatings    VendorRating[]   @relation("TenantVendorRatings")
+  purchaseOrders   PurchaseOrder[]
+  poApprovals      POApproval[]
+  goodsReceipts    GoodsReceipt[]   @relation("TenantGoodsReceipts")
 }
 
 // ----------------------------------------------------------------- user ---
@@ -229,6 +238,14 @@ model User {
   @@map("users")
   conversationParticipants   ConversationParticipant[]
   sentMessages               Message[]
+  // Phase 41: Vendor & Procurement Pack
+  requestedPOs               PurchaseOrder[]  @relation("PORequester")
+  approvedPOs                PurchaseOrder[]  @relation("POApprover")
+  poDecisions                POApproval[]     @relation("POApprovalApprover")
+  goodsReceiptsReceived      GoodsReceipt[]   @relation("UserGoodsReceiptsReceived")
+  vendorBillApprovals        VendorBill[]     @relation("VendorBillApprover")
+  vendorPaymentsMade         VendorPayment[]  @relation("VendorPaidBy")
+  vendorRatings              VendorRating[]   @relation("UserVendorRatings")
 }
 
 // ---------------------------------------------------------------- space ---
@@ -826,6 +843,7 @@ model InventoryItem {
   quantity     Int      @default(0)
   unit         String   @default("pcs") // pcs | boxes | liters | kg
   reorderLevel Int      @default(5) @map("reorder_level")
+  lastRestockedAt DateTime? @map("last_restocked_at") // Phase 41
   unitPrice    Decimal? @map("unit_price") @db.Decimal(12, 2)
   notes        String?
   createdAt    DateTime @default(now()) @map("created_at")
@@ -2841,4 +2859,196 @@ model MemberIntro {
   @@unique([tenantId, newMemberId, suggestedMemberId]) // same pair dobara suggest nahi
   @@index([tenantId, status])
   @@map("member_intros")
+}
+
+// ------------------------------------------------- phase 41: procurement ---
+
+model Vendor {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name         String
+  company      String?
+  email        String?
+  phone        String?
+  address      String?
+  category     String   @default("other") // maintenance | food | it | office | other
+  paymentTerms String   @default("net_30") @map("payment_terms") // net_15 | net_30 | cod
+  taxId        String?  @map("tax_id")
+  rating       Decimal? @db.Decimal(3, 2) @map("rating") // 0.00 - 5.00, auto-computed
+  isActive     Boolean  @default(true) @map("is_active")
+  notes        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  purchaseOrders PurchaseOrder[]
+  vendorBills    VendorBill[]
+  contracts      VendorContract[]
+  ratings        VendorRating[] @relation("VendorRatings")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, category])
+  @@map("vendors")
+}
+
+model PurchaseOrder {
+  id          String  @id @default(cuid())
+  tenantId    String  @map("tenant_id")
+  tenant      Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  number      String // PO-YYYYMM-NNNN series, unique per tenant
+  vendorId    String  @map("vendor_id")
+  vendor      Vendor  @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  items       Json // [{ desc, qty, price }]
+  subtotal    Decimal @db.Decimal(12, 2)
+  tax         Decimal @db.Decimal(12, 2) @default(0)
+  total       Decimal @db.Decimal(12, 2)
+  status      String  @default("draft") // draft | pending_approval | approved | rejected | ordered | received | closed
+  requestedBy String? @map("requested_by")
+  requester   User?   @relation("PORequester", fields: [requestedBy], references: [id], onDelete: SetNull)
+  approvedBy  String? @map("approved_by")
+  approver    User?   @relation("POApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+  notes       String? @db.Text
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  approvals     POApproval[]
+  goodsReceipts GoodsReceipt[] @relation("PurchaseOrderGoodsReceipts")
+  vendorBills   VendorBill[]
+
+  @@unique([tenantId, number])
+  @@index([tenantId, vendorId])
+  @@index([tenantId, status])
+  @@map("purchase_orders")
+}
+
+model POApproval {
+  id         String        @id @default(cuid())
+  tenantId   String        @map("tenant_id")
+  tenant     Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  poId       String        @map("po_id")
+  po         PurchaseOrder @relation(fields: [poId], references: [id], onDelete: Cascade)
+  approverId String        @map("approver_id")
+  approver   User          @relation("POApprovalApprover", fields: [approverId], references: [id], onDelete: Cascade)
+  decision   String // approved | rejected
+  note       String?       @db.Text
+  level      Int           @default(1) // approval level: 1 = manager/admin, 2 = ceo
+  required   Boolean       @default(true)
+  decidedAt  DateTime      @default(now()) @map("decided_at")
+
+  @@unique([tenantId, poId, level])
+  @@index([tenantId, poId])
+  @@map("po_approvals")
+}
+
+model GoodsReceipt {
+  id            String        @id @default(cuid())
+  tenantId      String        @map("tenant_id")
+  tenant        Tenant        @relation("TenantGoodsReceipts", fields: [tenantId], references: [id], onDelete: Cascade)
+  poId          String        @map("po_id")
+  purchaseOrder PurchaseOrder @relation("PurchaseOrderGoodsReceipts", fields: [poId], references: [id], onDelete: Cascade)
+  receivedBy    String?       @map("received_by")
+  receiver      User?         @relation("UserGoodsReceiptsReceived", fields: [receivedBy], references: [id], onDelete: SetNull)
+  receivedAt    DateTime      @default(now()) @map("received_at")
+  itemsReceived Json          @map("items_received") // [{ desc, orderedQty, receivedQty, condition }]
+  discrepancies String?
+  status        String        @default("complete") // complete | partial
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  vendorBills VendorBill[]
+
+  @@index([tenantId])
+  @@index([poId])
+  @@map("goods_receipts")
+}
+
+model VendorBill {
+  id            String         @id @default(cuid())
+  tenantId      String         @map("tenant_id")
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  billNo        String         @map("bill_no") // vendor ka apna invoice number
+  vendorId      String         @map("vendor_id")
+  vendor        Vendor         @relation(fields: [vendorId], references: [id], onDelete: Restrict)
+  poId          String?        @map("po_id")
+  purchaseOrder PurchaseOrder? @relation(fields: [poId], references: [id], onDelete: SetNull)
+  grnId         String?        @map("grn_id")
+  goodsReceipt  GoodsReceipt?  @relation(fields: [grnId], references: [id], onDelete: SetNull)
+  amount        Decimal        @db.Decimal(12, 2)
+  paidAmount    Decimal        @default(0) @db.Decimal(12, 2) @map("paid_amount") // partial-payment tracking
+  dueDate       DateTime       @db.Date @map("due_date")
+  status        String         @default("pending") @map("status") // pending | approved | paid | disputed (overdue derived)
+  disputeReason String?        @map("dispute_reason") @db.Text
+  paidAt        DateTime?      @map("paid_at")
+  expenseId     String?        @map("expense_id") // approve par bani Expense entry ka id (no FK)
+  approvedBy    String?        @map("approved_by")
+  approver      User?          @relation("VendorBillApprover", fields: [approvedBy], references: [id], onDelete: SetNull)
+  notes         String?        @db.Text
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  payments VendorPayment[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, vendorId])
+  @@index([tenantId, dueDate])
+  @@map("vendor_bills")
+}
+
+model VendorPayment {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  billId    String   @map("bill_id")
+  bill      VendorBill @relation(fields: [billId], references: [id], onDelete: Cascade)
+  amount    Decimal  @db.Decimal(12, 2)
+  method    String   @default("bank") // bank | cash | online
+  reference String?
+  paidAt    DateTime @default(now()) @map("paid_at")
+  paidById  String   @map("paid_by_id")
+  paidBy    User     @relation("VendorPaidBy", fields: [paidById], references: [id], onDelete: Restrict)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, billId])
+  @@index([tenantId, paidAt])
+  @@map("vendor_payments")
+}
+
+model VendorRating {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation("TenantVendorRatings", fields: [tenantId], references: [id], onDelete: Cascade)
+  vendorId  String   @map("vendor_id")
+  vendor    Vendor   @relation("VendorRatings", fields: [vendorId], references: [id], onDelete: Cascade)
+  ratedBy   String   @map("rated_by")
+  rater     User     @relation("UserVendorRatings", fields: [ratedBy], references: [id], onDelete: Cascade)
+  score     Int // 1-5
+  criteria  String   @default("quality") // quality | timeliness | price
+  comment   String?  @db.Text
+  ratedAt   DateTime @default(now()) @map("rated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([vendorId, ratedBy])
+  @@index([tenantId, vendorId])
+  @@map("vendor_ratings")
+}
+
+model VendorContract {
+  id              String    @id @default(cuid())
+  tenantId        String    @map("tenant_id")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  vendorId        String    @map("vendor_id")
+  vendor          Vendor    @relation(fields: [vendorId], references: [id], onDelete: Cascade)
+  title           String
+  startDate       DateTime? @map("start_date")
+  endDate         DateTime  @map("end_date")
+  value           Decimal?  @db.Decimal(12, 2)
+  autoRenew       Boolean   @default(false) @map("auto_renew")
+  documentUrl     String?   @map("document_url")
+  reminderDays    Int       @default(30) @map("reminder_days")
+  status          String    @default("active") @map("status") // active | expired
+  lastReminderKey String?   @map("last_reminder_key")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, endDate])
+  @@map("vendor_contracts")
 }

@@ -1,0 +1,54 @@
+// Phase 41 Track 3: Goods Receipt Notes (GRN) — items received against a
+// PurchaseOrder, with per-item quantities, condition, and discrepancy notes.
+//
+// Coordinator merge notes:
+//  - Back-relation: PurchaseOrder needs `goodsReceipts GoodsReceipt[]`
+//    (relation name "PurchaseOrderGoodsReceipts")
+//  - Back-relation: Tenant needs `goodsReceipts GoodsReceipt[]`
+//    (relation name "TenantGoodsReceipts")
+//  - Back-relation: User needs `goodsReceiptsReceived GoodsReceipt[]`
+//    (relation name "UserGoodsReceiptsReceived", receivedBy -> User)
+//
+// Migration SQL:
+//   CREATE TABLE "goods_receipts" (
+//     "id" TEXT NOT NULL PRIMARY KEY,
+//     "tenant_id" TEXT NOT NULL,
+//     "po_id" TEXT NOT NULL,
+//     "received_by" TEXT,
+//     "received_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "items_received" JSONB NOT NULL,
+//     "discrepancies" TEXT,
+//     "status" TEXT NOT NULL DEFAULT 'complete',
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "goods_receipts_tenant_id_fkey" FOREIGN KEY ("tenant_id")
+//       REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//     CONSTRAINT "goods_receipts_po_id_fkey" FOREIGN KEY ("po_id")
+//       REFERENCES "purchase_orders"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//     CONSTRAINT "goods_receipts_received_by_fkey" FOREIGN KEY ("received_by")
+//       REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE
+//   );
+//   CREATE INDEX "goods_receipts_tenant_id_idx" ON "goods_receipts"("tenant_id");
+//   CREATE INDEX "goods_receipts_po_id_idx" ON "goods_receipts"("po_id");
+//   ALTER TABLE "purchase_orders"
+//     ADD CONSTRAINT "PurchaseOrder_goodsReceipts_fkey" -- handled via relation instead
+
+model GoodsReceipt {
+  id            String         @id @default(cuid())
+  tenantId      String         @map("tenant_id")
+  tenant        Tenant         @relation("TenantGoodsReceipts", fields: [tenantId], references: [id], onDelete: Cascade)
+  poId          String         @map("po_id")
+  purchaseOrder PurchaseOrder  @relation("PurchaseOrderGoodsReceipts", fields: [poId], references: [id], onDelete: Cascade)
+  receivedBy    String?        @map("received_by")
+  receiver      User?          @relation("UserGoodsReceiptsReceived", fields: [receivedBy], references: [id], onDelete: SetNull)
+  receivedAt    DateTime       @default(now()) @map("received_at")
+  // [{ desc, orderedQty, receivedQty, condition: good/damaged/wrong }]
+  itemsReceived Json           @map("items_received")
+  discrepancies String?
+  // complete | partial
+  status        String         @default("complete")
+  createdAt     DateTime       @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@index([poId])
+  @@map("goods_receipts")
+}

@@ -1,0 +1,19 @@
+// Phase 41 Track 6: Procurement Approval Workflow — schema delta fragment.
+// Coordinator: POApproval model (Track 2 fragment `purchase-orders.prisma` se)
+// me ye fields merge karein. Agar coordinator track 2 ka fragment naye se
+// merge kar raha hai, to ye do fields + unique constraint seedha POApproval
+// model me jod dein. Migration me Track 2 ke CREATE TABLE ke BAAD ye
+// ALTER statements lagayein.
+// schema.prisma ko yahan NAHI chherna (parallel agents).
+
+// POApproval model par ADD karne hain:
+//   level    Int     @default(1)   // approval level (1 = manager/admin, 2 = ceo)
+//   required Boolean @default(true) // kya ye level is PO ke liye required hai
+//   @@unique([tenantId, poId, level]) // ek level par sirf 1 decision
+
+// --- Migration SQL (Track 2 ke CREATE TABLE "po_approvals" ke baad lagayein) ---
+// ALTER TABLE "po_approvals" ADD COLUMN "level" INTEGER NOT NULL DEFAULT 1;
+// ALTER TABLE "po_approvals" ADD COLUMN "required" BOOLEAN NOT NULL DEFAULT TRUE;
+// ALTER TABLE "po_approvals"
+//   ADD CONSTRAINT "po_approvals_tenant_id_po_id_level_key"
+//   UNIQUE ("tenant_id", "po_id", "level");

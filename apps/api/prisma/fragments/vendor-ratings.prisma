@@ -1,0 +1,48 @@
+// Phase 41 Track 8: Vendor Performance Ratings
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Vendor { ratings VendorRating[] }   (relation name "VendorRatings")
+//   User   { vendorRatings VendorRating[] } (relation name "UserVendorRatings")
+//   Tenant { vendorRatings VendorRating[] } (relation name "TenantVendorRatings")
+// schema.prisma untouched by this track.
+
+model VendorRating {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation("TenantVendorRatings", fields: [tenantId], references: [id], onDelete: Cascade)
+  vendorId  String   @map("vendor_id")
+  vendor    Vendor   @relation("VendorRatings", fields: [vendorId], references: [id], onDelete: Cascade)
+  ratedBy   String   @map("rated_by")
+  rater     User     @relation("UserVendorRatings", fields: [ratedBy], references: [id], onDelete: Cascade)
+  score     Int      // 1-5
+  // quality | timeliness | price
+  criteria  String   @default("quality")
+  comment   String?  @db.Text
+  ratedAt   DateTime @default(now()) @map("rated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // ek user ek vendor ko ek dafa rate kare — dobara rate = update
+  @@unique([vendorId, ratedBy])
+  @@index([tenantId, vendorId])
+  @@map("vendor_ratings")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase41_vendor_ratings) ---
+// CREATE TABLE "vendor_ratings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "vendor_id" TEXT NOT NULL,
+//   "rated_by" TEXT NOT NULL,
+//   "score" INTEGER NOT NULL CHECK ("score" BETWEEN 1 AND 5),
+//   "criteria" TEXT NOT NULL DEFAULT 'quality',
+//   "comment" TEXT,
+//   "rated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "vendor_ratings_tenant_id_fkey" FOREIGN KEY ("tenant_id")
+//     REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "vendor_ratings_vendor_id_fkey" FOREIGN KEY ("vendor_id")
+//     REFERENCES "vendors"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "vendor_ratings_rated_by_fkey" FOREIGN KEY ("rated_by")
+//     REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "vendor_ratings_vendor_id_rated_by_key" ON "vendor_ratings"("vendor_id", "rated_by");
+// CREATE INDEX "vendor_ratings_tenant_id_vendor_id_idx" ON "vendor_ratings"("tenant_id", "vendor_id");
