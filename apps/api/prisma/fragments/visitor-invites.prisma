@@ -1,0 +1,30 @@
+// Phase 33 Track 8: Visitor pre-registration by members — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model VisitorInvite {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId    String   @map("member_id") // host member
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  visitorName String   @map("visitor_name")
+  visitorEmail String? @map("visitor_email")
+  visitorPhone String? @map("visitor_phone")
+  expectedAt  DateTime @map("expected_at")
+  purpose     String   @default("meeting") // meeting | tour | interview | delivery | other
+  notes       String?
+  code        String   @db.Char(6) // 6-char check-in code, unique per tenant
+  status      String   @default("pending") // pending | checked-in | expired | cancelled
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status, expectedAt])
+  @@map("visitor_invites")
+}
+
+// ADD TO Tenant model:
+//   visitorInvites VisitorInvite[]
+//
+// ADD TO Member model:
+//   visitorInvites VisitorInvite[]

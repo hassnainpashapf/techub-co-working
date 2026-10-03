@@ -1,0 +1,42 @@
+// Phase 33 Track 4: Announcements Feed — schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma and add to the
+// phase 33 migration. DO NOT edit schema.prisma here.
+
+// --- ADD TO model Announcement ---
+//   pinned    Boolean   @default(false) @map("pinned")
+//   expiresAt DateTime? @map("expires_at")
+//   reads     AnnouncementRead[]
+
+model AnnouncementRead {
+  id             String       @id @default(cuid())
+  announcementId String       @map("announcement_id")
+  announcement   Announcement @relation(fields: [announcementId], references: [id], onDelete: Cascade)
+  userId         String       @map("user_id")
+  user           User         @relation("AnnouncementReads", fields: [userId], references: [id], onDelete: Cascade)
+  readAt         DateTime     @default(now()) @map("read_at")
+
+  @@unique([announcementId, userId])
+  @@index([announcementId])
+  @@index([userId])
+  @@map("announcement_reads")
+}
+
+// ADD TO User model:
+//   announcementReads AnnouncementRead[] @relation("AnnouncementReads")
+
+// --- Migration SQL (coordinator: append to phase 33 migration) ---
+// ALTER TABLE "announcements" ADD COLUMN "pinned" BOOLEAN NOT NULL DEFAULT false;
+// ALTER TABLE "announcements" ADD COLUMN "expires_at" TIMESTAMP(3);
+// CREATE INDEX "announcements_pinned_idx" ON "announcements"("pinned");
+// CREATE TABLE "announcement_reads" (
+//     "id" TEXT NOT NULL,
+//     "announcement_id" TEXT NOT NULL,
+//     "user_id" TEXT NOT NULL,
+//     "read_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "announcement_reads_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "announcement_reads_announcement_id_user_id_key" ON "announcement_reads"("announcement_id", "user_id");
+// CREATE INDEX "announcement_reads_announcement_id_idx" ON "announcement_reads"("announcement_id");
+// CREATE INDEX "announcement_reads_user_id_idx" ON "announcement_reads"("user_id");
+// ALTER TABLE "announcement_reads" ADD CONSTRAINT "announcement_reads_announcement_id_fkey" FOREIGN KEY ("announcement_id") REFERENCES "announcements"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "announcement_reads" ADD CONSTRAINT "announcement_reads_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

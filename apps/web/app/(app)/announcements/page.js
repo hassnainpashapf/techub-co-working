@@ -18,17 +18,31 @@ const CHANNELS = [
 ];
 
 function ComposeForm({ onSend, sending }) {
-  const [f, setF] = useState({ title: '', body: '', audience: 'all', channels: ['inapp'] });
+  const [f, setF] = useState({ title: '', body: '', audience: 'all', channels: ['inapp'], pinned: false, expiresAt: '' });
   const toggle = (c) => setF({ ...f, channels: f.channels.includes(c) ? f.channels.filter((x) => x !== c) : [...f.channels, c] });
+  const submit = (e) => {
+    e.preventDefault();
+    // <input type="date"> gives YYYY-MM-DD; backend zod expects full ISO datetime
+    onSend({ ...f, expiresAt: f.expiresAt ? new Date(`${f.expiresAt}T23:59:59`).toISOString() : null });
+  };
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSend(f); }}>
+    <form onSubmit={submit}>
       <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} required maxLength={200} placeholder="e.g. Pool maintenance on Saturday" /></Field>
       <Field label="Message"><textarea className="input min-h-[120px]" value={f.body} onChange={(e) => setF({ ...f, body: e.target.value })} required maxLength={5000} placeholder="Write your announcement…" /></Field>
-      <Field label="Audience">
-        <select className="input" value={f.audience} onChange={(e) => setF({ ...f, audience: e.target.value })}>
-          {AUDIENCES.map((a) => <option key={a.value} value={a.value}>{a.label}</option>)}
-        </select>
-      </Field>
+      <div className="grid grid-cols-2 gap-3">
+        <Field label="Audience">
+          <select className="input" value={f.audience} onChange={(e) => setF({ ...f, audience: e.target.value })}>
+            {AUDIENCES.map((a) => <option key={a.value} value={a.value}>{a.label}</option>)}
+          </select>
+        </Field>
+        <Field label="Expires on (optional)">
+          <input type="date" className="input [color-scheme:dark]" value={f.expiresAt} min={new Date().toISOString().slice(0, 10)} onChange={(e) => setF({ ...f, expiresAt: e.target.value })} />
+        </Field>
+      </div>
+      <label className="flex items-center gap-2 mb-4 text-sm text-slate-300 cursor-pointer">
+        <input type="checkbox" checked={f.pinned} onChange={(e) => setF({ ...f, pinned: e.target.checked })} className="accent-violet-500 w-4 h-4" />
+        📌 Pin to top of feed
+      </label>
       <Field label="Channels">
         <div className="flex flex-wrap gap-2">
           {CHANNELS.map((c) => (
@@ -98,13 +112,15 @@ export default function AnnouncementsPage() {
       ) : (
         <div className="space-y-3">
           {list.map((a) => (
-            <div key={a.id} className="card-premium p-5">
+            <div key={a.id} className={`card-premium p-5 ${a.pinned ? 'border-violet-400/40 shadow-[0_0_24px_rgba(139,92,246,0.15)]' : ''}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
+                    {a.pinned && <Badge tone="violet">📌 Pinned</Badge>}
                     <h3 className="text-white font-semibold">{a.title}</h3>
                     {a.sentAt && <Badge tone="emerald">Sent</Badge>}
                     <Badge tone="slate">{AUDIENCES.find((x) => x.value === a.audience)?.label || a.audience}</Badge>
+                    {a.expiresAt && <Badge tone="amber">Expires {new Date(a.expiresAt).toLocaleDateString()}</Badge>}
                   </div>
                   <p className="text-sm text-slate-400 mt-2 whitespace-pre-wrap">{a.body}</p>
                   <div className="flex items-center gap-2 mt-3 flex-wrap">

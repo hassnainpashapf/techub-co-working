@@ -1,0 +1,65 @@
+// Phase 33 Track 2: Referral Program — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model ReferralCode {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation("MemberReferralCodes", fields: [memberId], references: [id], onDelete: Cascade)
+  code      String   // e.g. REF-7K2Q9X (unique globally)
+  referrals Referral[] @relation("CodeReferrals")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([code])
+  @@unique([tenantId, memberId])
+  @@index([tenantId])
+  @@map("referral_codes")
+}
+
+model Referral {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  codeId       String   @map("code_id")
+  code         ReferralCode @relation("CodeReferrals", fields: [codeId], references: [id], onDelete: Cascade)
+  referredName String   @map("referred_name")
+  referredEmail String  @map("referred_email")
+  status       String   @default("invited") // invited | joined | rewarded
+  rewardAmount Decimal? @map("reward_amount") @db.Decimal(12, 2)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, status])
+  @@index([codeId])
+  @@map("referrals")
+}
+
+// ADD TO Tenant model:
+//   referralCodes ReferralCode[]
+//   referrals     Referral[]
+//
+// ADD TO Member model:
+//   referralCodes ReferralCode[] @relation("MemberReferralCodes")
+
+// Migration SQL:
+// CREATE TABLE "referral_codes" (
+//   "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "member_id" TEXT NOT NULL,
+//   "code" TEXT NOT NULL, "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "referral_codes_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "referral_codes_code_key" ON "referral_codes"("code");
+// CREATE UNIQUE INDEX "referral_codes_tenant_id_member_id_key" ON "referral_codes"("tenant_id", "member_id");
+// CREATE INDEX "referral_codes_tenant_id_idx" ON "referral_codes"("tenant_id");
+// ALTER TABLE "referral_codes" ADD CONSTRAINT "referral_codes_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "referral_codes" ADD CONSTRAINT "referral_codes_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "referrals" (
+//   "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "code_id" TEXT NOT NULL,
+//   "referred_name" TEXT NOT NULL, "referred_email" TEXT NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'invited', "reward_amount" DECIMAL(12,2),
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "referrals_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "referrals_tenant_id_status_idx" ON "referrals"("tenant_id", "status");
+// CREATE INDEX "referrals_code_id_idx" ON "referrals"("code_id");
+// ALTER TABLE "referrals" ADD CONSTRAINT "referrals_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "referrals" ADD CONSTRAINT "referrals_code_id_fkey" FOREIGN KEY ("code_id") REFERENCES "referral_codes"("id") ON DELETE CASCADE ON UPDATE CASCADE;

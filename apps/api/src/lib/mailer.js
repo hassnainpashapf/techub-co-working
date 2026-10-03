@@ -146,6 +146,10 @@ const templates = {
     subject: `Visitor arrived — ${visitorName}`,
     html: wrap('Visitor Check-in', `<p>Hi ${hostName || 'there'},</p><p><b>${visitorName}</b> has checked in at reception and is waiting to meet you.</p>`),
   }),
+  visitorInvite: ({ visitorName, hostName, code, expectedAt }) => ({
+    subject: `You're expected — check-in code ${code}`,
+    html: wrap('Visitor Invitation', `<p>Hi ${visitorName || 'there'},</p><p><b>${hostName || 'Your host'}</b> has pre-registered your visit${expectedAt ? ` on <b>${expectedAt}</b>` : ''}.</p><p>Show this code at reception:</p><p style="font-size:28px;font-weight:800;letter-spacing:6px;">${code}</p>`),
+  }),
   paymentReceived: ({ memberName, amount, invoiceNumber }) => ({
     subject: `Payment received — Rs ${Number(amount).toLocaleString()}`,
     html: wrap('Payment Received', `<p>Hi ${memberName || 'there'},</p><p>We received your payment of <b>Rs ${Number(amount).toLocaleString()}</b>${invoiceNumber ? ` for invoice <b>${invoiceNumber}</b>` : ''}. Thank you!</p>`),
@@ -157,6 +161,10 @@ const templates = {
   passwordReset: ({ name, resetUrl }) => ({
     subject: 'Reset your password',
     html: wrap('Reset Your Password', `<p>Hi ${name || 'there'},</p><p>We received a request to reset your password. Click the button below to choose a new one:</p><p><a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Reset Password</a></p><p>This link expires in <b>1 hour</b> and can only be used once. If you didn't request this, you can safely ignore this email.</p>`),
+  }),
+  referralInvite: ({ name, referrerName, joinUrl, rewardNote }) => ({
+    subject: `${referrerName || 'A friend'} invited you to join us`,
+    html: wrap('You Are Invited', `<p>Hi ${name || 'there'},</p><p><b>${referrerName || 'A friend'}</b> thinks you'd love our coworking space and invited you to join.</p><p><a href="${joinUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Accept Invitation</a></p>${rewardNote ? `<p style="color:#6b7280;font-size:13px">${rewardNote}</p>` : ''}<p style="color:#6b7280;font-size:13px">If you didn't expect this invitation, you can safely ignore this email.</p>`),
   }),
   announcement: ({ title, body, name }) => ({
     subject: `📢 ${title}`,
@@ -178,6 +186,10 @@ const templates = {
   systemHealthAlert: ({ name, issues }) => ({
     subject: '⚠️ System health alert',
     html: wrap('System Health Alert', `<p>Hi ${name || 'Admin'},</p><p>The system health check detected the following issue(s):</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${issues || 'n/a'}</pre><p>Please check the System Health page for details.</p>`),
+  }),
+  eventReminder: ({ memberName, eventTitle, eventWhen, eventLocation }) => ({
+    subject: `🎉 Reminder: ${eventTitle} tomorrow`,
+    html: wrap('Event Reminder', `<p>Hi ${memberName || 'there'},</p><p>Just a reminder that <b>${eventTitle}</b> is happening <b>tomorrow</b>:</p><p>📅 ${eventWhen || ''}<br/>📍 ${eventLocation || ''}</p><p>We look forward to seeing you!</p>`),
   }),
 };
 
@@ -240,12 +252,15 @@ const TEMPLATE_VARS = {
   bookingConfirmed: ['memberName', 'unitCode', 'date', 'startTime'],
   ticketUpdate: ['memberName', 'ticketNo', 'status'],
   visitorCheckin: ['hostName', 'visitorName'],
+  visitorInvite: ['visitorName', 'hostName', 'code', 'expectedAt'],
   paymentReceived: ['memberName', 'amount', 'invoiceNumber'],
   emailVerification: ['name', 'verifyUrl'],
   passwordReset: ['name', 'resetUrl'],
+  referralInvite: ['name', 'referrerName', 'joinUrl', 'rewardNote'],
   announcement: ['title', 'body', 'name'],
   invoiceOverdue: ['memberName', 'number', 'amount', 'dueDate', 'daysOverdue', 'level'],
   systemHealthAlert: ['name', 'issues'],
+  eventReminder: ['memberName', 'eventTitle', 'eventWhen', 'eventLocation'],
 };
 
 function listBuiltinTemplates() {

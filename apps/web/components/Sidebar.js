@@ -87,6 +87,7 @@ const NAV_MAIN = [
       { label: 'Companies', path: '/companies' },
       { label: 'Leads', path: '/leads' },
       { label: 'Membership Plans', path: '/plans' },
+      { label: 'Referrals', path: '/referrals' },
     ],
   },
   { key: 'launchpad', label: 'Launchpad', path: '/tasks', icon: 'launchpad',
@@ -95,6 +96,8 @@ const NAV_MAIN = [
       { label: 'Tickets', path: '/tickets' },
       { label: 'Maintenance', path: '/maintenance' },
       { label: 'Visitors', path: '/visitors' },
+      { label: 'Events', path: '/events' },
+      { label: 'NPS Surveys', path: '/surveys' },
       { label: 'Reminders', path: '/reminders' },
     ],
   },
@@ -112,6 +115,11 @@ const NAV_MEMBER = [
   { key: 'mytickets', label: 'My Tickets', path: '/tickets', icon: 'launchpad' },
   { key: 'mydocs', label: 'My Documents', path: '/documents', icon: 'school' },
   { key: 'myfeedback', label: 'Feedback', path: '/portal/feedback', icon: 'message' },
+  { key: 'events', label: 'Events', path: '/portal/events', icon: 'team' },
+  { key: 'marketplace', label: 'Marketplace', path: '/portal/marketplace', icon: 'launchpad' },
+  { key: 'directory', label: 'Directory', path: '/portal/directory', icon: 'team' },
+  { key: 'loyalty', label: 'Loyalty', path: '/portal/loyalty', icon: 'investor' },
+  { key: 'referrals', label: 'Referrals', path: '/portal/referrals', icon: 'message' },
 ];
 
 const NAV_OTHERS = [

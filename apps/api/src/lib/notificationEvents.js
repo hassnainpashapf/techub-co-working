@@ -12,7 +12,7 @@ const NOTIFICATION_EVENTS = [
   'announcement',
 ];
 
-const NOTIFICATION_CHANNELS = ['email', 'sms', 'whatsapp', 'inapp'];
+const NOTIFICATION_CHANNELS = ['email', 'sms', 'whatsapp', 'inapp', 'push'];
 
 const NOTIFICATION_EVENT_LABELS = {
   'booking.confirmed': 'Booking confirmed',
@@ -29,6 +29,7 @@ const NOTIFICATION_CHANNEL_LABELS = {
   sms: 'SMS',
   whatsapp: 'WhatsApp',
   inapp: 'In-App',
+  push: 'Push',
 };
 
 module.exports = {

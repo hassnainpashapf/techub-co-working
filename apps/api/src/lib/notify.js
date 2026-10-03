@@ -27,7 +27,7 @@ async function sendMessage({ to, channel, message }) {
 // { tenantId, userId?, role?, type, message }
 async function createNotification(txOrPrisma, { tenantId, userId = null, role = null, type, message }) {
   const db = txOrPrisma || prisma;
-  return db.notification.create({
+  const row = await db.notification.create({
     data: {
       tenantId,
       userId,
@@ -36,6 +36,12 @@ async function createNotification(txOrPrisma, { tenantId, userId = null, role = 
       message,
     },
   });
+  // Phase 33 Track 10: web push hook — fire-and-forget, kabhi fail nahi hone deta.
+  try {
+    const { maybePushForNotification } = require('./push');
+    maybePushForNotification(row).catch(() => {});
+  } catch (e) { /* push lib load na ho to ignore */ }
+  return row;
 }
 
 module.exports = { sendMessage, createNotification };

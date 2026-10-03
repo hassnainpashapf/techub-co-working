@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAuth } from '../../../context/AuthContext';
 import { PageHeader, StatCard, Modal, Field, Badge, Spinner, EmptyState, ErrorBanner } from '../../../components/ui';
+import SurveyBanner from '../../../components/SurveyBanner';
 
 function fmtMoney(n) {
   return `Rs ${Number(n || 0).toLocaleString()}`;
@@ -84,6 +85,161 @@ function PortalBookingModal({ onClose, onDone }) {
   );
 }
 
+// Announcements feed (phase 33) — pinned first, unread highlighted
+function AnnouncementsFeed() {
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [expanded, setExpanded] = useState({});
+
+  const load = () => {
+    api.get('/announcements/feed?limit=10')
+      .then((d) => setItems(d.announcements || []))
+      .catch(() => {})
+      .finally(() => setLoading(false));
+  };
+  useEffect(load, []);
+
+  const toggle = async (id) => {
+    const open = !expanded[id];
+    setExpanded({ ...expanded, [id]: open });
+    if (open) {
+      try {
+        await api.post(`/announcements/${id}/read`);
+        setItems((prev) => prev.map((a) => (a.id === id ? { ...a, read: true } : a)));
+      } catch { /* ignore */ }
+    }
+  };
+
+  const unread = items.filter((a) => !a.read).length;
+
+  return (
+    <div className="card-premium p-5 mt-6">
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-white font-bold">📢 Announcements</h2>
+        {unread > 0 && <span className="text-xs font-bold bg-blue-500/20 border border-blue-400/40 text-blue-200 rounded-full px-2.5 py-0.5">{unread} new</span>}
+      </div>
+      {loading ? <Spinner /> : items.length === 0 ? (
+        <p className="text-slate-400 text-sm">No announcements right now.</p>
+      ) : (
+        <div className="space-y-3">
+          {items.map((a) => (
+            <button
+              key={a.id}
+              onClick={() => toggle(a.id)}
+              className={`w-full text-left rounded-xl px-4 py-3 border transition ${
+                a.pinned
+                  ? 'bg-violet-500/[0.08] border-violet-400/40 shadow-[0_0_20px_rgba(139,92,246,0.12)]'
+                  : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15'
+              }`}
+            >
+              <div className="flex items-center gap-2">
+                {!a.read && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />}
+                {a.pinned && <span className="text-xs">📌</span>}
+                <p className="text-white font-medium text-sm flex-1">{a.title}</p>
+                <span className="text-slate-500 text-xs shrink-0">{new Date(a.createdAt).toLocaleDateString()}</span>
+              </div>
+              {expanded[a.id] && (
+                <p className="text-slate-300 text-sm mt-2 whitespace-pre-wrap">{a.body}</p>
+              )}
+              {a.senderName && (
+                <p className="text-slate-500 text-xs mt-1">— {a.senderName}</p>
+              )}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Phase 33 Track 5: Directory profile — member's own opt-in presence settings
+function DirectoryProfileSection() {
+  const [profile, setProfile] = useState(null);
+  const [optIn, setOptIn] = useState(false);
+  const [bio, setBio] = useState('');
+  const [tagsInput, setTagsInput] = useState('');
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    api.get('/directory/my-profile')
+      .then((d) => {
+        const p = d.profile || {};
+        setProfile(p);
+        setOptIn(!!p.directoryOptIn);
+        setBio(p.directoryBio || '');
+        setTagsInput((p.directoryTags || []).join(', '));
+      })
+      .catch(() => {});
+  }, []);
+
+  async function save() {
+    setSaving(true);
+    setError('');
+    setSaved(false);
+    try {
+      const tags = tagsInput.split(',').map((t) => t.trim()).filter(Boolean);
+      const d = await api.put('/directory/my-profile', { directoryOptIn: optIn, directoryBio: bio || null, directoryTags: tags });
+      setProfile(d.profile);
+      setSaved(true);
+    } catch (err) {
+      setError(err.message || 'Save failed');
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  return (
+    <div className="card-premium p-5 mt-6">
+      <h2 className="text-white font-bold mb-1">Directory Profile 🤝</h2>
+      <p className="text-slate-400 text-xs mb-4">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
+      <label className="flex items-center gap-3 mb-4 cursor-pointer">
+        <button
+          type="button"
+          role="switch"
+          aria-checked={optIn}
+          onClick={() => setOptIn(!optIn)}
+          className={`w-11 h-6 rounded-full relative transition-colors ${optIn ? 'bg-blue-500' : 'bg-white/10'}`}
+        >
+          <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${optIn ? 'left-[22px]' : 'left-0.5'}`} />
+        </button>
+        <span className="text-sm text-white font-medium">Show me in the member directory</span>
+      </label>
+      {optIn && (
+        <>
+          <div className="mb-3">
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Bio</label>
+            <textarea
+              className="input"
+              rows={2}
+              maxLength={500}
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+              placeholder="What do you do? What are you looking for?"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <input
+              className="input"
+              value={tagsInput}
+              onChange={(e) => setTagsInput(e.target.value)}
+              placeholder="design, marketing, startup"
+            />
+          </div>
+        </>
+      )}
+      {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
+      {saved && <p className="text-sm text-emerald-300 mb-3">Saved ✓</p>}
+      <div className="flex items-center gap-3">
+        <button onClick={save} disabled={saving} className="btn-primary text-sm">{saving ? 'Saving…' : 'Save'}</button>
+        <a href="/portal/directory" className="text-sm text-blue-300 hover:text-blue-200 underline">View directory →</a>
+      </div>
+    </div>
+  );
+}
+
 export default function PortalPage() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
@@ -131,6 +287,8 @@ export default function PortalPage() {
           <button onClick={() => setShowBook(true)} className="btn-primary">📅 Book a Space</button>
         }
       />
+
+      <SurveyBanner />
 
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard label="Upcoming Bookings" value={upcomingBookings.length} accent="blue" />
@@ -187,6 +345,9 @@ export default function PortalPage() {
         </div>
       </div>
 
+      {/* Announcements feed */}
+      <AnnouncementsFeed />
+
       {/* Profile */}
       <div className="card-premium p-5 mt-6">
         <h2 className="text-white font-bold mb-4">My Profile</h2>
@@ -197,6 +358,9 @@ export default function PortalPage() {
           <div><p className="text-slate-500 text-xs">Company</p><p className="text-white">{member.companyName || '—'}</p></div>
         </div>
       </div>
+
+      {/* Directory presence (opt-in) */}
+      <DirectoryProfileSection />
 
       {showBook && <PortalBookingModal onClose={() => setShowBook(false)} onDone={() => { setShowBook(false); load(); }} />}
     </div>

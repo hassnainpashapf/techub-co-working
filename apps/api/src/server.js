@@ -99,11 +99,44 @@ app.use('/api/audit-retention', require('./routes/audit-retention'));
 app.use('/api/backups', require('./routes/backups'));
 app.use('/api/health', require('./routes/health'));
 app.use('/api/data-export', require('./routes/data-export'));
+// Phase 33: community & engagement
+app.use('/api/events', require('./routes/events'));
+app.use('/api/referrals', require('./routes/referrals'));
+app.use('/api/loyalty', require('./routes/loyalty'));
+app.use('/api/marketplace', require('./routes/marketplace'));
+app.use('/api/surveys', require('./routes/surveys'));
+app.use('/api/visitor-invites', require('./routes/visitor-invites'));
+app.use('/api/push', require('./routes/push'));
+app.use('/api/directory', require('./routes/directory'));
+app.use('/api/displays', require('./routes/displays'));
 require('./lib/healthCheck');
 require('./lib/healthCheck').startHealthScheduler();
 require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler
 require('./lib/backup').registerBackupJob();
 require('./lib/backup').ensureBackupScheduled();
+// Phase 33: community jobs (auto-register handlers) + daily schedule
+require('./lib/eventReminderJob');
+require('./lib/marketplaceExpiry');
+require('./lib/npsScheduler');
+try {
+  const { enqueue } = require('./lib/jobs');
+  const prisma = require('./lib/prisma');
+  const scheduleCommunityJobs = async () => {
+    try {
+      const pending = await prisma.job.count({
+        where: { type: { in: ['event-reminder', 'marketplace-expiry', 'nps-scheduler'] }, status: 'pending' },
+      }).catch(() => 1);
+      if (!pending) {
+        const tomorrow = new Date(Date.now() + 24 * 60 * 60 * 1000);
+        for (const type of ['event-reminder', 'marketplace-expiry', 'nps-scheduler']) {
+          await enqueue(type, {}, { runAt: tomorrow }).catch(() => {});
+        }
+      }
+    } catch (e) { console.error('[phase33] schedule failed:', e.message); }
+  };
+  scheduleCommunityJobs();
+  setInterval(scheduleCommunityJobs, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase33] scheduler init failed:', e.message); }
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

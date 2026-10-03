@@ -129,6 +129,7 @@ function MemberForm({ initial, onSave, saving }) {
     creditLimit: initial?.creditLimit ?? '',
   });
   const [companies, setCompanies] = useState([]);
+
   useEffect(() => {
     api.get('/companies').then((d) => setCompanies(d.companies || [])).catch(() => {});
   }, []);
@@ -257,6 +258,54 @@ function MemberDetail({ member, onClose, onChanged }) {
       </div>
     );
   }
+  // Phase 33: loyalty points card (balance + recent ledger + manual adjust)
+  function LoyaltyCard({ memberId }) {
+    const [data, setData] = useState(null);
+    const [adj, setAdj] = useState({ points: '', reason: '' });
+    const [busy, setBusy] = useState(false);
+    const [msg, setMsg] = useState('');
+    useEffect(() => {
+      let cancelled = false;
+      api.get(`/loyalty/members/${memberId}`)
+        .then((d) => { if (!cancelled) setData(d); })
+        .catch(() => {});
+      return () => { cancelled = true; };
+    }, [memberId]);
+    if (!data) return null;
+    async function adjust(e) {
+      e.preventDefault();
+      setMsg('');
+      const pts = Math.floor(Number(adj.points));
+      if (!pts || !adj.reason.trim()) { setMsg('Points and reason required.'); return; }
+      setBusy(true);
+      try {
+        const r = await api.post(`/loyalty/members/${memberId}/adjust`, { points: pts, reason: adj.reason.trim() });
+        setData((d) => ({ ...d, balance: r.balance, entries: [r.entry, ...(d.entries || [])] }));
+        setAdj({ points: '', reason: '' });
+      } catch (err) { setMsg(err.message || 'Adjust failed'); }
+      finally { setBusy(false); }
+    }
+    return (
+      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-5">
+        <div className="flex items-center justify-between mb-2">
+          <span className="text-sm text-slate-300 font-medium">Loyalty Points</span>
+          <span className="text-lg font-bold text-violet-300">{Number(data.balance || 0).toLocaleString()} pts</span>
+        </div>
+        {(data.entries || []).slice(0, 3).map((e) => (
+          <div key={e.id} className="flex justify-between text-xs text-slate-400 py-1 border-t border-white/5">
+            <span>{e.reason.replace(/_/g, ' ')}</span>
+            <span className={e.points > 0 ? 'text-emerald-300' : 'text-red-300'}>{e.points > 0 ? `+${e.points}` : e.points}</span>
+          </div>
+        ))}
+        <form onSubmit={adjust} className="flex gap-2 mt-3">
+          <input type="number" className="input !py-1.5 text-xs w-24" placeholder="+/- pts" value={adj.points} onChange={(e) => setAdj({ ...adj, points: e.target.value })} />
+          <input className="input !py-1.5 text-xs flex-1" placeholder="Reason" value={adj.reason} onChange={(e) => setAdj({ ...adj, reason: e.target.value })} />
+          <button className="btn-secondary !py-1.5 text-xs" disabled={busy}>{busy ? '…' : 'Adjust'}</button>
+        </form>
+        {msg && <p className="text-xs text-red-300 mt-2">{msg}</p>}
+      </div>
+    );
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -300,6 +349,7 @@ function MemberDetail({ member, onClose, onChanged }) {
           ) : (
           <div>
           <CreditBar m={m} />
+          <LoyaltyCard memberId={m.id} />
           <div className="grid grid-cols-2 gap-3 text-sm mb-5">
             <div><p className="text-xs text-slate-400">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
             <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{m.email || '—'}</p></div>

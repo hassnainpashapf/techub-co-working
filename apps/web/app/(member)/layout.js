@@ -11,6 +11,7 @@ const NAV = [
   { label: 'My Bookings', path: '/m/bookings', icon: '📅' },
   { label: 'My Invoices', path: '/m/invoices', icon: '🧾' },
   { label: 'My Tickets', path: '/m/tickets', icon: '🎫' },
+  { label: 'My Visitors', path: '/m/visitors', icon: '🧍' },
   { label: 'Profile', path: '/m/profile', icon: '👤' },
 ];
 

@@ -1,0 +1,12 @@
+// Phase 33 Track 5: Member Directory (opt-in) — privacy-safe networking directory.
+// Coordinator: merge into schema.prisma — ADD TO model Member:
+//   directoryOptIn Boolean  @default(false) @map("directory_opt_in")
+//   directoryBio   String?  @map("directory_bio")
+//   directoryTags  String[] @default([]) @map("directory_tags")
+//
+// Migration SQL (coordinator: put in the phase-33 migration folder):
+// ---------------------------------------------------------------
+// ALTER TABLE "members" ADD COLUMN "directory_opt_in" BOOLEAN NOT NULL DEFAULT false;
+// ALTER TABLE "members" ADD COLUMN "directory_bio" TEXT;
+// ALTER TABLE "members" ADD COLUMN "directory_tags" TEXT[] NOT NULL DEFAULT '{}';
+// CREATE INDEX "members_tenant_id_directory_opt_in_idx" ON "members"("tenant_id", "directory_opt_in");

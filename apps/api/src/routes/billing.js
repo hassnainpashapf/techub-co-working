@@ -376,6 +376,12 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
     }
     emitWebhook(req.user.tenantId, 'payment.received', { id: result.payment.id, amount: result.payment.amount, method: result.payment.method, invoiceNumber: invoice.number });
 
+    // Phase 33: loyalty auto-earn — invoice just flipped to fully paid -> points (non-blocking)
+    if (result.invoice.status === 'paid' && invoice.status !== 'paid') {
+      const { awardForPayment } = require('../lib/loyalty');
+      awardForPayment(req.user.tenantId, invoice.memberId, invoice.amount, invoice.id).catch(() => {});
+    }
+
     return res.status(201).json(result);
   } catch (err) {
     return next(err);

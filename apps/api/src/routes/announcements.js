@@ -26,6 +26,8 @@ const announcementSchema = z.object({
   body: z.string().min(1).max(5000),
   audience: z.enum(AUDIENCES).default('all'),
   channels: z.array(z.enum(CHANNELS)).min(1).default(['inapp']),
+  pinned: z.boolean().default(false),
+  expiresAt: z.string().datetime().optional().nullable(),
 });
 
 // Resolve recipient users for an audience within the tenant
@@ -38,6 +40,60 @@ async function resolveRecipients(tenantId, audience) {
     select: { id: true, email: true, name: true },
   });
 }
+
+// Member/staff feed — active, audience-appropriate announcements, pinned first.
+// NOTE: must be registered before '/:id' style routes.
+router.get('/feed', async (req, res, next) => {
+  try {
+    const limit = Math.min(parseInt(req.query.limit, 10) || 20, 100);
+    const audiences = req.user.role === 'member' ? ['all', 'members'] : ['all', 'staff'];
+    const now = new Date();
+    const list = await prisma.announcement.findMany({
+      where: {
+        ...tenantFilter(req),
+        audience: { in: audiences },
+        OR: [{ expiresAt: null }, { expiresAt: { gt: now } }],
+      },
+      include: {
+        sender: { select: { id: true, name: true } },
+        reads: { where: { userId: req.user.sub }, select: { id: true } },
+      },
+      orderBy: [{ pinned: 'desc' }, { createdAt: 'desc' }],
+      take: limit,
+    });
+    res.json({
+      announcements: list.map((a) => ({
+        id: a.id,
+        title: a.title,
+        body: a.body,
+        audience: a.audience,
+        pinned: !!a.pinned,
+        expiresAt: a.expiresAt,
+        sentAt: a.sentAt,
+        createdAt: a.createdAt,
+        senderName: a.sender?.name || null,
+        read: a.reads.length > 0,
+      })),
+    });
+  } catch (e) { next(e); }
+});
+
+// Mark announcement as read (member)
+router.post('/:id/read', async (req, res, next) => {
+  try {
+    const existing = await prisma.announcement.findFirst({
+      where: { id: req.params.id, ...tenantFilter(req) },
+      select: { id: true },
+    });
+    if (!existing) return res.status(404).json({ error: 'Announcement not found' });
+    await prisma.announcementRead.upsert({
+      where: { announcementId_userId: { announcementId: req.params.id, userId: req.user.sub } },
+      update: {},
+      create: { announcementId: req.params.id, userId: req.user.sub },
+    });
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
 
 // List announcements
 router.get('/', senderOnly, async (req, res, next) => {
@@ -54,7 +110,7 @@ router.get('/', senderOnly, async (req, res, next) => {
 // Create + broadcast announcement
 router.post('/', senderOnly, validateBody(announcementSchema), async (req, res, next) => {
   try {
-    const { title, body, audience, channels } = req.body;
+    const { title, body, audience, channels, pinned, expiresAt } = req.body;
     const tenantId = req.user.tenantId;
 
     const recipients = await resolveRecipients(tenantId, audience);
@@ -66,6 +122,8 @@ router.post('/', senderOnly, validateBody(announcementSchema), async (req, res, 
         body,
         audience,
         channels,
+        pinned: !!pinned,
+        expiresAt: expiresAt ? new Date(expiresAt) : null,
         sentBy: req.user.sub,
         sentAt: channels.includes('inapp') ? new Date() : null,
       },
@@ -102,7 +160,7 @@ router.post('/', senderOnly, validateBody(announcementSchema), async (req, res, 
     // if (channels.includes('whatsapp')) { /* whatsappQueue.enqueue(...) */ }
 
     await writeAudit(req, 'announcement.sent', 'Announcement', announcement.id, null, {
-      title, audience, channels, recipients: recipients.length, emailed,
+      title, audience, channels, pinned: !!pinned, recipients: recipients.length, emailed,
     });
 
     res.status(201).json({ announcement, recipients: recipients.length, emailed });

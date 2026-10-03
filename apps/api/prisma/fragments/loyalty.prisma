@@ -1,0 +1,42 @@
+// Phase 33 Track 3: Loyalty Points — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model LoyaltyLedger {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  points    Int      // positive = earned, negative = redeemed
+  reason    String   // invoice_payment | referral_bonus | manual_adjust | redeemed | welcome
+  relatedId String?  @map("related_id") // e.g. invoice id, credit note id, referrer link
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@index([memberId])
+  @@map("loyalty_ledger")
+}
+
+// ADD TO Tenant model:
+//   loyaltyLedger LoyaltyLedger[]
+//
+// ADD TO Member model:
+//   loyaltyLedger LoyaltyLedger[]
+
+// --- Migration SQL ---
+// CREATE TABLE "loyalty_ledger" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "points" INTEGER NOT NULL,
+//     "reason" TEXT NOT NULL,
+//     "related_id" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "loyalty_ledger_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "loyalty_ledger_tenant_id_idx" ON "loyalty_ledger"("tenant_id");
+// CREATE INDEX "loyalty_ledger_member_id_idx" ON "loyalty_ledger"("member_id");
+// ALTER TABLE "loyalty_ledger" ADD CONSTRAINT "loyalty_ledger_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "loyalty_ledger" ADD CONSTRAINT "loyalty_ledger_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;

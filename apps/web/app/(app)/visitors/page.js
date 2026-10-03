@@ -44,6 +44,25 @@ export default function VisitorsPage() {
   const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [filter, setFilter] = useState('today');
+  const [tab, setTab] = useState('walkin');
+  const [invites, setInvites] = useState([]);
+  const [codeSearch, setCodeSearch] = useState('');
+
+  const loadInvites = (q) => {
+    const s = q !== undefined ? q : codeSearch;
+    api.get(`/visitor-invites?upcoming=true${s ? `&search=${encodeURIComponent(s)}` : ''}`)
+      .then((d) => setInvites(d.invites || []))
+      .catch((e) => setError(e.message));
+  };
+  useEffect(() => { if (allowed && tab === 'prereg') loadInvites(''); }, [allowed, tab]);
+
+  const fastCheckIn = async (code) => {
+    try {
+      await api.post(`/visitor-invites/checkin/${code}`, {});
+      loadInvites('');
+      setCodeSearch('');
+    } catch (e) { setError(e.message); }
+  };
 
   const load = () => {
     setLoading(true);
@@ -98,6 +117,21 @@ export default function VisitorsPage() {
         action={<button className="btn-primary" onClick={() => setShowForm(true)}>+ Check In</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
+      <div className="flex gap-2 mb-4 flex-wrap items-center">
+        {[['walkin', 'Walk-in'], ['prereg', 'Pre-registered']].map(([v, l]) => (
+          <button key={v} onClick={() => setTab(v)}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            {l}
+          </button>
+        ))}
+        {tab === 'prereg' && (
+          <div className="flex gap-2 ml-2">
+            <input className="input !w-44" placeholder="Search name or code…" value={codeSearch}
+              onChange={(e) => { setCodeSearch(e.target.value); loadInvites(e.target.value); }} />
+          </div>
+        )}
+      </div>
+      {tab === 'walkin' ? (<>
       <div className="flex gap-2 mb-4">
         {[['today', 'Today'], ['inside', 'Inside Now'], ['all', 'All']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)}
@@ -107,6 +141,24 @@ export default function VisitorsPage() {
         ))}
       </div>
       {loading ? <Spinner /> : <DataTable columns={columns} rows={visitors} emptyText="No visitors." />}
+      </>) : (
+      <div className="grid gap-3">
+        {invites.length === 0 ? (
+          <div className="card-premium p-8 text-center text-sm text-slate-400">No pending pre-registrations.</div>
+        ) : invites.map((i) => (
+          <div key={i.id} className="card-premium p-4 flex items-center justify-between gap-3">
+            <div>
+              <div className="font-semibold text-white">{i.visitorName}</div>
+              <div className="text-xs text-slate-400">
+                Host: {i.member?.name || '—'} · {new Date(i.expectedAt).toLocaleString()} · {purposeLabel(i.purpose)} ·{' '}
+                Code <span className="font-mono font-bold text-violet-300 tracking-widest">{i.code}</span>
+              </div>
+            </div>
+            <button className="btn-primary text-xs px-4 py-1.5 shrink-0" onClick={() => fastCheckIn(i.code)}>Check In</button>
+          </div>
+        ))}
+      </div>
+      )}
       {showForm && (
         <Modal title="Visitor Check-In" onClose={() => setShowForm(false)}>
           <CheckInForm onSave={checkIn} saving={saving} />

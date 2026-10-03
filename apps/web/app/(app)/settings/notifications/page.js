@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { PageHeader, Spinner, ErrorBanner } from '../../../../components/ui';
+import PushToggle from './PushToggle';
 
 function Toggle({ on, onChange, disabled }) {
   return (
@@ -60,6 +61,7 @@ export default function NotificationPreferencesPage() {
     <div>
       <PageHeader title="Notification Preferences" subtitle="Choose which notifications you get on each channel. Anything off here stays on by default." />
       {error && <ErrorBanner message={error} />}
+      <PushToggle />
       <div className="card-premium p-6 overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
           <thead>
