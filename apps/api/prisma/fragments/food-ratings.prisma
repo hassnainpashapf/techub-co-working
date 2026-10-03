@@ -1,0 +1,42 @@
+// Phase 43 Track 7: Food Item Ratings
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { foodRatings FoodRating[] }
+//   MenuItem { ratings FoodRating[] }
+//   Member { foodRatings FoodRating[] }
+// schema.prisma untouched by this track.
+
+model FoodRating {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  menuItemId String   @map("menu_item_id")
+  memberId   String   @map("member_id")
+  score      Int // 1..5
+  comment    String?
+  ratedAt    DateTime @default(now()) @map("rated_at")
+
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  menuItem MenuItem @relation(fields: [menuItemId], references: [id], onDelete: Cascade)
+  member   Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([menuItemId, memberId]) // ek member ek item ko ek dafa rate karta hai (dobara = update)
+  @@index([tenantId, menuItemId])
+  @@index([tenantId, memberId])
+  @@map("food_ratings")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase43_cafe) ---
+// CREATE TABLE "food_ratings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "menu_item_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "score" INTEGER NOT NULL CHECK ("score" BETWEEN 1 AND 5),
+//   "comment" TEXT,
+//   "rated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "food_ratings_menu_item_id_fkey" FOREIGN KEY ("menu_item_id") REFERENCES "menu_items"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "food_ratings_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "food_ratings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "food_ratings_menu_item_id_member_id_key" ON "food_ratings"("menu_item_id", "member_id");
+// CREATE INDEX "food_ratings_tenant_id_menu_item_id_idx" ON "food_ratings"("tenant_id", "menu_item_id");
+// CREATE INDEX "food_ratings_tenant_id_member_id_idx" ON "food_ratings"("tenant_id", "member_id");

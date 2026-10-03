@@ -118,6 +118,17 @@ require('./lib/reviewReminders'); // 'review-reminders' (self-schedule via ensur
 require('./lib/milestones'); // 'milestones' (self-schedule via ensure)
 require('./lib/badges'); // 'badges-run' auto-register on require
 require('./lib/newsletterJob'); // 'newsletter-send' auto-register on require
+// Phase 43: Cafeteria & F&B Pack (additive)
+app.use('/api/menu', require('./routes/menu'));
+app.use('/api/menu', require('./routes/food-ratings').router);
+app.use('/api/food-orders', require('./routes/food-orders'));
+app.use('/api/food-orders', require('./routes/food-payments'));
+app.use('/api/kitchen', require('./routes/kitchen'));
+app.use('/api/delivery-zones', require('./routes/delivery-zones'));
+app.use('/api/meal-plans', require('./routes/meal-plans'));
+app.use('/api/cafe-staff', require('./routes/cafe-staff'));
+app.use('/api/food-waste', require('./routes/food-waste'));
+app.use('/api/cafe', require('./routes/cafe-dashboard'));
 app.use('/api/contract-renewals', require('./routes/contract-renewals'));
 app.use('/api/member-qr', require('./routes/member-qr'));
 app.use('/api/feedback', require('./routes/feedback'));

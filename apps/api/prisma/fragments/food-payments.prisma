@@ -1,0 +1,22 @@
+// Phase 43 Track 4: Order Payment & Billing — DELTA fragment.
+// FoodOrder model Track 2 (food-orders.prisma) me banta hai. Yahan sirf
+// payment-related columns jod rahe hain — duplicate model nahi.
+//
+// Coordinator merge: FoodOrder model me ye fields jodein (koi existing
+// field mat chhein).
+
+// FoodOrder par naye fields:
+//   paymentStatus String  @default("unpaid") @map("payment_status") // unpaid | paid | added_to_invoice
+//   paymentMethod String? @map("payment_method")                    // cash | card | wallet | invoice
+//   paidAt        DateTime? @map("paid_at")
+//   invoiceId     String? @map("invoice_id") // 'invoice' method par bana Invoice
+//   @@index([tenantId, paymentStatus])
+
+// --- Migration SQL (2026100352xxxx_phase43_cafe, food-orders CREATE ke BAAD) ---
+// ALTER TABLE "food_orders"
+//   ADD COLUMN "payment_status" TEXT NOT NULL DEFAULT 'unpaid',
+//   ADD COLUMN "payment_method" TEXT,
+//   ADD COLUMN "paid_at" TIMESTAMPTZ,
+//   ADD COLUMN "invoice_id" TEXT;
+// CREATE INDEX "food_orders_tenant_id_payment_status_idx"
+//   ON "food_orders" ("tenant_id", "payment_status");

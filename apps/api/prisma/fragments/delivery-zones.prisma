@@ -1,0 +1,31 @@
+// Phase 43 Track 5: Delivery Zones
+// COORDINATOR: merge into schema.prisma + add back-relation:
+//   Tenant { deliveryZones DeliveryZone[] }
+// schema.prisma untouched by this track.
+
+model DeliveryZone {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  name        String   // e.g. "Floor 1", "Meeting Room A", "Outdoor Patio"
+  description String?
+  isActive    Boolean  @default(true) @map("is_active")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, sortOrder])
+  @@index([tenantId, isActive])
+  @@map("delivery_zones")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase43_delivery_zones) ---
+// CREATE TABLE "delivery_zones" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "description" TEXT,
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "sort_order" INTEGER NOT NULL DEFAULT 0,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "delivery_zones_tenant_id_sort_order_idx" ON "delivery_zones"("tenant_id", "sort_order");
+// CREATE INDEX "delivery_zones_tenant_id_is_active_idx" ON "delivery_zones"("tenant_id", "is_active");

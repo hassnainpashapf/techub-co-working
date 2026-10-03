@@ -1,0 +1,39 @@
+// Phase 43 Track 9: F&B Waste Log
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { foodWaste FoodWaste[] }
+//   User   { foodWasteLogged FoodWaste[] @relation("FoodWasteLogged") }
+//   MenuItem { wasteLogs FoodWaste[] }  (Track 1 menu fragment merge ke baad)
+// schema.prisma untouched by this track.
+
+model FoodWaste {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  date        DateTime @db.Date
+  menuItemId  String?  @map("menu_item_id")
+  description String
+  quantity    Int
+  reason      String   @default("spoiled") // spoiled | overcooked | expired | other
+  costEstimate Decimal? @map("cost_estimate") @db.Decimal(12, 2)
+  recordedById String  @map("recorded_by_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, date])
+  @@index([tenantId, reason])
+  @@map("food_waste")
+}
+
+// --- migration SQL (coordinator: 20261003xxxx_phase43_food_waste) ---
+// CREATE TABLE "food_waste" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "date" DATE NOT NULL,
+//   "menu_item_id" TEXT,
+//   "description" TEXT NOT NULL,
+//   "quantity" INTEGER NOT NULL,
+//   "reason" TEXT NOT NULL DEFAULT 'spoiled',
+//   "cost_estimate" DECIMAL(12,2),
+//   "recorded_by_id" TEXT NOT NULL,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "food_waste_tenant_id_date_idx" ON "food_waste"("tenant_id", "date");
+// CREATE INDEX "food_waste_tenant_id_reason_idx" ON "food_waste"("tenant_id", "reason");

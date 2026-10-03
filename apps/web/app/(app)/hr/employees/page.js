@@ -19,6 +19,78 @@ const TYPES = [
   { value: 'part_time', label: 'Part-time' },
   { value: 'contract', label: 'Contract' },
 ];
+
+// Phase 43 Track 8: employee ko café role assign/remove
+function CafeRoleTab({ employeeId }) {
+  const [staff, setStaff] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [role, setRole] = useState('chef');
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
+
+  const load = async () => {
+    setLoading(true);
+    try {
+      const { data } = await api.get('/cafe-staff');
+      const list = data.staff || data.cafeStaff || [];
+      setStaff(list.find((s) => (s.employee && s.employee.id === employeeId) || s.employeeId === employeeId) || null);
+      setError('');
+    } catch (e) {
+      setError(e?.response?.data?.error?.message || 'Load nahi hua');
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, [employeeId]);
+
+  const assign = async () => {
+    setBusy(true);
+    try {
+      await api.post('/cafe-staff/assign', { employeeId, role });
+      await load();
+    } catch (e) {
+      setError(e?.response?.data?.error?.message || 'Assign fail ho gaya');
+    } finally {
+      setBusy(false);
+    }
+  };
+  const remove = async () => {
+    setBusy(true);
+    try {
+      await api.post(`/cafe-staff/${staff.id}/deactivate`);
+      await load();
+    } catch (e) {
+      setError(e?.response?.data?.error?.message || 'Remove fail ho gaya');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  if (loading) return <Spinner />;
+  return (
+    <div className="space-y-3 text-sm">
+      {error && <ErrorBanner message={error} onRetry={load} />}
+      {staff && staff.isActive ? (
+        <div className="flex items-center justify-between rounded-lg bg-slate-800/60 px-4 py-3">
+          <div>
+            <div className="font-semibold text-slate-200 capitalize">🧑‍🍳 {staff.role}</div>
+            <div className="text-xs text-slate-400">Café staff — kitchen display access hai</div>
+          </div>
+          <button onClick={remove} disabled={busy} className="btn-ghost text-red-300 text-sm">Remove</button>
+        </div>
+      ) : (
+        <div className="flex items-center gap-2">
+          <select value={role} onChange={(e) => setRole(e.target.value)} className="input">
+            <option value="chef">Chef</option>
+            <option value="cashier">Cashier</option>
+            <option value="runner">Runner</option>
+          </select>
+          <button onClick={assign} disabled={busy} className="btn-primary text-sm">{busy ? '…' : 'Assign café role'}</button>
+        </div>
+      )}
+    </div>
+  );
+}
 const STATUSES = [
   { value: 'active', label: 'Active', tone: 'green' },
   { value: 'on_leave', label: 'On leave', tone: 'amber' },
@@ -207,6 +279,7 @@ export default function EmployeesPage() {
           <div className="flex gap-2 mb-4">
             <button className={ptab === 'info' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('info')}>Info</button>
             <button className={ptab === 'documents' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('documents')}>Documents</button>
+            <button className={ptab === 'cafe' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('cafe')}>Café Role</button>
           </div>
           {ptab === 'info' && (
             <div className="space-y-2 text-sm">
@@ -224,6 +297,9 @@ export default function EmployeesPage() {
           )}
           {ptab === 'documents' && (
             <EmployeeDocumentsTab employeeId={profile.id} />
+          )}
+          {ptab === 'cafe' && (
+            <CafeRoleTab employeeId={profile.id} />
           )}
           <div className="flex justify-end gap-2 mt-4">
             <button className="btn-ghost" onClick={() => { openEdit(profile); setProfile(null); }}>✏️ Edit</button>

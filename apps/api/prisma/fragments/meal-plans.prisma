@@ -1,0 +1,70 @@
+// Phase 43 Track 6: Meal Plans (Subscriptions)
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { mealPlans MealPlan[]; memberMealPlans MemberMealPlan[] }
+//   Member { mealPlans MemberMealPlan[] }
+// schema.prisma untouched by this track.
+
+model MealPlan {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  name        String // e.g. "Monthly Lunch"
+  description String?
+  price       Decimal  @db.Decimal(12, 2)
+  mealsPerDay Int      @default(1) @map("meals_per_day")
+  validDays   Int      @default(30) @map("valid_days") // plan duration in days
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  subscriptions MemberMealPlan[]
+
+  @@index([tenantId, isActive])
+  @@map("meal_plans")
+}
+
+model MemberMealPlan {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  memberId  String   @map("member_id")
+  planId    String   @map("plan_id")
+  startDate DateTime @map("start_date")
+  endDate   DateTime @map("end_date")
+  mealsUsed Int      @default(0) @map("meals_used")
+  mealsTotal Int     @map("meals_total")
+  status    String   @default("active") // active | expired | cancelled
+  createdAt DateTime @default(now()) @map("created_at")
+
+  plan MealPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, memberId])
+  @@index([tenantId, status])
+  @@map("member_meal_plans")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase43_cafe) ---
+// CREATE TABLE "meal_plans" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "description" TEXT,
+//   "price" DECIMAL(12,2) NOT NULL,
+//   "meals_per_day" INTEGER NOT NULL DEFAULT 1,
+//   "valid_days" INTEGER NOT NULL DEFAULT 30,
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "meal_plans_tenant_id_is_active_idx" ON "meal_plans"("tenant_id", "is_active");
+// CREATE TABLE "member_meal_plans" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "plan_id" TEXT NOT NULL,
+//   "start_date" TIMESTAMP(3) NOT NULL,
+//   "end_date" TIMESTAMP(3) NOT NULL,
+//   "meals_used" INTEGER NOT NULL DEFAULT 0,
+//   "meals_total" INTEGER NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'active',
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "member_meal_plans_plan_id_fkey" FOREIGN KEY ("plan_id") REFERENCES "meal_plans"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "member_meal_plans_tenant_id_member_id_idx" ON "member_meal_plans"("tenant_id", "member_id");
+// CREATE INDEX "member_meal_plans_tenant_id_status_idx" ON "member_meal_plans"("tenant_id", "status");

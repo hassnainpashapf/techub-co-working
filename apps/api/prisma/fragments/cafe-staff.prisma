@@ -1,0 +1,33 @@
+// Phase 43 Track 8: Kitchen Staff & Shifts for Cafe.
+// Alag model (Employee.department constrained hai: ops/finance/sales/admin/support)
+// is liye cafe role ko separate table me rakha — department untouched.
+model CafeStaff {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employeeId String   @unique @map("employee_id")
+  employee   Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  role       String   // chef | cashier | runner
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, role])
+  @@map("cafe_staff")
+}
+
+// ---- Back-relations (coordinator schema.prisma me jode) ----
+// Tenant:   cafeStaff CafeStaff[]
+// Employee: cafeStaff CafeStaff?
+
+// ---- Migration SQL (coordinator: 2026100352xxxx_phase43_cafe) ----
+// CREATE TABLE "cafe_staff" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "employee_id" TEXT NOT NULL UNIQUE REFERENCES "employees"("id") ON DELETE CASCADE,
+//   "role" TEXT NOT NULL,
+//   "is_active" BOOLEAN NOT NULL DEFAULT TRUE,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "cafe_staff_tenant_active_idx" ON "cafe_staff"("tenant_id", "is_active");
+// CREATE INDEX "cafe_staff_tenant_role_idx" ON "cafe_staff"("tenant_id", "role");
