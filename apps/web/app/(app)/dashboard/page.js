@@ -151,13 +151,25 @@ function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
+  const [trends, setTrends] = useState(null);
+  const [range, setRange] = useState('6m');
+
+  const rangeParams = () => {
+    const to = new Date();
+    const from = new Date();
+    if (range === '3m') from.setMonth(from.getMonth() - 2);
+    else if (range === '12m') from.setMonth(from.getMonth() - 11);
+    else from.setMonth(from.getMonth() - 5);
+    from.setDate(1);
+    return `from=${from.toISOString()}&to=${to.toISOString()}&granularity=month`;
+  };
 
   useEffect(() => {
     let cancelled = false;
-    api
-      .get('/dashboard')
-      .then((d) => {
-        if (!cancelled) setData(d);
+    setLoading(true);
+    Promise.all([api.get('/dashboard'), api.get(`/dashboard/trends?${rangeParams()}`)])
+      .then(([d, t]) => {
+        if (!cancelled) { setData(d); setTrends(t); }
       })
       .catch((e) => {
         if (!cancelled) setError(e.message);
@@ -168,7 +180,7 @@ function StaffDashboard() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [range]);
 
   if (loading) return <Spinner />;
   if (error) return <ErrorBanner message={error} onRetry={() => window.location.reload()} />;
@@ -183,6 +195,18 @@ function StaffDashboard() {
   const unpaidCount = duesInfo.count ?? 0;
   const revenueThisMonth = data?.revenueThisMonth ?? 0;
   const tasksPending = data?.tasksPending ?? 0;
+
+  // Real trend data from API
+  const trendLabels = trends?.trends?.labels || [];
+  const shortLabel = (l) => {
+    // 'YYYY-MM' -> 'Mon'
+    const m = l.split('-');
+    if (m.length === 2) return ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][parseInt(m[1], 10) - 1];
+    return l.slice(5);
+  };
+  const revenueData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.revenue[i] || 0 }));
+  const bookingData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.bookings[i] || 0 }));
+  const memberData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.members[i] || 0 }));
   const duesList = invoices.filter((i) =>
     ['unpaid', 'partial', 'overdue'].includes((i.status || '').toLowerCase())
   );
@@ -218,38 +242,53 @@ function StaffDashboard() {
       </div>
 
       {/* Rich Charts Row */}
+      <div className="flex items-center justify-between mb-3">
+        <h2 className="font-bold text-white text-[15px]">Trends</h2>
+        <div className="flex gap-1">
+          {[['3m', '3M'], ['6m', '6M'], ['12m', '1Y']].map(([v, l]) => (
+            <button
+              key={v}
+              onClick={() => setRange(v)}
+              className={`px-3 py-1 rounded-lg text-xs font-medium border ${range === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}
+            >{l}</button>
+          ))}
+        </div>
+      </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        <ChartCard title="Revenue Trend" sub="Last 6 months">
-          <BarChart
-            data={[
-              { label: 'May', value: revenueThisMonth * 0.62 },
-              { label: 'Jun', value: revenueThisMonth * 0.71 },
-              { label: 'Jul', value: revenueThisMonth * 0.58 },
-              { label: 'Aug', value: revenueThisMonth * 0.83 },
-              { label: 'Sep', value: revenueThisMonth * 0.92 },
-              { label: 'Oct', value: revenueThisMonth },
-            ]}
-          />
+        <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'}>
+          <BarChart data={revenueData.length ? revenueData : [{ label: '—', value: 0 }]} />
         </ChartCard>
         <ChartCard title="Occupancy" sub={`${occ.occupied ?? 0} of ${occ.total ?? 0} units`}>
           <div className="flex items-center justify-center py-2">
             <DonutChart percent={occupancyPercent} />
           </div>
         </ChartCard>
-        <ChartCard title="Bookings" sub="Last 6 months">
+        <ChartCard title="Bookings" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'}>
           <TrendChart
-            data={[
-              { label: 'May', value: 8 },
-              { label: 'Jun', value: 12 },
-              { label: 'Jul', value: 9 },
-              { label: 'Aug', value: 15 },
-              { label: 'Sep', value: 18 },
-              { label: 'Oct', value: 14 },
-            ]}
+            data={bookingData.length ? bookingData : [{ label: '—', value: 0 }]}
             color="#22c55e"
           />
         </ChartCard>
       </div>
+      {memberData.some((d) => d.value > 0) && (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+          <ChartCard title="New Members" sub="Signups per month">
+            <TrendChart data={memberData} color="#8b5cf6" />
+          </ChartCard>
+          <ChartCard title="Tickets by Status" sub="All time">
+            <div className="flex flex-wrap gap-2 py-4">
+              {Object.entries(trends?.ticketsByStatus || {}).map(([s, c]) => (
+                <span key={s} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200">
+                  <span className="capitalize">{s.replace('_', ' ')}</span>: <span className="font-bold text-white">{c}</span>
+                </span>
+              ))}
+              {Object.keys(trends?.ticketsByStatus || {}).length === 0 && (
+                <span className="text-sm text-slate-500">No tickets yet</span>
+              )}
+            </div>
+          </ChartCard>
+        </div>
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>

@@ -110,6 +110,83 @@ router.get(['/', '/stats'], async (req, res, next) => {
   }
 });
 
+// Revenue & booking trends with date-range support.
+// GET /api/dashboard/trends?from=2026-01-01&to=2026-12-31&granularity=month
+router.get('/trends', async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const to = req.query.to ? new Date(String(req.query.to)) : new Date();
+    const from = req.query.from
+      ? new Date(String(req.query.from))
+      : new Date(to.getFullYear(), to.getMonth() - 5, 1);
+    const granularity = req.query.granularity === 'day' ? 'day' : 'month';
+
+    // Revenue: payments grouped by period
+    const payments = await prisma.payment.findMany({
+      where: { ...tf, paidAt: { gte: from, lte: to } },
+      select: { amount: true, paidAt: true },
+    });
+    // Bookings grouped by period
+    const bookings = await prisma.booking.findMany({
+      where: { ...tf, startAt: { gte: from, lte: to } },
+      select: { startAt: true },
+    });
+    // New members grouped by period
+    const members = await prisma.member.findMany({
+      where: { ...tf, createdAt: { gte: from, lte: to } },
+      select: { createdAt: true },
+    });
+    // Tickets grouped by status
+    const tickets = await prisma.ticket.groupBy({
+      by: ['status'],
+      where: tf,
+      _count: true,
+    });
+
+    const keyOf = (d) => {
+      const dt = new Date(d);
+      return granularity === 'day'
+        ? dt.toISOString().slice(0, 10)
+        : `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, '0')}`;
+    };
+
+    // Build period buckets
+    const buckets = {};
+    const cursor = new Date(from);
+    while (cursor <= to) {
+      buckets[keyOf(cursor)] = { revenue: 0, bookings: 0, members: 0 };
+      if (granularity === 'day') cursor.setDate(cursor.getDate() + 1);
+      else cursor.setMonth(cursor.getMonth() + 1);
+    }
+    for (const p of payments) {
+      const k = keyOf(p.paidAt);
+      if (buckets[k]) buckets[k].revenue += num(p.amount);
+    }
+    for (const b of bookings) {
+      const k = keyOf(b.startAt);
+      if (buckets[k]) buckets[k].bookings += 1;
+    }
+    for (const m of members) {
+      const k = keyOf(m.createdAt);
+      if (buckets[k]) buckets[k].members += 1;
+    }
+
+    const labels = Object.keys(buckets).sort();
+    res.json({
+      trends: {
+        labels,
+        revenue: labels.map((l) => buckets[l].revenue),
+        bookings: labels.map((l) => buckets[l].bookings),
+        members: labels.map((l) => buckets[l].members),
+      },
+      ticketsByStatus: Object.fromEntries(tickets.map((t) => [t.status, t._count])),
+      range: { from: from.toISOString(), to: to.toISOString(), granularity },
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // Personal dashboard for the member portal role.
 async function memberDashboard(me) {
   if (!me.memberId) {
