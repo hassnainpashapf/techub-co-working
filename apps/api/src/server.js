@@ -342,6 +342,18 @@ app.use('/api/access-dashboard', require('./routes/access-dashboard'));
 try {
   require('./lib/accessAnomalies').ensureAccessAnomaliesScheduled();
 } catch (e) { console.error('[phase48] access anomalies schedule failed:', e.message); }
+// Phase 49: Unified Communication Hub Pack (additive) — route mounts
+app.use('/api/comms', require('./routes/comms'));
+app.use('/api/comms-timeline', require('./routes/comms-timeline'));
+app.use('/api/call-logs', require('./routes/call-logs'));
+app.use('/api/comms-templates', require('./routes/comms-templates'));
+app.use('/api/auto-replies', require('./routes/auto-replies'));
+app.use('/api/inbox', require('./routes/inbox'));
+app.use('/api/comms-dashboard', require('./routes/comms-dashboard'));
+// Phase 49: scheduled comms job (additive)
+try {
+  require('./lib/scheduledComms').ensureScheduledCommsJob();
+} catch (e) { console.error('[phase49] scheduled comms job failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

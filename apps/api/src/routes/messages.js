@@ -285,6 +285,26 @@ router.post('/conversations/:id/messages', validateBody(sendMsgSchema), async (r
     });
 
     await audit(req, 'message.send', msg.id, { conversationId: conv.id });
+    // Phase 49 Track 8: auto-reply hook (best effort, fire-and-forget — sirf member-sent messages par)
+    if (sender.senderMemberId && req.body.body) {
+      try {
+        const { maybeAutoReply } = require('../lib/autoReply');
+        maybeAutoReply(req.user.tenantId, 'internal', req.body.body, {
+          conversationKey: 'conv:' + conv.id,
+          sendReply: async (replyBody) => {
+            await prisma.message.create({
+              data: {
+                conversationId: conv.id,
+                senderUserId: null,
+                senderMemberId: null,
+                body: replyBody,
+                readBy: [],
+              },
+            }).catch(() => {});
+          },
+        }).catch(() => {});
+      } catch {}
+    }
     res.status(201).json({ id: msg.id });
   } catch (e) {
     next(e);

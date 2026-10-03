@@ -1,0 +1,68 @@
+// Phase 49 Track 1/10: Unified Communication Hub — unified message store.
+// DO NOT edit schema.prisma directly (10 parallel agents — merge conflicts se bachne ke liye).
+// Coordinator: merge this model + back-relations into schema.prisma, then create
+// the migration (see SQL below).
+//
+// Channels: internal | email | sms | whatsapp | voice | note
+// Directions: in | out
+// Statuses: queued | sent | delivered | failed | read
+
+model CommMessage {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  channel      String    // internal | email | sms | whatsapp | voice | note
+  direction    String    @default("out") // in | out
+  memberId     String?   @map("member_id")
+  member       Member?   @relation("MemberCommMessages", fields: [memberId], references: [id], onDelete: SetNull)
+  userId       String?   @map("user_id")
+  user         User?     @relation("UserCommMessages", fields: [userId], references: [id], onDelete: SetNull)
+  to           String?   // phone / email address for external channels
+  subject      String?
+  body         String    @db.Text
+  status       String    @default("queued") // queued | sent | delivered | failed | read
+  provider     String?   // twilio | console | meta | mailer | manual ...
+  externalId   String?   @map("external_id")
+  error        String?
+  scheduledFor DateTime? @map("scheduled_for")
+  sentAt       DateTime? @map("sent_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@index([memberId, createdAt])
+  @@index([tenantId, channel])
+  @@index([tenantId, status])
+  @@map("comm_messages")
+}
+
+// ---- Migration SQL (coordinator: put into the phase 49 migration) ----
+// CREATE TABLE "comm_messages" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "channel" TEXT NOT NULL,
+//   "direction" TEXT NOT NULL DEFAULT 'out',
+//   "member_id" TEXT,
+//   "user_id" TEXT,
+//   "to" TEXT,
+//   "subject" TEXT,
+//   "body" TEXT NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'queued',
+//   "provider" TEXT,
+//   "external_id" TEXT,
+//   "error" TEXT,
+//   "scheduled_for" TIMESTAMP(3),
+//   "sent_at" TIMESTAMP(3),
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "comm_messages_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "comm_messages_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+//   CONSTRAINT "comm_messages_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "comm_messages_tenant_id_idx" ON "comm_messages"("tenant_id");
+// CREATE INDEX "comm_messages_member_id_created_at_idx" ON "comm_messages"("member_id", "created_at");
+// CREATE INDEX "comm_messages_tenant_id_channel_idx" ON "comm_messages"("tenant_id", "channel");
+// CREATE INDEX "comm_messages_tenant_id_status_idx" ON "comm_messages"("tenant_id", "status");
+//
+// ---- Back-relations to add ----
+// Tenant:  commMessages CommMessage[]
+// Member:  commMessages CommMessage[] @relation("MemberCommMessages")
+// User:    commMessages CommMessage[] @relation("UserCommMessages")

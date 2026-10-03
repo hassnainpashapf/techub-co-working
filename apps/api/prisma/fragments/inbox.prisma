@@ -1,0 +1,26 @@
+// Phase 49 Track 9/10: Team Inbox & Assignment — schema fragment (DELTA).
+// DO NOT edit schema.prisma directly (10 parallel agents — merge conflicts se bachne ke liye).
+//
+// NOTE: CommMessage model Track 1 (comms.prisma) me hai — yahan sirf DELTA hai
+// (team-inbox workflow fields: assign + resolve).
+
+// DELTA — CommMessage model (Track 1) par 3 naye fields:
+model CommMessage {
+  // ... (Track 1 ke fields)
+  assignedToId String?   @map("assigned_to_id") // kis staff member ko assign hai
+  assignedTo   User?     @relation("CommMessageAssignedTo", fields: [assignedToId], references: [id], onDelete: SetNull)
+  isResolved   Boolean   @default(false) @map("is_resolved")
+  resolvedAt   DateTime? @map("resolved_at")
+}
+
+// ---- Migration SQL (coordinator: phase 49 migration me, comm_messages table ke BAAD) ----
+// ALTER TABLE "comm_messages" ADD COLUMN "assigned_to_id" TEXT;
+// ALTER TABLE "comm_messages" ADD COLUMN "is_resolved" BOOLEAN NOT NULL DEFAULT false;
+// ALTER TABLE "comm_messages" ADD COLUMN "resolved_at" TIMESTAMP(3);
+// CREATE INDEX "comm_messages_assigned_to_id_idx" ON "comm_messages"("assigned_to_id");
+// CREATE INDEX "comm_messages_is_resolved_idx" ON "comm_messages"("is_resolved");
+// ALTER TABLE "comm_messages" ADD CONSTRAINT "comm_messages_assigned_to_id_fkey"
+//   FOREIGN KEY ("assigned_to_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+//
+// ---- Back-relations to add ----
+// User: assignedCommMessages CommMessage[] @relation("CommMessageAssignedTo")

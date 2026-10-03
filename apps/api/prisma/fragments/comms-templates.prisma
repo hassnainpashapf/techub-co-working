@@ -1,0 +1,37 @@
+// Phase 49 Track 6: CommTemplate fragment — cross-channel message templates.
+// Merge: schema.prisma me jorein + migration SQL banayein.
+//   model CommTemplate { ... }
+// Tenant back-relation: Tenant par `commTemplates CommTemplate[]` jorein.
+
+model CommTemplate {
+  id         String   @id @default(uuid())
+  tenantId   String
+  name       String
+  channel    String   // any | email | sms | whatsapp | internal
+  subject    String?
+  body       String   @db.Text
+  variables  Json?    // ["name","amount"] — body me {{name}} placeholders
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([tenantId, name])
+  @@index([tenantId, channel])
+  @@map("comm_templates")
+}
+
+// --- Migration SQL (PostgreSQL) ---
+// CREATE TABLE comm_templates (
+//   id TEXT PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   name TEXT NOT NULL,
+//   channel TEXT NOT NULL DEFAULT 'any',
+//   subject TEXT,
+//   body TEXT NOT NULL,
+//   variables JSONB,
+//   "isActive" BOOLEAN NOT NULL DEFAULT TRUE,
+//   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   CONSTRAINT comm_templates_tenant_name_unique UNIQUE ("tenantId", name)
+// );
+// CREATE INDEX comm_templates_tenant_channel_idx ON comm_templates ("tenantId", channel);

@@ -150,6 +150,14 @@ const NAV_MAIN = [
   },
   { key: 'accessdesk', label: 'Access Desk', path: '/access/desk', icon: 'shield',
     roles: ['ceo', 'admin', 'super_admin', 'manager', 'ops', 'receptionist'] },
+  { key: 'comms', label: 'Communication', path: '/comms', icon: 'message',
+    roles: ['ceo', 'admin', 'super_admin', 'manager', 'receptionist', 'ops'],
+    children: [
+      { label: 'Communication Hub', path: '/comms' },
+      { label: 'Team Inbox', path: '/comms/inbox' },
+      { label: 'SMS Campaigns', path: '/comms/sms' },
+    ],
+  },
   { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
   { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
 ];

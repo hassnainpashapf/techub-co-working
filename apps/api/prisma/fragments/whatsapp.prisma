@@ -1,23 +1,38 @@
-// Phase 27 Track 2/5: WhatsApp notifications — schema fragment.
-// DO NOT edit schema.prisma directly (5 agents parallel). Coordinator merges
+// Phase 49 Track 3/10: per-tenant WhatsApp Business settings — schema fragment.
+// NOTE: WhatsappLog (Phase 27 Track 2/5) is ALREADY merged into schema.prisma — do NOT re-add it.
+// DO NOT edit schema.prisma directly (10 agents parallel). Coordinator merges
 // this fragment into schema.prisma + migration before deploy.
 //
 // ADD TO Tenant model:
-//   whatsappLogs WhatsappLog[]
+//   whatsappSetting WhatsappSetting?
 
-model WhatsappLog {
-  id          String   @id @default(cuid())
-  tenantId    String   @map("tenant_id")
-  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  to          String
-  template    String
-  params      Json?    @map("params")
-  status      String   @default("queued") // queued | sent | failed
-  provider    String   @default("console") // meta | console
-  providerSid String?  @map("provider_sid")
-  error       String?
-  createdAt   DateTime @default(now()) @map("created_at")
+model WhatsappSetting {
+  id                   String   @id @default(cuid())
+  tenantId             String   @unique @map("tenant_id")
+  tenant               Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  phoneNumberId        String?  @map("phone_number_id")
+  accessTokenEncrypted String?  @map("access_token_encrypted")
+  verifyTokenEncrypted String?  @map("verify_token_encrypted")
+  appSecretEncrypted   String?  @map("app_secret_encrypted")
+  businessNumber       String?  @map("business_number")
+  isActive             Boolean  @default(false) @map("is_active")
+  createdAt            DateTime @default(now()) @map("created_at")
+  updatedAt            DateTime @updatedAt @map("updated_at")
 
-  @@index([tenantId])
-  @@map("whatsapp_logs")
+  @@map("whatsapp_settings")
 }
+
+// ---- Migration SQL (coordinator: apps/api/prisma/migrations/<ts>_phase49_comms/migration.sql) ----
+// CREATE TABLE whatsapp_settings (
+//   id TEXT PRIMARY KEY,
+//   tenant_id TEXT UNIQUE NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//   phone_number_id TEXT,
+//   access_token_encrypted TEXT,
+//   verify_token_encrypted TEXT,
+//   app_secret_encrypted TEXT,
+//   business_number TEXT,
+//   is_active BOOLEAN NOT NULL DEFAULT false,
+//   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+//   updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+// );
+// CREATE INDEX whatsapp_settings_tenant_idx ON whatsapp_settings(tenant_id);

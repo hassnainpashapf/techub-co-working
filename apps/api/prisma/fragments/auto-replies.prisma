@@ -1,0 +1,36 @@
+// Phase 49 Track 8/10: Auto-Replies — schema fragment.
+// DO NOT edit schema.prisma directly (10 agents parallel). Coordinator merges
+// this fragment into schema.prisma + migration before deploy.
+//
+// ADD TO Tenant model:
+//   autoReplies AutoReply[]
+//
+// Migration SQL (coordinator):
+//   CREATE TABLE auto_replies (
+//     id TEXT PRIMARY KEY,
+//     tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//     trigger TEXT NOT NULL,            -- keyword | business_hours | off_hours
+//     keyword TEXT,
+//     channel TEXT NOT NULL,           -- whatsapp | internal
+//     reply_body TEXT NOT NULL,
+//     is_active BOOLEAN NOT NULL DEFAULT true,
+//     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+//     updated_at TIMESTAMPTZ NOT NULL DEFAULT now()
+//   );
+//   CREATE INDEX auto_replies_tenant_idx ON auto_replies(tenant_id);
+
+model AutoReply {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trigger   String   // keyword | business_hours | off_hours
+  keyword   String?
+  channel   String   // whatsapp | internal
+  replyBody String   @map("reply_body") @db.Text
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@map("auto_replies")
+}
