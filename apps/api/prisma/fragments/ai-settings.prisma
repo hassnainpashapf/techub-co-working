@@ -1,0 +1,44 @@
+// Phase 45 Track 1: AI Provider Settings — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model AiSetting {
+  id                 String   @id @default(cuid())
+  tenantId           String   @unique @map("tenant_id")
+  tenant             Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider           String   @default("disabled") // disabled | openai | anthropic | openai-compatible
+  apiKeyEncrypted    String?  @map("api_key_encrypted") // AES-256-GCM via lib/crypto.js, write-only
+  baseUrl            String?  @map("base_url") // custom base URL (openai-compatible only, https enforced)
+  model              String?  // e.g. gpt-4o-mini, claude-3-5-haiku
+  enabledFeatures    Json?    @map("enabled_features") // { chat: true, insights: true, sentiment: true }
+  monthlyTokenCap    Int?     @map("monthly_token_cap") // soft cap per tenant per month
+  tokensUsedThisMonth Int     @default(0) @map("tokens_used_this_month")
+  usageMonth         String   @default("") @map("usage_month") // YYYY-MM, resets when month changes
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("ai_settings")
+}
+
+// ADD TO Tenant model:
+//   aiSetting AiSetting?
+
+// MIGRATION SQL:
+// CREATE TABLE "ai_settings" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "provider" TEXT NOT NULL DEFAULT 'disabled',
+//   "api_key_encrypted" TEXT,
+//   "base_url" TEXT,
+//   "model" TEXT,
+//   "enabled_features" JSONB,
+//   "monthly_token_cap" INTEGER,
+//   "tokens_used_this_month" INTEGER NOT NULL DEFAULT 0,
+//   "usage_month" TEXT NOT NULL DEFAULT '',
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "ai_settings_pkey" PRIMARY KEY ("id"),
+//   CONSTRAINT "ai_settings_tenant_id_key" UNIQUE ("tenant_id"),
+//   CONSTRAINT "ai_settings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );

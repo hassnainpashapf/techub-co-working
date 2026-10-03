@@ -32,6 +32,9 @@ const ICONS = {
   support: (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/><line x1="4.93" y1="4.93" x2="9.17" y2="9.17"/><line x1="14.83" y1="14.83" x2="19.07" y2="19.07"/><line x1="14.83" y1="9.17" x2="19.07" y2="4.93"/><line x1="4.93" y1="19.07" x2="9.17" y2="14.83"/></svg>
   ),
+  insights: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a4 4 0 0 1 4 4c2.5.5 4 2.5 4 5a5 5 0 0 1-2 4v2a2 2 0 0 1-2 2h-1"/><path d="M12 2a4 4 0 0 0-4 4C5.5 6.5 4 8.5 4 11a5 5 0 0 0 2 4v2a2 2 0 0 0 2 2h1"/><path d="M12 2v3"/><circle cx="12" cy="13" r="1.5"/></svg>
+  ),
   chevron: (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
   ),
@@ -125,6 +128,8 @@ const NAV_MAIN = [
     ],
   },
   { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
+  { key: 'intelligence', label: 'Intelligence', path: '/intelligence', icon: 'insights',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'] },
   { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
   { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
 ];
@@ -259,6 +264,7 @@ const NAV_OTHERS = [
       { label: 'Booking Rules', path: '/settings/booking-rules' },
       { label: 'White Label', path: '/settings/white-label' },
       { label: 'Automation', path: '/settings/automation' },
+      { label: 'AI Settings', path: '/settings/ai' },
     ],
   },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },

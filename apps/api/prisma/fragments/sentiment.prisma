@@ -1,0 +1,12 @@
+// ------------------------------------------------- Phase 45: Feedback Sentiment Scoring
+// DELTA fragment — existing `Feedback` model par naye fields (coordinator schema.prisma me merge kare).
+//
+// Schema.prisma me `Feedback` model me ye 2 lines add karni hain:
+//
+//   sentiment      String?  @map("sentiment")        // positive | neutral | negative
+//   sentimentScore Float?   @map("sentiment_score") // -1.0 .. 1.0
+//
+// Migration SQL (coordinator 20261003540000_phase45_ai migration me jode):
+//   ALTER TABLE "feedback" ADD COLUMN "sentiment" TEXT;
+//   ALTER TABLE "feedback" ADD COLUMN "sentiment_score" DOUBLE PRECISION;
+//   CREATE INDEX IF NOT EXISTS "feedback_tenant_sentiment_idx" ON "feedback"("tenant_id", "sentiment");

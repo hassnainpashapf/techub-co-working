@@ -191,6 +191,9 @@ model Tenant {
   eventSponsors        EventSponsor[]
   eventSpeakers        EventSpeaker[]
   eventSessions        EventSession[]
+  // Phase 45: AI & Intelligence Pack
+  aiSetting            AiSetting?
+  insights             Insight[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -1560,6 +1563,8 @@ model Feedback {
   upvotes    Int      @default(0)
   status     String   @default("new") // new | reviewed | planned | done | rejected | resolved
   adminReply String?  @map("admin_reply") @db.Text
+  sentiment      String?  @map("sentiment")        // positive | neutral | negative
+  sentimentScore Float?    @map("sentiment_score")  // -1.0 .. 1.0
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
@@ -3636,4 +3641,42 @@ model FoodWaste {
   @@index([tenantId, date])
   @@index([tenantId, reason])
   @@map("food_waste")
+}
+
+// ----------------------------------------------------------------- Phase 45: AI & Intelligence Pack
+model AiSetting {
+  id                  String  @id @default(cuid())
+  tenantId            String  @unique @map("tenant_id")
+  tenant              Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider            String  @default("disabled") // disabled | openai | anthropic | openai-compatible
+  apiKeyEncrypted     String? @map("api_key_encrypted") // AES-256-GCM, write-only
+  baseUrl             String? @map("base_url") // custom base URL (openai-compatible only, https enforced)
+  model               String? // e.g. gpt-4o-mini, claude-3-5-haiku
+  enabledFeatures     Json?   @map("enabled_features") // { chat: true, insights: true, sentiment: true }
+  monthlyTokenCap     Int?    @map("monthly_token_cap")
+  tokensUsedThisMonth Int     @default(0) @map("tokens_used_this_month")
+  usageMonth          String  @default("") @map("usage_month") // YYYY-MM, resets when month changes
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  @@map("ai_settings")
+}
+
+model Insight {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  week      DateTime @map("week") @db.Date
+  type      String   // revenue | occupancy | churn | billing | leases
+  title     String
+  body      String   @db.Text
+  severity  String   @default("info") @map("severity") // info | warning | critical
+  data      Json?
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, week, type])
+  @@index([tenantId, week])
+  @@index([tenantId, isRead])
+  @@map("insights")
 }

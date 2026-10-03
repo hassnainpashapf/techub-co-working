@@ -320,6 +320,11 @@ const templates = {
     subject: `🗂️ Reminder: "${title}" expires ${expiresAt}`,
     html: wrap('Document Expiry Reminder', `<p>Hi ${memberName || 'there'},</p><p>Your document <b>"${title}"</b> expires on <b>${expiresAt}</b>.</p><p>Please renew it and upload the new copy to avoid any issues.</p><p>Warm regards,<br/>Your coworking team</p>`),
   }),
+  // Phase 45 Track 9: daily manager digest.
+  managerDigest: ({ name, dateLine, summaryHtml }) => ({
+    subject: `📊 Daily digest — ${dateLine}`,
+    html: wrap('Daily Manager Digest', `<p>Hi ${name || 'there'},</p>${summaryHtml || ''}`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -423,6 +428,7 @@ const TEMPLATE_VARS = {
   bookingReminder: ['memberName', 'title', 'unitCode', 'startAt'],
   maintenanceReminder: ['name', 'title', 'location', 'daysOpen'],
   documentReminder: ['memberName', 'title', 'expiresAt'],
+  managerDigest: ['name', 'dateLine', 'summaryHtml'],
 };
 
 function listBuiltinTemplates() {

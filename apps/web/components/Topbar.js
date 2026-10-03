@@ -69,6 +69,17 @@ export default function Topbar() {
     debounceRef.current = setTimeout(async () => {
       try {
         const data = await api.get(`/search?q=${encodeURIComponent(q)}`);
+        // Phase 45: smart-search ki extra entities (contracts, vendors, events, event tickets) bhi merge karo — staff-only, members par 403 silent skip
+        try {
+          const ss = await api.get(`/smart-search?q=${encodeURIComponent(q)}`);
+          const extra = (ss.results || []).map((r) => ({ ...r, path: r.link || r.path }));
+          const byEntity = {};
+          extra.forEach((r) => { (byEntity[r.entity] = byEntity[r.entity] || []).push(r); });
+          if (byEntity.contracts?.length) data.contracts = byEntity.contracts;
+          if (byEntity.vendors?.length) data.vendors = byEntity.vendors;
+          if (byEntity.events?.length) data.events = byEntity.events;
+          if (byEntity.eventTickets?.length) data.eventTickets = byEntity.eventTickets;
+        } catch { /* smart-search unavailable for this role — skip */ }
         setResults(data);
         setDropOpen(true);
       } catch {
@@ -106,6 +117,10 @@ export default function Topbar() {
         { key: 'tickets', label: 'Tickets', items: results.tickets || [] },
         { key: 'units', label: 'Units', items: results.units || [] },
         { key: 'companies', label: 'Companies', items: results.companies || [] },
+        { key: 'contracts', label: 'Contracts', items: results.contracts || [] },
+        { key: 'vendors', label: 'Vendors', items: results.vendors || [] },
+        { key: 'events', label: 'Events', items: results.events || [] },
+        { key: 'eventTickets', label: 'Event Tickets', items: results.eventTickets || [] },
       ].filter((g) => g.items.length > 0)
     : [];
   const totalHits = groups.reduce((n, g) => n + g.items.length, 0);

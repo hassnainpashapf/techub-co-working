@@ -292,6 +292,22 @@ try {
 try {
   require('./lib/eventEmails').ensureEventEmailsScheduled();
 } catch (e) { console.error('[phase44] event emails schedule failed:', e.message); }
+// Phase 45: AI & Intelligence Pack (additive) — route mounts
+app.use('/api/ai-settings', require('./routes/ai-settings'));
+app.use('/api/ai/chat', require('./routes/ai-chat'));
+app.use('/api/smart-search', require('./routes/smart-search'));
+app.use('/api/insights', require('./routes/insights'));
+app.use('/api/anomalies', require('./routes/anomalies'));
+app.use('/api/sentiment', require('./routes/sentiment'));
+app.use('/api/smart-pricing', require('./routes/smart-pricing'));
+app.use('/api/intelligence', require('./routes/intelligence'));
+// Phase 45: AI jobs (additive) — weekly insights, anomaly scan, churn auto-actions, manager digest
+try {
+  require('./lib/insightEngine').ensureInsightsScheduled();
+  require('./lib/anomalyDetector').ensureAnomalyScheduled();
+  require('./lib/churnActions').ensureChurnActionsScheduled();
+  require('./lib/managerDigest').ensureDigestScheduled();
+} catch (e) { console.error('[phase45] AI jobs schedule failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

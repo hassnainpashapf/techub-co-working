@@ -6,6 +6,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { PageHeader, StatCard, Modal, Field, Badge, Spinner, EmptyState, ErrorBanner } from '../../../components/ui';
 import SurveyBanner from '../../../components/SurveyBanner';
 import MailBanner from '../../../components/MailBanner';
+import AiAssistant from './_components/AiAssistant';
 
 function fmtMoney(n) {
   return `Rs ${Number(n || 0).toLocaleString()}`;
@@ -728,6 +729,7 @@ export default function PortalPage() {
 
       {showBook && <PortalBookingModal onClose={() => setShowBook(false)} onDone={() => { setShowBook(false); load(); }} />}
       {showVisitor && <VisitorInviteModal onClose={() => setShowVisitor(false)} onDone={() => { setShowVisitor(false); }} />}
+      <AiAssistant />
     </div>
   );
 }

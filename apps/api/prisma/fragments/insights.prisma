@@ -1,0 +1,49 @@
+// Phase 45 Track 4: Weekly AI Insights Engine — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+//
+// Har Monday job `generateWeeklyInsights(tenantId)` har type ka ek Insight
+// row banata/upsert karta hai (dedupe @@unique([tenantId, week, type])).
+// Dashboard unread insights dikhata hai; staff read/dismiss karta hai.
+
+model Insight {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  week      DateTime @map("week") @db.Date // us Monday ki date jis week ke liye insight hai
+  type      String   // revenue | occupancy | churn | billing | leases
+  title     String
+  body      String   @db.Text // rule-based text, ya LLM polished
+  severity  String   @default("info") @map("severity") // info | warning | critical
+  data      Json?    // detector ke asal numbers (JSON)
+  isRead    Boolean  @default(false) @map("is_read")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, week, type])
+  @@index([tenantId, week])
+  @@index([tenantId, isRead])
+  @@map("insights")
+}
+
+// ADD TO Tenant model:
+//   insights Insight[]
+
+// MIGRATION SQL:
+// CREATE TABLE "insights" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "week" DATE NOT NULL,
+//   "type" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "body" TEXT NOT NULL,
+//   "severity" TEXT NOT NULL DEFAULT 'info',
+//   "data" JSONB,
+//   "is_read" BOOLEAN NOT NULL DEFAULT false,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "insights_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "insights_tenant_id_week_type_key" ON "insights"("tenant_id", "week", "type");
+// CREATE INDEX "insights_tenant_id_week_idx" ON "insights"("tenant_id", "week");
+// CREATE INDEX "insights_tenant_id_is_read_idx" ON "insights"("tenant_id", "is_read");
+// ALTER TABLE "insights" ADD CONSTRAINT "insights_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

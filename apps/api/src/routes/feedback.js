@@ -67,6 +67,13 @@ router.post('/', validateBody(createSchema), async (req, res, next) => {
       entity: 'Feedback', entityId: fb.id, newValue: { category, rating, isAnonymous },
       ip: req.ip, userAgent: req.headers['user-agent'],
     }).catch(() => {});
+    // Phase 45: auto sentiment score (fire-and-forget)
+    try {
+      const { analyzeSentiment } = require('../lib/sentiment');
+      analyzeSentiment(body, { refine: false, tenantId: tf.tenantId }).then(({ score, sentiment }) => {
+        prisma.feedback.update({ where: { id: fb.id }, data: { sentiment, sentimentScore: score } }).catch(() => {});
+      }).catch(() => {});
+    } catch {}
 
     // Notify staff admins (in-app) about new feedback
     try {
