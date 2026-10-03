@@ -1,0 +1,58 @@
+// Phase 39 Track 5: Follow-up Reminders for Leads — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model LeadFollowup {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId     String   @map("lead_id")
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  dueAt      DateTime @map("due_at")
+  type       String   // call | email | whatsapp | tour
+  note       String?  @db.Text
+  status     String   @default("pending") // pending | done | skipped
+  assignedTo String?  @map("assigned_to")
+  assignee   User?    @relation("LeadFollowupAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status, dueAt])
+  @@index([tenantId, assignedTo, status])
+  @@index([leadId])
+  @@map("lead_followups")
+}
+
+// ADD TO Tenant model:
+//   leadFollowups LeadFollowup[]
+//
+// ADD TO Lead model:
+//   followups LeadFollowup[]
+//
+// ADD TO User model:
+//   assignedLeadFollowups LeadFollowup[] @relation("LeadFollowupAssignee")
+
+// --- Migration SQL ---
+// CREATE TABLE "lead_followups" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "lead_id" TEXT NOT NULL,
+//     "due_at" TIMESTAMP(3) NOT NULL,
+//     "type" TEXT NOT NULL,
+//     "note" TEXT,
+//     "status" TEXT NOT NULL DEFAULT 'pending',
+//     "assigned_to" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "lead_followups_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "lead_followups_tenant_id_status_due_at_idx" ON "lead_followups"("tenant_id", "status", "due_at");
+// CREATE INDEX "lead_followups_tenant_id_assigned_to_status_idx" ON "lead_followups"("tenant_id", "assigned_to", "status");
+// CREATE INDEX "lead_followups_lead_id_idx" ON "lead_followups"("lead_id");
+// ALTER TABLE "lead_followups" ADD CONSTRAINT "lead_followups_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lead_followups" ADD CONSTRAINT "lead_followups_lead_id_fkey"
+//   FOREIGN KEY ("lead_id") REFERENCES "leads"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lead_followups" ADD CONSTRAINT "lead_followups_assigned_to_fkey"
+//   FOREIGN KEY ("assigned_to") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

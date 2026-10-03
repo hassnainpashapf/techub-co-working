@@ -1,37 +1,52 @@
-// Phase 29 Track 3: Leads CRM (kanban) — schema fragment.
-// Coordinator: merge this model into apps/api/prisma/schema.prisma
-// and create the matching migration. DO NOT edit schema.prisma here
-// (10 parallel agents — merge conflicts se bachne ke liye).
+// Phase 39 Track 1: Lead Management extension — schema FRAGMENT (delta only).
+// Coordinator: the base `Lead` model from Phase 29 is ALREADY merged into
+// apps/api/prisma/schema.prisma — DO NOT re-create it.
+// Merge only the delta below: 1 new model + 2 new columns on Lead.
+//
+// DO NOT edit schema.prisma here (10 parallel agents — merge conflicts se bachne ke liye).
 
-model Lead {
-  id                String   @id @default(cuid())
-  tenantId          String   @map("tenant_id")
-  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  name              String
-  email             String?
-  phone             String?
-  company           String?
-  source            String   @default("walkin") // walkin | website | referral | social | other
-  interest          String?  // unit type of interest
-  budget            Decimal? @db.Decimal(12, 2)
-  stage             String   @default("new") // new | contacted | visit | booked | lost
-  notes             String?  @db.Text
-  assignedTo        String?  @map("assigned_to")
-  assignee          User?    @relation("LeadAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
-  convertedMemberId String?  @map("converted_member_id")
-  convertedMember   Member?  @relation("LeadConversion", fields: [convertedMemberId], references: [id], onDelete: SetNull)
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+// --- New model ---
+model LeadActivity {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId    String   @map("lead_id")
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type      String // call | email | tour | note | stage_change
+  body      String   @db.Text
+  createdBy String?  @map("created_by")
+  creator   User?    @relation("LeadActivityCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
 
-  @@index([tenantId, stage])
-  @@map("leads")
+  @@index([tenantId, leadId, createdAt])
+  @@map("lead_activities")
 }
 
-// ADD TO Tenant model:
-//   leads Lead[]
+// --- ADD TO Lead model in schema.prisma ---
+//   score          Int       @default(0) // 0..100 — lead score (Track 6 uses this)
+//   lastContactAt  DateTime? @map("last_contact_at") // last call/email/tour
+//   activities     LeadActivity[]
 //
-// ADD TO User model:
-//   assignedLeads Lead[] @relation("LeadAssignee")
+// --- ADD TO Tenant model ---
+//   leadActivities LeadActivity[]
 //
-// ADD TO Member model:
-//   convertedFromLead Lead? @relation("LeadConversion")
+// --- ADD TO User model ---
+//   leadActivitiesCreated LeadActivity[] @relation("LeadActivityCreator")
+
+// --- Migration SQL (coordinator: append to the Phase 39 migration) ---
+// ALTER TABLE "leads" ADD COLUMN "score" INTEGER NOT NULL DEFAULT 0;
+// ALTER TABLE "leads" ADD COLUMN "last_contact_at" TIMESTAMPTZ;
+// CREATE TABLE "lead_activities" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "lead_id" TEXT NOT NULL,
+//   "type" TEXT NOT NULL,
+//   "body" TEXT NOT NULL,
+//   "created_by" TEXT,
+//   "created_at" TIMESTAMPTZ(6) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "lead_activities_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "lead_activities_tenant_id_lead_id_created_at_idx" ON "lead_activities"("tenant_id", "lead_id", "created_at");
+// ALTER TABLE "lead_activities" ADD CONSTRAINT "lead_activities_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lead_activities" ADD CONSTRAINT "lead_activities_lead_id_fkey" FOREIGN KEY ("lead_id") REFERENCES "leads"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lead_activities" ADD CONSTRAINT "lead_activities_created_by_fkey" FOREIGN KEY ("created_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;

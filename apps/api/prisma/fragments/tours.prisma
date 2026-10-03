@@ -1,0 +1,55 @@
+// Phase 39 Track 3: Tour Scheduling — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model Tour {
+  id                String    @id @default(cuid())
+  tenantId          String    @map("tenant_id")
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId            String    @map("lead_id")
+  lead              Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  scheduledAt       DateTime  @map("scheduled_at")
+  durationMin       Int       @default(30) @map("duration_min")
+  assignedTo        String?   @map("assigned_to") // host staff userId
+  assignee          User?     @relation("TourAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  status            String    @default("scheduled") // scheduled | completed | cancelled | no_show
+  notes             String?   @db.Text
+  outcome           String?   // completed par: interested | not_interested | undecided
+  reminder24hSentAt  DateTime? @map("reminder_24h_sent_at")
+  reminder2hSentAt   DateTime? @map("reminder_2h_sent_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, scheduledAt])
+  @@index([leadId])
+  @@map("tours")
+}
+
+// ADD TO Tenant model:
+//   tours Tour[]
+//
+// ADD TO Lead model:
+//   tours Tour[]
+//
+// ADD TO User model:
+//   assignedTours Tour[] @relation("TourAssignee")
+
+// Migration SQL (for coordinator):
+// CREATE TABLE "tours" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "lead_id" TEXT NOT NULL REFERENCES "leads"("id") ON DELETE CASCADE,
+//   "scheduled_at" TIMESTAMPTZ NOT NULL,
+//   "duration_min" INTEGER NOT NULL DEFAULT 30,
+//   "assigned_to" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+//   "status" TEXT NOT NULL DEFAULT 'scheduled',
+//   "notes" TEXT,
+//   "outcome" TEXT,
+//   "reminder_24h_sent_at" TIMESTAMPTZ,
+//   "reminder_2h_sent_at" TIMESTAMPTZ,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "tours_tenant_id_scheduled_at_idx" ON "tours"("tenant_id", "scheduled_at");
+// CREATE INDEX "tours_lead_id_idx" ON "tours"("lead_id");

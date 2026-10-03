@@ -1,0 +1,57 @@
+// Phase 39 Track 4: Quotations for Leads — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model Quotation {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId    String   @map("lead_id")
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  number    String   // Q-YYYYMM-NNNN series, unique per tenant
+  items     Json     // [{ desc, qty, price }]
+  total     Decimal  @db.Decimal(12, 2)
+  validTill DateTime @map("valid_till")
+  status    String   @default("draft") // draft | sent | accepted | rejected | expired
+  sentAt    DateTime? @map("sent_at")
+  createdBy String?  @map("created_by")
+  creator   User?    @relation("QuotationCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, number])
+  @@index([tenantId, leadId])
+  @@index([tenantId, status])
+  @@map("quotations")
+}
+
+// ADD TO Tenant model:
+//   quotations Quotation[]
+//
+// ADD TO Lead model:
+//   quotations Quotation[]
+//
+// ADD TO User model:
+//   createdQuotations Quotation[] @relation("QuotationCreator")
+
+// --- Migration SQL (for coordinator's migration file) ---
+// CREATE TABLE "quotations" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "lead_id" TEXT NOT NULL REFERENCES "leads"("id") ON DELETE CASCADE,
+//   "number" TEXT NOT NULL,
+//   "items" JSONB NOT NULL,
+//   "total" DECIMAL(12,2) NOT NULL,
+//   "valid_till" TIMESTAMPTZ NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'draft',
+//   "sent_at" TIMESTAMPTZ,
+//   "created_by" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+//   "notes" TEXT,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   UNIQUE ("tenant_id", "number")
+// );
+// CREATE INDEX "quotations_tenant_id_lead_id_idx" ON "quotations"("tenant_id", "lead_id");
+// CREATE INDEX "quotations_tenant_id_status_idx" ON "quotations"("tenant_id", "status");

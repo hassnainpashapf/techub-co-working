@@ -173,6 +173,11 @@ const templates = {
     subject: `New invoice ${number} — Rs ${Number(amount).toLocaleString()}`,
     html: wrap('New Invoice', `<p>Hi ${memberName || 'there'},</p><p>A new invoice <b>${number}</b> for <b>Rs ${Number(amount).toLocaleString()}</b> has been issued${dueDate ? `, due <b>${dueDate}</b>` : ''}.</p><p>Please pay at your earliest convenience.</p>`),
   }),
+  // Phase 39 Track 7: welcome email on lead → member conversion.
+  memberWelcome: ({ memberName, planName, unitCode }) => ({
+    subject: `Welcome aboard${planName ? ` — ${planName}` : ''}! 🎉`,
+    html: wrap('Welcome to Your Coworking Space', `<p>Hi ${memberName || 'there'},</p><p>Your membership is now <b>active</b> — welcome to the community! 🎉</p>${planName ? `<p>Plan: <b>${planName}</b></p>` : ''}${unitCode ? `<p>Your space: <b>${unitCode}</b></p>` : ''}<p>We can't wait to see you around. Reach out anytime if you need anything.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
   bookingConfirmed: ({ memberName, unitCode, date, startTime }) => ({
     subject: `Booking confirmed — ${unitCode}`,
     html: wrap('Booking Confirmed', `<p>Hi ${memberName || 'there'},</p><p>Your booking for <b>${unitCode}</b> on <b>${date}</b> at <b>${startTime}</b> is confirmed.</p>`),
@@ -366,6 +371,7 @@ function renderCustom(custom, data) {
 // Built-in template keys + their variable names (for the template-editor UI).
 const TEMPLATE_VARS = {
   invoiceCreated: ['memberName', 'number', 'amount', 'dueDate'],
+  memberWelcome: ['memberName', 'planName', 'unitCode'],
   bookingConfirmed: ['memberName', 'unitCode', 'date', 'startTime'],
   ticketUpdate: ['memberName', 'ticketNo', 'status'],
   visitorCheckin: ['hostName', 'visitorName'],

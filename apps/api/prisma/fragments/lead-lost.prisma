@@ -1,0 +1,16 @@
+// Phase 39 Track 8: Lost-lead analysis — extend the Lead model.
+// Coordinator: ADD these fields to the Lead model in apps/api/prisma/schema.prisma
+// (the Lead model itself lives in fragments/leads.prisma; Track 1 may have
+// rewritten its stages to new/contacted/tour_scheduled/quoted/negotiating/won/lost.
+// These two fields are stage-agnostic — they work on any Lead shape).
+//
+//   lostReason String?  @map("lost_reason") // price | location | timing | competitor | no_response | other
+//   lostAt     DateTime? @map("lost_at")    // when the lead was marked lost
+//
+// Migration SQL (append to the Phase 39 migration):
+//   ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "lost_reason" TEXT;
+//   ALTER TABLE "leads" ADD COLUMN IF NOT EXISTS "lost_at" TIMESTAMPTZ(6);
+//
+// NOTE: leads already in stage='lost' before this phase get lostReason=NULL.
+// The lost-analysis endpoint treats NULL/empty as "other/unspecified" so
+// old data still counts (coordinator: do NOT backfill blindly).

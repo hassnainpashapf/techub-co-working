@@ -70,7 +70,16 @@ app.use('/api/cache', require('./routes/cache'));
 app.use('/api/jobs', require('./routes/jobs'));
 app.use('/api/storage', require('./routes/storage'));
 app.use('/api/recurring-bookings', require('./routes/recurring-bookings'));
+app.use('/api/leads', require('./routes/lead-public')); // public, auth-free — PEHLE mount
 app.use('/api/leads', require('./routes/leads'));
+app.use('/api/leads', require('./routes/lead-lost')); // /lost-analysis, /:id/lost
+app.use('/api/tours', require('./routes/tours'));
+app.use('/api/quotations', require('./routes/quotations'));
+app.use('/api/lead-followups', require('./routes/lead-followups'));
+app.use('/api/lead-import', require('./routes/lead-import'));
+require('./lib/quotationExpiry'); // 'quotation-expiry'
+require('./lib/leadFollowupDigest'); // 'lead-followup-digest'
+require('./lib/tourReminders'); // 'tour-reminders'
 app.use('/api/contract-renewals', require('./routes/contract-renewals'));
 app.use('/api/member-qr', require('./routes/member-qr'));
 app.use('/api/feedback', require('./routes/feedback'));
@@ -176,6 +185,22 @@ try {
   schedulePhase38Jobs();
   setInterval(schedulePhase38Jobs, 24 * 60 * 60 * 1000).unref();
 } catch (e) { console.error('[phase38] scheduler init failed:', e.message); }
+
+// Phase 39: CRM jobs (additive) — quotation expiry + lead followup digest (daily), tour reminders (hourly)
+try {
+  const { enqueue } = require('./lib/jobs');
+  const prisma39 = require('./lib/prisma');
+  const schedulePhase39Jobs = async () => {
+    try {
+      require('./lib/quotationExpiry').ensureQuotationExpiryScheduled();
+      require('./lib/leadFollowupDigest').ensureLeadFollowupDigestScheduled();
+      const pendingT = await prisma39.job.count({ where: { type: 'tour-reminders', status: 'pending' } }).catch(() => 1);
+      if (!pendingT) await enqueue('tour-reminders', {}, { runAt: new Date(Date.now() + 60 * 60 * 1000) }).catch(() => {});
+    } catch (e) { console.error('[phase39] schedule failed:', e.message); }
+  };
+  schedulePhase39Jobs();
+  setInterval(schedulePhase39Jobs, 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase39] scheduler init failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

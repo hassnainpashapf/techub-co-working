@@ -85,6 +85,10 @@ model Tenant {
   jobs                    Job[]
   recurringBookings       RecurringBooking[]
   leads                   Lead[]
+  leadActivities          LeadActivity[]
+  tours                   Tour[]
+  quotations              Quotation[]
+  leadFollowups           LeadFollowup[]
   feedback                Feedback[]
   emailTemplates          EmailTemplate[]
   savedViews              SavedView[]
@@ -189,6 +193,10 @@ model User {
   sentAnnouncements           Announcement[]           @relation("SentAnnouncements")
   notificationPreferences     NotificationPreference[]
   assignedLeads               Lead[]                   @relation("LeadAssignee")
+  leadActivitiesCreated     LeadActivity[]           @relation("LeadActivityCreator")
+  assignedTours             Tour[]                   @relation("TourAssignee")
+  createdQuotations         Quotation[]              @relation("QuotationCreator")
+  assignedLeadFollowups     LeadFollowup[]           @relation("LeadFollowupAssignee")
   savedViews                  SavedView[]
   salaryStructures            SalaryStructure[]        @relation("SalaryStructures")
   payslips                    Payslip[]                @relation("Payslips")
@@ -1350,11 +1358,103 @@ model Lead {
   assignee          User?    @relation("LeadAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
   convertedMemberId String?  @map("converted_member_id")
   convertedMember   Member?  @relation("LeadConversion", fields: [convertedMemberId], references: [id], onDelete: SetNull)
+  score             Int      @default(0) // 0..100 — lead score (Track 6)
+  lastContactAt     DateTime? @map("last_contact_at") // last call/email/tour
+  lostReason        String?  @map("lost_reason") // price | location | timing | competitor | no_response | other
+  lostAt            DateTime? @map("lost_at")
+  activities        LeadActivity[]
+  tours             Tour[]
+  quotations        Quotation[]
+  followups         LeadFollowup[]
   createdAt         DateTime @default(now()) @map("created_at")
   updatedAt         DateTime @updatedAt @map("updated_at")
 
   @@index([tenantId, stage])
   @@map("leads")
+}
+
+model LeadActivity {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId    String   @map("lead_id")
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  type      String // call | email | tour | note | stage_change
+  body      String   @db.Text
+  createdBy String?  @map("created_by")
+  creator   User?    @relation("LeadActivityCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, leadId, createdAt])
+  @@map("lead_activities")
+}
+
+model Tour {
+  id                String    @id @default(cuid())
+  tenantId          String    @map("tenant_id")
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId            String    @map("lead_id")
+  lead              Lead      @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  scheduledAt       DateTime  @map("scheduled_at")
+  durationMin       Int       @default(30) @map("duration_min")
+  assignedTo        String?   @map("assigned_to") // host staff userId
+  assignee          User?     @relation("TourAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  status            String    @default("scheduled") // scheduled | completed | cancelled | no_show
+  notes             String?   @db.Text
+  outcome           String?   // completed par: interested | not_interested | undecided
+  reminder24hSentAt  DateTime? @map("reminder_24h_sent_at")
+  reminder2hSentAt   DateTime? @map("reminder_2h_sent_at")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, scheduledAt])
+  @@index([leadId])
+  @@map("tours")
+}
+
+model Quotation {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId    String   @map("lead_id")
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  number    String   // Q-YYYYMM-NNNN series, unique per tenant
+  items     Json     // [{ desc, qty, price }]
+  total     Decimal  @db.Decimal(12, 2)
+  validTill DateTime @map("valid_till")
+  status    String   @default("draft") // draft | sent | accepted | rejected | expired
+  sentAt    DateTime? @map("sent_at")
+  createdBy String?  @map("created_by")
+  creator   User?    @relation("QuotationCreator", fields: [createdBy], references: [id], onDelete: SetNull)
+  notes     String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, number])
+  @@index([tenantId, leadId])
+  @@index([tenantId, status])
+  @@map("quotations")
+}
+
+model LeadFollowup {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  leadId     String   @map("lead_id")
+  lead       Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  dueAt      DateTime @map("due_at")
+  type       String   // call | email | whatsapp | tour
+  note       String?  @db.Text
+  status     String   @default("pending") // pending | done | skipped
+  assignedTo String?  @map("assigned_to")
+  assignee   User?    @relation("LeadFollowupAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status, dueAt])
+  @@index([tenantId, assignedTo, status])
+  @@index([leadId])
+  @@map("lead_followups")
 }
 
 model Feedback {

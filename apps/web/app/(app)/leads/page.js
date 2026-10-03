@@ -9,6 +9,7 @@ const STAGES = [
   { key: 'contacted', label: 'Contacted', tone: 'amber' },
   { key: 'visit', label: 'Visit', tone: 'violet' },
   { key: 'booked', label: 'Booked', tone: 'green' },
+  { key: 'won', label: 'Won', tone: 'green' },
   { key: 'lost', label: 'Lost', tone: 'slate' },
 ];
 const SOURCES = ['walkin', 'website', 'referral', 'social', 'other'];
@@ -73,11 +74,101 @@ function LeadCard({ lead, onMove, onEdit, onConvert, onDelete }) {
         </select>
         <button onClick={() => onEdit(lead)} className="btn-secondary !py-1 !px-2 !text-xs">Edit</button>
         {!lead.convertedMemberId && lead.stage !== 'lost' && (
-          <button onClick={() => onConvert(lead)} className="btn-primary !py-1 !px-2 !text-xs" title="Convert to member">Convert</button>
+          <button onClick={() => onConvert(lead)} className="btn-primary !py-1 !px-2 !text-xs" title="Convert to member">Convert to member</button>
         )}
         <button onClick={() => onDelete(lead)} className="!py-1 !px-2 !text-xs text-red-400 hover:text-red-300">✕</button>
       </div>
     </div>
+  );
+}
+
+// Phase 39 Track 7: convert-to-member modal (plan, unit, start date) + success with member link.
+function ConvertModal({ lead, onClose, onDone }) {
+  const [plans, setPlans] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [f, setF] = useState({
+    planId: '',
+    unitId: '',
+    startDate: new Date().toISOString().slice(0, 10),
+    rentAmount: lead?.budget != null ? String(lead.budget) : '',
+  });
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
+  const [result, setResult] = useState(null);
+
+  useEffect(() => {
+    Promise.all([api.get('/membership-plans?isActive=true'), api.get('/spaces/units?status=vacant')])
+      .then(([p, u]) => {
+        setPlans(p.plans || []);
+        setUnits((u.units || []).filter((x) => x.type !== 'meeting_room'));
+      })
+      .catch((e) => setError(e.message));
+  }, []);
+
+  const submit = async (e) => {
+    e.preventDefault();
+    setSaving(true);
+    setError('');
+    try {
+      const body = {
+        planId: f.planId || null,
+        unitId: f.unitId || null,
+        startDate: f.startDate || undefined,
+        rentAmount: f.rentAmount === '' ? null : Number(f.rentAmount),
+      };
+      const data = await api.post(`/leads/${lead.id}/convert`, body);
+      setResult(data);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <Modal open={!!lead} onClose={onClose} title={`Convert to member — ${lead?.name || ''}`}>
+      {error && <ErrorBanner message={error} onClose={() => setError('')} />}
+      {result ? (
+        <div className="text-center py-4">
+          <div className="text-4xl mb-3">🎉</div>
+          <div className="text-white font-semibold text-lg">"{result.member.name}" is now a member!</div>
+          {result.contract && (
+            <div className="text-sm text-slate-400 mt-2">Contract created — {result.contract.unitId ? `unit ${result.contract.unitId}` : ''} from {new Date(result.contract.startDate).toLocaleDateString()}</div>
+          )}
+          <a href="/members" className="btn-primary inline-block mt-4" onClick={() => { onClose(); onDone(); }}>
+            View member →
+          </a>
+        </div>
+      ) : (
+        <form onSubmit={submit}>
+          <Field label="Membership plan (optional)">
+            <select className="input" value={f.planId} onChange={(e) => setF({ ...f, planId: e.target.value })}>
+              <option value="">No plan</option>
+              {plans.map((p) => <option key={p.id} value={p.id}>{p.name} — Rs {Number(p.price).toLocaleString()}</option>)}
+            </select>
+          </Field>
+          <Field label="Unit (optional — creates contract)">
+            <select className="input" value={f.unitId} onChange={(e) => {
+              const u = units.find((x) => x.id === e.target.value);
+              setF({ ...f, unitId: e.target.value, rentAmount: u ? String(Number(u.monthlyPrice)) : f.rentAmount });
+            }}>
+              <option value="">No unit / contract</option>
+              {units.map((u) => <option key={u.id} value={u.id}>{u.code} — Rs {Number(u.monthlyPrice).toLocaleString()}/mo</option>)}
+            </select>
+          </Field>
+          <div className="grid grid-cols-2 gap-4">
+            <Field label="Start date">
+              <input type="date" className="input" value={f.startDate} onChange={(e) => setF({ ...f, startDate: e.target.value })} />
+            </Field>
+            <Field label="Rent amount (Rs)">
+              <input type="number" min="0" className="input" value={f.rentAmount} onChange={(e) => setF({ ...f, rentAmount: e.target.value })} placeholder="0" />
+            </Field>
+          </div>
+          {!lead?.phone && <div className="text-xs text-amber-400 mb-3">⚠️ Lead has no phone — add one first (phone is required for members).</div>}
+          <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Converting…' : 'Convert to member'}</button>
+        </form>
+      )}
+    </Modal>
   );
 }
 
@@ -87,6 +178,7 @@ export default function LeadsPage() {
   const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [modal, setModal] = useState(null); // 'create' | lead-obj | null
+  const [convertLead, setConvertLead] = useState(null); // lead being converted
   const [saving, setSaving] = useState(false);
 
   const load = async (q = '') => {
@@ -133,13 +225,7 @@ export default function LeadsPage() {
   };
 
   const convert = async (lead) => {
-    if (!confirm(`Convert "${lead.name}" to a member?`)) return;
-    try {
-      await api.post(`/leads/${lead.id}/convert`);
-      load(search);
-    } catch (err) {
-      setError(err.message);
-    }
+    setConvertLead(lead);
   };
 
   const del = async (lead) => {
@@ -191,6 +277,13 @@ export default function LeadsPage() {
       <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'create' ? 'Add Lead' : 'Edit Lead'}>
         {modal && <LeadForm initial={modal === 'create' ? null : modal} onSave={save} saving={saving} />}
       </Modal>
+      {convertLead && (
+        <ConvertModal
+          lead={convertLead}
+          onClose={() => setConvertLead(null)}
+          onDone={() => load(search)}
+        />
+      )}
     </div>
   );
 }
