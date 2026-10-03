@@ -44,6 +44,9 @@ const ICONS = {
   chevUpDown: (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="8 9 12 5 16 9"/><polyline points="8 15 12 19 16 15" opacity="0.4"/></svg>
   ),
+  shield: (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+  ),
 };
 
 const NAV_MAIN = [
@@ -137,6 +140,16 @@ const NAV_MAIN = [
   },
   { key: 'intelligence', label: 'Intelligence', path: '/intelligence', icon: 'insights',
     roles: ['ceo', 'admin', 'super_admin', 'manager'] },
+  { key: 'access', label: 'Access', path: '/access', icon: 'shield',
+    roles: ['ceo', 'admin', 'super_admin', 'manager', 'ops'],
+    children: [
+      { label: 'Access Dashboard', path: '/access' },
+      { label: 'Doors & Access Points', path: '/access/doors' },
+      { label: 'Day Passes', path: '/access/passes' },
+    ],
+  },
+  { key: 'accessdesk', label: 'Access Desk', path: '/access/desk', icon: 'shield',
+    roles: ['ceo', 'admin', 'super_admin', 'manager', 'ops', 'receptionist'] },
   { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
   { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
 ];
@@ -155,6 +168,7 @@ const NAV_MEMBER = [
   { key: 'mypolls', label: 'Polls', path: '/portal/polls', icon: 'team' },
   { key: 'mymessages', label: 'Messages', path: '/portal/messages', icon: 'message' },
   { key: 'mycafe', label: 'Café', path: '/portal/cafe', icon: 'workspaces' },
+  { key: 'myaccess', label: 'My Access', path: '/portal/access', icon: 'shield' },
   { key: 'events', label: 'Events', path: '/portal/events', icon: 'team' },
   { key: 'marketplace', label: 'Marketplace', path: '/portal/marketplace', icon: 'launchpad' },
   { key: 'directory', label: 'Directory', path: '/portal/directory', icon: 'team' },

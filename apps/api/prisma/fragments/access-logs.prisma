@@ -1,0 +1,53 @@
+// Phase 48 Track 3/10: Access Logs — entry/exit events per door.
+// Dependency: Track 1 ka doors.prisma fragment PEHLE merge ho — us me Door model hai.
+// Coordinator: ye model Door + Member se link karta hai.
+//
+// model AccessLog {
+//   id             String   @id @default(cuid())
+//   tenantId       String
+//   doorId         String
+//   door           Door     @relation(fields: [doorId], references: [id], onDelete: Cascade)
+//   memberId       String?
+//   member         Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+//   credentialType String?  // pin | rfid | mobile | manual | qr
+//   direction      String   // in | out
+//   result         String   // granted | denied
+//   reason         String?  // denied ki wajah ya manual note
+//   createdById    String?  // manual entry kis staff ne ki
+//   createdAt      DateTime @default(now())
+//
+//   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+//
+//   @@index([tenantId, doorId, createdAt])
+//   @@index([tenantId, memberId, createdAt])
+//   @@index([tenantId, result, createdAt])
+// }
+//
+// Back-relations:
+//   Door model me:   accessLogs AccessLog[]
+//   Member model me: accessLogs AccessLog[]
+//   Tenant model me: accessLogs AccessLog[]
+//
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "AccessLog" (
+//   "id" TEXT NOT NULL,
+//   "tenantId" TEXT NOT NULL,
+//   "doorId" TEXT NOT NULL,
+//   "memberId" TEXT,
+//   "credentialType" TEXT,
+//   "direction" TEXT NOT NULL,
+//   "result" TEXT NOT NULL,
+//   "reason" TEXT,
+//   "createdById" TEXT,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "AccessLog_pkey" PRIMARY KEY ("id")
+// );
+// ALTER TABLE "AccessLog" ADD CONSTRAINT "AccessLog_doorId_fkey"
+//   FOREIGN KEY ("doorId") REFERENCES "Door"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "AccessLog" ADD CONSTRAINT "AccessLog_memberId_fkey"
+//   FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "AccessLog" ADD CONSTRAINT "AccessLog_tenantId_fkey"
+//   FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE INDEX "AccessLog_tenantId_doorId_createdAt_idx" ON "AccessLog"("tenantId", "doorId", "createdAt");
+// CREATE INDEX "AccessLog_tenantId_memberId_createdAt_idx" ON "AccessLog"("tenantId", "memberId", "createdAt");
+// CREATE INDEX "AccessLog_tenantId_result_createdAt_idx" ON "AccessLog"("tenantId", "result", "createdAt");

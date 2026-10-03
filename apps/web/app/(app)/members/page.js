@@ -15,6 +15,7 @@ import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 import SavedViews from '../../../components/SavedViews';
 import { useAuth } from '../../../context/AuthContext';
 import IntroductionsWidget from '../../../components/IntroductionsWidget'; // Phase 40 Track 9
+import MemberAccessTab from '../../../components/MemberAccessTab'; // Phase 48 Track 2
 
 const STATUS_TONE = { active: 'green', inactive: 'slate', suspended: 'red', pending: 'amber' };
 const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
@@ -348,14 +349,16 @@ function MemberDetail({ member, onClose, onChanged }) {
         <div>
           {error && <ErrorBanner message={error} />}
           <div className="flex gap-2 mb-5">
-            {['overview', 'timeline'].map((t) => (
+            {['overview', 'timeline', 'access'].map((t) => (
               <button key={t} onClick={() => setTab(t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
-                {t}
+                {t === 'access' ? '🔑 Access' : t}
               </button>
             ))}
           </div>
-          {tab === 'timeline' ? (
+          {tab === 'access' ? (
+            <MemberAccessTab memberId={m.id} />
+          ) : tab === 'timeline' ? (
             <MemberTimeline memberId={m.id} />
           ) : (
           <div>

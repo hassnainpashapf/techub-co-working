@@ -1,0 +1,23 @@
+// Phase 48 Track 1/10: Doors & Access Points — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model Door {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  location  String?  // e.g. "Ground floor, left corridor"
+  deviceId  String?  @map("device_id") // hardware controller id (optional integration)
+  type      String   @default("internal") // entrance | internal | exit
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, type])
+  @@map("doors")
+}
+
+// ADD TO Tenant model:
+//   doors Door[]

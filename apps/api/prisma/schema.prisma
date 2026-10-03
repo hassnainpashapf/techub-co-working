@@ -201,6 +201,12 @@ model Tenant {
   // Phase 47: Custom Forms & Surveys Builder Pack
   customForms          CustomForm[]
   formSubmissions      FormSubmission[]
+  // Phase 48: Smart Access & Entry Pack
+  doors                Door[]
+  accessCredentials    AccessCredential[]
+  accessLogs           AccessLog[]
+  accessSchedules      AccessSchedule[]
+  dayPasses            DayPass[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -271,6 +277,7 @@ model User {
   announcementReads           AnnouncementRead[]       @relation("AnnouncementReads")
   kpiDashboards               KpiDashboard[]           @relation("KpiDashboardOwner") // Phase 35
   calendarConnections         CalendarConnection[] // Phase 36
+  createdDayPasses            DayPass[]              @relation("CreatedDayPasses") // Phase 48
 
   @@index([tenantId, role])
   @@map("users")
@@ -478,6 +485,11 @@ model Member {
   eventTickets               EventTicket[]
   // Phase 47: Custom Forms & Surveys Builder Pack
   formSubmissions            FormSubmission[]
+  // Phase 48: Smart Access & Entry Pack
+  accessCredentials          AccessCredential[]
+  accessLogs                 AccessLog[]
+  accessSchedules            AccessSchedule[]      @relation("MemberAccessSchedules")
+  hostedDayPasses            DayPass[]             @relation("HostedDayPasses")
 }
 
 // ------------------------------------------------------------ company ------
@@ -3803,4 +3815,108 @@ model FormSubmission {
   @@index([tenantId, submitterEmail])
   @@index([tenantId, status])
   @@index([formId, status])
+}
+
+// ------------------------------------------------- Phase 48: Smart Access & Entry Pack
+model Door {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  location  String?
+  deviceId  String?  @map("device_id") // hardware controller id (optional integration)
+  type      String   @default("internal") // entrance | internal | exit
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  accessLogs      AccessLog[]
+  accessSchedules AccessSchedule[] @relation("DoorAccessSchedules")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, type])
+  @@map("doors")
+}
+
+model AccessCredential {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  tenant     Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String    @map("member_id")
+  member     Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  type       String    // pin | rfid | mobile
+  valueHash  String    @map("value_hash") // sirf hash — PIN/token kabhi plain nahi
+  isActive   Boolean   @default(true) @map("is_active")
+  expiresAt  DateTime? @map("expires_at")
+  lastUsedAt DateTime? @map("last_used_at")
+  createdAt  DateTime  @default(now()) @map("created_at")
+
+  @@unique([tenantId, memberId, type, valueHash])
+  @@index([tenantId, memberId])
+  @@map("access_credentials")
+}
+
+model AccessLog {
+  id             String   @id @default(cuid())
+  tenantId       String   @map("tenant_id")
+  tenant         Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  doorId         String   @map("door_id")
+  door           Door     @relation(fields: [doorId], references: [id], onDelete: Cascade)
+  memberId       String?  @map("member_id")
+  member         Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  credentialType String?  @map("credential_type") // pin | rfid | mobile | manual | qr
+  direction      String   // in | out
+  result         String   // granted | denied
+  reason         String?  // denied ki wajah ya manual note
+  createdById    String?  @map("created_by_id") // manual entry kis staff ne ki
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, doorId, createdAt])
+  @@index([tenantId, memberId, createdAt])
+  @@index([tenantId, result, createdAt])
+  @@map("access_logs")
+}
+
+model AccessSchedule {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String?  @map("member_id")
+  member     Member?  @relation("MemberAccessSchedules", fields: [memberId], references: [id], onDelete: Cascade)
+  doorId     String?  @map("door_id")
+  door       Door?    @relation("DoorAccessSchedules", fields: [doorId], references: [id], onDelete: Cascade)
+  daysOfWeek Json     @map("days_of_week") // ISO [1..7]
+  startTime  String   @map("start_time")   // "HH:mm"
+  endTime    String   @map("end_time")     // endTime <= startTime = overnight window
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, memberId])
+  @@index([tenantId, doorId])
+  @@map("access_schedules")
+}
+
+model DayPass {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  visitorName  String    @map("visitor_name")
+  visitorPhone String?   @map("visitor_phone")
+  hostMemberId String?   @map("host_member_id")
+  hostMember   Member?   @relation("HostedDayPasses", fields: [hostMemberId], references: [id], onDelete: SetNull)
+  code         String    // short human code, unique per tenant
+  validFrom    DateTime  @map("valid_from")
+  validUntil   DateTime  @map("valid_until")
+  doorIds      Json?     @map("door_ids") // array of door ids; null/empty = all doors
+  status       String    @default("active") // active | used | expired | revoked | pending
+  usedAt       DateTime? @map("used_at")
+  createdById  String?   @map("created_by_id")
+  createdBy    User?     @relation("CreatedDayPasses", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@index([tenantId, validUntil])
+  @@map("day_passes")
 }

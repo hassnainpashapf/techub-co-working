@@ -329,6 +329,19 @@ try {
   require('./lib/fx').ensureFxScheduled();
   require('./lib/fxAlerts').ensureFxAlertsScheduled();
 } catch (e) { console.error('[phase46] FX jobs schedule failed:', e.message); }
+// Phase 48: Smart Access & Entry Pack (additive) — route mounts
+app.use('/api/doors', require('./routes/doors'));
+app.use('/api/access-credentials', require('./routes/access-credentials'));
+app.use('/api/access-schedules', require('./routes/access-schedules'));
+app.use('/api/access-logs', require('./routes/access-logs'));
+app.use('/api/day-passes', require('./routes/day-passes'));
+app.use('/api/door-unlock', require('./routes/door-unlock'));
+app.use('/api/my-access', require('./routes/my-access'));
+app.use('/api/access-dashboard', require('./routes/access-dashboard'));
+// Phase 48: access anomaly scan job (additive)
+try {
+  require('./lib/accessAnomalies').ensureAccessAnomaliesScheduled();
+} catch (e) { console.error('[phase48] access anomalies schedule failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

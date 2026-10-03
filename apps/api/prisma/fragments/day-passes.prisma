@@ -1,0 +1,52 @@
+// Phase 48 Track 5: Visitor day passes.
+// Fragment — coordinator schema.prisma me merge karega + migration SQL neeche.
+// Back-relations: Tenant.dayPasses, Member.hostedDayPasses, User.createdDayPasses.
+
+model DayPass {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  visitorName  String    @map("visitor_name")
+  visitorPhone String?   @map("visitor_phone")
+  hostMemberId String?   @map("host_member_id")
+  hostMember   Member?   @relation("HostedDayPasses", fields: [hostMemberId], references: [id], onDelete: SetNull)
+  code         String    @map("code") // short human code, unique per tenant
+  validFrom    DateTime  @map("valid_from")
+  validUntil   DateTime  @map("valid_until")
+  doorIds      Json?     @map("door_ids") // array of door ids; null/empty = all doors
+  status       String    @default("active") @map("status") // active | used | expired | revoked
+  usedAt       DateTime? @map("used_at")
+  createdById  String?   @map("created_by_id")
+  createdBy    User?     @relation("CreatedDayPasses", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@index([tenantId, validUntil])
+  @@map("day_passes")
+}
+
+// ---- Migration SQL (20261003570000_phase48_access me merge) ----
+// CREATE TABLE day_passes (
+//   id TEXT PRIMARY KEY,
+//   tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//   visitor_name TEXT NOT NULL,
+//   visitor_phone TEXT,
+//   host_member_id TEXT REFERENCES members(id) ON DELETE SET NULL,
+//   code TEXT NOT NULL,
+//   valid_from TIMESTAMPTZ NOT NULL,
+//   valid_until TIMESTAMPTZ NOT NULL,
+//   door_ids JSONB,
+//   status TEXT NOT NULL DEFAULT 'active',
+//   used_at TIMESTAMPTZ,
+//   created_by_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+//   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   UNIQUE (tenant_id, code)
+// );
+// CREATE INDEX day_passes_tenant_status_idx ON day_passes(tenant_id, status);
+// CREATE INDEX day_passes_tenant_until_idx ON day_passes(tenant_id, valid_until);
+// Tenant par: dayPasses DayPass[]
+// Member par: hostedDayPasses DayPass[] @relation("HostedDayPasses")
+// User par: createdDayPasses DayPass[] @relation("CreatedDayPasses")

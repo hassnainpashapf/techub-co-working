@@ -1,0 +1,53 @@
+// Phase 48 Track 4/10: Access Schedules — member/door entry time windows.
+// Coordinator: neeche wala model schema.prisma me jorein (AccessCredential/Door/Track 2-3
+// fragments ke baad bhi chalega — order farq nahi parta).
+//
+// Back-relations jorne hain:
+//   Member model me:  accessSchedules AccessSchedule[] @relation("MemberAccessSchedules")
+//   Door model me:    accessSchedules AccessSchedule[] @relation("DoorAccessSchedules")
+//   Tenant model me:  accessSchedules AccessSchedule[]
+//
+// daysOfWeek: ISO [1..7] (1=Mon ... 7=Sun)
+// startTime/endTime: "HH:mm" 24h. endTime <= startTime = overnight window (e.g. 20:00-06:00).
+// memberId NULL = default schedule (sab members par lagta hai)
+// doorId   NULL = sab doors par lagta hai
+// Precedence (canEnter me): member+door > member-only > door-only > global default.
+//
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "AccessSchedule" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "memberId" TEXT,
+//   "doorId" TEXT,
+//   "daysOfWeek" JSONB NOT NULL,
+//   "startTime" TEXT NOT NULL,
+//   "endTime" TEXT NOT NULL,
+//   "isActive" BOOLEAN NOT NULL DEFAULT true,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "AccessSchedule_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "AccessSchedule_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "AccessSchedule_doorId_fkey" FOREIGN KEY ("doorId") REFERENCES "Door"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "AccessSchedule_tenantId_memberId_idx" ON "AccessSchedule"("tenantId", "memberId");
+// CREATE INDEX "AccessSchedule_tenantId_doorId_idx" ON "AccessSchedule"("tenantId", "doorId");
+
+model AccessSchedule {
+  id         String   @id @default(cuid())
+  tenantId   String
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String?
+  member     Member?  @relation("MemberAccessSchedules", fields: [memberId], references: [id], onDelete: Cascade)
+  doorId     String?
+  door       Door?    @relation("DoorAccessSchedules", fields: [doorId], references: [id], onDelete: Cascade)
+  daysOfWeek Json
+  startTime  String
+  endTime    String
+  isActive   Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@index([tenantId, memberId])
+  @@index([tenantId, doorId])
+  @@map("AccessSchedule")
+}
