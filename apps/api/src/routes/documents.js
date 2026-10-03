@@ -1,5 +1,6 @@
 const express = require('express');
 const { z } = require('zod');
+const multer = require('multer');
 
 const prisma = require('../lib/prisma');
 const { authenticate } = require('../middleware/auth');
@@ -7,6 +8,12 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { writeAudit } = require('../middleware/audit');
+const { saveFile, readStream, fileExists, removeFile, MAX_BYTES } = require('../lib/storage');
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_BYTES },
+});
 
 const router = express.Router();
 
@@ -64,7 +71,59 @@ router.delete('/documents/:id', write, async (req, res, next) => {
     const doc = await prisma.document.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
     if (!doc) return res.status(404).json({ error: 'Document not found' });
     await prisma.document.delete({ where: { id: req.params.id } });
+    if (doc.storagePath) removeFile(doc.storagePath);
+    await writeAudit(req, 'document.delete', 'Document', doc.id, { title: doc.title }, null);
     res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// Upload a real file + create document record (multipart/form-data)
+router.post('/documents/upload', write, upload.single('file'), async (req, res, next) => {
+  try {
+    if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
+    const { title, category, memberId, notes } = req.body;
+    if (memberId) {
+      const member = await prisma.member.findFirst({ where: { id: memberId, ...tenantFilter(req) } });
+      if (!member) return res.status(400).json({ error: 'Member not found' });
+    }
+    const { storagePath } = saveFile(req.user.tenantId, req.file);
+    const doc = await prisma.document.create({
+      data: {
+        tenantId: req.user.tenantId,
+        title: title || req.file.originalname,
+        category: category || 'general',
+        memberId: memberId || null,
+        notes: notes || null,
+        fileName: req.file.originalname,
+        fileSize: req.file.size,
+        mimeType: req.file.mimetype,
+        storagePath,
+        uploadedById: req.user.id,
+      },
+      include: { member: { select: { id: true, name: true } } },
+    });
+    await writeAudit(req, 'document.upload', 'Document', doc.id, null, { title: doc.title, size: doc.fileSize });
+    res.status(201).json({ document: doc });
+  } catch (e) {
+    if (e.status === 400) return res.status(400).json({ error: e.message });
+    next(e);
+  }
+});
+
+// Download a document file (auth + tenant checked)
+router.get('/documents/:id/download', async (req, res, next) => {
+  try {
+    const where = { id: req.params.id, ...tenantFilter(req) };
+    if (req.user.role === 'member' && req.user.memberId) where.memberId = req.user.memberId;
+    const doc = await prisma.document.findFirst({ where });
+    if (!doc) return res.status(404).json({ error: 'Document not found' });
+    if (!doc.storagePath || !fileExists(doc.storagePath)) {
+      return res.status(404).json({ error: 'File not available' });
+    }
+    res.setHeader('Content-Type', doc.mimeType || 'application/octet-stream');
+    res.setHeader('Content-Disposition', `attachment; filename="${(doc.fileName || 'file').replace(/"/g, '')}"`);
+    if (doc.fileSize) res.setHeader('Content-Length', doc.fileSize);
+    readStream(doc.storagePath).pipe(res);
   } catch (e) { next(e); }
 });
 

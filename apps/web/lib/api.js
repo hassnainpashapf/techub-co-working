@@ -88,6 +88,59 @@ export async function apiFetch(path, { method = 'GET', body } = {}, _retried = f
   return data;
 }
 
+export async function apiUpload(path, formData, _retried = false) {
+  const { access } = getTokens();
+  const headers = {};
+  if (access) headers.Authorization = `Bearer ${access}`;
+
+  let res;
+  try {
+    res = await fetch(`${API_BASE}${path}`, { method: 'POST', headers, body: formData });
+  } catch (e) {
+    throw new Error('Cannot reach the API server. Is it running?');
+  }
+
+  if (res.status === 401 && !_retried) {
+    const ok = await doRefresh();
+    if (ok) return apiUpload(path, formData, true);
+    clearTokens();
+    if (typeof window !== 'undefined') window.location = '/login';
+    throw new Error('Session expired. Please log in again.');
+  }
+
+  let data = null;
+  try { data = await res.json(); } catch { data = null; }
+  if (!res.ok) {
+    const raw = data && (data.message || data.error);
+    const message = (typeof raw === 'string' ? raw : raw && raw.message) || `Upload failed (${res.status})`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+export function apiDownloadUrl(path) {
+  const { access } = getTokens();
+  // Token in query for direct <a> downloads (download endpoint accepts it via auth middleware? no—use fetch blob instead)
+  return `${API_BASE}${path}`;
+}
+
+export async function apiDownload(path, filename) {
+  const { access } = getTokens();
+  const headers = {};
+  if (access) headers.Authorization = `Bearer ${access}`;
+  const res = await fetch(`${API_BASE}${path}`, { headers });
+  if (!res.ok) throw new Error(`Download failed (${res.status})`);
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename || 'file';
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
 export const api = {
   get: (path) => apiFetch(path),
   post: (path, body) => apiFetch(path, { method: 'POST', body }),

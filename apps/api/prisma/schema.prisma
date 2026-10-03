@@ -695,6 +695,7 @@ model Document {
   fileUrl     String?  @map("file_url")
   fileSize    Int?     @map("file_size")
   mimeType    String?  @map("mime_type")
+  storagePath String?  @map("storage_path") // local disk path or S3 key
   notes       String?
   uploadedById String? @map("uploaded_by_id")
   uploadedBy  User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)

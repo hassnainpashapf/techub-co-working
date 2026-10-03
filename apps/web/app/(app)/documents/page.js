@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api } from '../../../lib/api';
+import { api, apiUpload, apiDownload } from '../../../lib/api';
 import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, DataTable } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 
@@ -11,9 +11,16 @@ const DOC_CATS = ['contract', 'id', 'invoice', 'policy', 'other'];
 
 function DocForm({ members, onSave, saving }) {
   const [f, setF] = useState({ title: '', category: 'general', memberId: '', notes: '' });
+  const [file, setFile] = useState(null);
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, memberId: f.memberId || null }); }}>
-      <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} required placeholder="e.g. Membership Agreement" /></Field>
+    <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, memberId: f.memberId || null, file }); }}>
+      <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="e.g. Membership Agreement (optional if file chosen)" /></Field>
+      <Field label="File *">
+        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-violet-500/20 file:text-violet-200 file:text-xs"
+          onChange={(e) => setFile(e.target.files?.[0] || null)} required
+          accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.csv" />
+        <p className="text-[11px] text-slate-500 mt-1">PDF, images, Word/Excel, TXT, CSV — max 25MB</p>
+      </Field>
       <div className="grid grid-cols-2 gap-x-4">
         <Field label="Category">
           <select className="input" value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>
@@ -28,7 +35,7 @@ function DocForm({ members, onSave, saving }) {
         </Field>
       </div>
       <Field label="Notes"><input className="input" value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></Field>
-      <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Add Document'}</button>
+      <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Uploading…' : 'Upload Document'}</button>
     </form>
   );
 }
@@ -75,7 +82,16 @@ export default function DocumentsPage() {
 
   const addDoc = async (data) => {
     setSaving(true);
-    try { await api.post('/documents/documents', data); setShowDocForm(false); load(); }
+    try {
+      const fd = new FormData();
+      if (data.file) fd.append('file', data.file);
+      if (data.title) fd.append('title', data.title);
+      fd.append('category', data.category || 'general');
+      if (data.memberId) fd.append('memberId', data.memberId);
+      if (data.notes) fd.append('notes', data.notes);
+      await apiUpload('/documents/documents/upload', fd);
+      setShowDocForm(false); load();
+    }
     catch (e) { setError(e.message); } finally { setSaving(false); }
   };
   const addCn = async (data) => {
@@ -90,12 +106,24 @@ export default function DocumentsPage() {
   };
 
   const docCols = [
-    { key: 'title', label: 'Document', render: (d) => <div><div className="font-medium text-white">{d.title}</div><div className="text-xs text-slate-400 capitalize">{d.category}</div></div> },
+    { key: 'title', label: 'Document', render: (d) => <div><div className="font-medium text-white">{d.title}</div><div className="text-xs text-slate-400 capitalize">{d.category}{d.fileName ? ` · 📎 ${d.fileName}` : ''}{d.fileSize ? ` (${(d.fileSize / 1024).toFixed(0)} KB)` : ''}</div></div> },
     { key: 'member', label: 'Member', render: (d) => <span className="text-sm text-slate-300">{d.member?.name || '—'}</span> },
     { key: 'by', label: 'Uploaded by', render: (d) => <span className="text-sm text-slate-300">{d.uploadedBy?.name || '—'}</span> },
     { key: 'date', label: 'Date', render: (d) => <span className="text-xs text-slate-400">{d.createdAt?.slice(0, 10)}</span> },
-    { key: 'action', label: '', render: (d) => <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button> },
+    {
+      key: 'action', label: '', render: (d) => (
+        <div className="flex gap-2">
+          {d.fileName && <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => downloadDoc(d)}>Download</button>}
+          <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button>
+        </div>
+      ),
+    },
   ];
+
+  const downloadDoc = async (d) => {
+    try { await apiDownload(`/documents/documents/${d.id}/download`, d.fileName || d.title); }
+    catch (e) { setError(e.message); }
+  };
   const cnCols = [
     { key: 'number', label: 'Number', render: (c) => <span className="font-mono text-sm text-slate-300">{c.number}</span> },
     { key: 'member', label: 'Member', render: (c) => <span className="text-sm text-white">{c.member?.name}</span> },
