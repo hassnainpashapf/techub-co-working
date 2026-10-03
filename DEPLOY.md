@@ -5,43 +5,48 @@ Architecture: **Frontend → Cloudflare Pages** (free, global CDN),
 
 ---
 
-## PART A — Backend on VPS (API + Database)
+## PART A — Backend on VPS (ONE container: API + PostgreSQL)
 
 ### 1) Server
-- Ubuntu 24.04 VPS, 2 GB RAM (e.g. Hetzner CX22 ~€4.5/month)
+- Ubuntu 24.04 VPS, 2 GB RAM
+- Docker: `curl -fsSL https://get.docker.com | sh`
 
-### 2) Docker install (server par, root)
-```bash
-curl -fsSL https://get.docker.com | sh
-```
-
-### 3) Code lao
+### 2) Code + build (single image)
 ```bash
 git clone https://github.com/hassnainpashapf/techub-co-working.git
 cd techub-co-working
+sudo docker build -f deploy/single-container/Dockerfile -t techub-backend .
 ```
 
-### 4) Config
+### 3) Run (sirf 1 container)
 ```bash
-cp .env.prod.example .env.prod
-nano .env.prod
-```
-- `POSTGRES_PASSWORD` — lamba random password
-- `JWT_ACCESS_SECRET` / `JWT_REFRESH_SECRET` — `openssl rand -hex 32` se banao
+# secrets banao (hex only)
+POSTGRES_PASSWORD=$(openssl rand -hex 24)
+JWT_ACCESS_SECRET=$(openssl rand -hex 32)
+JWT_REFRESH_SECRET=$(openssl rand -hex 32)
 
-### 5) Start
-```bash
-docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
-docker compose -f docker-compose.prod.yml --env-file .env.prod ps
-```
+sudo docker run -d --name techub-backend --restart unless-stopped \
+  -p 127.0.0.1:4000:4000 \
+  -v techub-pgdata:/var/lib/postgresql/data \
+  -e POSTGRES_PASSWORD="$POSTGRES_PASSWORD" \
+  -e JWT_ACCESS_SECRET="$JWT_ACCESS_SECRET" \
+  -e JWT_REFRESH_SECRET="$JWT_REFRESH_SECRET" \
+  techub-backend
 
-### 6) Cloudflare Tunnel — API ko public karo
+# API check (pehli dafa migrations me 1-2 min lag sakta hai)
+curl -s http://localhost:4000/api/health
+```
+Database container ke andar hi hai; data `techub-pgdata` volume me mehfooz rehta hai.
+
+### 4) Cloudflare Tunnel — API ko public karo
 1. Cloudflare Zero Trust dashboard → Networks → Tunnels → **Create a Tunnel** → token copy karo
-2. Public hostname add karo: `api.example.com` → `http://api:4000`
-3. `.env.prod` me `TUNNEL_TOKEN=` set karo
-4. `docker-compose.prod.yml` me `tunnel` service uncomment karo, phir:
+2. Public hostname add karo: `api.example.com` → `http://localhost:4000`
+3. Server par cloudflared install + chalao:
 ```bash
-docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+curl -fsSL https://pkg.cloudflare.com/cloudflare-main.gpg | sudo tee /usr/share/keyrings/cloudflare-main.gpg >/dev/null
+echo 'deb [signed-by=/usr/share/keyrings/cloudflare-main.gpg] https://pkg.cloudflare.com/cloudflared jammy main' | sudo tee /etc/apt/sources.list.d/cloudflared.list
+sudo apt-get update && sudo apt-get install -y cloudflared
+sudo cloudflared service install <TUNNEL_TOKEN>
 ```
 API ab public hai: `https://api.example.com`
 
@@ -66,7 +71,8 @@ Har `git push` par Pages khud dobara deploy kar dega.
 ## Rozmarrah (VPS)
 ```bash
 # backend logs
-docker compose -f docker-compose.prod.yml --env-file .env.prod logs -f
+sudo docker logs -f techub-backend
 # backend update (naya code aane par)
-git pull && docker compose -f docker-compose.prod.yml --env-file .env.prod up -d --build
+cd ~/techub-co-working && git pull && sudo docker build -f deploy/single-container/Dockerfile -t techub-backend . && sudo docker rm -f techub-backend
+# (phir upar wala "Run" command dobara chalao — data volume me mehfooz hai)
 ```
