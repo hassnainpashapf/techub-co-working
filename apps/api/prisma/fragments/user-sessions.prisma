@@ -1,0 +1,35 @@
+// Phase 32 Track 5: UserSession — login devices/sessions manager.
+// Coordinator: merge into schema.prisma + add back-relation on User:
+//   userSessions UserSession[]
+//
+// Migration SQL (coordinator: put in the phase-32 migration folder):
+// ---------------------------------------------------------------
+// CREATE TABLE "user_sessions" (
+//     "id" TEXT NOT NULL,
+//     "user_id" TEXT NOT NULL,
+//     "ip_address" TEXT,
+//     "user_agent" TEXT,
+//     "device_name" TEXT,
+//     "last_active_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "revoked_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "user_sessions_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "user_sessions_user_id_revoked_at_idx" ON "user_sessions"("user_id", "revoked_at");
+// ALTER TABLE "user_sessions" ADD CONSTRAINT "user_sessions_user_id_fkey"
+//   FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+model UserSession {
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  deviceName   String?   @map("device_name")
+  lastActiveAt DateTime  @default(now()) @map("last_active_at")
+  revokedAt    DateTime? @map("revoked_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, revokedAt])
+  @@map("user_sessions")
+}

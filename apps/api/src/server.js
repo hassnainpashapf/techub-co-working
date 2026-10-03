@@ -92,6 +92,18 @@ app.use('/api/gateways', require('./routes/gateways'));
 app.use('/api/petty-cash', require('./routes/petty-cash'));
 app.use('/api/budgets', require('./routes/budgets'));
 app.use('/api/ar-aging', require('./routes/ar-aging'));
+// Phase 32: security & reliability
+app.use('/api/sessions', require('./routes/sessions'));
+app.use('/api/login-security', require('./routes/login-security'));
+app.use('/api/audit-retention', require('./routes/audit-retention'));
+app.use('/api/backups', require('./routes/backups'));
+app.use('/api/health', require('./routes/health'));
+app.use('/api/data-export', require('./routes/data-export'));
+require('./lib/healthCheck');
+require('./lib/healthCheck').startHealthScheduler();
+require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler
+require('./lib/backup').registerBackupJob();
+require('./lib/backup').ensureBackupScheduled();
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

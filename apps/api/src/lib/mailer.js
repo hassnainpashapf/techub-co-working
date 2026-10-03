@@ -154,6 +154,10 @@ const templates = {
     subject: 'Verify your email address',
     html: wrap('Verify Your Email', `<p>Hi ${name || 'there'},</p><p>Please verify your email address by clicking the link below:</p><p><a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Verify Email</a></p><p>This link expires in 24 hours.</p>`),
   }),
+  passwordReset: ({ name, resetUrl }) => ({
+    subject: 'Reset your password',
+    html: wrap('Reset Your Password', `<p>Hi ${name || 'there'},</p><p>We received a request to reset your password. Click the button below to choose a new one:</p><p><a href="${resetUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Reset Password</a></p><p>This link expires in <b>1 hour</b> and can only be used once. If you didn't request this, you can safely ignore this email.</p>`),
+  }),
   announcement: ({ title, body, name }) => ({
     subject: `📢 ${title}`,
     html: wrap('Announcement', `<p>Hi ${name || 'there'},</p><h3 style="margin:0 0 8px">${title}</h3><p style="white-space:pre-wrap">${body}</p>`),
@@ -171,6 +175,10 @@ const templates = {
       html: wrap(titles[lvl] || titles[1], `<p>Hi ${memberName || 'there'},</p><p>${intros[lvl] || intros[1]}</p><p>If you have already paid, please ignore this message.</p>`),
     };
   },
+  systemHealthAlert: ({ name, issues }) => ({
+    subject: '⚠️ System health alert',
+    html: wrap('System Health Alert', `<p>Hi ${name || 'Admin'},</p><p>The system health check detected the following issue(s):</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${issues || 'n/a'}</pre><p>Please check the System Health page for details.</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -234,8 +242,10 @@ const TEMPLATE_VARS = {
   visitorCheckin: ['hostName', 'visitorName'],
   paymentReceived: ['memberName', 'amount', 'invoiceNumber'],
   emailVerification: ['name', 'verifyUrl'],
+  passwordReset: ['name', 'resetUrl'],
   announcement: ['title', 'body', 'name'],
   invoiceOverdue: ['memberName', 'number', 'amount', 'dueDate', 'daysOverdue', 'level'],
+  systemHealthAlert: ['name', 'issues'],
 };
 
 function listBuiltinTemplates() {

@@ -44,6 +44,11 @@ export function AuthProvider({ children }) {
   }
 
   function logout() {
+    // Phase 32: revoke the server-side refresh token (best-effort), then clear local state
+    try {
+      const { refresh } = getTokens();
+      if (refresh) api.post('/auth/logout', { refreshToken: refresh }).catch(() => {});
+    } catch {}
     clearTokens();
     setUser(null);
     window.location = '/login';

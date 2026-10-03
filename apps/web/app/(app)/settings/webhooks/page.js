@@ -10,7 +10,8 @@ function WebhookForm({ initial, events, onSave, saving }) {
     name: initial?.name || '',
     url: initial?.url || '',
     events: initial?.events || [],
-    secret: initial?.secret || '',
+    // Secret is masked in list responses — prefill the mask so it isn't overwritten.
+    secret: initial?.hasSecret ? '••••••••' : (initial?.secret || ''),
     active: initial?.active ?? true,
   });
   const toggle = (e) => setF({ ...f, events: f.events.includes(e) ? f.events.filter((x) => x !== e) : [...f.events, e] });
@@ -28,8 +29,8 @@ function WebhookForm({ initial, events, onSave, saving }) {
           ))}
         </div>
       </Field>
-      <Field label="Secret (optional — auto-generated if blank)">
-        <input className="input font-mono text-xs" value={f.secret} onChange={(e) => setF({ ...f, secret: e.target.value })} placeholder="HMAC signing secret" />
+      <Field label="Secret (HMAC signing — shown once, then masked)">
+        <input className="input font-mono text-xs" value={f.secret} onChange={(e) => setF({ ...f, secret: e.target.value })} placeholder="Auto-generated if blank" />
       </Field>
       <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
         <input type="checkbox" checked={f.active} onChange={(e) => setF({ ...f, active: e.target.checked })} className="accent-violet-500" />
@@ -43,12 +44,22 @@ function WebhookForm({ initial, events, onSave, saving }) {
 function Deliveries({ webhookId }) {
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(true);
-  useEffect(() => {
+  const [busy, setBusy] = useState(null);
+  const loadRows = () => {
+    setLoading(true);
     api.get(`/webhooks/${webhookId}/deliveries`)
       .then((d) => setRows(d.deliveries || []))
       .catch(() => {})
       .finally(() => setLoading(false));
-  }, [webhookId]);
+  };
+  useEffect(() => { loadRows(); }, [webhookId]);
+  const resend = async (deliveryId) => {
+    setBusy(deliveryId);
+    try {
+      await api.post(`/webhooks/${webhookId}/deliveries/${deliveryId}/resend`);
+      loadRows();
+    } catch (e) { alert(e.message); } finally { setBusy(null); }
+  };
   if (loading) return <Spinner />;
   const cols = [
     { key: 'event', label: 'Event', render: (r) => <span className="font-mono text-xs text-slate-300">{r.event}</span> },
@@ -57,6 +68,13 @@ function Deliveries({ webhookId }) {
     { key: 'attempts', label: 'Attempts', render: (r) => <span className="text-xs text-slate-400">{r.attempts ?? 1}{r.status === 'failed' && (r.attempts ?? 1) > 1 ? ' (retrying)' : ''}</span> },
     { key: 'error', label: 'Error', render: (r) => <span className="text-xs text-red-300 truncate max-w-[200px] block">{r.error || '—'}</span> },
     { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleString()}</span> },
+    {
+      key: 'resend', label: '', render: (r) => r.status === 'failed' ? (
+        <button className="text-xs text-blue-300 hover:text-blue-200 disabled:opacity-50" disabled={busy === r.id} onClick={() => resend(r.id)}>
+          {busy === r.id ? 'Sending…' : 'Resend'}
+        </button>
+      ) : null,
+    },
   ];
   return <DataTable columns={cols} rows={rows} emptyText="No deliveries yet." />;
 }
@@ -71,6 +89,7 @@ export default function WebhooksPage() {
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
   const [viewDeliveries, setViewDeliveries] = useState(null);
+  const [secretModal, setSecretModal] = useState(null); // one-time secret display
 
   const load = () => {
     setLoading(true);
@@ -86,10 +105,22 @@ export default function WebhooksPage() {
   const save = async (data) => {
     setSaving(true);
     try {
-      if (editing) await api.patch(`/webhooks/${editing.id}`, data);
-      else await api.post('/webhooks', data);
+      let d;
+      if (editing) d = await api.patch(`/webhooks/${editing.id}`, data);
+      else d = await api.post('/webhooks', data);
       setShowForm(false); setEditing(null); load();
+      // New secret is shown ONCE — it is masked in all later responses.
+      if (d?.webhook?.secret) setSecretModal({ title: 'Webhook secret', secret: d.webhook.secret });
     } catch (e) { setError(e.message); } finally { setSaving(false); }
+  };
+
+  const regenSecret = async (h) => {
+    if (!confirm(`Regenerate signing secret for "${h.name}"? Old signatures will stop working.`)) return;
+    try {
+      const d = await api.post(`/webhooks/${h.id}/secret`);
+      setSecretModal({ title: `New secret — ${h.name}`, secret: d.secret });
+      setError('');
+    } catch (e) { setError(e.message); }
   };
 
   const remove = async (id) => {
@@ -109,9 +140,10 @@ export default function WebhooksPage() {
     { key: 'active', label: 'Status', render: (h) => <Badge tone={h.active ? 'green' : 'slate'}>{h.active ? 'active' : 'paused'}</Badge> },
     {
       key: 'action', label: '', render: (h) => (
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-wrap">
           <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => setViewDeliveries(h)}>Logs</button>
           <button className="text-xs text-slate-300 hover:text-white" onClick={() => sendTest(h.id)}>Test</button>
+          <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => regenSecret(h)}>Secret</button>
           <button className="text-xs text-slate-300 hover:text-white" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>
           <button className="text-xs text-red-300 hover:text-red-200" onClick={() => remove(h.id)}>Delete</button>
         </div>
@@ -136,6 +168,23 @@ export default function WebhooksPage() {
       {viewDeliveries && (
         <Modal title={`Deliveries — ${viewDeliveries.name}`} onClose={() => setViewDeliveries(null)}>
           <Deliveries webhookId={viewDeliveries.id} />
+        </Modal>
+      )}
+      {secretModal && (
+        <Modal title={secretModal.title} onClose={() => setSecretModal(null)}>
+          <p className="text-sm text-slate-300 mb-3">
+            Copy this secret now — it will never be shown again. Receivers verify the{' '}
+            <span className="font-mono text-xs text-violet-300">X-CoworkOS-Signature</span> header with it.
+          </p>
+          <div className="flex gap-2">
+            <input className="input font-mono text-xs" readOnly value={secretModal.secret} onFocus={(e) => e.target.select()} />
+            <button
+              className="btn-secondary shrink-0"
+              onClick={() => { navigator.clipboard?.writeText(secretModal.secret); }}
+            >
+              Copy
+            </button>
+          </div>
         </Modal>
       )}
     </div>

@@ -6,10 +6,14 @@ const { authenticator } = require('otplib');
 
 const prisma = require('../lib/prisma');
 const { hashPassword, comparePassword } = require('../lib/auth');
+const { encryptSecret } = require('../lib/crypto');
+const { resolveTotpSecret, maybeMigrateTotpSecret } = require('../lib/totp');
 const { authenticate } = require('../middleware/auth');
 const { validateBody } = require('../middleware/validate');
 const { writeAudit } = require('../middleware/audit');
 const { strictLimiter } = require('../middleware/rateLimit');
+// Phase 32: dedicated 5/hour per email+IP limiter for password-reset endpoints
+const { resetPasswordLimiter } = require('../lib/resetRateLimit');
 
 const router = express.Router();
 
@@ -18,12 +22,17 @@ const router = express.Router();
 // ---------------------------------------------------------------------------
 const forgotSchema = z.object({ email: z.string().email() });
 
-router.post('/forgot-password', strictLimiter, validateBody(forgotSchema), async (req, res, next) => {
+router.post('/forgot-password', resetPasswordLimiter, validateBody(forgotSchema), async (req, res, next) => {
   try {
     const { email } = req.body;
     const user = await prisma.user.findUnique({ where: { email } });
     // Always return success to prevent email enumeration
     if (user && user.isActive) {
+      // Invalidate previous unused tokens — only one live reset token per user
+      await prisma.passwordReset.updateMany({
+        where: { userId: user.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
       const token = crypto.randomBytes(32).toString('hex');
       const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
       await prisma.passwordReset.create({
@@ -33,10 +42,13 @@ router.post('/forgot-password', strictLimiter, validateBody(forgotSchema), async
           expiresAt: new Date(Date.now() + 60 * 60 * 1000), // 1 hour
         },
       });
-      // TODO: send email via integrations/email module (Phase 8)
-      // For now, log the token (dev only — remove in production with email configured)
+      const resetUrl = `${WEB_URL}/reset-password?token=${token}`;
+      // Phase 32: real email via queued mailer (Phase 12/28) — never log the
+      // plaintext token in production; the DB only ever holds the hash.
+      const { notify } = require('../lib/mailer');
+      await notify(user.tenantId, user.email, 'passwordReset', { name: user.name, resetUrl }).catch(() => {});
       if (process.env.NODE_ENV !== 'production') {
-        console.log(`[auth] password reset token for ${email}: ${token}`);
+        console.log(`[auth] password reset link for ${email}: ${resetUrl}`);
       }
       await writeAudit({
         tenantId: user.tenantId,
@@ -59,7 +71,7 @@ const resetSchema = z.object({
   password: z.string().min(8),
 });
 
-router.post('/reset-password', strictLimiter, validateBody(resetSchema), async (req, res, next) => {
+router.post('/reset-password', resetPasswordLimiter, validateBody(resetSchema), async (req, res, next) => {
   try {
     const { token, password } = req.body;
     // Phase 28: password policy
@@ -69,20 +81,31 @@ router.post('/reset-password', strictLimiter, validateBody(resetSchema), async (
       return res.status(400).json({ error: { message: pwCheck.errors.join(' ') } });
     }
     const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-    const reset = await prisma.passwordReset.findFirst({
-      where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
-      include: { user: true },
+    // Phase 32: atomic single-use claim inside one transaction — concurrent
+    // requests racing on the same token: only the first updateMany wins.
+    const reset = await prisma.$transaction(async (tx) => {
+      const rec = await tx.passwordReset.findFirst({
+        where: { tokenHash, usedAt: null, expiresAt: { gt: new Date() } },
+        include: { user: true },
+      });
+      if (!rec) return null;
+      const claimed = await tx.passwordReset.updateMany({
+        where: { id: rec.id, usedAt: null },
+        data: { usedAt: new Date() },
+      });
+      if (claimed.count === 0) return null; // lost the race — already used
+      const passwordHash = await hashPassword(password);
+      await tx.user.update({ where: { id: rec.userId }, data: { passwordHash } });
+      // Revoke all sessions on password change
+      await tx.session.updateMany({
+        where: { userId: rec.userId, revokedAt: null },
+        data: { revokedAt: new Date() },
+      });
+      return rec;
     });
     if (!reset) {
       return res.status(400).json({ error: { message: 'Invalid or expired reset token.' } });
     }
-    const passwordHash = await hashPassword(password);
-    await prisma.$transaction([
-      prisma.user.update({ where: { id: reset.userId }, data: { passwordHash } }),
-      prisma.passwordReset.update({ where: { id: reset.id }, data: { usedAt: new Date() } }),
-      // Revoke all sessions on password change
-      prisma.session.updateMany({ where: { userId: reset.userId, revokedAt: null }, data: { revokedAt: new Date() } }),
-    ]);
     await writeAudit({
       tenantId: reset.user.tenantId,
       actorId: reset.userId,
@@ -198,10 +221,11 @@ router.post('/2fa/setup', authenticate, async (req, res, next) => {
   try {
     const secret = authenticator.generateSecret();
     const otpauth = authenticator.keyuri(req.user.email || 'user', 'CoworkOS', secret);
-    // Store temporarily (not enabled until verified)
+    // Store encrypted at rest (not enabled until verified). The plaintext
+    // `secret` + `otpauth` are still returned so the QR flow keeps working.
     await prisma.user.update({
       where: { id: req.user.sub },
-      data: { totpSecret: secret, totpEnabled: false },
+      data: { totpSecret: encryptSecret(secret), totpEnabled: false },
     });
     return res.json({ secret, otpauth, message: 'Scan the QR code with your authenticator app, then verify.' });
   } catch (err) {
@@ -217,10 +241,13 @@ router.post('/2fa/verify', authenticate, validateBody(verify2faSchema), async (r
     if (!user || !user.totpSecret) {
       return res.status(400).json({ error: { message: '2FA not set up.' } });
     }
-    const ok = authenticator.verify({ token: req.body.code, secret: user.totpSecret });
+    const { secret } = resolveTotpSecret(user.totpSecret); // decrypts, or legacy plaintext
+    const ok = authenticator.verify({ token: req.body.code, secret });
     if (!ok) {
       return res.status(400).json({ error: { message: 'Invalid verification code.' } });
     }
+    // Auto-migrate legacy plaintext secret to encrypted on successful verify.
+    await maybeMigrateTotpSecret(user.id, user.totpSecret);
     await prisma.user.update({ where: { id: user.id }, data: { totpEnabled: true } });
     await writeAudit({
       tenantId: user.tenantId,
@@ -243,7 +270,8 @@ router.post('/2fa/disable', authenticate, validateBody(verify2faSchema), async (
     if (!user || !user.totpSecret) {
       return res.status(400).json({ error: { message: '2FA not set up.' } });
     }
-    const ok = authenticator.verify({ token: req.body.code, secret: user.totpSecret });
+    const { secret } = resolveTotpSecret(user.totpSecret); // decrypts, or legacy plaintext
+    const ok = authenticator.verify({ token: req.body.code, secret });
     if (!ok) {
       return res.status(400).json({ error: { message: 'Invalid verification code.' } });
     }

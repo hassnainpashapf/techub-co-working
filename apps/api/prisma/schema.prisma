@@ -94,6 +94,9 @@ model Tenant {
   onlinePayments OnlinePayment[]
   budgets Budget[]
   pettyCashTransactions PettyCashTransaction[]
+  loginAlerts LoginAlert[]
+  auditArchives AuditArchive[]
+  backupRecords BackupRecord[]
 
   @@map("tenants")
 }
@@ -148,6 +151,9 @@ model User {
   salaryStructures    SalaryStructure[] @relation("SalaryStructures")
   payslips            Payslip[]         @relation("Payslips")
   pettyCashTransactions PettyCashTransaction[]
+  refreshTokens       RefreshToken[]
+  userSessions        UserSession[]
+  loginAlerts         LoginAlert[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -1200,6 +1206,7 @@ model Job {
   maxAttempts Int      @default(5) @map("max_attempts")
   runAt       DateTime @default(now()) @map("run_at")
   lastError   String?  @map("last_error") @db.Text
+  retryDelays Json?    @map("retry_delays") // phase 32: optional custom retry schedule (ms array)
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
@@ -1473,4 +1480,84 @@ model PettyCashTransaction {
 
   @@index([tenantId, createdAt])
   @@map("petty_cash_transactions")
+}
+
+// ------------------------------------------------- Phase 32: Security Pack
+model RefreshToken {
+  id        String    @id @default(cuid())
+  userId    String    @map("user_id")
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String    @unique @map("token_hash")
+  expiresAt DateTime  @map("expires_at")
+  revokedAt DateTime? @map("revoked_at")
+  replacedBy String?  @map("replaced_by") // id of successor token (rotation chain)
+  ipAddress String?   @map("ip_address")
+  userAgent String?   @map("user_agent")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("refresh_tokens")
+}
+
+model UserSession {
+  id           String    @id @default(cuid())
+  userId       String    @map("user_id")
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress    String?   @map("ip_address")
+  userAgent    String?   @map("user_agent")
+  deviceName   String?   @map("device_name")
+  lastActiveAt DateTime  @default(now()) @map("last_active_at")
+  revokedAt    DateTime? @map("revoked_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+
+  @@index([userId, revokedAt])
+  @@map("user_sessions")
+}
+
+model LoginAlert {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId         String    @map("user_id")
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress      String    @map("ip_address")
+  userAgent      String?   @map("user_agent") @db.Text
+  type           String    @default("new_device") // new_device | suspicious | blocked_ip
+  acknowledgedAt DateTime? @map("acknowledged_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, userId])
+  @@index([tenantId, ipAddress])
+  @@map("login_alerts")
+}
+
+model AuditArchive {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  periodFrom  DateTime @map("period_from")
+  periodTo    DateTime @map("period_to")
+  recordCount Int      @map("record_count")
+  filePath    String?  @map("file_path")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("audit_archives")
+}
+
+model BackupRecord {
+  id        String   @id @default(cuid())
+  tenantId  String?  @map("tenant_id") // null = system-level backup (super_admin)
+  tenant    Tenant?  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  fileName  String   @map("file_name")
+  filePath  String   @map("file_path") @db.Text
+  sizeBytes BigInt   @map("size_bytes")
+  status    String   @default("completed") // completed | failed
+  note      String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("backup_records")
 }

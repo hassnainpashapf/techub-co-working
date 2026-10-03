@@ -27,8 +27,8 @@ function buildPayload(user, type) {
   };
 }
 
-function signAccessToken(user) {
-  return jwt.sign(buildPayload(user, 'access'), ACCESS_SECRET(), {
+function signAccessToken(user, extra = {}) {
+  return jwt.sign({ ...buildPayload(user, 'access'), ...extra }, ACCESS_SECRET(), {
     expiresIn: ACCESS_TTL(),
   });
 }

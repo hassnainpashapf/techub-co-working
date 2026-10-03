@@ -3,10 +3,10 @@ const { z } = require('zod');
 const { authenticator } = require('otplib');
 
 const prisma = require('../lib/prisma');
+const { resolveTotpSecret, maybeMigrateTotpSecret } = require('../lib/totp');
 const {
   comparePassword,
   signAccessToken,
-  signRefreshToken,
   verifyRefreshToken,
   signPreAuthToken,
   verifyPreAuthToken,
@@ -16,17 +16,50 @@ const { validateBody } = require('../middleware/validate');
 const { loginLimiter } = require('../middleware/rateLimit');
 // Phase 28: brute-force lockout
 const { checkLockout, recordFailure, recordSuccess } = require('../lib/loginAttempts');
+// Phase 32: login security (IP allowlist + new-device alerts)
+const { checkIpAllowed, recordBlockedIp, trackLogin } = require('../lib/loginSecurity');
 const { writeAudit } = require('../middleware/audit');
+// Phase 32 Track 5: login session tracking (session manager UI)
+const { recordLoginSession, latestActiveSession } = require('../lib/userSessions');
+// Phase 32: DB-backed refresh token rotation
+const {
+  issueRefreshToken,
+  rotateRefreshToken,
+  revokeRefreshToken,
+  TokenReuseError,
+} = require('../lib/refreshTokens');
 
 const router = express.Router();
+
+// --- refresh-token cookie helpers (no cookie-parser dependency) ---
+const REFRESH_COOKIE = 'cw_refresh';
+function parseCookies(req) {
+  const out = {};
+  const header = req.headers && req.headers.cookie;
+  if (!header) return out;
+  for (const part of String(header).split(';')) {
+    const i = part.indexOf('=');
+    if (i < 0) continue;
+    out[part.slice(0, i).trim()] = decodeURIComponent(part.slice(i + 1).trim());
+  }
+  return out;
+}
+function setRefreshCookie(res, token) {
+  res.cookie(REFRESH_COOKIE, token, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === 'production',
+    sameSite: 'lax',
+    maxAge: 7 * 24 * 3600 * 1000,
+    path: '/api/auth',
+  });
+}
+function clearRefreshCookie(res) {
+  res.clearCookie(REFRESH_COOKIE, { path: '/api/auth' });
+}
 
 const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
-});
-
-const refreshSchema = z.object({
-  refreshToken: z.string().min(1),
 });
 
 function safeUser(user) {
@@ -35,10 +68,28 @@ function safeUser(user) {
   return rest;
 }
 
-function issuePair(user) {
+// Phase 32: issue access JWT + DB-backed rotating refresh token; sets httpOnly cookie.
+// Returns { accessToken, refreshToken } — refreshToken is an opaque one-time value.
+async function issueLoginPair(user, req, res) {
+  // Phase 32 Track 5: record login session (device/IP); bind its id as `sid` on the access token
+  const loginSession = await recordLoginSession(req, user);
+  const accessToken = signAccessToken(user, loginSession ? { sid: loginSession.id } : {});
+  const { token } = await issueRefreshToken(user.id, {
+    ip: req.ip,
+    ua: req.headers['user-agent'],
+  });
+  setRefreshCookie(res, token);
+  return { accessToken, refreshToken: token };
+}
+
+function publicUser(user) {
   return {
-    accessToken: signAccessToken(user),
-    refreshToken: signRefreshToken(user),
+    id: user.id,
+    name: user.name,
+    email: user.email,
+    role: user.role,
+    tenantId: user.tenantId,
+    memberId: user.memberId,
   };
 }
 
@@ -66,6 +117,14 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
       return res.status(401).json({ error: { message: 'Invalid credentials' } });
     }
     recordSuccess(email, req.ip);
+    // Phase 32: IP allowlist enforcement (applies to all roles; empty = disabled)
+    const ipCheck = await checkIpAllowed(user.tenantId, req.ip);
+    if (!ipCheck.allowed) {
+      recordBlockedIp(user.tenantId, user, req.ip, req.headers['user-agent']);
+      return res.status(403).json({
+        error: { message: 'Login from this IP address is not allowed.', code: 'IP_NOT_ALLOWED' },
+      });
+    }
     // 2FA check — if enabled, require TOTP code before issuing tokens
     if (user.totpEnabled && user.totpSecret) {
       // Issue a short-lived pre-2FA token (5 min) to authorize the 2FA verify step
@@ -76,7 +135,9 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
         user: { id: user.id, name: user.name, email: user.email },
       });
     }
-    const tokens = issuePair(user);
+    const tokens = await issueLoginPair(user, req, res);
+    // Phase 32: new-device / suspicious login alert (fire-and-forget)
+    trackLogin(user.tenantId, user, req.ip, req.headers['user-agent']);
     await writeAudit({
       tenantId: user.tenantId,
       actorId: user.id,
@@ -89,12 +150,7 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
     return res.json({
       ...tokens,
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        tenantId: user.tenantId,
-        memberId: user.memberId,
+        ...publicUser(user),
         tenant: user.tenant ? user.tenant.name : null,
       },
     });
@@ -125,11 +181,24 @@ router.post('/login/2fa', loginLimiter, validateBody(verify2faLoginSchema), asyn
     if (!user || !user.isActive || !user.totpEnabled || !user.totpSecret) {
       return res.status(401).json({ error: { message: 'Invalid request.' } });
     }
-    const ok = authenticator.verify({ token: code, secret: user.totpSecret });
+    const { secret } = resolveTotpSecret(user.totpSecret); // decrypts, or legacy plaintext
+    const ok = authenticator.verify({ token: code, secret });
     if (!ok) {
       return res.status(401).json({ error: { message: 'Invalid 2FA code.' } });
     }
-    const tokens = issuePair(user);
+    // Auto-migrate legacy plaintext secret to encrypted on successful 2FA login.
+    await maybeMigrateTotpSecret(user.id, user.totpSecret);
+    // Phase 32: IP allowlist enforcement (applies to all roles; empty = disabled)
+    const ipCheck2fa = await checkIpAllowed(user.tenantId, req.ip);
+    if (!ipCheck2fa.allowed) {
+      recordBlockedIp(user.tenantId, user, req.ip, req.headers['user-agent']);
+      return res.status(403).json({
+        error: { message: 'Login from this IP address is not allowed.', code: 'IP_NOT_ALLOWED' },
+      });
+    }
+    const tokens = await issueLoginPair(user, req, res);
+    // Phase 32: new-device / suspicious login alert (fire-and-forget)
+    trackLogin(user.tenantId, user, req.ip, req.headers['user-agent']);
     await writeAudit({
       tenantId: user.tenantId,
       actorId: user.id,
@@ -142,12 +211,7 @@ router.post('/login/2fa', loginLimiter, validateBody(verify2faLoginSchema), asyn
     return res.json({
       ...tokens,
       user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        tenantId: user.tenantId,
-        memberId: user.memberId,
+        ...publicUser(user),
         tenant: user.tenant ? user.tenant.name : null,
       },
     });
@@ -156,11 +220,65 @@ router.post('/login/2fa', loginLimiter, validateBody(verify2faLoginSchema), asyn
   }
 });
 
-router.post('/refresh', validateBody(refreshSchema), async (req, res, next) => {
+// Phase 32: rotate a refresh token. Accepts body { refreshToken } or httpOnly cookie.
+// DB rotation first; unknown tokens fall back to legacy JWT verification (migration path).
+// A revoked token presented again = reuse -> all user tokens revoked + security audit.
+router.post('/refresh', async (req, res, next) => {
   try {
+    const presented =
+      (req.body && typeof req.body.refreshToken === 'string' && req.body.refreshToken) ||
+      parseCookies(req)[REFRESH_COOKIE] ||
+      null;
+
+    if (presented) {
+      let rotated = null;
+      try {
+        rotated = await rotateRefreshToken(presented, {
+          ip: req.ip,
+          ua: req.headers['user-agent'],
+        });
+      } catch (err) {
+        if (err instanceof TokenReuseError || err.code === 'TOKEN_REUSE') {
+          await writeAudit({
+            tenantId: null,
+            actorId: err.userId,
+            action: 'auth.token_reuse_detected',
+            entity: 'User',
+            entityId: err.userId,
+            ip: req.ip,
+            userAgent: req.headers['user-agent'],
+          });
+          clearRefreshCookie(res);
+          return res.status(401).json({
+            error: {
+              message: 'Session compromised. All sessions revoked — please log in again.',
+              code: 'TOKEN_REUSE',
+            },
+          });
+        }
+        throw err;
+      }
+      if (rotated) {
+        const user = await prisma.user.findUnique({ where: { id: rotated.userId } });
+        if (user && user.isActive) {
+          // Phase 32 Track 5: keep the access token bound to the latest active login session
+          const activeSession = await latestActiveSession(user.id);
+          const accessToken = signAccessToken(user, activeSession ? { sid: activeSession.id } : {});
+          setRefreshCookie(res, rotated.token);
+          return res.json({
+            accessToken,
+            refreshToken: rotated.token,
+            user: publicUser(user),
+          });
+        }
+      }
+      // unknown/expired/inactive -> try legacy JWT fallback below
+    }
+
+    // Legacy JWT fallback (keeps pre-Phase-32 sessions working)
     let payload;
     try {
-      payload = verifyRefreshToken(req.body.refreshToken);
+      payload = verifyRefreshToken(presented);
     } catch (_err) {
       return res.status(401).json({ error: { message: 'Invalid refresh token' } });
     }
@@ -171,18 +289,30 @@ router.post('/refresh', validateBody(refreshSchema), async (req, res, next) => {
     if (!user || !user.isActive) {
       return res.status(401).json({ error: { message: 'Invalid refresh token' } });
     }
-    const tokens = issuePair(user);
-    return res.json({
-      ...tokens,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        tenantId: user.tenantId,
-        memberId: user.memberId,
-      },
-    });
+    // Migrate legacy session onto DB rotation
+    const tokens = await issueLoginPair(user, req, res);
+    return res.json({ ...tokens, user: publicUser(user) });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Phase 32: revoke the presented refresh token (body or cookie) and clear the cookie.
+router.post('/logout', async (req, res, next) => {
+  try {
+    const presented =
+      (req.body && typeof req.body.refreshToken === 'string' && req.body.refreshToken) ||
+      parseCookies(req)[REFRESH_COOKIE] ||
+      null;
+    if (presented) {
+      try {
+        await revokeRefreshToken(presented);
+      } catch (_e) {
+        /* best-effort */
+      }
+    }
+    clearRefreshCookie(res);
+    return res.json({ ok: true });
   } catch (err) {
     return next(err);
   }

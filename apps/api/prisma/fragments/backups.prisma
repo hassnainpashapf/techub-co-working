@@ -1,0 +1,21 @@
+// Phase 32 Track 10: Backup Automation — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model BackupRecord {
+  id        String   @id @default(cuid())
+  tenantId  String?  @map("tenant_id") // null = system-level backup (super_admin)
+  tenant    Tenant?  @relation(fields: ["tenantId"], references: ["id"], onDelete: Cascade)
+  fileName  String   @map("file_name")
+  filePath  String   @map("file_path") @db.Text
+  sizeBytes BigInt   @map("size_bytes")
+  status    String   @default("completed") // completed | failed
+  note      String?  @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("backup_records")
+}
+
+// ADD TO Tenant model:
+//   backupRecords BackupRecord[]

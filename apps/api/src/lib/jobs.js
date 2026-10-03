@@ -13,18 +13,38 @@ function registerHandler(type, fn) {
 }
 
 async function enqueue(type, data, opts = {}) {
-  const { tenantId = null, runAt = null, maxAttempts = 5 } = opts;
-  const job = await prisma.job.create({
-    data: {
-      type,
-      payload: data || {},
-      tenantId,
-      status: 'pending',
-      attempts: 0,
-      maxAttempts,
-      runAt: runAt || new Date(),
-    },
-  });
+  const { tenantId = null, runAt = null, maxAttempts = 5, retryDelays = null } = opts;
+  // retryDelays: optional array of ms delays per attempt, e.g. [60000, 300000].
+  // Persisted on the job row when the column exists (Phase 32 hardening);
+  // otherwise ignored — backoff falls back to the default schedule.
+  let retryDelaysCol = {};
+  try {
+    if (retryDelays) retryDelaysCol = { retryDelays };
+  } catch { /* never throws */ }
+  let job;
+  try {
+    job = await prisma.job.create({
+      data: {
+        type,
+        payload: data || {},
+        tenantId,
+        status: 'pending',
+        attempts: 0,
+        maxAttempts,
+        runAt: runAt || new Date(),
+        ...retryDelaysCol,
+      },
+    });
+  } catch (e) {
+    // Column may not exist yet (migration pending) — retry without it.
+    if (retryDelays && /retry/i.test(String((e && e.message) || e))) {
+      job = await prisma.job.create({
+        data: { type, payload: data || {}, tenantId, status: 'pending', attempts: 0, maxAttempts, runAt: runAt || new Date() },
+      });
+    } else {
+      throw e;
+    }
+  }
   return job;
 }
 
@@ -44,8 +64,15 @@ async function processOne(job) {
   } catch (err) {
     const attempts = job.attempts + 1;
     const exhausted = attempts >= job.maxAttempts;
-    // Exponential backoff: 2^attempts minutes
-    const backoffMs = Math.pow(2, Math.min(attempts, 8)) * 60 * 1000;
+    // Backoff: custom per-job schedule when provided (Phase 32 webhook hardening),
+    // otherwise default exponential backoff: 2^attempts minutes.
+    let backoffMs = Math.pow(2, Math.min(attempts, 8)) * 60 * 1000;
+    const custom = job.retryDelays;
+    if (Array.isArray(custom) && custom.length) {
+      const idx = Math.min(attempts - 1, custom.length - 1);
+      const v = Number(custom[idx]);
+      if (Number.isFinite(v) && v > 0) backoffMs = Math.min(v, 24 * 60 * 60 * 1000);
+    }
     await prisma.job.update({
       where: { id: job.id },
       data: {

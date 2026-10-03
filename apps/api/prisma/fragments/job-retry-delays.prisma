@@ -1,0 +1,15 @@
+// Phase 32 Track 3: Webhook hardening — per-job custom retry schedule.
+//
+// Coordinator merge instructions:
+// 1. Add to `model Job` in apps/api/prisma/schema.prisma:
+//      retryDelays  Json?  @map("retry_delays") // optional custom retry schedule (ms array)
+// 2. Add to the phase migration SQL:
+//      ALTER TABLE "jobs" ADD COLUMN "retry_delays" JSONB;
+//
+// NOTE: WebhookDelivery model already exists in schema.prisma (no new table needed).
+
+// ADD TO Job:
+//   retryDelays Json? @map("retry_delays")
+
+// MIGRATION SQL:
+// ALTER TABLE "jobs" ADD COLUMN "retry_delays" JSONB;

@@ -1,0 +1,34 @@
+// Phase 32 Track 8: Audit log retention archives — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model AuditArchive {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  periodFrom  DateTime @map("period_from")
+  periodTo    DateTime @map("period_to")
+  recordCount Int      @map("record_count")
+  filePath    String?  @map("file_path")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("audit_archives")
+}
+
+// ADD TO Tenant model:
+//   auditArchives AuditArchive[]
+
+// ---- Migration SQL (coordinator: consolidate into phase 32 migration) ----
+// CREATE TABLE "audit_archives" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "period_from" TIMESTAMP(3) NOT NULL,
+//     "period_to" TIMESTAMP(3) NOT NULL,
+//     "record_count" INTEGER NOT NULL,
+//     "file_path" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "audit_archives_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "audit_archives_tenant_id_created_at_idx" ON "audit_archives"("tenant_id", "created_at");
+// ALTER TABLE "audit_archives" ADD CONSTRAINT "audit_archives_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

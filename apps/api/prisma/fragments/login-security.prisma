@@ -1,0 +1,46 @@
+// Phase 32 Track 6: Login Security (alerts + IP allowlist) — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model LoginAlert {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId         String    @map("user_id")
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  ipAddress      String    @map("ip_address")
+  userAgent      String?   @map("user_agent") @db.Text
+  type           String    @default("new_device") // new_device | suspicious | blocked_ip
+  acknowledgedAt DateTime? @map("acknowledged_at")
+  createdAt      DateTime  @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@index([tenantId, userId])
+  @@index([tenantId, ipAddress])
+  @@map("login_alerts")
+}
+
+// ADD TO Tenant model:
+//   loginAlerts LoginAlert[]
+//
+// ADD TO User model:
+//   loginAlerts LoginAlert[]
+
+// --- Migration SQL ---
+// CREATE TABLE "login_alerts" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "user_id" TEXT NOT NULL,
+//     "ip_address" TEXT NOT NULL,
+//     "user_agent" TEXT,
+//     "type" TEXT NOT NULL DEFAULT 'new_device',
+//     "acknowledged_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "login_alerts_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "login_alerts_tenant_id_created_at_idx" ON "login_alerts"("tenant_id", "created_at");
+// CREATE INDEX "login_alerts_tenant_id_user_id_idx" ON "login_alerts"("tenant_id", "user_id");
+// CREATE INDEX "login_alerts_tenant_id_ip_address_idx" ON "login_alerts"("tenant_id", "ip_address");
+// ALTER TABLE "login_alerts" ADD CONSTRAINT "login_alerts_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "login_alerts" ADD CONSTRAINT "login_alerts_user_id_fkey"
+//   FOREIGN KEY ("user_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -28,7 +28,7 @@ const webhookSchema = z.object({
   active: z.boolean().optional(),
 });
 
-// List webhooks
+// List webhooks — secret is masked (never returned); use /:id/secret to rotate.
 router.get('/', adminWrite, async (req, res, next) => {
   try {
     const webhooks = await prisma.webhook.findMany({
@@ -36,7 +36,8 @@ router.get('/', adminWrite, async (req, res, next) => {
       include: { _count: { select: { deliveries: true } } },
       orderBy: { createdAt: 'desc' },
     });
-    res.json({ webhooks, availableEvents: WEBHOOK_EVENTS });
+    const masked = webhooks.map((w) => ({ ...w, secret: null, hasSecret: !!w.secret }));
+    res.json({ webhooks: masked, availableEvents: WEBHOOK_EVENTS });
   } catch (e) { next(e); }
 });
 
@@ -60,9 +61,24 @@ router.patch('/:id', adminWrite, validateBody(webhookSchema.partial()), async (r
   try {
     const existing = await prisma.webhook.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
     if (!existing) return res.status(404).json({ error: 'Webhook not found' });
-    const webhook = await prisma.webhook.update({ where: { id: req.params.id }, data: req.body });
+    const data = { ...req.body };
+    // Never overwrite the secret with a masked/blank value from the edit form.
+    if (data.secret == null || data.secret === '' || /^[•*]+$/.test(String(data.secret))) delete data.secret;
+    const webhook = await prisma.webhook.update({ where: { id: req.params.id }, data });
     await writeAudit(req, 'webhook.update', 'Webhook', webhook.id, null, { name: webhook.name });
-    res.json({ webhook });
+    res.json({ webhook: { ...webhook, secret: null, hasSecret: !!webhook.secret } });
+  } catch (e) { next(e); }
+});
+
+// Regenerate signing secret — returned ONCE, then masked everywhere.
+router.post('/:id/secret', adminWrite, async (req, res, next) => {
+  try {
+    const existing = await prisma.webhook.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
+    if (!existing) return res.status(404).json({ error: 'Webhook not found' });
+    const secret = crypto.randomBytes(32).toString('hex');
+    await prisma.webhook.update({ where: { id: req.params.id }, data: { secret } });
+    await writeAudit(req, 'webhook.secret.rotate', 'Webhook', req.params.id, null, { name: existing.name });
+    res.json({ secret });
   } catch (e) { next(e); }
 });
 
@@ -98,6 +114,36 @@ router.post('/:id/test', adminWrite, async (req, res, next) => {
     if (!webhook) return res.status(404).json({ error: 'Webhook not found' });
     const { testWebhook } = require('../lib/webhooks');
     await testWebhook(webhook);
+    res.json({ ok: true });
+  } catch (e) { next(e); }
+});
+
+// Resend a failed delivery — resets attempts and re-enqueues with the same retry schedule.
+router.post('/:id/deliveries/:deliveryId/resend', adminWrite, async (req, res, next) => {
+  try {
+    const webhook = await prisma.webhook.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
+    if (!webhook) return res.status(404).json({ error: 'Webhook not found' });
+    if (!webhook.active) return res.status(400).json({ error: 'Webhook is paused' });
+    const delivery = await prisma.webhookDelivery.findFirst({
+      where: { id: req.params.deliveryId, webhookId: webhook.id, ...tenantFilter(req) },
+    });
+    if (!delivery) return res.status(404).json({ error: 'Delivery not found' });
+    const { WEBHOOK_RETRY_DELAYS, WEBHOOK_MAX_ATTEMPTS, registerWebhookHandler } = require('../lib/webhooks');
+    registerWebhookHandler();
+    let jobs = null;
+    try { jobs = require('../lib/jobs'); } catch { /* fall through */ }
+    await prisma.webhookDelivery.update({
+      where: { id: delivery.id },
+      data: { status: 'pending', attempts: 0, error: null, responseCode: null },
+    });
+    if (jobs && typeof jobs.enqueue === 'function') {
+      await jobs.enqueue(
+        'webhook',
+        { webhookId: webhook.id, event: delivery.event, payload: delivery.payload, deliveryId: delivery.id },
+        { tenantId: webhook.tenantId, maxAttempts: WEBHOOK_MAX_ATTEMPTS, retryDelays: WEBHOOK_RETRY_DELAYS }
+      );
+    }
+    await writeAudit(req, 'webhook.delivery.resend', 'WebhookDelivery', delivery.id, null, { event: delivery.event });
     res.json({ ok: true });
   } catch (e) { next(e); }
 });

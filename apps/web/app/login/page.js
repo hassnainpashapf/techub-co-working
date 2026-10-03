@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 
 export default function LoginPage() {
@@ -9,6 +9,13 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
+  const [resetDone, setResetDone] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (new URLSearchParams(window.location.search).get('reset') === '1') setResetDone(true);
+    } catch (_e) { /* ignore */ }
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -36,6 +43,11 @@ export default function LoginPage() {
 
         <div className="card !p-7">
           <form onSubmit={handleSubmit}>
+            {resetDone && (
+              <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-lg px-4 py-3 mb-4">
+                Password reset successfully. Please sign in with your new password.
+              </div>
+            )}
             {error && (
               <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">
                 {error}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
-import { api } from '../../../lib/api';
+import { api, getTokens, API_BASE } from '../../../lib/api';
 import {
   PageHeader,
   DataTable,
@@ -17,6 +17,101 @@ import { useAuth } from '../../../context/AuthContext';
 
 const STATUS_TONE = { active: 'green', inactive: 'slate', suspended: 'red', pending: 'amber' };
 const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
+
+// Phase 32 Track 7: GDPR-style data export + anonymization controls.
+function DataPrivacySection({ member, onChanged }) {
+  const { user } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [msg, setMsg] = useState('');
+  const [showAnon, setShowAnon] = useState(false);
+  const [confirmName, setConfirmName] = useState('');
+
+  const staff = ['ceo', 'admin', 'super_admin'].includes(user?.role);
+  const selfExport = user?.memberId && user.memberId === member.id;
+  if (!staff && !selfExport) return null;
+
+  async function handleExport() {
+    setBusy(true); setMsg('');
+    try {
+      const { access } = getTokens();
+      const res = await fetch(`${API_BASE}/data-export/member/${member.id}/export`, {
+        method: 'POST',
+        headers: access ? { Authorization: `Bearer ${access}` } : {},
+      });
+      if (!res.ok) throw new Error(`Export failed (${res.status})`);
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = `member-data-${member.id}.json`;
+      document.body.appendChild(a); a.click(); a.remove();
+      window.URL.revokeObjectURL(url);
+      setMsg('Data exported as JSON.');
+    } catch (e) { setMsg(e.message); }
+    finally { setBusy(false); }
+  }
+
+  async function handleAnonymize() {
+    if (confirmName.trim().toLowerCase() !== (member.name || '').trim().toLowerCase()) {
+      setMsg('Type the member name exactly to confirm anonymization.');
+      return;
+    }
+    setBusy(true); setMsg('');
+    try {
+      await api.post(`/data-export/member/${member.id}/anonymize`, { confirm: true });
+      setShowAnon(false); setConfirmName('');
+      setMsg('Member anonymized — login disabled.');
+      if (onChanged) onChanged();
+    } catch (e) { setMsg(e.message); }
+    finally { setBusy(false); }
+  }
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mt-6">
+      <h3 className="font-semibold text-white mb-1">Data &amp; Privacy</h3>
+      <p className="text-xs text-slate-400 mb-3">
+        Export all member data as JSON (password hashes are never included). Anonymization replaces
+        personal data with placeholders — financial records are kept for tax compliance.
+      </p>
+      {msg && <p className="text-xs text-amber-300 mb-3">{msg}</p>}
+      <div className="flex flex-wrap gap-2">
+        <button onClick={handleExport} disabled={busy}
+          className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-slate-200 hover:bg-white/10 disabled:opacity-50">
+          {busy ? 'Working…' : 'Export Data (JSON)'}
+        </button>
+        {staff && (
+          <button onClick={() => { setShowAnon(true); setMsg(''); }} disabled={busy}
+            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-red-500/40 bg-red-500/10 text-red-300 hover:bg-red-500/20 disabled:opacity-50">
+            Anonymize (GDPR)
+          </button>
+        )}
+      </div>
+      {showAnon && (
+        <Modal title="Anonymize member" onClose={() => { if (!busy) { setShowAnon(false); setConfirmName(''); } }}>
+          <p className="text-sm text-slate-300 mb-2">
+            This permanently replaces <span className="font-semibold text-white">{member.name}</span>'s personal
+            data (name, email, phone, CNIC) with placeholders and <span className="text-red-300 font-medium">disables their login</span>.
+            Invoices and payments are kept for tax compliance. This cannot be undone.
+          </p>
+          <Field label={`Type "${member.name}" to confirm`}>
+            <input className="input" value={confirmName} onChange={(e) => setConfirmName(e.target.value)}
+              placeholder="Member name" disabled={busy} />
+          </Field>
+          <div className="flex justify-end gap-2 mt-4">
+            <button onClick={() => { setShowAnon(false); setConfirmName(''); }} disabled={busy}
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-slate-300 hover:bg-white/10">
+              Cancel
+            </button>
+            <button onClick={handleAnonymize} disabled={busy || !confirmName.trim()}
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-500 text-white disabled:opacity-50">
+              {busy ? 'Anonymizing…' : 'Anonymize permanently'}
+            </button>
+          </div>
+          {msg && <p className="text-xs text-amber-300 mt-3">{msg}</p>}
+        </Modal>
+      )}
+    </div>
+  );
+}
 
 function MemberForm({ initial, onSave, saving }) {
   const { user } = useAuth();
@@ -129,7 +224,7 @@ function MemberTimeline({ memberId }) {
   );
 }
 
-function MemberDetail({ member, onClose }) {
+function MemberDetail({ member, onClose, onChanged }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [detail, setDetail] = useState(null);
@@ -237,6 +332,7 @@ function MemberDetail({ member, onClose }) {
             rows={invoices.slice(0, 5)}
             empty={{ title: 'No invoices' }}
           />
+          <DataPrivacySection member={m} onChanged={onChanged} />
           </div>
           )}
         </div>
@@ -515,7 +611,7 @@ export default function MembersPage() {
         </Modal>
       )}
       {modal?.mode === 'detail' && (
-        <MemberDetail member={modal.data} onClose={() => setModal(null)} />
+        <MemberDetail member={modal.data} onClose={() => setModal(null)} onChanged={refresh} />
       )}
 
       {/* Phase 29 Track 4: renew contract modal */}
