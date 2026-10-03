@@ -1,0 +1,37 @@
+// Phase 51 Track 2: MeterReadings
+// Dependency: meters.prisma (Track 1) ka `UtilityMeter` fragment PEHLE merge hona chahiye.
+// Coordinator: schema.prisma me + `UtilityMeter` par `readings MeterReading[]` back-relation jorna hai.
+//
+// Migration SQL (20261003600000_phase51_utility):
+//
+// CREATE TABLE "meter_readings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "meterId" TEXT NOT NULL,
+//   "reading" DECIMAL(12,2) NOT NULL,
+//   "readAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "readById" TEXT,
+//   "photoUrl" TEXT,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "meter_readings_meterId_fkey" FOREIGN KEY ("meterId") REFERENCES "utility_meters"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "meter_readings_meterId_readAt_idx" ON "meter_readings"("meterId", "readAt" DESC);
+// CREATE INDEX "meter_readings_tenantId_idx" ON "meter_readings"("tenantId");
+
+model MeterReading {
+  id        String   @id @default(cuid())
+  tenantId  String
+  meterId   String
+  meter     UtilityMeter @relation(fields: [meterId], references: [id], onDelete: Cascade)
+  reading   Decimal  @db.Decimal(12, 2)
+  readAt    DateTime @default(now())
+  readById  String?
+  photoUrl  String?
+  createdAt DateTime @default(now())
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([meterId, readAt(sort: Desc)])
+  @@index([tenantId])
+  @@map("meter_readings")
+}

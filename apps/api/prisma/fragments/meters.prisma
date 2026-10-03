@@ -1,0 +1,50 @@
+// Phase 51 Track 1/10: Utility Meters — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model UtilityMeter {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String   // e.g. "Main Electricity Meter"
+  type        String   @default("electricity") // electricity | water | gas | internet
+  unitId      String?  @map("unit_id") // null = building/shared meter
+  unit        Unit?    @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  buildingId  String?  @map("building_id")
+  building    Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  meterNumber String?  @map("meter_number")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  readings UtilityMeterReading[] @relation("MeterReadings")
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, type])
+  @@map("utility_meters")
+}
+
+// Migration SQL (coordinator: migration folder me daalein):
+// CREATE TABLE "utility_meters" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "name" TEXT NOT NULL,
+//   "type" TEXT NOT NULL DEFAULT 'electricity',
+//   "unit_id" TEXT REFERENCES "units"("id") ON DELETE SET NULL,
+//   "building_id" TEXT REFERENCES "buildings"("id") ON DELETE SET NULL,
+//   "meter_number" TEXT,
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "utility_meters_tenant_active_idx" ON "utility_meters"("tenant_id", "is_active");
+// CREATE INDEX "utility_meters_tenant_type_idx" ON "utility_meters"("tenant_id", "type");
+
+// ADD TO Tenant model:
+//   utilityMeters UtilityMeter[]
+// ADD TO Unit model:
+//   utilityMeters UtilityMeter[]
+// ADD TO Building model:
+//   utilityMeters UtilityMeter[]
+
+// NOTE: UtilityMeterReading model (readings relation) Track 2 ke fragment me aayega —
+// coordinator dono merge kare; relation name "MeterReadings" dono taraf same rakhe.

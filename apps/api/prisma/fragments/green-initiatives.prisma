@@ -1,0 +1,47 @@
+// Phase 51 Track 9/10: Green Initiatives — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model GreenInitiative {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?  @db.Text
+  category     String   @default("energy") // energy | water | waste | awareness
+  targetValue  Float?   @map("target_value")
+  currentValue Float    @default(0) @map("current_value")
+  unit         String?  // e.g. "kWh", "%", "trees"
+  startDate    DateTime @map("start_date")
+  endDate      DateTime? @map("end_date")
+  status       String   @default("planned") // planned | active | completed
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, category])
+  @@map("green_initiatives")
+}
+
+// Coordinator: Tenant model me back-relation jorna hai:
+//   greenInitiatives GreenInitiative[]
+
+// Migration SQL (coordinator: migration folder me daalein):
+// CREATE TABLE "green_initiatives" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "title" TEXT NOT NULL,
+//   "description" TEXT,
+//   "category" TEXT NOT NULL DEFAULT 'energy',
+//   "target_value" DOUBLE PRECISION,
+//   "current_value" DOUBLE PRECISION NOT NULL DEFAULT 0,
+//   "unit" TEXT,
+//   "start_date" TIMESTAMP(3) NOT NULL,
+//   "end_date" TIMESTAMP(3),
+//   "status" TEXT NOT NULL DEFAULT 'planned',
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "green_initiatives_tenant_status_idx" ON "green_initiatives"("tenant_id", "status");
+// CREATE INDEX "green_initiatives_tenant_category_idx" ON "green_initiatives"("tenant_id", "category");

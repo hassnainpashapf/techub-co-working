@@ -170,6 +170,14 @@ const NAV_MAIN = [
       { label: 'Incident Reports', path: '/legal/incidents' },
     ],
   },
+  { key: 'utilities', label: '⚡ Utilities', path: '/utilities', icon: 'workspaces',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Utilities Dashboard', path: '/utilities' },
+      { label: '🔌 Utility Meters', path: '/utilities/meters' },
+      { label: '🌱 Green Initiatives', path: '/utilities/green' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only
@@ -187,6 +195,7 @@ const NAV_MEMBER = [
   { key: 'mymessages', label: 'Messages', path: '/portal/messages', icon: 'message' },
   { key: 'mycafe', label: 'Café', path: '/portal/cafe', icon: 'workspaces' },
   { key: 'myaccess', label: 'My Access', path: '/portal/access', icon: 'shield' },
+  { key: 'myusage', label: 'My Usage', path: '/portal/usage', icon: 'investor' },
   { key: 'events', label: 'Events', path: '/portal/events', icon: 'team' },
   { key: 'marketplace', label: 'Marketplace', path: '/portal/marketplace', icon: 'launchpad' },
   { key: 'directory', label: 'Directory', path: '/portal/directory', icon: 'team' },

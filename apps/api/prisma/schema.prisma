@@ -222,6 +222,12 @@ model Tenant {
   insurancePolicies    InsurancePolicy[]  @relation("TenantInsurancePolicies")
   retentionPolicies    RetentionPolicy[]
   retentionRuns        RetentionRun[]
+  // Phase 51: Utility & Sustainability Pack
+  utilityMeters        UtilityMeter[]
+  meterReadings        MeterReading[]
+  utilityRates         UtilityRate[]
+  utilityBills         UtilityBill[]
+  greenInitiatives     GreenInitiative[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -338,6 +344,7 @@ model Building {
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
   floors    Floor[]
+  utilityMeters UtilityMeter[] // Phase 51
 
   @@index([tenantId])
   @@map("buildings")
@@ -417,6 +424,7 @@ model Unit {
 
   recurringBookings RecurringBooking[]
   bookingRequests   BookingRequest[]
+  utilityMeters     UtilityMeter[] // Phase 51
 
   @@unique([tenantId, code])
   @@index([tenantId, type, status])
@@ -518,6 +526,7 @@ model Member {
   policyAcks                 PolicyAck[]           @relation("MemberPolicyAcks")
   legalDocuments             LegalDocument[]       @relation("MemberLegalDocs")
   incidents                  Incident[]
+  utilityBills               UtilityBill[] // Phase 51
 }
 
 // ------------------------------------------------------------ company ------
@@ -635,6 +644,7 @@ model Invoice {
   dunningLogs    DunningLog[]
   onlinePayments OnlinePayment[]
   fxGainLoss     FxGainLoss[] // Phase 46
+  utilityBills   UtilityBill[] // Phase 51
 
   @@unique([tenantId, number])
   @@index([tenantId, status])
@@ -4230,4 +4240,105 @@ model RetentionRun {
 
   @@index([tenantId, createdAt])
   @@map("retention_runs")
+}
+
+// ------------------------------------------------ Phase 51: Utility & Sustainability Pack ---
+model UtilityMeter {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  type        String    @default("electricity") // electricity | water | gas | internet
+  unitId      String?   @map("unit_id")
+  unit        Unit?     @relation(fields: [unitId], references: [id], onDelete: SetNull)
+  buildingId  String?   @map("building_id")
+  building    Building? @relation(fields: [buildingId], references: [id], onDelete: SetNull)
+  meterNumber String?   @map("meter_number")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  readings MeterReading[]
+  bills    UtilityBill[] // Phase 51
+
+  @@index([tenantId, isActive])
+  @@index([tenantId, type])
+  @@map("utility_meters")
+}
+
+model MeterReading {
+  id        String       @id @default(cuid())
+  tenantId  String
+  tenant    Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  meterId   String
+  meter     UtilityMeter @relation(fields: [meterId], references: [id], onDelete: Cascade)
+  reading   Decimal      @db.Decimal(12, 2)
+  readAt    DateTime     @default(now())
+  readById  String?
+  photoUrl  String?
+  createdAt DateTime     @default(now())
+
+  @@index([meterId, readAt(sort: Desc)])
+  @@index([tenantId])
+  @@map("meter_readings")
+}
+
+model UtilityRate {
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  type          String
+  ratePerUnit   Decimal  @map("rate_per_unit") @db.Decimal(12, 4)
+  fixedCharge   Decimal? @map("fixed_charge") @db.Decimal(12, 2)
+  effectiveFrom DateTime @map("effective_from") @db.Date
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, type, effectiveFrom])
+  @@map("utility_rates")
+}
+
+model UtilityBill {
+  id          String       @id @default(cuid())
+  tenantId    String       @map("tenant_id")
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId    String?      @map("member_id")
+  member      Member?      @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  unitId      String?      @map("unit_id")
+  meterId     String       @map("meter_id")
+  meter       UtilityMeter @relation(fields: [meterId], references: [id], onDelete: Restrict)
+  periodStart DateTime     @map("period_start") @db.Date
+  periodEnd   DateTime     @map("period_end") @db.Date
+  consumption Decimal      @db.Decimal(12, 2)
+  ratePerUnit Decimal      @map("rate_per_unit") @db.Decimal(12, 4)
+  fixedCharge Decimal      @default(0) @map("fixed_charge") @db.Decimal(12, 2)
+  amount      Decimal      @db.Decimal(12, 2)
+  invoiceId   String?      @map("invoice_id")
+  invoice     Invoice?     @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  status      String       @default("draft") // draft | billed | void
+  createdAt   DateTime     @default(now()) @map("created_at")
+
+  @@unique([tenantId, meterId, periodStart])
+  @@index([tenantId, memberId])
+  @@index([tenantId, status])
+  @@map("utility_bills")
+}
+
+model GreenInitiative {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title        String
+  description  String?  @db.Text
+  category     String   @default("energy")
+  targetValue  Float?   @map("target_value")
+  currentValue Float    @default(0) @map("current_value")
+  unit         String?
+  startDate    DateTime @map("start_date")
+  endDate      DateTime? @map("end_date")
+  status       String   @default("planned") // planned | active | completed
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, category])
+  @@map("green_initiatives")
 }

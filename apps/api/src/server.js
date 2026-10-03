@@ -364,6 +364,19 @@ app.use('/api/insurance', require('./routes/insurance'));
 app.use('/api/retention', require('./routes/retention'));
 app.use('/api/vendor-compliance', require('./routes/vendor-compliance'));
 app.use('/api/legal-dashboard', require('./routes/legal-dashboard'));
+// Phase 51: Utility & Sustainability Pack (additive)
+app.use('/api/meters', require('./routes/meters'));
+app.use('/api/meter-readings', require('./routes/meter-readings'));
+app.use('/api/utility-billing', require('./routes/utility-billing'));
+app.use('/api/utility-analytics', require('./routes/utility-analytics'));
+app.use('/api/cost-allocation', require('./routes/cost-allocation'));
+app.use('/api/my-usage', require('./routes/my-usage'));
+app.use('/api/sustainability', require('./routes/sustainability'));
+app.use('/api/green-initiatives', require('./routes/green-initiatives'));
+app.use('/api/utilities-dashboard', require('./routes/utilities-dashboard'));
+try {
+  require('./lib/utilityAlerts').ensureUtilityAlertsScheduled();
+} catch (e) { console.error('[phase51] utility alerts schedule failed:', e.message); }
 // Phase 50: legal jobs (additive)
 try {
   require('./lib/legalVaultExpiry').ensureLegalVaultExpiryScheduled();
