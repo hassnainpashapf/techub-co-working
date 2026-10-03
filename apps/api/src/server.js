@@ -45,9 +45,13 @@ app.use('/api/api-keys', require('./routes/api-keys'));
 app.use('/api/subscriptions', require('./routes/subscriptions'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/notifications', require('./routes/notifications'));
+app.use('/api/notification-preferences', require('./routes/notification-preferences'));
 app.use('/api/reports', require('./routes/reports'));
+app.use('/api/whatsapp', require('./routes/whatsapp'));
 app.use('/api/settings', require('./routes/settings'));
 app.use('/api/portal', require('./routes/portal'));
+app.use('/api/sms', require('./routes/sms'));
+app.use('/api/announcements', require('./routes/announcements'));
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

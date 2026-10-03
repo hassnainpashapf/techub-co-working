@@ -1,0 +1,27 @@
+// Phase 27 Track 5: Announcements / Broadcast — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (5 parallel agents — merge conflicts se bachne ke liye).
+
+model Announcement {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title     String
+  body      String   @db.Text
+  audience  String   @default("all") // all | members | staff
+  channels  String[] @default(["inapp"]) // inapp | email | sms | whatsapp
+  sentBy    String   @map("sent_by")
+  sender    User     @relation("SentAnnouncements", fields: [sentBy], references: [id], onDelete: Cascade)
+  sentAt    DateTime? @map("sent_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("announcements")
+}
+
+// ADD TO Tenant model:
+//   announcements Announcement[]
+//
+// ADD TO User model:
+//   sentAnnouncements Announcement[] @relation("SentAnnouncements")

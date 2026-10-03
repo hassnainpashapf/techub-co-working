@@ -11,18 +11,54 @@ const router = express.Router();
 router.use(authenticate, requireTenantUser);
 
 // Inbox: notifications addressed to me directly, or to my role.
+// Supports ?unread=1, ?type=, ?page=, ?limit=
 router.get('/', async (req, res, next) => {
   try {
-    const items = await prisma.notification.findMany({
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(100, Math.max(1, parseInt(req.query.limit, 10) || 20));
+    const where = {
+      tenantId: req.user.tenantId,
+      OR: [{ userId: req.user.sub }, { role: req.user.role }],
+    };
+    if (req.query.unread === '1' || req.query.unread === 'true') {
+      where.isRead = false;
+    }
+    if (req.query.type) {
+      where.type = req.query.type;
+    }
+    const [items, total, unreadCount] = await Promise.all([
+      prisma.notification.findMany({
+        where,
+        orderBy: { createdAt: 'desc' },
+        skip: (page - 1) * limit,
+        take: limit,
+      }),
+      prisma.notification.count({ where }),
+      prisma.notification.count({
+        where: {
+          tenantId: req.user.tenantId,
+          OR: [{ userId: req.user.sub }, { role: req.user.role }],
+          isRead: false,
+        },
+      }),
+    ]);
+    return res.json({ items, total, page, limit, unreadCount });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Lightweight unread count for the Topbar badge.
+router.get('/unread-count', async (req, res, next) => {
+  try {
+    const count = await prisma.notification.count({
       where: {
         tenantId: req.user.tenantId,
         OR: [{ userId: req.user.sub }, { role: req.user.role }],
+        isRead: false,
       },
-      orderBy: { createdAt: 'desc' },
-      take: 100,
     });
-    const unreadCount = items.filter((n) => !n.isRead).length;
-    return res.json({ items, unreadCount });
+    return res.json({ count });
   } catch (err) {
     return next(err);
   }

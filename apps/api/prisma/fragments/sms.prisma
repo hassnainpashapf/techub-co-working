@@ -1,0 +1,23 @@
+// Phase 27 Track 1: SMS notifications — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (5 parallel agents — merge conflicts se bachne ke liye).
+
+model SmsLog {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  to          String
+  body        String
+  status      String   @default("queued") // queued | sent | failed
+  provider    String   @default("twilio") // twilio | console
+  providerSid String?  @map("provider_sid")
+  error       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("sms_logs")
+}
+
+// ADD TO Tenant model:
+//   smsLogs SmsLog[]

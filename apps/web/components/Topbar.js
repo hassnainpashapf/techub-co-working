@@ -34,9 +34,9 @@ export default function Topbar() {
     let cancelled = false;
     async function load() {
       try {
-        const data = await api.get('/notifications?unread=true');
-        const list = data.notifications || data || [];
-        if (!cancelled) setUnread(Array.isArray(list) ? list.length : 0);
+        const data = await api.get('/notifications/unread-count');
+        const count = data.count ?? data.unreadCount ?? 0;
+        if (!cancelled) setUnread(Number(count) || 0);
       } catch {
         /* silent */
       }
@@ -76,7 +76,7 @@ export default function Topbar() {
         <button className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><polyline points="12 7 12 12 15 15"/></svg>
         </button>
-        <a href="/reminders" className="relative w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors">
+        <a href="/notifications" className="relative w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-slate-200 hover:bg-white/5 transition-colors">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           {unread > 0 && (
             <span className="absolute top-1 right-1 bg-blue-500 text-white text-[9px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center">

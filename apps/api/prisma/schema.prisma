@@ -76,6 +76,10 @@ model Tenant {
   settings      Setting[]
   auditLogs     AuditLog[]
   subscription  TenantSubscription?
+  smsLogs       SmsLog[]
+  whatsappLogs  WhatsappLog[]
+  announcements Announcement[]
+  notificationPreferences NotificationPreference[]
 
   @@map("tenants")
 }
@@ -123,6 +127,8 @@ model User {
   offeredRides        Ride[]
   rideRequests        RideRequest[]
   unitFavorites       UnitFavorite[]
+  sentAnnouncements   Announcement[] @relation("SentAnnouncements")
+  notificationPreferences NotificationPreference[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -1075,4 +1081,73 @@ model ApiKey {
 
   @@index([tenantId])
   @@map("api_keys")
+}
+
+// ------------------------------------------------- Phase 27: Notifications Hub
+model SmsLog {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  to          String
+  body        String
+  status      String   @default("queued") // queued | sent | failed
+  provider    String   @default("twilio") // twilio | console
+  providerSid String?  @map("provider_sid")
+  error       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("sms_logs")
+}
+
+model WhatsappLog {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  to          String
+  template    String
+  params      Json?    @map("params")
+  status      String   @default("queued") // queued | sent | failed
+  provider    String   @default("console") // meta | console
+  providerSid String?  @map("provider_sid")
+  error       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("whatsapp_logs")
+}
+
+model NotificationPreference {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType String   @map("event_type") // e.g. 'booking.confirmed'
+  channel   String   // 'email' | 'sms' | 'whatsapp' | 'inapp'
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, eventType, channel])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("notification_preferences")
+}
+
+model Announcement {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title     String
+  body      String   @db.Text
+  audience  String   @default("all") // all | members | staff
+  channels  String[] @default(["inapp"]) // inapp | email | sms | whatsapp
+  sentBy    String   @map("sent_by")
+  sender    User     @relation("SentAnnouncements", fields: [sentBy], references: [id], onDelete: Cascade)
+  sentAt    DateTime? @map("sent_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("announcements")
 }

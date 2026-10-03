@@ -1,0 +1,23 @@
+// Phase 27 Track 2/5: WhatsApp notifications — schema fragment.
+// DO NOT edit schema.prisma directly (5 agents parallel). Coordinator merges
+// this fragment into schema.prisma + migration before deploy.
+//
+// ADD TO Tenant model:
+//   whatsappLogs WhatsappLog[]
+
+model WhatsappLog {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  to          String
+  template    String
+  params      Json?    @map("params")
+  status      String   @default("queued") // queued | sent | failed
+  provider    String   @default("console") // meta | console
+  providerSid String?  @map("provider_sid")
+  error       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("whatsapp_logs")
+}

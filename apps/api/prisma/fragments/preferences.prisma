@@ -1,0 +1,28 @@
+// Phase 27 Track 4: Notification preferences — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (5 parallel agents — merge conflicts se bachne ke liye).
+
+model NotificationPreference {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  eventType String   @map("event_type") // e.g. 'booking.confirmed'
+  channel   String   // 'email' | 'sms' | 'whatsapp' | 'inapp'
+  enabled   Boolean  @default(true)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, eventType, channel])
+  @@index([tenantId])
+  @@index([userId])
+  @@map("notification_preferences")
+}
+
+// ADD TO Tenant model:
+//   notificationPreferences NotificationPreference[]
+
+// ADD TO User model:
+//   notificationPreferences NotificationPreference[]

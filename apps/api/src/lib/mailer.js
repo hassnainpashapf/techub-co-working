@@ -72,6 +72,10 @@ const templates = {
     subject: 'Verify your email address',
     html: wrap('Verify Your Email', `<p>Hi ${name || 'there'},</p><p>Please verify your email address by clicking the link below:</p><p><a href="${verifyUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Verify Email</a></p><p>This link expires in 24 hours.</p>`),
   }),
+  announcement: ({ title, body, name }) => ({
+    subject: `📢 ${title}`,
+    html: wrap('Announcement', `<p>Hi ${name || 'there'},</p><h3 style="margin:0 0 8px">${title}</h3><p style="white-space:pre-wrap">${body}</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {

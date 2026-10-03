@@ -88,6 +88,7 @@ const NAV_MAIN = [
     ],
   },
   { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
+  { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
 ];
 
 // Limited nav for member-portal users — own data only
@@ -111,8 +112,11 @@ const NAV_OTHERS = [
       { label: 'General', path: '/settings' },
       { label: 'Branding', path: '/settings/branding' },
       { label: 'Email', path: '/settings/email' },
+      { label: 'SMS', path: '/settings/sms' },
+      { label: 'WhatsApp', path: '/settings/whatsapp' },
       { label: 'Webhooks', path: '/settings/webhooks' },
       { label: 'API Keys', path: '/settings/api-keys' },
+      { label: 'Notifications', path: '/settings/notifications' },
       { label: 'Subscription', path: '/settings/subscription' },
     ],
   },
@@ -233,7 +237,7 @@ export default function Sidebar() {
         ) : (
           <>
             <p className="px-3.5 pb-2 text-[12px] font-medium text-slate-600">Main</p>
-            {NAV_MAIN.map(renderItem)}
+            {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
             <p className="px-3.5 pt-5 pb-2 text-[12px] font-medium text-slate-600">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
