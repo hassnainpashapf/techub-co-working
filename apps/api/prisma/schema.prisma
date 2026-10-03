@@ -54,6 +54,7 @@ model Tenant {
   notifications Notification[]
   tickets       Ticket[]
   ticketComments TicketComment[]
+  visitors      Visitor[]
   settings      Setting[]
   auditLogs     AuditLog[]
 
@@ -91,6 +92,7 @@ model User {
   reportedTickets   Ticket[]        @relation("TicketReporter")
   assignedTickets   Ticket[]        @relation("TicketAssignee")
   ticketComments    TicketComment[]
+  createdVisitors   Visitor[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -211,6 +213,7 @@ model Member {
   invoices  Invoice[]
   bookings  Booking[]
   tickets   Ticket[]
+  hostedVisits Visitor[]
 
   @@index([tenantId, status])
   @@map("members")
@@ -522,6 +525,32 @@ model TicketComment {
 
   @@index([ticketId, createdAt])
   @@map("ticket_comments")
+}
+
+// ---------------------------------------------------------------- visitor ---
+model Visitor {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  phone       String?
+  email       String?
+  cnic        String?
+  purpose     String    @default("meeting") // meeting | tour | interview | delivery | other
+  hostMemberId String?  @map("host_member_id")
+  hostMember  Member?   @relation(fields: [hostMemberId], references: [id], onDelete: SetNull)
+  hostName    String?   @map("host_name") // free text if no member record
+  checkInAt   DateTime  @default(now()) @map("check_in_at")
+  checkOutAt  DateTime? @map("check_out_at")
+  badgeNo     String?   @map("badge_no")
+  notes       String?
+  createdById String?   @map("created_by_id")
+  createdBy   User?     @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, checkInAt])
+  @@map("visitors")
 }
 
 // --------------------------------------------------------------- settings ---
