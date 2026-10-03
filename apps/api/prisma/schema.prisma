@@ -33,6 +33,9 @@ model Tenant {
   address   String?
   plan      String   @default("starter") // starter | growth | enterprise
   isActive  Boolean  @default(true) @map("is_active")
+  logoPath  String?  @map("logo_path")
+  primaryColor String? @map("primary_color")
+  tagline   String?
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 

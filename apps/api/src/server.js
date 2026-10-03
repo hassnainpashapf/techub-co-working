@@ -45,6 +45,36 @@ app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/settings', require('./routes/settings'));
 
+// Public tenant branding (for login page) — lookup by slug, no auth
+app.get('/api/branding/:slug', async (req, res, next) => {
+  try {
+    const prisma = require('./lib/prisma');
+    const tenant = await prisma.tenant.findUnique({
+      where: { slug: req.params.slug },
+      select: { name: true, tagline: true, primaryColor: true, logoPath: true },
+    });
+    if (!tenant) return res.status(404).json({ error: 'Not found' });
+    res.json({ branding: { name: tenant.name, tagline: tenant.tagline, primaryColor: tenant.primaryColor, hasLogo: !!tenant.logoPath } });
+  } catch (e) { next(e); }
+});
+
+app.get('/api/branding/:slug/logo', async (req, res, next) => {
+  try {
+    const prisma = require('./lib/prisma');
+    const { readStream, fileExists } = require('./lib/storage');
+    const tenant = await prisma.tenant.findUnique({
+      where: { slug: req.params.slug },
+      select: { logoPath: true },
+    });
+    if (!tenant?.logoPath || !fileExists(tenant.logoPath)) return res.status(404).json({ error: 'No logo' });
+    const ext = tenant.logoPath.split('.').pop().toLowerCase();
+    const mime = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', svg: 'image/svg+xml' }[ext] || 'image/png';
+    res.setHeader('Content-Type', mime);
+    res.setHeader('Cache-Control', 'public, max-age=3600');
+    readStream(tenant.logoPath).pipe(res);
+  } catch (e) { next(e); }
+});
+
 // 404 for unknown API paths
 app.use((req, res) => {
   res.status(404).json({ error: { message: 'Not found' } });
