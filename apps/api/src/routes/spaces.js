@@ -231,7 +231,65 @@ router.get('/units', read, async (req, res, next) => {
       include: { zone: { include: { floor: { include: { building: true } } } } },
       orderBy: { code: 'asc' },
     });
-    return res.json({ units });
+
+    const myId = req.user.sub || req.user.id;
+    // Favorites for current user
+    const favs = await prisma.unitFavorite.findMany({
+      where: { tenantId: req.user.tenantId, userId: myId },
+      select: { unitId: true },
+    });
+    const favSet = new Set(favs.map((f) => f.unitId));
+
+    // Availability check for a date range: unit is unavailable if any confirmed
+    // booking overlaps [from, to)
+    let busySet = new Set();
+    if (req.query.from && req.query.to) {
+      const from = new Date(String(req.query.from));
+      const to = new Date(String(req.query.to));
+      if (!isNaN(from) && !isNaN(to) && from < to) {
+        const clashes = await prisma.booking.findMany({
+          where: {
+            ...tenantFilter(req),
+            status: 'confirmed',
+            startAt: { lt: to },
+            endAt: { gt: from },
+          },
+          select: { unitId: true },
+        });
+        busySet = new Set(clashes.map((b) => b.unitId));
+      }
+    }
+
+    const shaped = units.map((u) => ({
+      ...u,
+      monthlyPrice: Number(u.monthlyPrice),
+      isFavorite: favSet.has(u.id),
+      isAvailable: !busySet.has(u.id),
+      buildingName: u.zone?.floor?.building?.name || null,
+    }));
+    return res.json({ units: shaped });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Toggle favorite
+router.post('/units/:id/favorite', read, async (req, res, next) => {
+  try {
+    const myId = req.user.sub || req.user.id;
+    const unit = await prisma.unit.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
+    if (!unit) return res.status(404).json({ error: { message: 'Unit not found' } });
+    const existing = await prisma.unitFavorite.findFirst({
+      where: { tenantId: req.user.tenantId, unitId: unit.id, userId: myId },
+    });
+    if (existing) {
+      await prisma.unitFavorite.delete({ where: { id: existing.id } });
+      return res.json({ isFavorite: false });
+    }
+    await prisma.unitFavorite.create({
+      data: { tenantId: req.user.tenantId, unitId: unit.id, userId: myId },
+    });
+    return res.json({ isFavorite: true });
   } catch (err) {
     return next(err);
   }

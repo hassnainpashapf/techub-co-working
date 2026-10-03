@@ -1,9 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAuth } from '../../../context/AuthContext';
-import { Spinner, Modal, Field } from '../../../components/ui';
+import { Spinner, Modal, Field, ErrorBanner } from '../../../components/ui';
 
 const WORKSPACE_TYPES = [
   { label: 'Co-working space', types: ['hot_desk', 'dedicated_desk'] },
@@ -13,7 +13,12 @@ const WORKSPACE_TYPES = [
   { label: 'R & D Lab', types: ['meeting_room', 'phone_booth'] },
 ];
 
-// High-definition workspace images (Unsplash CDN, high quality for crisp 4K feel)
+const TYPE_LABELS = {
+  hot_desk: 'Hot Desk', dedicated_desk: 'Dedicated Desk', cabin: 'Private Cabin',
+  meeting_room: 'Meeting Room', phone_booth: 'Phone Booth',
+  virtual_office: 'Virtual Office', accommodation: 'Accommodation',
+};
+
 const IMAGES = [
   'https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=90&auto=format&fit=crop',
   'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=900&q=90&auto=format&fit=crop',
@@ -23,20 +28,16 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1517502884422-41eaead166d4?w=900&q=90&auto=format&fit=crop',
 ];
 
-const VENUE_NAMES = [
-  'Regus - London Chancery',
-  'Tobacco Dock Workspaces',
-  'Knotel Workclub',
-  'WeWork - Gulberg Greens',
-  'The Hive - DHA Raya',
-  'Colab House',
+const DURATIONS = [
+  { label: 'Hourly', divisor: 720, suffix: '/hr' },
+  { label: 'Daily', divisor: 30, suffix: '/day' },
+  { label: 'Weekly', divisor: 4, suffix: '/week' },
+  { label: 'Monthly', divisor: 1, suffix: '/mo' },
 ];
-
-const DURATIONS = ['Hourly', 'Daily', 'Weekly', 'Monthly'];
 const BUDGETS = [
-  { label: 'Under $500', max: 500 },
-  { label: '$500 – $1,000', min: 500, max: 1000 },
-  { label: '$1,000+', min: 1000 },
+  { label: 'Under Rs 20k', max: 20000 },
+  { label: 'Rs 20k – 50k', min: 20000, max: 50000 },
+  { label: 'Rs 50k+', min: 50000 },
 ];
 const FREEBIES = ['Wi-fi', 'AC', 'Coffee', 'Parking'];
 
@@ -46,6 +47,8 @@ const SORT_OPTIONS = [
   { value: 'price-high', label: 'Price: High to Low' },
   { value: 'name', label: 'Name A–Z' },
 ];
+
+const money = (n) => `Rs ${Math.round(Number(n || 0)).toLocaleString()}`;
 
 function FilterSection({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
@@ -173,23 +176,24 @@ function BookingModal({ unit, onClose, onDone }) {
   );
 }
 
-function BookingCard({ unit, index, onBook, isFav, onToggleFav }) {
+function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
   const [imgIdx, setImgIdx] = useState(0);
   const images = [IMAGES[index % IMAGES.length], IMAGES[(index + 2) % IMAGES.length], IMAGES[(index + 4) % IMAGES.length]];
-  const venueName = VENUE_NAMES[index % VENUE_NAMES.length];
+  const price = Number(unit.monthlyPrice || 0) / duration.divisor;
+  const amenities = unit.amenities?.length ? unit.amenities : ['Wi-fi'];
 
   return (
     <div className="rounded-[20px] bg-gradient-to-b from-[#161626] via-[#12121e] to-[#0e0e18] border border-white/[0.09] overflow-hidden hover:border-blue-400/50 hover:shadow-[0_12px_56px_rgba(59,130,246,0.28),0_0_0_1px_rgba(59,130,246,0.15)] hover:-translate-y-1.5 transition-all duration-300 group animate-fadeUp shadow-[0_4px_24px_rgba(0,0,0,0.4)]" style={{ animationDelay: `${(index % 6) * 0.07}s` }}>
       <div className="relative h-44 overflow-hidden">
         <img
           src={images[imgIdx]}
-          alt={venueName}
+          alt={unit.code}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 contrast-[1.05] saturate-[1.1]"
           loading="lazy"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-        <span className="animate-glowPulse absolute top-3 left-3 px-3 py-1 rounded-full text-[12px] font-semibold bg-[#bfdbfe] text-[#1e3a8a]">
-          Available
+        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[12px] font-semibold ${unit.isAvailable ? 'bg-[#bfdbfe] text-[#1e3a8a] animate-glowPulse' : 'bg-slate-700/80 text-slate-300'}`}>
+          {unit.isAvailable ? 'Available' : 'Booked'}
         </span>
         <button
           onClick={(e) => { e.stopPropagation(); onToggleFav(unit.id); }}
@@ -212,29 +216,31 @@ function BookingCard({ unit, index, onBook, isFav, onToggleFav }) {
       </div>
 
       <div className="p-4">
-        <h3 className="text-white text-[16px] font-semibold truncate drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">{venueName}</h3>
+        <h3 className="text-white text-[16px] font-semibold truncate drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">{unit.code} — {TYPE_LABELS[unit.type] || unit.type}</h3>
+        {unit.buildingName && <p className="text-[12px] text-slate-400 mt-0.5">📍 {unit.buildingName}</p>}
         <div className="flex items-center gap-2 mt-2.5 flex-wrap">
           <span className="inline-flex items-center gap-1 text-[12px] text-white">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-            x16
+            x{unit.capacity || 1}
           </span>
-          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.07] text-[12px] text-white font-semibold">Workstation</span>
-          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.07] text-[12px] text-white">
-            Shop available
+          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.07] text-[12px] text-white font-semibold">{TYPE_LABELS[unit.type] || unit.type}</span>
+          <span className={`px-2.5 py-0.5 rounded-full text-[12px] ${unit.status === 'vacant' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-amber-500/15 text-amber-300'}`}>
+            {unit.status}
           </span>
         </div>
         <p className="flex items-center gap-2 text-[12.5px] text-white mt-2.5">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-          Wi-fi, AC, Coffee, Parking
+          {amenities.join(', ')}
         </p>
         <div className="flex items-end justify-between mt-3.5">
           <div>
             <p className="text-[12px] text-white">Start from</p>
-            <p className="text-white text-[19px] font-bold">$400</p>
+            <p className="text-white text-[19px] font-bold">{money(price)}<span className="text-[12px] font-normal text-slate-400">{duration.suffix}</span></p>
           </div>
           <button
             onClick={() => onBook(unit)}
-            className="btn-shine px-5 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border border-blue-400/60 text-blue-200 bg-blue-500/10 shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:bg-blue-500 hover:text-white hover:shadow-[0_0_28px_rgba(59,130,246,0.65)] transition-all duration-200 active:scale-95"
+            disabled={!unit.isAvailable}
+            className={`btn-shine px-5 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border transition-all duration-200 active:scale-95 ${unit.isAvailable ? 'border-blue-400/60 text-blue-200 bg-blue-500/10 shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:bg-blue-500 hover:text-white hover:shadow-[0_0_28px_rgba(59,130,246,0.65)]' : 'border-white/10 text-slate-500 bg-white/[0.03] cursor-not-allowed'}`}
           >
             Book now
           </button>
@@ -246,7 +252,6 @@ function BookingCard({ unit, index, onBook, isFav, onToggleFav }) {
 
 function MapView({ units, onBook }) {
   const [selected, setSelected] = useState(null);
-  // Deterministic pseudo-random positions for pins
   const positions = units.map((u, i) => ({
     left: `${12 + ((i * 37) % 76)}%`,
     top: `${15 + ((i * 53) % 70)}%`,
@@ -254,7 +259,6 @@ function MapView({ units, onBook }) {
 
   return (
     <div className="relative rounded-2xl overflow-hidden border border-white/[0.08] bg-[#0d0d1a] h-[560px] animate-fadeUp">
-      {/* Stylized map background */}
       <div className="absolute inset-0 opacity-40"
         style={{
           backgroundImage: `
@@ -268,13 +272,9 @@ function MapView({ units, onBook }) {
         <div className="absolute top-2/3 left-0 right-0 h-[2px] bg-blue-500/10 -rotate-[12deg]" />
         <div className="absolute left-1/3 top-0 bottom-0 w-[3px] bg-blue-500/10 rotate-[4deg]" />
         <div className="absolute left-2/3 top-0 bottom-0 w-[2px] bg-blue-500/10 -rotate-[6deg]" />
-        <div className="absolute top-10 left-10 w-24 h-16 rounded-xl bg-blue-500/[0.07] border border-blue-500/10" />
-        <div className="absolute bottom-16 right-16 w-32 h-20 rounded-xl bg-blue-600/[0.06] border border-blue-600/10" />
       </div>
 
-      {/* Pins */}
       {units.map((u, i) => {
-        const name = VENUE_NAMES[i % VENUE_NAMES.length];
         const isSel = selected === u.id;
         return (
           <button
@@ -283,19 +283,21 @@ function MapView({ units, onBook }) {
             className="absolute -translate-x-1/2 -translate-y-1/2 group"
             style={{ left: positions[i].left, top: positions[i].top }}
           >
-            <span className={`relative flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200 group-hover:scale-125 ${isSel ? 'bg-blue-500 border-blue-300 shadow-[0_0_24px_rgba(59,130,246,0.8)] scale-125' : 'bg-[#1a1a2e] border-blue-500/60 shadow-[0_0_14px_rgba(59,130,246,0.4)]'}`}>
+            <span className={`relative flex items-center justify-center w-10 h-10 rounded-full border-2 transition-all duration-200 group-hover:scale-125 ${isSel ? 'bg-blue-500 border-blue-300 shadow-[0_0_24px_rgba(59,130,246,0.8)] scale-125' : u.isAvailable ? 'bg-[#1a1a2e] border-blue-500/60 shadow-[0_0_14px_rgba(59,130,246,0.4)]' : 'bg-[#1a1a2e] border-slate-600/60'}`}>
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </span>
             {isSel && (
               <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-[#1a1a2e] border border-blue-500/30 rounded-xl px-4 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 animate-fadeUp">
-                <span className="block text-white text-[13px] font-semibold">{name}</span>
-                <span className="block text-white text-[12px] mt-0.5">Start from $400</span>
-                <span
-                  onClick={(e) => { e.stopPropagation(); onBook(u); }}
-                  className="mt-2 inline-block px-4 py-1.5 rounded-lg text-[12.5px] font-semibold bg-blue-500 text-white hover:bg-blue-400 transition-colors cursor-pointer"
-                >
-                  Book now
-                </span>
+                <span className="block text-white text-[13px] font-semibold">{u.code}</span>
+                <span className="block text-white text-[12px] mt-0.5">{money(u.monthlyPrice)}/mo · {u.isAvailable ? 'Available' : 'Booked'}</span>
+                {u.isAvailable && (
+                  <span
+                    onClick={(e) => { e.stopPropagation(); onBook(u); }}
+                    className="mt-2 inline-block px-4 py-1.5 rounded-lg text-[12.5px] font-semibold bg-blue-500 text-white hover:bg-blue-400 transition-colors cursor-pointer"
+                  >
+                    Book now
+                  </span>
+                )}
               </span>
             )}
           </button>
@@ -310,66 +312,84 @@ function MapView({ units, onBook }) {
 }
 
 export default function DiscoverPage() {
+  const today = new Date().toISOString().slice(0, 10);
   const [units, setUnits] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [search, setSearch] = useState('');
   const [wsType, setWsType] = useState('Co-working space');
-  const [fromDate, setFromDate] = useState('2024-03-17');
-  const [toDate, setToDate] = useState('2024-03-17');
+  const [fromDate, setFromDate] = useState(today);
+  const [toDate, setToDate] = useState(today);
   const [bookingUnit, setBookingUnit] = useState(null);
   const [bookedMsg, setBookedMsg] = useState('');
   const [view, setView] = useState('grid');
   const [sortBy, setSortBy] = useState('featured');
-  const [duration, setDuration] = useState('Daily');
+  const [durationIdx, setDurationIdx] = useState(1);
   const [budgetIdx, setBudgetIdx] = useState(null);
   const [freebies, setFreebies] = useState([]);
   const [favorites, setFavorites] = useState(new Set());
   const [showFavsOnly, setShowFavsOnly] = useState(false);
+  const [availOnly, setAvailOnly] = useState(false);
+
+  const duration = DURATIONS[durationIdx];
 
   const loadUnits = () => {
     setLoading(true);
-    api.get('/spaces/units')
-      .then((d) => setUnits(d.units || d || []))
-      .catch(() => setUnits([]))
+    setError('');
+    const q = fromDate && toDate ? `?from=${fromDate}&to=${toDate}` : '';
+    api.get(`/spaces/units${q}`)
+      .then((d) => {
+        const list = d.units || d || [];
+        setUnits(list);
+        setFavorites(new Set(list.filter((u) => u.isFavorite).map((u) => u.id)));
+      })
+      .catch((e) => { setError(e.message); setUnits([]); })
       .finally(() => setLoading(false));
   };
 
-  useEffect(() => { loadUnits(); }, []);
-
-  useEffect(() => {
-    try {
-      const saved = JSON.parse(localStorage.getItem('discover_favs') || '[]');
-      setFavorites(new Set(saved));
-    } catch { /* ignore */ }
-  }, []);
+  useEffect(() => { loadUnits(); }, [fromDate, toDate]);
 
   function toggleFav(id) {
-    setFavorites((prev) => {
-      const next = new Set(prev);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      try { localStorage.setItem('discover_favs', JSON.stringify([...next])); } catch { /* ignore */ }
-      return next;
-    });
+    api.post(`/spaces/units/${id}/favorite`)
+      .then((d) => {
+        setFavorites((prev) => {
+          const next = new Set(prev);
+          if (d.isFavorite) next.add(id); else next.delete(id);
+          return next;
+        });
+      })
+      .catch((e) => setError(e.message));
+  }
+
+  function toggleFreebie(fb) {
+    setFreebies((prev) => prev.includes(fb) ? prev.filter((x) => x !== fb) : [...prev, fb]);
   }
 
   const activeType = WORKSPACE_TYPES.find((t) => t.label === wsType);
   let filtered = units.filter((u) => {
-    if (search && !((u.code || '') + ' ' + (u.type || '')).toLowerCase().includes(search.toLowerCase())) return false;
+    if (search && !((u.code || '') + ' ' + (u.type || '') + ' ' + (u.buildingName || '')).toLowerCase().includes(search.toLowerCase())) return false;
     if (activeType && !activeType.types.includes(u.type)) return false;
     if (showFavsOnly && !favorites.has(u.id)) return false;
+    if (availOnly && !u.isAvailable) return false;
     if (budgetIdx !== null) {
       const b = BUDGETS[budgetIdx];
-      const p = Number(u.monthlyPrice || 400);
+      const p = Number(u.monthlyPrice || 0);
       if (b.min && p < b.min) return false;
       if (b.max && p > b.max) return false;
+    }
+    if (freebies.length) {
+      const am = (u.amenities || []).map((a) => a.toLowerCase());
+      if (!freebies.every((fb) => am.includes(fb.toLowerCase()))) return false;
     }
     return true;
   });
 
-  if (sortBy === 'price-low') filtered = [...filtered].sort((a, b) => (a.monthlyPrice || 0) - (b.monthlyPrice || 0));
-  else if (sortBy === 'price-high') filtered = [...filtered].sort((a, b) => (b.monthlyPrice || 0) - (a.monthlyPrice || 0));
+  const priceFor = (u) => Number(u.monthlyPrice || 0) / duration.divisor;
+  if (sortBy === 'price-low') filtered = [...filtered].sort((a, b) => priceFor(a) - priceFor(b));
+  else if (sortBy === 'price-high') filtered = [...filtered].sort((a, b) => priceFor(b) - priceFor(a));
   else if (sortBy === 'name') filtered = [...filtered].sort((a, b) => (a.code || '').localeCompare(b.code || ''));
+
+  const availableCount = useMemo(() => units.filter((u) => u.isAvailable).length, [units]);
 
   function handleBooked() {
     setBookingUnit(null);
@@ -380,13 +400,28 @@ export default function DiscoverPage() {
 
   return (
     <div className="animate-fadeUp">
-      <h1 className="text-white text-[22px] font-bold mb-5 drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]">Available co-workspace</h1>
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
+        <h1 className="text-white text-[22px] font-bold drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]">Available co-workspace</h1>
+        <div className="flex items-center gap-2">
+          <span className="text-[12px] text-slate-400">{availableCount} of {units.length} available {fromDate === toDate ? `on ${formatDateDisplay(fromDate)}` : `(${formatDateDisplay(fromDate)} → ${formatDateDisplay(toDate)})`}</span>
+          <div className="flex rounded-lg border border-white/10 overflow-hidden">
+            {[['grid', 'Grid'], ['map', 'Map']].map(([v, l]) => (
+              <button key={v} onClick={() => setView(v)}
+                className={`px-3 py-1.5 text-xs font-medium ${view === v ? 'bg-blue-500/25 text-blue-200' : 'text-slate-400 hover:bg-white/5'}`}>{l}</button>
+            ))}
+          </div>
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
+            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value} className="bg-[#1a1a2e]">{o.label}</option>)}
+          </select>
+        </div>
+      </div>
 
       {bookedMsg && (
         <div className="mb-4 bg-green-500/10 border border-green-500/30 text-green-300 text-sm rounded-xl px-4 py-3 animate-fadeUp">
           {bookedMsg}
         </div>
       )}
+      {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       <div className="flex gap-6">
         <div className="w-[240px] shrink-0">
@@ -403,6 +438,10 @@ export default function DiscoverPage() {
           <FilterSection title="Availability" defaultOpen>
             <DateField label="From" value={fromDate} onChange={setFromDate} />
             <DateField label="To" value={toDate} onChange={setToDate} />
+            <label className="flex items-center gap-2 text-[13px] text-slate-300 cursor-pointer">
+              <input type="checkbox" checked={availOnly} onChange={(e) => setAvailOnly(e.target.checked)} className="accent-blue-500" />
+              Available only
+            </label>
           </FilterSection>
 
           <FilterSection title="Workspace" defaultOpen>
@@ -413,125 +452,74 @@ export default function DiscoverPage() {
                     {wsType === t.label && <span className="w-[10px] h-[10px] rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
                   </span>
                   <input type="radio" name="wsType" checked={wsType === t.label} onChange={() => setWsType(t.label)} className="hidden" />
-                  <span className={`text-[13.5px] font-medium text-white transition-colors ${wsType === t.label ? 'text-white font-semibold' : 'text-white'}`}>{t.label}</span>
+                  <span className="text-[13.5px] font-medium text-white">{t.label}</span>
                 </label>
               ))}
             </div>
           </FilterSection>
 
           <FilterSection title="Duration">
-            <div className="space-y-3">
-              {DURATIONS.map((d) => (
-                <label key={d} className="flex items-center gap-3 cursor-pointer group">
-                  <span className={`w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-all duration-200 ${duration === d ? 'border-blue-500' : 'border-slate-600 group-hover:border-slate-400'}`}>
-                    {duration === d && <span className="w-[10px] h-[10px] rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
-                  </span>
-                  <input type="radio" name="duration" checked={duration === d} onChange={() => setDuration(d)} className="hidden" />
-                  <span className={`text-[13.5px] font-medium text-white transition-colors ${duration === d ? 'text-white font-semibold' : 'text-white'}`}>{d}</span>
-                </label>
+            <div className="grid grid-cols-2 gap-2">
+              {DURATIONS.map((d, i) => (
+                <button key={d.label} onClick={() => setDurationIdx(i)}
+                  className={`px-3 py-2 rounded-xl text-[13px] font-medium border transition-all ${durationIdx === i ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  {d.label}
+                </button>
               ))}
             </div>
+            <p className="text-[11px] text-slate-500 mt-2">Prices adjust to the selected billing period.</p>
           </FilterSection>
+
           <FilterSection title="Budget">
-            <div className="space-y-3">
+            <div className="space-y-2">
               {BUDGETS.map((b, i) => (
-                <label key={b.label} className="flex items-center gap-3 cursor-pointer group">
-                  <span className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center transition-all duration-200 ${budgetIdx === i ? 'border-blue-500 bg-blue-500/20' : 'border-slate-600 group-hover:border-slate-400'}`}>
-                    {budgetIdx === i && (
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    )}
-                  </span>
-                  <input type="checkbox" checked={budgetIdx === i} onChange={() => setBudgetIdx(budgetIdx === i ? null : i)} className="hidden" />
-                  <span className={`text-[13.5px] font-medium text-white transition-colors ${budgetIdx === i ? 'text-white font-semibold' : 'text-white'}`}>{b.label}</span>
-                </label>
+                <button key={b.label} onClick={() => setBudgetIdx(budgetIdx === i ? null : i)}
+                  className={`w-full text-left px-3 py-2 rounded-xl text-[13px] border transition-all ${budgetIdx === i ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  {b.label} <span className="text-[11px] opacity-70">/mo</span>
+                </button>
               ))}
             </div>
           </FilterSection>
-          <FilterSection title="Freebie">
-            <div className="space-y-3">
-              {FREEBIES.map((f) => (
-                <label key={f} className="flex items-center gap-3 cursor-pointer group">
-                  <span className={`w-[18px] h-[18px] rounded-md border flex items-center justify-center transition-all duration-200 ${freebies.includes(f) ? 'border-blue-500 bg-blue-500/20' : 'border-slate-600 group-hover:border-slate-400'}`}>
-                    {freebies.includes(f) && (
-                      <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#60a5fa" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                    )}
-                  </span>
-                  <input
-                    type="checkbox"
-                    checked={freebies.includes(f)}
-                    onChange={() => setFreebies(freebies.includes(f) ? freebies.filter((x) => x !== f) : [...freebies, f])}
-                    className="hidden"
-                  />
-                  <span className={`text-[13.5px] font-medium text-white transition-colors ${freebies.includes(f) ? 'text-white font-semibold' : 'text-white'}`}>{f}</span>
-                </label>
+
+          <FilterSection title="Freebies">
+            <div className="flex flex-wrap gap-2">
+              {FREEBIES.map((fb) => (
+                <button key={fb} onClick={() => toggleFreebie(fb)}
+                  className={`px-3 py-1.5 rounded-full text-[12.5px] border transition-all ${freebies.includes(fb) ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  {fb}
+                </button>
               ))}
             </div>
+          </FilterSection>
+
+          <FilterSection title="Favorites">
+            <label className="flex items-center gap-2 text-[13px] text-slate-300 cursor-pointer">
+              <input type="checkbox" checked={showFavsOnly} onChange={(e) => setShowFavsOnly(e.target.checked)} className="accent-pink-500" />
+              Show favorites only ({favorites.size})
+            </label>
           </FilterSection>
         </div>
 
         <div className="flex-1 min-w-0">
-          {/* Toolbar: view toggle, favorites, sort, count */}
-          <div className="flex items-center justify-between mb-5 flex-wrap gap-3">
-            <p className="text-[13.5px] text-white">
-              <span className="text-white font-semibold">{filtered.length}</span> workspace{filtered.length !== 1 ? 's' : ''} found
-              {showFavsOnly && <span className="ml-2 text-pink-300">· favorites only</span>}
-            </p>
-            <div className="flex items-center gap-2.5">
-              <button
-                onClick={() => setShowFavsOnly(!showFavsOnly)}
-                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium border transition-all duration-200 ${showFavsOnly ? 'border-pink-400/50 bg-pink-500/10 text-pink-300 shadow-[0_0_16px_rgba(244,114,182,0.25)]' : 'border-white/[0.1] text-white hover:text-white hover:border-white/20'}`}
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill={showFavsOnly ? '#f472b6' : 'none'} stroke="currentColor" strokeWidth="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
-                Favorites
-              </button>
-              <div className="flex rounded-xl border border-white/[0.1] overflow-hidden">
-                <button
-                  onClick={() => setView('grid')}
-                  className={`px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ${view === 'grid' ? 'bg-blue-500/20 text-white shadow-[inset_0_0_12px_rgba(59,130,246,0.2)]' : 'text-white hover:text-white'}`}
-                >
-                  Grid
-                </button>
-                <button
-                  onClick={() => setView('map')}
-                  className={`px-3.5 py-2 text-[13px] font-medium transition-all duration-200 ${view === 'map' ? 'bg-blue-500/20 text-white shadow-[inset_0_0_12px_rgba(59,130,246,0.2)]' : 'text-white hover:text-white'}`}
-                >
-                  Map view
-                </button>
-              </div>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="bg-[#141422] border border-white/[0.1] rounded-xl px-3.5 py-2 text-[13px] text-white outline-none focus:border-blue-500/50 cursor-pointer"
-              >
-                {SORT_OPTIONS.map((o) => (
-                  <option key={o.value} value={o.value}>{o.label}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {loading ? (
-            <Spinner />
-          ) : filtered.length === 0 ? (
-            <div className="text-center py-20 text-white">
-              <p className="text-lg font-medium text-white">No workspaces found</p>
-              <p className="text-sm mt-1">Try adjusting your search or filters.</p>
-            </div>
-          ) : view === 'map' ? (
+          {loading ? <Spinner /> : view === 'map' ? (
             <MapView units={filtered} onBook={setBookingUnit} />
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-20 text-slate-500">
+              <p className="text-5xl mb-4">🏢</p>
+              <p className="text-lg font-medium text-slate-300">No workspaces match</p>
+              <p className="text-sm mt-1">Try adjusting your filters.</p>
+            </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
               {filtered.map((u, i) => (
-                <BookingCard key={u.id || i} unit={u} index={i} onBook={setBookingUnit} isFav={favorites.has(u.id)} onToggleFav={toggleFav} />
+                <BookingCard key={u.id} unit={u} index={i} duration={duration} onBook={setBookingUnit} isFav={favorites.has(u.id)} onToggleFav={toggleFav} />
               ))}
             </div>
           )}
         </div>
       </div>
 
-      {bookingUnit && (
-        <BookingModal unit={bookingUnit} onClose={() => setBookingUnit(null)} onDone={handleBooked} />
-      )}
+      {bookingUnit && <BookingModal unit={bookingUnit} onClose={() => setBookingUnit(null)} onDone={handleBooked} />}
     </div>
   );
 }

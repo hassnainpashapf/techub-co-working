@@ -69,6 +69,7 @@ model Tenant {
   rideRequests RideRequest[]
   webhooks Webhook[]
   webhookDeliveries WebhookDelivery[]
+  unitFavorites UnitFavorite[]
   emailSetting EmailSetting?
   settings      Setting[]
   auditLogs     AuditLog[]
@@ -117,6 +118,7 @@ model User {
   processedRefunds    Refund[] @relation("RefundProcessor")
   offeredRides        Ride[]
   rideRequests        RideRequest[]
+  unitFavorites       UnitFavorite[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -176,6 +178,8 @@ enum UnitType {
   cabin
   meeting_room
   phone_booth
+  virtual_office
+  accommodation
 }
 
 enum UnitStatus {
@@ -195,6 +199,7 @@ model Unit {
   status       UnitStatus @default(vacant)
   monthlyPrice Decimal    @map("monthly_price") @db.Decimal(12, 2)
   capacity     Int        @default(1)
+  amenities    String[]   @default([])
   posX         Int        @default(0) @map("pos_x") // floor-plan grid X
   posY         Int        @default(0) @map("pos_y") // floor-plan grid Y
   createdAt    DateTime   @default(now()) @map("created_at")
@@ -205,6 +210,7 @@ model Unit {
   tickets   Ticket[]
   maintenanceOrders MaintenanceOrder[]
   assets Asset[]
+  favorites UnitFavorite[]
 
   @@unique([tenantId, code])
   @@index([tenantId, type, status])
@@ -850,6 +856,22 @@ model WebhookDelivery {
 
   @@index([tenantId, webhookId, createdAt])
   @@map("webhook_deliveries")
+}
+
+// ------------------------------------------------------- unit favorites ---
+model UnitFavorite {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  unitId    String   @map("unit_id")
+  unit      Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, unitId, userId])
+  @@index([tenantId, userId])
+  @@map("unit_favorites")
 }
 
 // ---------------------------------------------------------- email settings ---
