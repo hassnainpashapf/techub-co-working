@@ -62,6 +62,8 @@ model Tenant {
   documents Document[]
   creditNotes CreditNote[]
   refunds Refund[]
+  rides Ride[]
+  rideRequests RideRequest[]
   emailSetting EmailSetting?
   settings      Setting[]
   auditLogs     AuditLog[]
@@ -108,6 +110,8 @@ model User {
   createdCreditNotes  CreditNote[]
   requestedRefunds    Refund[] @relation("RefundRequester")
   processedRefunds    Refund[] @relation("RefundProcessor")
+  offeredRides        Ride[]
+  rideRequests        RideRequest[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -762,6 +766,48 @@ model Refund {
   @@unique([tenantId, number])
   @@index([tenantId, status])
   @@map("refunds")
+}
+
+// ------------------------------------------------------------------ rides ---
+model Ride {
+  id            String        @id @default(cuid())
+  tenantId      String        @map("tenant_id")
+  tenant        Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  driverUserId  String?       @map("driver_user_id")
+  driverUser    User?         @relation(fields: [driverUserId], references: [id], onDelete: SetNull)
+  driverName    String        @map("driver_name")
+  from          String
+  to            String
+  date          DateTime      @db.Date
+  time          String
+  seatsTotal    Int           @map("seats_total")
+  seatsLeft     Int           @map("seats_left")
+  car           String?
+  phone         String?
+  status        String        @default("open") // open | full | cancelled
+  requests      RideRequest[]
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  @@index([tenantId, status, date])
+  @@map("rides")
+}
+
+model RideRequest {
+  id              String   @id @default(cuid())
+  tenantId        String   @map("tenant_id")
+  tenant          Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rideId          String   @map("ride_id")
+  ride            Ride     @relation(fields: [rideId], references: [id], onDelete: Cascade)
+  requesterUserId String?  @map("requester_user_id")
+  requesterUser   User?    @relation(fields: [requesterUserId], references: [id], onDelete: SetNull)
+  requesterName   String   @map("requester_name")
+  status          String   @default("accepted") // accepted | cancelled
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@unique([rideId, requesterUserId])
+  @@index([tenantId, rideId])
+  @@map("ride_requests")
 }
 
 // ---------------------------------------------------------- email settings ---

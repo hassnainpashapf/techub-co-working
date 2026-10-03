@@ -38,6 +38,7 @@ app.use('/api/inventory', require('./routes/inventory'));
 app.use('/api/documents', require('./routes/documents'));
 app.use('/api/email-settings', require('./routes/email-settings'));
 app.use('/api/refunds', require('./routes/refunds'));
+app.use('/api/rides', require('./routes/rides'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/reports', require('./routes/reports'));

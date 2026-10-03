@@ -2,41 +2,31 @@
 
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../context/AuthContext';
-import { Modal, Field, Spinner } from '../../../components/ui';
-
-const SEED_RIDES = [
-  { id: 'r1', from: 'DHA Phase 5', to: 'Techub Gulberg', date: '2026-10-06', time: '08:30', seats: 3, driver: 'Ahmed Khan', car: 'Honda City', phone: '0300-1234567' },
-  { id: 'r2', from: 'Model Town', to: 'Techub Gulberg', date: '2026-10-06', time: '09:00', seats: 2, driver: 'Sara Ali', car: 'Toyota Corolla', phone: '0321-9876543' },
-  { id: 'r3', from: 'Techub Gulberg', to: 'DHA Phase 5', date: '2026-10-06', time: '18:00', seats: 4, driver: 'Bilal Ahmed', car: 'Suzuki Swift', phone: '0333-5556677' },
-  { id: 'r4', from: 'Johar Town', to: 'Techub DHA Raya', date: '2026-10-07', time: '08:45', seats: 1, driver: 'Fatima Noor', car: 'Kia Picanto', phone: '0345-1112233' },
-];
-
-function loadRides() {
-  try {
-    const saved = JSON.parse(localStorage.getItem('techub_rides') || 'null');
-    if (Array.isArray(saved)) return saved;
-  } catch { /* ignore */ }
-  return SEED_RIDES;
-}
+import { api } from '../../../lib/api';
+import { Modal, Field, Spinner, ErrorBanner } from '../../../components/ui';
 
 function OfferRideModal({ onClose, onAdd }) {
   const { user } = useAuth();
   const [form, setForm] = useState({ from: '', to: 'Techub Gulberg', date: '', time: '08:30', seats: 3, car: '', phone: '' });
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  function submit(e) {
+  async function submit(e) {
     e.preventDefault();
     if (!form.from || !form.date || !form.seats) {
       setError('Please fill all required fields');
       return;
     }
-    onAdd({
-      id: 'r' + Date.now(),
-      ...form,
-      seats: Number(form.seats),
-      driver: user?.name || user?.email?.split('@')[0] || 'You',
-    });
-    onClose();
+    setSaving(true);
+    try {
+      const d = await api.post('/rides', { ...form, seats: Number(form.seats) });
+      onAdd(d.ride);
+      onClose();
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setSaving(false);
+    }
   }
 
   const set = (k) => (e) => setForm({ ...form, [k]: e.target.value });
@@ -74,22 +64,22 @@ function OfferRideModal({ onClose, onAdd }) {
         </div>
         <div className="flex justify-end gap-2 mt-2">
           <button type="button" onClick={onClose} className="btn-secondary">Cancel</button>
-          <button type="submit" className="btn-shine btn-primary">Post Ride</button>
+          <button type="submit" className="btn-shine btn-primary" disabled={saving}>{saving ? 'Posting…' : 'Post Ride'}</button>
         </div>
       </form>
     </Modal>
   );
 }
 
-function RideCard({ ride, onRequest, requested }) {
+function RideCard({ ride, onRequest, onCancelRequest, onCancelRide, busy }) {
   return (
     <div className="rounded-2xl bg-gradient-to-b from-[#141422] to-[#101019] border border-white/[0.08] p-5 hover:border-blue-400/40 hover:shadow-[0_8px_48px_rgba(59,130,246,0.22)] hover:-translate-y-1 transition-all duration-300 animate-fadeUp">
       <div className="flex items-center gap-3 mb-4">
         <span className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-fuchsia-600 flex items-center justify-center text-white font-bold text-[16px] shadow-[0_0_16px_rgba(59,130,246,0.5)]">
-          {ride.driver.charAt(0).toUpperCase()}
+          {(ride.driver || '?').charAt(0).toUpperCase()}
         </span>
         <div>
-          <p className="text-white text-[15px] font-semibold">{ride.driver}</p>
+          <p className="text-white text-[15px] font-semibold">{ride.driver}{ride.mine && <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">YOU</span>}</p>
           <p className="text-slate-500 text-[12.5px]">{ride.car || 'Car not specified'}</p>
         </div>
         <span className={`ml-auto px-3 py-1 rounded-full text-[12px] font-semibold ${ride.seats > 0 ? 'bg-[#bfdbfe] text-[#1e3a8a] animate-glowPulse' : 'bg-slate-700/60 text-slate-400'}`}>
@@ -122,19 +112,33 @@ function RideCard({ ride, onRequest, requested }) {
         )}
       </div>
 
-      <button
-        onClick={() => onRequest(ride.id)}
-        disabled={ride.seats <= 0 || requested}
-        className={`w-full py-2.5 rounded-xl text-[13.5px] font-semibold transition-all duration-200 active:scale-[0.98] ${
-          requested
-            ? 'bg-green-500/15 border border-green-500/40 text-green-300'
-            : ride.seats > 0
+      {ride.passengers?.length > 0 && (
+        <p className="text-[12px] text-slate-500 mb-3">🧍 {ride.passengers.join(', ')}</p>
+      )}
+
+      {ride.mine ? (
+        <button onClick={() => onCancelRide(ride.id)} disabled={busy}
+          className="w-full py-2.5 rounded-xl text-[13.5px] font-semibold bg-red-500/10 border border-red-500/40 text-red-300 hover:bg-red-500/20 transition-all">
+          Cancel Ride
+        </button>
+      ) : ride.requested ? (
+        <button onClick={() => onCancelRequest(ride.id)} disabled={busy}
+          className="w-full py-2.5 rounded-xl text-[13.5px] font-semibold bg-green-500/15 border border-green-500/40 text-green-300 hover:bg-green-500/25 transition-all">
+          ✓ Seat Requested — Tap to Cancel
+        </button>
+      ) : (
+        <button
+          onClick={() => onRequest(ride.id)}
+          disabled={ride.seats <= 0 || busy}
+          className={`w-full py-2.5 rounded-xl text-[13.5px] font-semibold transition-all duration-200 active:scale-[0.98] ${
+            ride.seats > 0
               ? 'btn-shine border border-blue-400/60 text-blue-200 bg-blue-500/10 shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:bg-blue-500 hover:text-white'
               : 'bg-white/[0.04] border border-white/[0.08] text-slate-600 cursor-not-allowed'
-        }`}
-      >
-        {requested ? '✓ Seat Requested' : ride.seats > 0 ? 'Request Seat' : 'Ride Full'}
-      </button>
+          }`}
+        >
+          {ride.seats > 0 ? 'Request Seat' : 'Ride Full'}
+        </button>
+      )}
     </div>
   );
 }
@@ -142,39 +146,73 @@ function RideCard({ ride, onRequest, requested }) {
 export default function RidesPage() {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const [requested, setRequested] = useState(new Set());
   const [search, setSearch] = useState('');
   const [msg, setMsg] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [mineOnly, setMineOnly] = useState(false);
 
-  useEffect(() => {
-    setRides(loadRides());
+  const load = async () => {
+    setLoading(true);
+    setError('');
     try {
-      setRequested(new Set(JSON.parse(localStorage.getItem('techub_rides_req') || '[]')));
-    } catch { /* ignore */ }
-    setLoading(false);
-  }, []);
+      const d = await api.get(`/rides${mineOnly ? '?mine=1' : ''}`);
+      setRides(d.rides || []);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  function persist(next) {
-    setRides(next);
-    try { localStorage.setItem('techub_rides', JSON.stringify(next)); } catch { /* ignore */ }
+  useEffect(() => { load(); }, [mineOnly]);
+
+  const flash = (m) => { setMsg(m); setTimeout(() => setMsg(''), 4000); };
+
+  async function handleAdd() {
+    flash('Your ride has been posted! 🚗');
+    load();
   }
 
-  function handleAdd(ride) {
-    persist([ride, ...rides]);
-    setMsg('Your ride has been posted! 🚗');
-    setTimeout(() => setMsg(''), 4000);
+  async function handleRequest(id) {
+    setBusy(true);
+    try {
+      await api.post(`/rides/${id}/request`);
+      flash('Seat requested! The driver will contact you. 🎉');
+      load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
   }
 
-  function handleRequest(id) {
-    const next = rides.map((r) => (r.id === id && r.seats > 0 ? { ...r, seats: r.seats - 1 } : r));
-    persist(next);
-    const nr = new Set(requested);
-    nr.add(id);
-    setRequested(nr);
-    try { localStorage.setItem('techub_rides_req', JSON.stringify([...nr])); } catch { /* ignore */ }
-    setMsg('Seat requested! The driver will contact you. 🎉');
-    setTimeout(() => setMsg(''), 4000);
+  async function handleCancelRequest(id) {
+    setBusy(true);
+    try {
+      await api.del(`/rides/${id}/request`);
+      flash('Request cancelled.');
+      load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  async function handleCancelRide(id) {
+    if (!confirm('Cancel this ride?')) return;
+    setBusy(true);
+    try {
+      await api.del(`/rides/${id}`);
+      flash('Ride cancelled.');
+      load();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBusy(false);
+    }
   }
 
   const filtered = rides.filter((r) =>
@@ -188,12 +226,18 @@ export default function RidesPage() {
           <h1 className="text-white text-[22px] font-bold">Ride Sharing</h1>
           <p className="text-slate-500 text-[13.5px] mt-1">Share rides with fellow members — save fuel, split costs.</p>
         </div>
-        <button
-          onClick={() => setShowModal(true)}
-          className="btn-shine px-5 py-2.5 rounded-xl text-[13.5px] font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-[0_0_24px_rgba(59,130,246,0.5)] hover:shadow-[0_0_36px_rgba(59,130,246,0.7)] hover:scale-[1.02] transition-all duration-200 active:scale-95"
-        >
-          + Offer a Ride
-        </button>
+        <div className="flex gap-2">
+          <button onClick={() => setMineOnly(!mineOnly)}
+            className={`px-4 py-2.5 rounded-xl text-[13.5px] font-semibold border transition-all ${mineOnly ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            My Rides
+          </button>
+          <button
+            onClick={() => setShowModal(true)}
+            className="btn-shine px-5 py-2.5 rounded-xl text-[13.5px] font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-[0_0_24px_rgba(59,130,246,0.5)] hover:shadow-[0_0_36px_rgba(59,130,246,0.7)] hover:scale-[1.02] transition-all duration-200 active:scale-95"
+          >
+            + Offer a Ride
+          </button>
+        </div>
       </div>
 
       {msg && (
@@ -201,6 +245,7 @@ export default function RidesPage() {
           {msg}
         </div>
       )}
+      {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       <div className="relative mb-6 max-w-md">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" className="absolute left-3.5 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -221,16 +266,14 @@ export default function RidesPage() {
           <p className="text-sm mt-1">Be the first to offer a ride!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-          {filtered.map((r) => (
-            <RideCard key={r.id} ride={r} onRequest={handleRequest} requested={requested.has(r.id)} />
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+          {filtered.map((ride) => (
+            <RideCard key={ride.id} ride={ride} onRequest={handleRequest} onCancelRequest={handleCancelRequest} onCancelRide={handleCancelRide} busy={busy} />
           ))}
         </div>
       )}
 
-      {showModal && (
-        <OfferRideModal onClose={() => setShowModal(false)} onAdd={handleAdd} />
-      )}
+      {showModal && <OfferRideModal onClose={() => setShowModal(false)} onAdd={handleAdd} />}
     </div>
   );
 }
