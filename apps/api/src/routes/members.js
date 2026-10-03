@@ -37,6 +37,20 @@ function memberScope(req) {
   return where;
 }
 
+// Own member record (for member portal profile)
+router.get('/me', async (req, res, next) => {
+  try {
+    if (!req.user.memberId) return res.status(404).json({ error: { message: 'No member record linked' } });
+    const member = await prisma.member.findFirst({
+      where: { id: req.user.memberId, ...tenantFilter(req) },
+    });
+    if (!member) return res.status(404).json({ error: { message: 'Member not found' } });
+    return res.json({ member });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.get('/', async (req, res, next) => {
   try {
     const where = memberScope(req);

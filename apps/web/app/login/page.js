@@ -15,8 +15,8 @@ export default function LoginPage() {
     setError('');
     setBusy(true);
     try {
-      await login(email.trim(), password);
-      window.location = '/dashboard';
+      const me = await login(email.trim(), password);
+      window.location = me?.role === 'member' ? '/m' : '/dashboard';
     } catch (err) {
       setError(err.message || 'Login failed');
       setBusy(false);
