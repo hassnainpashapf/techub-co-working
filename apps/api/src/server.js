@@ -36,6 +36,7 @@ app.use('/api/visitors', require('./routes/visitors'));
 app.use('/api/maintenance', require('./routes/maintenance'));
 app.use('/api/inventory', require('./routes/inventory'));
 app.use('/api/documents', require('./routes/documents'));
+app.use('/api/email-settings', require('./routes/email-settings'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/reports', require('./routes/reports'));

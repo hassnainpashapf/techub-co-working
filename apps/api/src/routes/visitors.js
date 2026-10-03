@@ -66,9 +66,20 @@ router.post('/check-in', write, validateBody(visitorSchema), async (req, res, ne
   try {
     const visitor = await prisma.visitor.create({
       data: { ...req.body, tenantId: req.user.tenantId, createdById: req.user.id },
-      include: includeVisitor,
+      include: {
+        ...includeVisitor,
+        hostMember: { select: { id: true, name: true, email: true } },
+      },
     });
     await writeAudit(req, 'visitor.checkin', 'Visitor', visitor.id, null, { name: visitor.name });
+    // Notify host member by email (non-blocking)
+    if (visitor.hostMember?.email) {
+      const { notify } = require('../lib/mailer');
+      notify(req.user.tenantId, visitor.hostMember.email, 'visitorCheckin', {
+        hostName: visitor.hostMember.name,
+        visitorName: visitor.name,
+      }).catch(() => {});
+    }
     res.status(201).json({ visitor });
   } catch (e) { next(e); }
 });

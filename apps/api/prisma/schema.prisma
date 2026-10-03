@@ -61,6 +61,7 @@ model Tenant {
   assets Asset[]
   documents Document[]
   creditNotes CreditNote[]
+  emailSetting EmailSetting?
   settings      Setting[]
   auditLogs     AuditLog[]
 
@@ -723,6 +724,25 @@ model CreditNote {
   @@unique([tenantId, number])
   @@index([tenantId, memberId])
   @@map("credit_notes")
+}
+
+// ---------------------------------------------------------- email settings ---
+model EmailSetting {
+  id        String   @id @default(cuid())
+  tenantId  String   @unique @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  enabled   Boolean  @default(false)
+  host      String?
+  port      Int      @default(587)
+  secure    Boolean  @default(false)
+  username  String?
+  password  String? // encrypted at rest in future
+  fromName  String?  @map("from_name")
+  fromEmail String?  @map("from_email")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("email_settings")
 }
 
 // --------------------------------------------------------------- settings ---

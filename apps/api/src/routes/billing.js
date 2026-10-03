@@ -236,6 +236,20 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
       return { payment, invoice: updatedInvoice };
     });
 
+    // Email receipt notification (non-blocking)
+    const member = await prisma.member.findFirst({
+      where: { id: invoice.memberId, ...tenantFilter(req) },
+      select: { name: true, email: true },
+    });
+    if (member?.email) {
+      const { notify } = require('../lib/mailer');
+      notify(req.user.tenantId, member.email, 'paymentReceived', {
+        memberName: member.name,
+        amount,
+        invoiceNumber: invoice.number,
+      }).catch(() => {});
+    }
+
     return res.status(201).json(result);
   } catch (err) {
     return next(err);

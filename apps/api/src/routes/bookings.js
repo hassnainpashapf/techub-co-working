@@ -122,8 +122,21 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
         endAt,
         createdById: req.user.sub,
       },
-      include: includeBooking,
+      include: {
+        ...includeBooking,
+        member: { select: { id: true, name: true, email: true } },
+      },
     });
+    // Email notification (non-blocking)
+    if (booking.member?.email) {
+      const { notify } = require('../lib/mailer');
+      notify(tf.tenantId, booking.member.email, 'bookingConfirmed', {
+        memberName: booking.member.name,
+        unitCode: booking.unit?.code,
+        date: new Date(booking.startAt).toLocaleDateString(),
+        startTime: new Date(booking.startAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      }).catch(() => {});
+    }
     return res.status(201).json({ booking });
   } catch (err) {
     return next(err);

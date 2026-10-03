@@ -172,9 +172,21 @@ router.patch('/:id', write, validateBody(ticketUpdateSchema), async (req, res, n
     const ticket = await prisma.ticket.update({
       where: { id: req.params.id },
       data,
-      include: includeTicket,
+      include: {
+        ...includeTicket,
+        member: { select: { id: true, name: true, email: true } },
+      },
     });
     await writeAudit(req, 'ticket.update', 'Ticket', ticket.id, { status: existing.status }, { status: ticket.status });
+    // Email notification on status change (non-blocking)
+    if (data.status && data.status !== existing.status && ticket.member?.email) {
+      const { notify } = require('../lib/mailer');
+      notify(req.user.tenantId, ticket.member.email, 'ticketUpdate', {
+        memberName: ticket.member.name,
+        ticketNo: ticket.ticketNumber || ticket.id.slice(-6),
+        status: data.status.replace('_', ' '),
+      }).catch(() => {});
+    }
     res.json({ ticket });
   } catch (e) { next(e); }
 });

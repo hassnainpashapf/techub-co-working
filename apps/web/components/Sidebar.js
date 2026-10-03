@@ -90,7 +90,12 @@ const NAV_MAIN = [
 
 const NAV_OTHERS = [
   { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', roles: ['super_admin'] },
-  { key: 'settings', label: 'Settings', path: '/settings', icon: 'settings' },
+  { key: 'settings', label: 'Settings', path: '/settings', icon: 'settings', chevron: true,
+    children: [
+      { label: 'General', path: '/settings' },
+      { label: 'Email', path: '/settings/email' },
+    ],
+  },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },
 ];
 
