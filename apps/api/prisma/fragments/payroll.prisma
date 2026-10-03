@@ -1,0 +1,64 @@
+// Phase 31 Track 1: Payroll — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model SalaryStructure {
+  id            String   @id @default(cuid())
+  tenantId      String   @map("tenant_id")
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId        String   @map("user_id")
+  user          User     @relation("SalaryStructures", fields: [userId], references: [id], onDelete: Cascade)
+  basicSalary   Decimal  @map("basic_salary") @db.Decimal(12, 2)
+  allowances    Json     @default("{}") // e.g. {"transport": 5000, "housing": 10000}
+  deductions    Json     @default("{}") // e.g. {"tax": 2000}
+  effectiveFrom DateTime @map("effective_from") @db.Date
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, effectiveFrom])
+  @@index([tenantId])
+  @@map("salary_structures")
+}
+
+model PayrollRun {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  month       String   // "2026-10"
+  status      String   @default("draft") // draft | finalized | paid
+  totalAmount Decimal  @default(0) @map("total_amount") @db.Decimal(12, 2)
+  createdBy   String?  @map("created_by")
+  finalizedAt DateTime? @map("finalized_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  payslips Payslip[]
+
+  @@unique([tenantId, month])
+  @@index([tenantId])
+  @@map("payroll_runs")
+}
+
+model Payslip {
+  id              String     @id @default(cuid())
+  payrollRunId    String     @map("payroll_run_id")
+  payrollRun      PayrollRun @relation(fields: [payrollRunId], references: [id], onDelete: Cascade)
+  userId          String     @map("user_id")
+  user            User       @relation("Payslips", fields: [userId], references: [id], onDelete: Cascade)
+  grossSalary     Decimal    @map("gross_salary") @db.Decimal(12, 2)
+  totalDeductions Decimal    @map("total_deductions") @db.Decimal(12, 2)
+  netPay          Decimal    @map("net_pay") @db.Decimal(12, 2)
+  details         Json       @default("{}") // {basic, allowances, deductions} breakdown
+  status          String     @default("pending") // pending | paid
+  createdAt       DateTime   @default(now()) @map("created_at")
+
+  @@index([payrollRunId])
+  @@index([userId])
+  @@map("payslips")
+}
+
+// ADD TO Tenant model:
+//   salaryStructures SalaryStructure[]
+//   payrollRuns      PayrollRun[]
+//
+// ADD TO User model:
+//   salaryStructures SalaryStructure[] @relation("SalaryStructures")
+//   payslips         Payslip[]         @relation("Payslips")

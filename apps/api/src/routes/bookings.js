@@ -118,6 +118,28 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
       });
     }
 
+    // Phase 31: credit limit enforcement — block booking if member exceeded limit.
+    if (finalMemberId) {
+      try {
+        const { checkCreditLimit } = require('../lib/credit');
+        const credit = await checkCreditLimit(tf.tenantId, finalMemberId);
+        if (credit.exceeded) {
+          return res.status(402).json({
+            error: {
+              message: `Credit limit exceeded. Outstanding Rs ${credit.balance.toLocaleString()} vs limit Rs ${credit.limit.toLocaleString()}. Please clear dues to book.`,
+              code: 'CREDIT_LIMIT_EXCEEDED',
+              balance: credit.balance,
+              limit: credit.limit,
+            },
+          });
+        }
+      } catch (err) {
+        if (err.status === 402) throw err;
+        // checkCreditLimit throws 400 for unknown member — member already validated above.
+        // Any other failure: fail open (don't block booking on credit-check errors).
+      }
+    }
+
     const booking = await prisma.booking.create({
       data: {
         ...tf,

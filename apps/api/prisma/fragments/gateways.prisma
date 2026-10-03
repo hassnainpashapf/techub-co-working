@@ -1,0 +1,27 @@
+// Phase 31 Track 5: Payment Gateway Framework — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model OnlinePayment {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  invoiceId  String   @map("invoice_id")
+  invoice    Invoice  @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+  gateway    String   // manual | jazzcash | easypaisa
+  amount     Decimal  @db.Decimal(12, 2)
+  status     String   @default("pending") // pending | paid | failed | expired
+  gatewayRef String?  @map("gateway_ref") // provider transaction id
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([invoiceId])
+  @@map("online_payments")
+}
+
+// ADD TO Tenant model:
+//   onlinePayments OnlinePayment[]
+//
+// ADD TO Invoice model:
+//   onlinePayments OnlinePayment[]

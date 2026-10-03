@@ -1,0 +1,20 @@
+// Phase 31 Track 8: Budgets (Budget vs Actual) — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model Budget {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  month     String   // "2026-10"
+  category  String   // expense category (rent_building | utilities | ... | other)
+  amount    Decimal  @db.Decimal(12, 2)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, month, category])
+  @@index([tenantId, month])
+  @@map("budgets")
+}
+
+// ADD TO Tenant model:
+//   budgets Budget[]

@@ -6,6 +6,7 @@ const { emitWebhook } = require('../lib/webhooks');
 const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
+const { writeAudit } = require('../middleware/audit');
 const { tenantFilter, todayDateOnly, refreshOverdue } = require('../lib/tenant');
 const { generateInvoicePdf } = require('../lib/invoice-pdf');
 const { invalidateTenantCache } = require('../middleware/cache');
@@ -20,6 +21,9 @@ const billingWrite = requireRole(...BILLING_ROLES);
 const paymentWrite = requireRole(...BILLING_ROLES, 'receptionist');
 
 const OPEN_INVOICE_STATUSES = ['unpaid', 'partial', 'overdue'];
+
+// Fire-and-forget audit helper (never breaks the request)
+const auditAsync = (data) => writeAudit(data).catch(() => {});
 
 // ------------------------------------------------------------ bulk actions ---
 // Phase 30: bulk invoice status (ceo/admin/manager only — sirf status, koi payment record nahi)
@@ -48,6 +52,17 @@ const generateSchema = z.object({
   month: z.string().regex(/^\d{4}-\d{2}$/, 'month must be YYYY-MM'),
 });
 
+// Phase 31: manual invoice creation incl. proforma type
+const createInvoiceSchema = z.object({
+  memberId: z.string().min(1),
+  amount: z.number().positive(),
+  dueDate: z.coerce.date(),
+  periodStart: z.coerce.date().optional(),
+  periodEnd: z.coerce.date().optional(),
+  notes: z.string().optional().nullable(),
+  invoiceType: z.enum(['standard', 'proforma']).default('standard'),
+});
+
 const paymentSchema = z.object({
   invoiceId: z.string().min(1),
   amount: z.number().positive(),
@@ -67,6 +82,10 @@ router.get('/invoices', async (req, res, next) => {
     } else {
       if (req.query.status) where.status = String(req.query.status);
       if (req.query.memberId) where.memberId = String(req.query.memberId);
+      // Phase 31: filter by invoice type (standard | proforma)
+      if (req.query.type && ['standard', 'proforma'].includes(String(req.query.type))) {
+        where.invoiceType = String(req.query.type);
+      }
       if (req.query.month) {
         // month=YYYY-MM → periodStart within that calendar month
         const m = String(req.query.month).match(/^(\d{4})-(\d{2})$/);
@@ -80,7 +99,7 @@ router.get('/invoices', async (req, res, next) => {
     const invoices = await prisma.invoice.findMany({
       where,
       include: {
-        member: { select: { id: true, name: true, phone: true } },
+        member: { select: { id: true, name: true, phone: true, creditLimit: true } },
         payments: { select: { id: true, amount: true, method: true, paidAt: true } },
       },
       orderBy: { createdAt: 'desc' },
@@ -147,6 +166,79 @@ router.post('/invoices/generate', billingWrite, validateBody(generateSchema), as
 
     if (created > 0) emitWebhook(tf.tenantId, 'invoice.created', { count: created, month: yyyymm });
     return res.status(201).json({ created });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Phase 31: manual invoice creation (standard or proforma).
+// Proforma invoices are estimates — they cannot receive payments until converted.
+router.post('/invoices', billingWrite, validateBody(createInvoiceSchema), async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const { memberId, amount, dueDate, periodStart, periodEnd, notes, invoiceType } = req.body;
+
+    const member = await prisma.member.findFirst({ where: { id: memberId, ...tf } });
+    if (!member) return res.status(404).json({ error: { message: 'Member not found' } });
+
+    const now = new Date();
+    const yyyymm = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const prefix = invoiceType === 'proforma' ? 'PRO' : 'INV';
+    const countForMonth = await prisma.invoice.count({
+      where: { tenantId: tf.tenantId, number: { startsWith: `${prefix}-${yyyymm}-` } },
+    });
+    const seq = String(countForMonth + 1).padStart(4, '0');
+
+    const invoice = await prisma.invoice.create({
+      data: {
+        tenantId: tf.tenantId,
+        memberId: member.id,
+        number: `${prefix}-${yyyymm}-${seq}`,
+        periodStart: periodStart || now,
+        periodEnd: periodEnd || now,
+        dueDate,
+        amount,
+        status: 'unpaid',
+        invoiceType,
+        notes: notes || null,
+      },
+    });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'invoice.created', entity: 'Invoice', entityId: invoice.id, newValue: { number: invoice.number, invoiceType }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    return res.status(201).json({ invoice });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// Phase 31: convert a proforma invoice into a standard invoice.
+// Gets a fresh INV- series number; payments are only allowed after conversion.
+router.post('/invoices/:id/convert', billingWrite, async (req, res, next) => {
+  try {
+    const invoice = await prisma.invoice.findFirst({
+      where: { id: req.params.id, ...tenantFilter(req) },
+    });
+    if (!invoice) return res.status(404).json({ error: { message: 'Invoice not found' } });
+    if (invoice.invoiceType !== 'proforma') {
+      return res.status(400).json({ error: { message: 'Only proforma invoices can be converted' } });
+    }
+    if (invoice.status === 'cancelled') {
+      return res.status(400).json({ error: { message: 'Cannot convert a cancelled invoice' } });
+    }
+
+    const now = new Date();
+    const yyyymm = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}`;
+    const countForMonth = await prisma.invoice.count({
+      where: { tenantId: invoice.tenantId, number: { startsWith: `INV-${yyyymm}-` } },
+    });
+    const seq = String(countForMonth + 1).padStart(4, '0');
+
+    const updated = await prisma.invoice.update({
+      where: { id: invoice.id },
+      data: { invoiceType: 'standard', number: `INV-${yyyymm}-${seq}` },
+    });
+    auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'invoice.converted', entity: 'Invoice', entityId: invoice.id, newValue: { from: invoice.number, to: updated.number }, ip: req.ip, userAgent: req.headers['user-agent'] });
+    emitWebhook(invoice.tenantId, 'invoice.created', { id: updated.id, number: updated.number });
+    return res.json({ invoice: updated });
   } catch (err) {
     return next(err);
   }
@@ -228,6 +320,12 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
     if (invoice.status === 'cancelled') {
       return res.status(400).json({
         error: { message: 'Cannot record payment on a cancelled invoice' },
+      });
+    }
+    // Phase 31: proforma invoices are estimates — convert before accepting payment
+    if (invoice.invoiceType === 'proforma') {
+      return res.status(400).json({
+        error: { message: 'Cannot record payment on a proforma invoice — convert it to a standard invoice first' },
       });
     }
 

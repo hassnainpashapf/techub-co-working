@@ -158,6 +158,19 @@ const templates = {
     subject: `📢 ${title}`,
     html: wrap('Announcement', `<p>Hi ${name || 'there'},</p><h3 style="margin:0 0 8px">${title}</h3><p style="white-space:pre-wrap">${body}</p>`),
   }),
+  invoiceOverdue: ({ memberName, number, amount, dueDate, daysOverdue, level }) => {
+    const lvl = Number(level) || 1;
+    const titles = { 1: 'Payment Reminder', 2: 'Overdue Payment — Action Required', 3: 'Final Notice — Overdue Payment' };
+    const intros = {
+      1: `This is a friendly reminder that invoice <b>${number}</b> for <b>Rs ${Number(amount).toLocaleString()}</b> was due on <b>${dueDate}</b> (${daysOverdue} day${daysOverdue === 1 ? '' : 's'} ago).`,
+      2: `Invoice <b>${number}</b> for <b>Rs ${Number(amount).toLocaleString()}</b> is now <b>${daysOverdue} days overdue</b> (was due <b>${dueDate}</b>). Please arrange payment at the earliest.`,
+      3: `This is a <b>final notice</b>: invoice <b>${number}</b> for <b>Rs ${Number(amount).toLocaleString()}</b> is <b>${daysOverdue} days overdue</b> (due <b>${dueDate}</b>). Please pay immediately to avoid service interruption.`,
+    };
+    return {
+      subject: `${titles[lvl] || titles[1]} — ${number}`,
+      html: wrap(titles[lvl] || titles[1], `<p>Hi ${memberName || 'there'},</p><p>${intros[lvl] || intros[1]}</p><p>If you have already paid, please ignore this message.</p>`),
+    };
+  },
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -222,6 +235,7 @@ const TEMPLATE_VARS = {
   paymentReceived: ['memberName', 'amount', 'invoiceNumber'],
   emailVerification: ['name', 'verifyUrl'],
   announcement: ['title', 'body', 'name'],
+  invoiceOverdue: ['memberName', 'number', 'amount', 'dueDate', 'daysOverdue', 'level'],
 };
 
 function listBuiltinTemplates() {

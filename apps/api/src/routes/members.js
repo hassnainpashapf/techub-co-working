@@ -76,10 +76,21 @@ const memberSchema = z.object({
   emergencyContact: z.string().optional().nullable(),
   status: z.enum(MEMBER_STATUSES).default('active'),
   notes: z.string().optional().nullable(),
+  creditLimit: z.number().nonnegative().optional().nullable(),
 });
 const memberUpdateSchema = memberSchema
   .partial()
   .refine((d) => Object.keys(d).length > 0, { message: 'No fields to update' });
+
+// Phase 31: credit limit may only be set by finance-privileged roles.
+const CREDIT_ROLES = ['ceo', 'admin', 'super_admin', 'finance_officer'];
+function stripCreditLimit(user, data) {
+  if (data.creditLimit !== undefined && !CREDIT_ROLES.includes(user.role)) {
+    const { creditLimit: _omit, ...rest } = data;
+    return rest;
+  }
+  return data;
+}
 
 // Resolve companyId (tenant-scoped) and sync companyName from the linked company.
 async function resolveCompany(tenantId, data) {
@@ -150,7 +161,7 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
     }
     const data = await resolveCompany(req.user.tenantId, req.body);
     const member = await prisma.member.create({
-      data: { ...tenantFilter(req), ...data },
+      data: { ...tenantFilter(req), ...stripCreditLimit(req.user, data) },
     });
     emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.create', entity: 'Member', entityId: member.id, newValue: { name: member.name }, ip: req.ip, userAgent: req.headers['user-agent'] });
@@ -260,7 +271,7 @@ router.patch('/:id', write, validateBody(memberUpdateSchema), async (req, res, n
     });
     if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
     const data = await resolveCompany(req.user.tenantId, req.body);
-    const member = await prisma.member.update({ where: { id: existing.id }, data });
+    const member = await prisma.member.update({ where: { id: existing.id }, data: stripCreditLimit(req.user, data) });
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.update', entity: 'Member', entityId: member.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ member });
   } catch (err) {

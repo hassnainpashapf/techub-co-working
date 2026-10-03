@@ -19,6 +19,8 @@ const STATUS_TONE = { active: 'green', inactive: 'slate', suspended: 'red', pend
 const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
 
 function MemberForm({ initial, onSave, saving }) {
+  const { user } = useAuth();
+  const canSetCredit = ['ceo', 'admin', 'super_admin', 'finance_officer'].includes(user?.role);
   const [form, setForm] = useState({
     name: initial?.name || '',
     phone: initial?.phone || '',
@@ -29,6 +31,7 @@ function MemberForm({ initial, onSave, saving }) {
     emergencyContact: initial?.emergencyContact || '',
     status: initial?.status || 'active',
     notes: initial?.notes || '',
+    creditLimit: initial?.creditLimit ?? '',
   });
   const [companies, setCompanies] = useState([]);
   useEffect(() => {
@@ -42,6 +45,9 @@ function MemberForm({ initial, onSave, saving }) {
         // If a company is selected from dropdown, backend syncs companyName — drop free text
         if (payload.companyId) delete payload.companyName;
         else delete payload.companyId;
+        // Normalize credit limit: empty => null (unlimited), otherwise number
+        if (payload.creditLimit === '' || payload.creditLimit == null) payload.creditLimit = null;
+        else payload.creditLimit = Number(payload.creditLimit);
         onSave(payload);
       }}
     >
@@ -77,6 +83,18 @@ function MemberForm({ initial, onSave, saving }) {
           </select>
         </Field>
         <Field label="Notes"><input className="input" value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></Field>
+        {canSetCredit && (
+          <Field label="Credit limit (Rs)">
+            <input
+              type="number"
+              min="0"
+              className="input"
+              value={form.creditLimit}
+              onChange={(e) => setForm({ ...form, creditLimit: e.target.value })}
+              placeholder="Empty = unlimited"
+            />
+          </Field>
+        )}
       </div>
       <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Save member'}</button>
     </form>
@@ -116,6 +134,34 @@ function MemberDetail({ member, onClose }) {
   const [error, setError] = useState('');
   const [detail, setDetail] = useState(null);
   const [tab, setTab] = useState('overview');
+
+  // Phase 31: credit balance bar (computed from loaded invoices)
+  function CreditBar({ m }) {
+    const limit = m.creditLimit == null ? null : Number(m.creditLimit);
+    const balance = (m.invoices || [])
+      .filter((i) => ['unpaid', 'partial', 'overdue'].includes(i.status))
+      .reduce((s, i) => s + Math.max(0, Number(i.amount || 0) - Number(i.amountPaid || 0)), 0);
+    const exceeded = limit != null && balance > limit;
+    const pct = limit ? Math.min(100, (balance / limit) * 100) : 0;
+    return (
+      <div className={`rounded-xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-white/10 bg-white/[0.03]'}`}>
+        <div className="flex items-center justify-between text-sm mb-2">
+          <span className="text-slate-300 font-medium">Credit</span>
+          {exceeded && <span className="text-[11px] font-bold text-red-300 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
+        </div>
+        <div className="flex items-baseline gap-2 text-sm mb-2">
+          <span className={exceeded ? 'text-red-300 font-bold' : 'text-white font-semibold'}>Rs {balance.toLocaleString()}</span>
+          <span className="text-slate-500 text-xs">outstanding</span>
+          <span className="text-slate-500 text-xs ml-auto">limit: {limit == null ? 'unlimited' : `Rs ${limit.toLocaleString()}`}</span>
+        </div>
+        {limit != null && (
+          <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+            <div className={`h-full rounded-full ${exceeded ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-emerald-400'}`} style={{ width: `${pct}%` }} />
+          </div>
+        )}
+      </div>
+    );
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -158,6 +204,7 @@ function MemberDetail({ member, onClose }) {
             <MemberTimeline memberId={m.id} />
           ) : (
           <div>
+          <CreditBar m={m} />
           <div className="grid grid-cols-2 gap-3 text-sm mb-5">
             <div><p className="text-xs text-slate-400">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
             <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{m.email || '—'}</p></div>

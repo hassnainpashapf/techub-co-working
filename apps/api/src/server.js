@@ -82,6 +82,16 @@ app.use('/api/email-templates', require('./routes/email-templates'));
 app.use('/api/saved-views', require('./routes/saved-views'));
 app.use('/api/public', require('./routes/public-bookings'));
 require('./lib/renewalAlerts');
+// Phase 31: recurring-invoice job auto-registers on require; dunning auto-registers via its route.
+require('./lib/recurringInvoiceJob');
+app.use('/api/payroll', require('./routes/payroll'));
+app.use('/api/recurring-invoices', require('./routes/recurring-invoices'));
+app.use('/api/dunning', require('./routes/dunning'));
+app.use('/api/tax-reports', require('./routes/tax-reports'));
+app.use('/api/gateways', require('./routes/gateways'));
+app.use('/api/petty-cash', require('./routes/petty-cash'));
+app.use('/api/budgets', require('./routes/budgets'));
+app.use('/api/ar-aging', require('./routes/ar-aging'));
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

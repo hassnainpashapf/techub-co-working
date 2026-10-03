@@ -1,0 +1,9 @@
+// Phase 31 Track 9: Proforma Invoices — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+// ADD TO Invoice model:
+//   invoiceType String @default("standard") @map("invoice_type") // standard | proforma
+
+// --- Migration SQL (append to phase migration) ---
+// ALTER TABLE "invoices" ADD COLUMN "invoice_type" TEXT NOT NULL DEFAULT 'standard';
+// CREATE INDEX "invoices_tenant_id_invoice_type_idx" ON "invoices"("tenant_id", "invoice_type");
