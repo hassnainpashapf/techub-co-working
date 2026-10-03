@@ -212,6 +212,16 @@ model Tenant {
   whatsappSetting      WhatsappSetting?
   commTemplates        CommTemplate[]
   autoReplies          AutoReply[]
+  // Phase 50: Legal & Compliance Pack
+  legalTemplates       LegalTemplate[]
+  policies             Policy[]
+  policyAcks           PolicyAck[]
+  complianceItems      ComplianceItem[]   @relation("TenantComplianceItems")
+  legalDocuments       LegalDocument[]
+  incidents            Incident[]
+  insurancePolicies    InsurancePolicy[]  @relation("TenantInsurancePolicies")
+  retentionPolicies    RetentionPolicy[]
+  retentionRuns        RetentionRun[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -309,6 +319,10 @@ model User {
   // Phase 49: Unified Communication Hub Pack
   commMessages           CommMessage[] @relation("UserCommMessages")
   assignedCommMessages   CommMessage[] @relation("CommMessageAssignedTo")
+  // Phase 50: Legal & Compliance Pack
+  policyAcks                 PolicyAck[]       @relation("UserPolicyAcks")
+  complianceAssignments      ComplianceItem[]  @relation("UserComplianceAssignments")
+  createdLegalDocuments      LegalDocument[]   @relation("CreatedLegalDocs")
 }
 
 // ---------------------------------------------------------------- space ---
@@ -500,6 +514,10 @@ model Member {
   hostedDayPasses            DayPass[]             @relation("HostedDayPasses")
   // Phase 49: Unified Communication Hub Pack
   commMessages               CommMessage[]         @relation("MemberCommMessages")
+  // Phase 50: Legal & Compliance Pack
+  policyAcks                 PolicyAck[]           @relation("MemberPolicyAcks")
+  legalDocuments             LegalDocument[]       @relation("MemberLegalDocs")
+  incidents                  Incident[]
 }
 
 // ------------------------------------------------------------ company ------
@@ -3161,6 +3179,10 @@ model Vendor {
   category     String   @default("other") // maintenance | food | it | office | other
   paymentTerms String   @default("net_30") @map("payment_terms") // net_15 | net_30 | cod
   taxId        String?  @map("tax_id")
+  // Phase 50: vendor compliance
+  complianceStatus String   @default("pending") @map("compliance_status") // pending | verified | expired
+  complianceDocs   Json?    @map("compliance_docs")
+  complianceExpiry DateTime? @map("compliance_expiry") @db.Date
   rating       Decimal? @db.Decimal(3, 2) @map("rating") // 0.00 - 5.00, auto-computed
   isActive     Boolean  @default(true) @map("is_active")
   notes        String?
@@ -3170,6 +3192,8 @@ model Vendor {
   vendorBills    VendorBill[]
   contracts      VendorContract[]
   ratings        VendorRating[] @relation("VendorRatings")
+  // Phase 50: Legal & Compliance Pack
+  legalDocuments LegalDocument[] @relation("VendorLegalDocs")
 
   @@index([tenantId, isActive])
   @@index([tenantId, category])
@@ -4014,4 +4038,196 @@ model AutoReply {
 
   @@index([tenantId])
   @@map("auto_replies")
+}
+
+// ------------------------------------------------ Phase 50: Legal & Compliance Pack ---
+model LegalTemplate {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name       String
+  category   String
+  body       String   @db.Text
+  variables  Json?
+  version    Int      @default(1)
+  isArchived Boolean  @default(false) @map("is_archived")
+  isActive   Boolean  @default(true)  @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt     @map("updated_at")
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@map("legal_templates")
+}
+
+model Policy {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title         String
+  category      String   @default("general")
+  fileUrl       String?
+  body          String?  @db.Text
+  version       Int      @default(1)
+  effectiveDate DateTime?
+  requiresAck   Boolean  @default(true)
+  reAckOnUpdate Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  acks          PolicyAck[]
+
+  @@index([tenantId, isActive])
+  @@map("Policy")
+}
+
+model PolicyAck {
+  id       String   @id @default(cuid())
+  tenantId String
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policyId String
+  policy   Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  memberId String?
+  member   Member?  @relation("MemberPolicyAcks", fields: [memberId], references: [id], onDelete: Cascade)
+  userId   String?
+  user     User?    @relation("UserPolicyAcks", fields: [userId], references: [id], onDelete: Cascade)
+  ackedAt  DateTime @default(now())
+  ipHash   String?
+
+  @@unique([policyId, memberId])
+  @@unique([policyId, userId])
+  @@index([tenantId, policyId])
+  @@map("PolicyAck")
+}
+
+model ComplianceItem {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation("TenantComplianceItems", fields: [tenantId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?
+  category      String
+  dueDate       DateTime?
+  frequency     String   @default("once")
+  status        String   @default("pending")
+  assignedToId  String?
+  assignedTo    User?    @relation("UserComplianceAssignments", fields: [assignedToId], references: [id], onDelete: SetNull)
+  evidenceUrl   String?
+  completedAt   DateTime?
+  completedById String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, dueDate])
+}
+
+model LegalDocument {
+  id              String    @id @default(cuid())
+  tenantId        String    @map("tenant_id")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title           String    @map("title")
+  category        String    @map("category")
+  fileUrl         String?   @map("file_url")
+  fileName        String?   @map("file_name")
+  fileMime        String?   @map("file_mime")
+  fileSize        Int?      @map("file_size")
+  relatedMemberId String?   @map("related_member_id")
+  relatedMember   Member?   @relation("MemberLegalDocs", fields: [relatedMemberId], references: [id], onDelete: SetNull)
+  relatedVendorId String?   @map("related_vendor_id")
+  relatedVendor   Vendor?   @relation("VendorLegalDocs", fields: [relatedVendorId], references: [id], onDelete: SetNull)
+  expiresAt       DateTime? @map("expires_at")
+  reminderDays    Json      @default("[30,7,1]") @map("reminder_days")
+  lastReminderKey String?   @map("last_reminder_key")
+  status          String    @default("active") @map("status")
+  createdById     String?   @map("created_by_id")
+  createdBy       User?     @relation("CreatedLegalDocs", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, category])
+  @@index([tenantId, status])
+  @@index([expiresAt])
+  @@map("legal_documents")
+}
+
+model Incident {
+  id               String   @id @default(cuid())
+  tenantId         String
+  tenant           Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title            String
+  category         String
+  severity         String
+  description      String
+  location         String?
+  reportedBy       String
+  reportedByName   String?
+  involvedMemberId String?
+  involvedMember   Member?  @relation(fields: [involvedMemberId], references: [id], onDelete: SetNull)
+  status           String   @default("open")
+  resolution       String?
+  attachments      Json?
+  occurredAt       DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([tenantId, status, createdAt])
+  @@index([tenantId, severity, createdAt])
+}
+
+model InsurancePolicy {
+  id               String   @id @default(cuid())
+  tenantId         String
+  tenant           Tenant   @relation("TenantInsurancePolicies", fields: [tenantId], references: [id], onDelete: Cascade)
+  provider         String
+  policyNumber     String
+  type             String
+  coverageAmount   Decimal  @db.Decimal(14, 2)
+  premiumAmount    Decimal  @db.Decimal(14, 2)
+  premiumFrequency String   @default("yearly")
+  startDate        DateTime
+  endDate          DateTime
+  documentUrl      String?
+  status           String   @default("active")
+  lastReminderKey  String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, endDate])
+}
+
+model RetentionPolicy {
+  id         String  @id @default(cuid())
+  tenantId   String  @map("tenant_id")
+  tenant     Tenant  @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  dataType   String  @map("data_type")
+  retainDays Int     @map("retain_days")
+  autoDelete Boolean @default(false) @map("auto_delete")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  runs RetentionRun[]
+
+  @@unique([tenantId, dataType])
+  @@index([tenantId])
+  @@map("retention_policies")
+}
+
+model RetentionRun {
+  id         String           @id @default(cuid())
+  tenantId   String           @map("tenant_id")
+  tenant     Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policyId   String?          @map("policy_id")
+  policy     RetentionPolicy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  dataType   String           @map("data_type")
+  mode       String
+  scanned    Int              @default(0)
+  deleted    Int              @default(0)
+  anonymized Int              @default(0)
+  details    Json?
+  runBy      String?          @map("run_by")
+  createdAt  DateTime         @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("retention_runs")
 }

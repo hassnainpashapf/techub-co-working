@@ -1,0 +1,39 @@
+// Phase 50 — Insurance Tracking
+// Coordinator: merge into schema.prisma + Tenant back-relation + migration SQL below.
+
+model InsurancePolicy {
+  id               String   @id @default(cuid())
+  tenantId         String
+  tenant           Tenant   @relation("TenantInsurancePolicies", fields: [tenantId], references: [id], onDelete: Cascade)
+  provider         String
+  policyNumber     String
+  type             String   // property / liability / health / equipment
+  coverageAmount   Decimal  @db.Decimal(14, 2)
+  premiumAmount    Decimal  @db.Decimal(14, 2)
+  premiumFrequency String   @default("yearly") // monthly / quarterly / yearly
+  startDate        DateTime
+  endDate          DateTime
+  documentUrl      String?
+  status           String   @default("active") // active / expired / cancelled
+  lastReminderKey  String?  // dedupe: "<endDateISO>:<days>"
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, endDate])
+}
+
+// Migration SQL:
+// CREATE TABLE "InsurancePolicy" (
+//   "id" TEXT PRIMARY KEY, "tenantId" TEXT NOT NULL REFERENCES "Tenant"("id") ON DELETE CASCADE,
+//   "provider" TEXT NOT NULL, "policyNumber" TEXT NOT NULL, "type" TEXT NOT NULL,
+//   "coverageAmount" NUMERIC(14,2) NOT NULL, "premiumAmount" NUMERIC(14,2) NOT NULL,
+//   "premiumFrequency" TEXT NOT NULL DEFAULT 'yearly',
+//   "startDate" TIMESTAMPTZ NOT NULL, "endDate" TIMESTAMPTZ NOT NULL,
+//   "documentUrl" TEXT, "status" TEXT NOT NULL DEFAULT 'active',
+//   "lastReminderKey" TEXT,
+//   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(), "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "InsurancePolicy_tenantId_status_idx" ON "InsurancePolicy"("tenantId","status");
+// CREATE INDEX "InsurancePolicy_tenantId_endDate_idx" ON "InsurancePolicy"("tenantId","endDate");
+// -- Tenant back-relation: insurancePolicies InsurancePolicy[] @relation("TenantInsurancePolicies")

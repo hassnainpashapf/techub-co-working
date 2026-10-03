@@ -1,0 +1,68 @@
+// Phase 50 Track 4: Legal Document Vault — schema fragment.
+// Fragment — coordinator schema.prisma me merge karega + migration SQL neeche.
+// Back-relations: Tenant.legalDocuments, Member.legalDocuments ("MemberLegalDocs"),
+// Vendor.legalDocuments ("VendorLegalDocs"), User.createdLegalDocuments ("CreatedLegalDocs").
+//
+// Deviation note (coordinator ke liye): brief me `reminderDays? @default(30)` tha,
+// lekin Phase 38 ke document-expiry pattern (Json [30,7,1]) ko reuse kiya hai taake
+// 30/7/1 din pehle notifications ek hi column se chal sakein — koi extra table nahi.
+// `status` column store hota hai (active/archived); valid/expiring/expired
+// `expiresAt` se DERIVE hota hai (API responses me `expiry.status` + `expiry.daysLeft`
+// computed fields ke tor par aata hai) — Phase 38 wala pattern.
+
+model LegalDocument {
+  id              String    @id @default(cuid())
+  tenantId        String    @map("tenant_id")
+  tenant          Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title           String    @map("title")
+  category        String    @map("category") // contract | nda | license | insurance | other
+  fileUrl         String?   @map("file_url") // storage path (local absolute path ya s3://...)
+  fileName        String?   @map("file_name")
+  fileMime        String?   @map("file_mime")
+  fileSize        Int?      @map("file_size")
+  relatedMemberId String?   @map("related_member_id")
+  relatedMember   Member?   @relation("MemberLegalDocs", fields: [relatedMemberId], references: [id], onDelete: SetNull)
+  relatedVendorId String?   @map("related_vendor_id")
+  relatedVendor   Vendor?   @relation("VendorLegalDocs", fields: [relatedVendorId], references: [id], onDelete: SetNull)
+  expiresAt       DateTime? @map("expires_at")
+  reminderDays    Json      @default("[30,7,1]") @map("reminder_days") // kin daysLeft par remind: [30,7,1]
+  lastReminderKey String?   @map("last_reminder_key") // dedupe: "<expiresAtISO>:<days|expired>"
+  status          String    @default("active") @map("status") // active | archived
+  createdById     String?   @map("created_by_id")
+  createdBy       User?     @relation("CreatedLegalDocs", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, category])
+  @@index([tenantId, status])
+  @@index([expiresAt])
+  @@map("legal_documents")
+}
+
+// ---- Migration SQL (20261003590000_phase50_legal me merge) ----
+// CREATE TABLE legal_documents (
+//   id TEXT PRIMARY KEY,
+//   tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//   title TEXT NOT NULL,
+//   category TEXT NOT NULL,
+//   file_url TEXT,
+//   file_name TEXT,
+//   file_mime TEXT,
+//   file_size INTEGER,
+//   related_member_id TEXT REFERENCES members(id) ON DELETE SET NULL,
+//   related_vendor_id TEXT REFERENCES vendors(id) ON DELETE SET NULL,
+//   expires_at TIMESTAMPTZ,
+//   reminder_days JSONB NOT NULL DEFAULT '[30,7,1]',
+//   last_reminder_key TEXT,
+//   status TEXT NOT NULL DEFAULT 'active',
+//   created_by_id TEXT REFERENCES users(id) ON DELETE SET NULL,
+//   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX legal_documents_tenant_category_idx ON legal_documents(tenant_id, category);
+// CREATE INDEX legal_documents_tenant_status_idx ON legal_documents(tenant_id, status);
+// CREATE INDEX legal_documents_expires_at_idx ON legal_documents(expires_at);
+// Tenant par: legalDocuments LegalDocument[]
+// Member par: legalDocuments LegalDocument[] @relation("MemberLegalDocs")
+// Vendor par: legalDocuments LegalDocument[] @relation("VendorLegalDocs")
+// User par: createdLegalDocuments LegalDocument[] @relation("CreatedLegalDocs")

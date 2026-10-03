@@ -8,6 +8,38 @@ import SurveyBanner from '../../../components/SurveyBanner';
 import MailBanner from '../../../components/MailBanner';
 import AiAssistant from './_components/AiAssistant';
 
+// Phase 50: pending policies banner
+function PoliciesBanner() {
+  const [pending, setPending] = useState([]);
+  const [acked, setAcked] = useState(false);
+  useEffect(() => {
+    api.get('/policies/pending').then((d) => setPending(d.pending || [])).catch(() => {});
+  }, []);
+  if (!pending.length || acked) return null;
+  const ack = async (id) => {
+    try {
+      await api.post(`/policies/${id}/ack`);
+      setPending((p) => p.filter((x) => x.id !== id));
+    } catch {}
+  };
+  return (
+    <div className="card-premium p-5 mb-6 border-amber-500/30" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
+      <p className="text-amber-200 font-bold mb-2">📋 {pending.length} policy document{pending.length > 1 ? 's' : ''} pending — parh kar acknowledge karein</p>
+      <div className="space-y-2">
+        {pending.map((p) => (
+          <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
+            <span className="text-slate-200">{p.title} <span className="text-slate-500">(v{p.version})</span></span>
+            <div className="flex gap-2">
+              {p.fileUrl && <a href={p.fileUrl} target="_blank" rel="noreferrer" className="btn-ghost text-xs">📄 Parhein</a>}
+              <button onClick={() => ack(p.id)} className="btn-primary text-xs">✅ Acknowledge</button>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function fmtMoney(n) {
   return `Rs ${Number(n || 0).toLocaleString()}`;
 }
@@ -585,6 +617,7 @@ export default function PortalPage() {
 
       <SurveyBanner />
       <MailBanner />
+      <PoliciesBanner />
 
       {/* NEXT BOOKING + BALANCE */}
       <div className="grid md:grid-cols-2 gap-4 mb-6 mt-6">

@@ -1,0 +1,86 @@
+// Phase 50 Track 2/10: Policy Documents + Acknowledgments.
+// Coordinator: neeche wale models schema.prisma me jorein.
+//
+// Back-relations jorne hain:
+//   Tenant model me: policies Policy[] , policyAcks PolicyAck[]
+//   Member model me: policyAcks PolicyAck[] @relation("MemberPolicyAcks")
+//   User   model me: policyAcks PolicyAck[] @relation("UserPolicyAcks")
+//
+// Ack semantics: ek member/user ek policy ka ek dafa ack karta hai.
+// reAckOnUpdate = true ho aur policy update ho (version bump) to dobara ack lazmi
+// (pending check: ack.ackedAt < policy.updatedAt).
+//
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "Policy" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "category" TEXT NOT NULL DEFAULT 'general',
+//   "fileUrl" TEXT,
+//   "body" TEXT,
+//   "version" INTEGER NOT NULL DEFAULT 1,
+//   "effectiveDate" TIMESTAMP(3),
+//   "requiresAck" BOOLEAN NOT NULL DEFAULT true,
+//   "reAckOnUpdate" BOOLEAN NOT NULL DEFAULT false,
+//   "isActive" BOOLEAN NOT NULL DEFAULT true,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "Policy_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "Policy_tenantId_isActive_idx" ON "Policy"("tenantId", "isActive");
+// CREATE TABLE "PolicyAck" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "policyId" TEXT NOT NULL,
+//   "memberId" TEXT,
+//   "userId" TEXT,
+//   "ackedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "ipHash" TEXT,
+//   CONSTRAINT "PolicyAck_tenantId_fkey" FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "PolicyAck_policyId_fkey" FOREIGN KEY ("policyId") REFERENCES "Policy"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "PolicyAck_memberId_fkey" FOREIGN KEY ("memberId") REFERENCES "Member"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "PolicyAck_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "PolicyAck_policyId_memberId_key" ON "PolicyAck"("policyId", "memberId");
+// CREATE UNIQUE INDEX "PolicyAck_policyId_userId_key" ON "PolicyAck"("policyId", "userId");
+// CREATE INDEX "PolicyAck_tenantId_policyId_idx" ON "PolicyAck"("tenantId", "policyId");
+
+model Policy {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title         String
+  category      String   @default("general")
+  fileUrl       String?
+  body          String?  @db.Text
+  version       Int      @default(1)
+  effectiveDate DateTime?
+  requiresAck   Boolean  @default(true)
+  reAckOnUpdate Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  acks          PolicyAck[]
+
+  @@index([tenantId, isActive])
+  @@map("Policy")
+}
+
+model PolicyAck {
+  id       String   @id @default(cuid())
+  tenantId String
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policyId String
+  policy   Policy   @relation(fields: [policyId], references: [id], onDelete: Cascade)
+  memberId String?
+  member   Member?  @relation("MemberPolicyAcks", fields: [memberId], references: [id], onDelete: Cascade)
+  userId   String?
+  user     User?    @relation("UserPolicyAcks", fields: [userId], references: [id], onDelete: Cascade)
+  ackedAt  DateTime @default(now())
+  ipHash   String?
+
+  @@unique([policyId, memberId])
+  @@unique([policyId, userId])
+  @@index([tenantId, policyId])
+  @@map("PolicyAck")
+}

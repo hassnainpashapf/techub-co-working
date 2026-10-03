@@ -354,6 +354,26 @@ app.use('/api/comms-dashboard', require('./routes/comms-dashboard'));
 try {
   require('./lib/scheduledComms').ensureScheduledCommsJob();
 } catch (e) { console.error('[phase49] scheduled comms job failed:', e.message); }
+// Phase 50: Legal & Compliance Pack (additive) — route mounts
+app.use('/api/legal-templates', require('./routes/legal-templates'));
+app.use('/api/policies', require('./routes/policies'));
+app.use('/api/compliance', require('./routes/compliance'));
+app.use('/api/legal-vault', require('./routes/legal-vault'));
+app.use('/api/incidents', require('./routes/incidents'));
+app.use('/api/insurance', require('./routes/insurance'));
+app.use('/api/retention', require('./routes/retention'));
+app.use('/api/vendor-compliance', require('./routes/vendor-compliance'));
+app.use('/api/legal-dashboard', require('./routes/legal-dashboard'));
+// Phase 50: legal jobs (additive)
+try {
+  require('./lib/legalVaultExpiry').ensureLegalVaultExpiryScheduled();
+} catch (e) { console.error('[phase50] legal vault expiry schedule failed:', e.message); }
+try {
+  require('./routes/insurance').ensureInsuranceScheduled();
+} catch (e) { console.error('[phase50] insurance reminders schedule failed:', e.message); }
+try {
+  require('./routes/compliance').ensureComplianceScheduled();
+} catch (e) { console.error('[phase50] compliance schedule failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

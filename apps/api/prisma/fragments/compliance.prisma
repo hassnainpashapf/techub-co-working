@@ -1,0 +1,39 @@
+// Phase 50 — Compliance Checklist
+// Coordinator: merge into schema.prisma + Tenant/User back-relations + migration SQL below.
+
+model ComplianceItem {
+  id            String   @id @default(cuid())
+  tenantId      String
+  tenant        Tenant   @relation("TenantComplianceItems", fields: [tenantId], references: [id], onDelete: Cascade)
+  title         String
+  description   String?
+  category      String   // fire / safety / license / tax / data
+  dueDate       DateTime?
+  frequency     String   @default("once") // once / monthly / quarterly / yearly
+  status        String   @default("pending") // pending / done / overdue
+  assignedToId  String?
+  assignedTo    User?    @relation("UserComplianceAssignments", fields: [assignedToId], references: [id], onDelete: SetNull)
+  evidenceUrl   String?
+  completedAt   DateTime?
+  completedById String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([tenantId, status])
+  @@index([tenantId, dueDate])
+}
+
+// Migration SQL:
+// CREATE TABLE "ComplianceItem" (
+//   "id" TEXT PRIMARY KEY, "tenantId" TEXT NOT NULL REFERENCES "Tenant"("id") ON DELETE CASCADE,
+//   "title" TEXT NOT NULL, "description" TEXT, "category" TEXT NOT NULL,
+//   "dueDate" TIMESTAMPTZ, "frequency" TEXT NOT NULL DEFAULT 'once',
+//   "status" TEXT NOT NULL DEFAULT 'pending',
+//   "assignedToId" TEXT REFERENCES "User"("id") ON DELETE SET NULL,
+//   "evidenceUrl" TEXT, "completedAt" TIMESTAMPTZ, "completedById" TEXT,
+//   "createdAt" TIMESTAMPTZ NOT NULL DEFAULT NOW(), "updatedAt" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "ComplianceItem_tenantId_status_idx" ON "ComplianceItem"("tenantId","status");
+// CREATE INDEX "ComplianceItem_tenantId_dueDate_idx" ON "ComplianceItem"("tenantId","dueDate");
+// -- Tenant back-relation: complianceItems ComplianceItem[] @relation("TenantComplianceItems")
+// -- User back-relation: complianceAssignments ComplianceItem[] @relation("UserComplianceAssignments")

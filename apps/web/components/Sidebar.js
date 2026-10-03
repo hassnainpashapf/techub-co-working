@@ -160,6 +160,16 @@ const NAV_MAIN = [
   },
   { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
   { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
+  { key: 'legal', label: '⚖️ Legal & Compliance', path: '/legal', icon: 'shield',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Legal Dashboard', path: '/legal' },
+      { label: '📄 Contract Templates', path: '/legal/templates' },
+      { label: 'Policy Documents', path: '/legal/policies' },
+      { label: 'Compliance', path: '/legal/compliance' },
+      { label: 'Incident Reports', path: '/legal/incidents' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only

@@ -185,6 +185,9 @@ router.post('/sign/:token', signLimiter, validateBody(signSchema), async (req, r
       userAgent: ua,
     }).catch(() => {});
 
+    // Phase 50: save template-based signed doc to legal vault (fire-and-forget)
+    try { require('../lib/templateSign').saveSignedDocumentToVault(updated.id).catch(() => {}); } catch {}
+
     return res.json({
       signature: { id: updated.id, status: updated.status, signedAt: updated.signedAt },
     });

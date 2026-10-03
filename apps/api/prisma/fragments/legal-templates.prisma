@@ -1,0 +1,42 @@
+// Phase 50 Track 1/10: Contract Template Library — schema fragment.
+// DO NOT edit schema.prisma directly (10 agents parallel). Coordinator merges
+// this fragment into schema.prisma + migration before deploy.
+//
+// ADD TO Tenant model:
+//   legalTemplates LegalTemplate[]
+//
+// Migration SQL (coordinator):
+//   CREATE TABLE legal_templates (
+//     id TEXT PRIMARY KEY,
+//     tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//     name TEXT NOT NULL,
+//     category TEXT NOT NULL,          -- membership | nda | employment | vendor | event
+//     body TEXT NOT NULL,             -- {{variable}} placeholders
+//     variables JSONB,                -- auto-extracted variable names
+//     version INTEGER NOT NULL DEFAULT 1,
+//     is_archived BOOLEAN NOT NULL DEFAULT false,
+//     is_active BOOLEAN NOT NULL DEFAULT true,
+//     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+//     updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+//     UNIQUE (tenant_id, name)
+//   );
+//   CREATE INDEX legal_templates_tenant_idx ON legal_templates(tenant_id);
+
+model LegalTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  category  String // membership | nda | employment | vendor | event
+  body      String   @db.Text // {{variable}} placeholders
+  variables Json? // auto-extracted variable names
+  version   Int      @default(1)
+  isArchived Boolean @default(false) @map("is_archived") // old version snapshot
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, name])
+  @@index([tenantId])
+  @@map("legal_templates")
+}

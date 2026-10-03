@@ -35,6 +35,10 @@ export default function VendorsPage() {
   const [vtab, setVtab] = useState('details'); // details | perf (Phase 41)
   const [form, setForm] = useState(emptyForm);
   const [saving, setSaving] = useState(false);
+  // Phase 50: vendor compliance status map
+  const [complianceMap, setComplianceMap] = useState({});
+  const COMP_TONE = { verified: 'green', pending: 'amber', expired: 'red', expiring_soon: 'orange' };
+  const COMP_LABEL = { verified: '✅ Verified', pending: '⏳ Pending', expired: '❌ Expired', expiring_soon: '⚠️ Expiring soon' };
 
   async function load() {
     setLoading(true);
@@ -45,6 +49,13 @@ export default function VendorsPage() {
       if (cat !== 'all') q.set('category', cat);
       const data = await api.get('/vendors?' + q.toString());
       setVendors(data.vendors || []);
+      // Phase 50: vendor compliance badges
+      try {
+        const c = await api.get('/vendor-compliance');
+        const map = {};
+        (c.vendors || []).forEach((x) => { map[x.id] = x.derivedStatus || x.complianceStatus; });
+        setComplianceMap(map);
+      } catch { setComplianceMap({}); }
     } catch (e) {
       setError(e.message || 'Vendors load nahi ho sake');
     } finally {
@@ -134,6 +145,7 @@ export default function VendorsPage() {
             { key: 'contact', label: 'Contact' },
             { key: 'paymentTerms', label: 'Terms' },
             { key: 'rating', label: 'Rating' },
+            { key: 'compliance', label: 'Compliance' },
             { key: 'status', label: 'Status' },
             { key: 'actions', label: '' },
           ]}
@@ -144,6 +156,10 @@ export default function VendorsPage() {
             contact: <div><div className="text-sm">{v.email || '—'}</div><div className="text-dim text-sm">{v.phone || ''}</div></div>,
             paymentTerms: termLabel(v.paymentTerms),
             rating: v.rating != null ? `⭐ ${Number(v.rating).toFixed(1)}` : <span className="text-dim">—</span>,
+            compliance: (() => {
+              const s = complianceMap[v.id] || 'pending';
+              return <Badge tone={COMP_TONE[s] || 'slate'}>{COMP_LABEL[s] || s}</Badge>;
+            })(),
             status: v.isActive ? <Badge tone="green">Active</Badge> : <Badge tone="slate">Inactive</Badge>,
             actions: (
               <div className="flex gap-2">
@@ -192,6 +208,22 @@ export default function VendorsPage() {
           </div>
           <Field label="Address"><textarea className="input" rows={2} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></Field>
           <Field label="Notes"><textarea className="input" rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></Field>
+          {modal !== 'add' && (
+            <div className="rounded-xl border border-white/10 bg-black/20 p-3 mt-3">
+              <div className="text-sm font-semibold text-white mb-2">🛡️ Compliance</div>
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-slate-300">
+                  <Badge tone={COMP_TONE[complianceMap[modal.id] || 'pending'] || 'slate'}>{COMP_LABEL[complianceMap[modal.id] || 'pending']}</Badge>
+                </span>
+                <button className="btn-sm" onClick={async () => {
+                  try {
+                    await api.patch(`/vendor-compliance/${modal.id}`, { complianceStatus: 'verified' });
+                    load();
+                  } catch (e) { setError(e.message || 'Verify nahi ho saka'); }
+                }}>✅ Mark verified</button>
+              </div>
+            </div>
+          )}
           <div className="flex justify-end gap-2 mt-4">
             <button className="btn" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn-primary" disabled={saving || !form.name} onClick={save}>{saving ? 'Saving...' : 'Save'}</button>

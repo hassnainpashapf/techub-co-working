@@ -1,0 +1,75 @@
+// Phase 50 Track 8/10: Data Retention & GDPR tools — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+model RetentionPolicy {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  dataType   String   @map("data_type") // logs | messages | visitors | marketing
+  retainDays Int      @map("retain_days") // purana data is se zyada din ka ho to process
+  autoDelete Boolean  @default(false) @map("auto_delete") // true = delete, false = anonymize jahan mumkin
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  runs RetentionRun[]
+
+  @@unique([tenantId, dataType])
+  @@index([tenantId])
+  @@map("retention_policies")
+}
+
+model RetentionRun {
+  id        String          @id @default(cuid())
+  tenantId  String          @map("tenant_id")
+  tenant    Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  policyId  String?         @map("policy_id")
+  policy    RetentionPolicy? @relation(fields: [policyId], references: [id], onDelete: SetNull)
+  dataType  String          @map("data_type")
+  mode      String          // dry_run | live
+  scanned   Int             @default(0)
+  deleted   Int             @default(0)
+  anonymized Int            @default(0)
+  details   Json?
+  runBy     String?         @map("run_by")
+  createdAt DateTime        @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("retention_runs")
+}
+
+// ADD TO Tenant model:
+//   retentionPolicies RetentionPolicy[]
+//   retentionRuns     RetentionRun[]
+
+// ---- Migration SQL (coordinator: consolidate into phase 50 migration) ----
+// CREATE TABLE "retention_policies" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "data_type" TEXT NOT NULL,
+//     "retain_days" INTEGER NOT NULL,
+//     "auto_delete" BOOLEAN NOT NULL DEFAULT false,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "retention_policies_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "retention_policies_tenant_id_data_type_key" ON "retention_policies"("tenant_id", "data_type");
+// CREATE INDEX "retention_policies_tenant_id_idx" ON "retention_policies"("tenant_id");
+// ALTER TABLE "retention_policies" ADD CONSTRAINT "retention_policies_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "retention_runs" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "policy_id" TEXT,
+//     "data_type" TEXT NOT NULL,
+//     "mode" TEXT NOT NULL,
+//     "scanned" INTEGER NOT NULL DEFAULT 0,
+//     "deleted" INTEGER NOT NULL DEFAULT 0,
+//     "anonymized" INTEGER NOT NULL DEFAULT 0,
+//     "details" JSONB,
+//     "run_by" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "retention_runs_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "retention_runs_tenant_id_created_at_idx" ON "retention_runs"("tenant_id", "created_at");
+// ALTER TABLE "retention_runs" ADD CONSTRAINT "retention_runs_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "retention_runs" ADD CONSTRAINT "retention_runs_policy_id_fkey"
+//   FOREIGN KEY ("policy_id") REFERENCES "retention_policies"("id") ON DELETE SET NULL ON UPDATE CASCADE;

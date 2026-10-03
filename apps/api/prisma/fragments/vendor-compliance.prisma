@@ -1,0 +1,20 @@
+// Phase 50 Track 9: Vendor Compliance — DELTA fragment.
+// Vendor model pehle se schema.prisma me merged hai (Phase 41).
+//
+// NOTE: `taxId` Vendor par PEHLE SE maujood hai — dobara mat dalo.
+// Sirf neeche wale 3 fields merge karo:
+//
+//   complianceStatus String @default("pending") @map("compliance_status") // pending | verified | expired
+//   complianceDocs   Json?  @map("compliance_docs") // [{ name, url, uploadedAt }]
+//   complianceExpiry DateTime? @map("compliance_expiry") @db.Date
+//
+// Coordinator: schema.prisma me Vendor model me upar wali 3 lines joro,
+// phir 20261003590000_phase50_legal migration me ye SQL chalao:
+
+// --- Migration SQL (PostgreSQL) ---
+// ALTER TABLE vendors ADD COLUMN IF NOT EXISTS compliance_status TEXT NOT NULL DEFAULT 'pending';
+// ALTER TABLE vendors ADD COLUMN IF NOT EXISTS compliance_docs JSONB;
+// ALTER TABLE vendors ADD COLUMN IF NOT EXISTS compliance_expiry DATE;
+// UPDATE vendors SET compliance_status = 'expired'
+//   WHERE compliance_expiry IS NOT NULL AND compliance_expiry < CURRENT_DATE;
+// CREATE INDEX IF NOT EXISTS vendors_compliance_idx ON vendors (tenant_id, compliance_status);

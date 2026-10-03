@@ -1,0 +1,60 @@
+// Phase 50 Track 6/10: Incident Reports — safety/security/theft/damage incidents.
+//
+// Coordinator: fragment → schema.prisma + migration SQL (comments me).
+//
+// model Incident {
+//   id               String   @id @default(cuid())
+//   tenantId         String
+//   title            String
+//   category         String   // safety | security | theft | damage | other
+//   severity         String   // low | medium | high | critical
+//   description      String
+//   location         String?
+//   reportedBy       String   // staff user id (kis ne report kiya)
+//   reportedByName   String?  // display ke liye naam snapshot
+//   involvedMemberId String?
+//   involvedMember   Member?  @relation(fields: [involvedMemberId], references: [id], onDelete: SetNull)
+//   status           String   @default("open") // open | investigating | resolved | closed
+//   resolution       String?
+//   attachments      Json?
+//   occurredAt       DateTime
+//   createdAt        DateTime @default(now())
+//   updatedAt        DateTime @updatedAt
+//
+//   tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+//
+//   @@index([tenantId, status, createdAt])
+//   @@index([tenantId, severity, createdAt])
+//   @@index([tenantId, involvedMemberId, createdAt])
+// }
+//
+// Back-relations:
+//   Member model me: incidents Incident[]
+//   Tenant model me: incidents Incident[]
+//
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "Incident" (
+//   "id" TEXT NOT NULL,
+//   "tenantId" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "category" TEXT NOT NULL,
+//   "severity" TEXT NOT NULL,
+//   "description" TEXT NOT NULL,
+//   "location" TEXT,
+//   "reportedBy" TEXT NOT NULL,
+//   "reportedByName" TEXT,
+//   "involvedMemberId" TEXT,
+//   "status" TEXT NOT NULL DEFAULT 'open',
+//   "resolution" TEXT,
+//   "attachments" JSONB,
+//   "occurredAt" TIMESTAMP(3) NOT NULL,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "Incident_pkey" PRIMARY KEY ("id")
+// );
+// ALTER TABLE "Incident" ADD CONSTRAINT "Incident_involvedMemberId_fkey"
+//   FOREIGN KEY ("involvedMemberId") REFERENCES "Member"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "Incident" ADD CONSTRAINT "Incident_tenantId_fkey"
+//   FOREIGN KEY ("tenantId") REFERENCES "Tenant"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE INDEX "Incident_tenantId_status_createdAt_idx" ON "Incident"("tenantId", "status", "createdAt");
+// CREATE INDEX "Incident_tenantId_severity_createdAt_idx" ON "Incident"("tenantId", "severity", "createdAt");
