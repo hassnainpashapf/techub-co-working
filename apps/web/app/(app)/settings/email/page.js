@@ -1,9 +1,9 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { api } from '../../../lib/api';
-import { PageHeader, Field, Spinner, ErrorBanner } from '../../../components/ui';
-import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+import { api } from '../../../../lib/api';
+import { PageHeader, Field, Spinner, ErrorBanner } from '../../../../components/ui';
+import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
 export default function EmailSettingsPage() {
   const { allowed } = useRequireRoles(['ceo', 'admin']);

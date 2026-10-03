@@ -55,10 +55,39 @@ function MemberForm({ initial, onSave, saving }) {
   );
 }
 
+function MemberTimeline({ memberId }) {
+  const [events, setEvents] = useState([]);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    let cancelled = false;
+    api.get(`/members/${memberId}/timeline`)
+      .then((d) => { if (!cancelled) setEvents(d.events || []); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setLoading(false); });
+    return () => { cancelled = true; };
+  }, [memberId]);
+  if (loading) return <Spinner />;
+  if (!events.length) return <p className="text-sm text-slate-400">No activity yet.</p>;
+  return (
+    <div className="relative pl-6">
+      <div className="absolute left-2 top-1 bottom-1 w-px bg-white/10" />
+      {events.map((e, i) => (
+        <div key={i} className="relative pb-4">
+          <div className="absolute -left-6 top-0 w-5 h-5 rounded-full bg-[#1a1a2c] border border-white/15 flex items-center justify-center text-[10px]">{e.icon}</div>
+          <p className="text-sm text-white font-medium">{e.title}</p>
+          {e.detail && <p className="text-xs text-slate-400">{e.detail}</p>}
+          <p className="text-[11px] text-slate-500">{e.at ? new Date(e.at).toLocaleString() : ''}</p>
+        </div>
+      ))}
+    </div>
+  );
+}
+
 function MemberDetail({ member, onClose }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [detail, setDetail] = useState(null);
+  const [tab, setTab] = useState('overview');
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +118,18 @@ function MemberDetail({ member, onClose }) {
       ) : (
         <div>
           {error && <ErrorBanner message={error} />}
+          <div className="flex gap-2 mb-5">
+            {['overview', 'timeline'].map((t) => (
+              <button key={t} onClick={() => setTab(t)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                {t}
+              </button>
+            ))}
+          </div>
+          {tab === 'timeline' ? (
+            <MemberTimeline memberId={m.id} />
+          ) : (
+          <div>
           <div className="grid grid-cols-2 gap-3 text-sm mb-5">
             <div><p className="text-xs text-slate-400">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
             <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{m.email || '—'}</p></div>
@@ -121,6 +162,8 @@ function MemberDetail({ member, onClose }) {
             rows={invoices.slice(0, 5)}
             empty={{ title: 'No invoices' }}
           />
+          </div>
+          )}
         </div>
       )}
     </Modal>

@@ -84,6 +84,68 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
   }
 });
 
+router.get('/:id/timeline', async (req, res, next) => {
+  try {
+    if (req.user.role === 'member' && req.params.id !== req.user.memberId) {
+      return res.status(403).json({ error: { message: 'Forbidden' } });
+    }
+    const where = { id: req.params.id, ...tenantFilter(req) };
+    const member = await prisma.member.findFirst({ where, include: { user: { select: { id: true } } } });
+    if (!member) return res.status(404).json({ error: { message: 'Member not found' } });
+
+    const mWhere = { memberId: member.id, ...tenantFilter(req) };
+    const [
+      contracts, invoices, bookings, tickets, visits, refunds, creditNotes, documents,
+    ] = await Promise.all([
+      prisma.contract.findMany({ where: mWhere, include: { unit: { select: { code: true } } }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.invoice.findMany({ where: mWhere, select: { id: true, number: true, createdAt: true, status: true, amount: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.booking.findMany({ where: mWhere, select: { id: true, createdAt: true, status: true, startAt: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.ticket.findMany({ where: mWhere, select: { id: true, createdAt: true, status: true, title: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.visitor.findMany({ where: { hostMemberId: member.id, ...tenantFilter(req) }, select: { id: true, createdAt: true, name: true, checkInAt: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.refund.findMany({ where: mWhere, select: { id: true, number: true, createdAt: true, status: true, amount: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.creditNote.findMany({ where: mWhere, select: { id: true, number: true, createdAt: true, status: true, amount: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+      prisma.document.findMany({ where: mWhere, select: { id: true, createdAt: true, title: true, category: true }, orderBy: { createdAt: 'desc' }, take: 50 }),
+    ]);
+
+    // Attendance is linked to the member's user account
+    const attendance = member.user
+      ? await prisma.attendanceRecord.findMany({
+          where: { userId: member.user.id, ...tenantFilter(req) },
+          select: { id: true, createdAt: true, date: true, checkIn: true },
+          orderBy: { date: 'desc' }, take: 50,
+        })
+      : [];
+
+    // Payments linked through member invoices
+    const invoiceIds = invoices.map((i) => i.id);
+    const payments = invoiceIds.length
+      ? await prisma.payment.findMany({
+          where: { invoiceId: { in: invoiceIds }, ...tenantFilter(req) },
+          select: { id: true, createdAt: true, amount: true, method: true, receiptNo: true },
+          orderBy: { createdAt: 'desc' }, take: 50,
+        })
+      : [];
+
+    const events = [
+      { type: 'joined', at: member.createdAt, title: 'Member joined', detail: member.name, icon: '👤', tone: 'blue' },
+      ...contracts.map((c) => ({ type: 'contract', at: c.createdAt, title: `Contract ${c.status}`, detail: c.unit?.code || '', icon: '📄', tone: 'violet' })),
+      ...invoices.map((i) => ({ type: 'invoice', at: i.createdAt, title: `Invoice ${i.number}`, detail: `Rs ${Number(i.amount).toLocaleString()} · ${i.status}`, icon: '🧾', tone: 'amber' })),
+      ...payments.map((p) => ({ type: 'payment', at: p.createdAt, title: 'Payment received', detail: `Rs ${Number(p.amount).toLocaleString()} · ${p.method || ''}`, icon: '💰', tone: 'green' })),
+      ...bookings.map((b) => ({ type: 'booking', at: b.createdAt, title: `Booking ${b.status}`, detail: b.startAt ? String(b.startAt).slice(0, 16).replace('T', ' ') : '', icon: '📅', tone: 'cyan' })),
+      ...tickets.map((t) => ({ type: 'ticket', at: t.createdAt, title: 'Ticket raised', detail: `${t.title || ''} · ${t.status}`, icon: '🎫', tone: 'red' })),
+      ...visits.map((v) => ({ type: 'visitor', at: v.checkInAt || v.createdAt, title: 'Hosted visitor', detail: v.name, icon: '🧑‍💼', tone: 'slate' })),
+      ...attendance.map((a) => ({ type: 'attendance', at: a.checkIn || a.createdAt, title: 'Checked in', detail: a.date ? String(a.date).slice(0, 10) : '', icon: '✅', tone: 'green' })),
+      ...refunds.map((r) => ({ type: 'refund', at: r.createdAt, title: `Refund ${r.status}`, detail: `${r.number} · Rs ${Number(r.amount).toLocaleString()}`, icon: '↩️', tone: 'orange' })),
+      ...creditNotes.map((c) => ({ type: 'credit', at: c.createdAt, title: `Credit note ${c.status}`, detail: `${c.number} · Rs ${Number(c.amount).toLocaleString()}`, icon: '🎟️', tone: 'violet' })),
+      ...documents.map((d) => ({ type: 'document', at: d.createdAt, title: 'Document added', detail: `${d.title} · ${d.category || ''}`, icon: '📎', tone: 'slate' })),
+    ].sort((a, b) => new Date(b.at) - new Date(a.at)).slice(0, 100);
+
+    return res.json({ events });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 router.get('/:id', async (req, res, next) => {
   try {
     if (req.user.role === 'member' && req.params.id !== req.user.memberId) {
