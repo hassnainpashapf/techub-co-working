@@ -143,12 +143,12 @@ export default function AttendancePage() {
       <div className="card mb-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="font-semibold text-slate-900">My attendance</h2>
-            <p className="text-sm text-slate-500">
+            <h2 className="font-semibold text-white">My attendance</h2>
+            <p className="text-sm text-slate-400">
               Status: {checkedIn ? (
                 <span className="font-medium text-green-600">Checked in{status?.checkInTime ? ` at ${String(status.checkInTime).slice(11, 16)}` : ''}</span>
               ) : (
-                <span className="font-medium text-slate-500">Not checked in</span>
+                <span className="font-medium text-slate-400">Not checked in</span>
               )}
             </p>
           </div>
@@ -166,7 +166,7 @@ export default function AttendancePage() {
       {/* Records */}
       <div className="card mb-4">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="font-semibold text-slate-900">Attendance records</h2>
+          <h2 className="font-semibold text-white">Attendance records</h2>
           <input type="date" className="input !w-auto" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
         <DataTable
@@ -195,7 +195,7 @@ export default function AttendancePage() {
       {/* Leaves */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
-          <h2 className="font-semibold text-slate-900 mb-3">Apply for leave</h2>
+          <h2 className="font-semibold text-white mb-3">Apply for leave</h2>
           <form onSubmit={applyLeave}>
             <div className="grid grid-cols-2 gap-3">
               <Field label="From"><input type="date" className="input" value={leaveForm.from} onChange={(e) => setLeaveForm({ ...leaveForm, from: e.target.value })} required /></Field>
@@ -204,7 +204,7 @@ export default function AttendancePage() {
             <Field label="Reason"><textarea className="input" rows="3" value={leaveForm.reason} onChange={(e) => setLeaveForm({ ...leaveForm, reason: e.target.value })} required placeholder="Reason for leave" /></Field>
             <button type="submit" className="btn-primary" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit request'}</button>
           </form>
-          <h3 className="font-semibold text-slate-900 mt-6 mb-2">My leaves</h3>
+          <h3 className="font-semibold text-white mt-6 mb-2">My leaves</h3>
           <DataTable
             columns={[
               { key: 'from', label: 'From', render: (r) => (r.from ? String(r.from).slice(0, 10) : '—') },
@@ -218,7 +218,7 @@ export default function AttendancePage() {
 
         {isPrivileged && (
           <div className="card">
-            <h2 className="font-semibold text-slate-900 mb-3">Pending leave requests ({pendingLeaves.length})</h2>
+            <h2 className="font-semibold text-white mb-3">Pending leave requests ({pendingLeaves.length})</h2>
             <DataTable
               columns={[
                 { key: 'user', label: 'Staff', render: (r) => r.userName || r.user?.name || '—' },

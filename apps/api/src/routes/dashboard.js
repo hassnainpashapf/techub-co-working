@@ -13,7 +13,7 @@ const OPEN_INVOICE_STATUSES = ['unpaid', 'partial', 'overdue'];
 // Adds an amountPaid-aware remaining figure on top of a Decimal sum.
 const num = (v) => Number(v);
 
-router.get('/stats', async (req, res, next) => {
+router.get(['/', '/stats'], async (req, res, next) => {
   try {
     const me = req.user;
 

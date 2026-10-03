@@ -64,8 +64,16 @@ router.get('/', async (req, res, next) => {
   try {
     const where = bookingScope(req);
     if (req.query.unitId) where.unitId = String(req.query.unitId);
-    if (req.query.from) where.startAt = { ...(where.startAt || {}), gte: new Date(String(req.query.from)) };
-    if (req.query.to) where.endAt = { ...(where.endAt || {}), lte: new Date(String(req.query.to)) };
+    if (req.query.from && req.query.to) {
+      // Calendar range: bookings overlapping [from, to)
+      const from = new Date(String(req.query.from));
+      const to = new Date(String(req.query.to));
+      where.startAt = { lt: to };
+      where.endAt = { gt: from };
+    } else {
+      if (req.query.from) where.startAt = { ...(where.startAt || {}), gte: new Date(String(req.query.from)) };
+      if (req.query.to) where.endAt = { ...(where.endAt || {}), lte: new Date(String(req.query.to)) };
+    }
     const bookings = await prisma.booking.findMany({
       where,
       include: includeBooking,
@@ -84,11 +92,6 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
 
     const unit = await prisma.unit.findFirst({ where: { id: unitId, ...tf } });
     if (!unit) return res.status(400).json({ error: { message: 'Unit not found' } });
-    if (unit.type !== 'meeting_room') {
-      return res.status(400).json({
-        error: { message: 'Only meeting rooms can be booked' },
-      });
-    }
 
     // Member role: bookings are forced onto their own member record.
     let finalMemberId = memberId || null;

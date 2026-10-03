@@ -24,10 +24,10 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-900 px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#0a0a14] px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-6">
-          <div className="inline-flex bg-indigo-600 text-white rounded-xl h-14 w-14 items-center justify-center text-2xl font-bold mb-3">
+          <div className="inline-flex bg-violet-600 text-white rounded-xl h-14 w-14 items-center justify-center text-2xl font-bold mb-3">
             C
           </div>
           <h1 className="text-2xl font-bold text-white">Coworking SaaS</h1>
@@ -37,7 +37,7 @@ export default function LoginPage() {
         <div className="card !p-7">
           <form onSubmit={handleSubmit}>
             {error && (
-              <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">
                 {error}
               </div>
             )}

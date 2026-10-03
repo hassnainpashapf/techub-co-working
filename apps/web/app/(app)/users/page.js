@@ -152,7 +152,7 @@ export default function UsersPage() {
       <div className="card">
         <DataTable
           columns={[
-            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-slate-900">{r.name || '—'}</span> },
+            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-white">{r.name || '—'}</span> },
             { key: 'email', label: 'Email' },
             { key: 'phone', label: 'Phone', render: (r) => r.phone || '—' },
             { key: 'role', label: 'Role', render: (r) => <Badge tone="indigo" className="capitalize">{(r.role || '').replace(/_/g, ' ')}</Badge> },

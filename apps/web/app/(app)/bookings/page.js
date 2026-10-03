@@ -156,7 +156,7 @@ export default function BookingsPage() {
       <div className="card">
         <DataTable
           columns={[
-            { key: 'title', label: 'Title', render: (r) => <span className="font-medium text-slate-900">{r.title || '—'}</span> },
+            { key: 'title', label: 'Title', render: (r) => <span className="font-medium text-white">{r.title || '—'}</span> },
             { key: 'room', label: 'Room', render: (r) => r.roomName || r.unitCode || r.unit?.code || '—' },
             { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
             {

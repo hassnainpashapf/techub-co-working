@@ -151,7 +151,7 @@ export default function FinancePage() {
 
       <div className="card">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="font-semibold text-slate-900">Expenses — {month}</h2>
+          <h2 className="font-semibold text-white">Expenses — {month}</h2>
           <select className="input max-w-[200px]" value={catFilter} onChange={(e) => setCatFilter(e.target.value)}>
             <option value="all">All categories</option>
             {CATEGORIES.map((c) => (

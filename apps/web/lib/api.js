@@ -79,8 +79,9 @@ export async function apiFetch(path, { method = 'GET', body } = {}, _retried = f
   }
 
   if (!res.ok) {
+    const raw = data && (data.message || data.error);
     const message =
-      (data && (data.message || data.error)) ||
+      (typeof raw === 'string' ? raw : raw && raw.message) ||
       `Request failed with status ${res.status}`;
     throw new Error(message);
   }

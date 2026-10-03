@@ -77,7 +77,28 @@ router.post('/check-out', async (req, res, next) => {
 });
 
 // Records: staff see only their own unless they are privileged.
-router.get('/records', async (req, res, next) => {
+// Today's check-in status for the current user.
+router.get('/status', async (req, res, next) => {
+  try {
+    const record = await prisma.attendanceRecord.findFirst({
+      where: {
+        ...tenantFilter(req),
+        userId: req.user.sub,
+        date: todayDateOnly(),
+      },
+      orderBy: { date: 'desc' },
+    });
+    return res.json({
+      status: record
+        ? { checkedIn: true, checkInAt: record.checkIn, checkOutAt: record.checkOut, record }
+        : { checkedIn: false },
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+router.get(['/', '/records'], async (req, res, next) => {
   try {
     const where = { ...tenantFilter(req) };
     if (isPrivileged(req.user.role)) {

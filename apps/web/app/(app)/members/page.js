@@ -90,16 +90,16 @@ function MemberDetail({ member, onClose }) {
         <div>
           {error && <ErrorBanner message={error} />}
           <div className="grid grid-cols-2 gap-3 text-sm mb-5">
-            <div><p className="text-xs text-slate-500">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Email</p><p className="font-medium">{m.email || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">CNIC</p><p className="font-medium">{m.cnic || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Company</p><p className="font-medium">{m.companyName || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Emergency contact</p><p className="font-medium">{m.emergencyContact || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Status</p><Badge tone={STATUS_TONE[m.status] || 'slate'}>{m.status || '—'}</Badge></div>
+            <div><p className="text-xs text-slate-400">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{m.email || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">CNIC</p><p className="font-medium">{m.cnic || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Company</p><p className="font-medium">{m.companyName || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Emergency contact</p><p className="font-medium">{m.emergencyContact || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Status</p><Badge tone={STATUS_TONE[m.status] || 'slate'}>{m.status || '—'}</Badge></div>
           </div>
-          {m.notes && <p className="text-sm text-slate-600 bg-slate-50 rounded-lg p-3 mb-5">{m.notes}</p>}
+          {m.notes && <p className="text-sm text-slate-400 bg-white/5 rounded-lg p-3 mb-5">{m.notes}</p>}
 
-          <h3 className="font-semibold text-slate-900 mb-2">Contracts ({contracts.length})</h3>
+          <h3 className="font-semibold text-white mb-2">Contracts ({contracts.length})</h3>
           <DataTable
             columns={[
               { key: 'unit', label: 'Unit', render: (r) => r.unitCode || r.unit?.code || '—' },
@@ -111,7 +111,7 @@ function MemberDetail({ member, onClose }) {
             empty={{ title: 'No contracts' }}
           />
 
-          <h3 className="font-semibold text-slate-900 mb-2 mt-5">Invoices ({invoices.length})</h3>
+          <h3 className="font-semibold text-white mb-2 mt-5">Invoices ({invoices.length})</h3>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -230,7 +230,7 @@ export default function MembersPage() {
       <div className="card">
         <DataTable
           columns={[
-            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-slate-900">{r.name}</span> },
+            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-white">{r.name}</span> },
             { key: 'phone', label: 'Phone' },
             { key: 'company', label: 'Company', render: (r) => r.companyName || '—' },
             { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status || '—'}</Badge> },

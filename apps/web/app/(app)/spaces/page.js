@@ -313,7 +313,7 @@ export default function SpacesPage() {
       {/* Buildings */}
       <div className="card mb-4">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-semibold text-slate-900">Buildings</h2>
+          <h2 className="font-semibold text-white">Buildings</h2>
           <button className="btn-primary btn-sm" onClick={() => setModal({ kind: 'building', mode: 'add' })}>+ Add building</button>
         </div>
         <DataTable
@@ -345,7 +345,7 @@ export default function SpacesPage() {
 
       {/* Building filter */}
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <label className="text-sm text-slate-600">Building:</label>
+        <label className="text-sm text-slate-400">Building:</label>
         <select className="input max-w-xs" value={buildingFilter} onChange={(e) => setBuildingFilter(e.target.value)}>
           <option value="">All buildings</option>
           {buildings.map((b) => (
@@ -360,7 +360,7 @@ export default function SpacesPage() {
           <button
             key={f.id}
             onClick={() => setActiveFloor(f.id)}
-            className={`chip ${activeFloor === f.id ? 'bg-indigo-600 text-white' : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-50'}`}
+            className={`chip ${activeFloor === f.id ? 'bg-violet-600 text-white' : 'bg-[#131322] text-slate-400 border border-white/10 hover:bg-white/5'}`}
           >
             {f.name}{f.building?.name ? ` · ${f.building.name}` : ''}
           </button>
@@ -373,15 +373,15 @@ export default function SpacesPage() {
           {/* Occupancy summary */}
           <div className="card mb-4">
             <div className="flex items-center justify-between mb-2">
-              <h2 className="font-semibold text-slate-900">Occupancy</h2>
-              <span className="text-sm font-medium text-slate-600">{occupancy.pct}% occupied</span>
+              <h2 className="font-semibold text-white">Occupancy</h2>
+              <span className="text-sm font-medium text-slate-400">{occupancy.pct}% occupied</span>
             </div>
-            <div className="h-3 rounded-full bg-slate-200 overflow-hidden flex">
+            <div className="h-3 rounded-full bg-white/10 overflow-hidden flex">
               <div className="bg-blue-500" style={{ width: `${occupancy.total ? (occupancy.occupied / occupancy.total) * 100 : 0}%` }} />
               <div className="bg-amber-400" style={{ width: `${occupancy.total ? (occupancy.maintenance / occupancy.total) * 100 : 0}%` }} />
               <div className="bg-green-400" style={{ width: `${occupancy.total ? (occupancy.vacant / occupancy.total) * 100 : 0}%` }} />
             </div>
-            <div className="flex gap-4 mt-2 text-xs text-slate-500">
+            <div className="flex gap-4 mt-2 text-xs text-slate-400">
               <span>🟦 Occupied: {occupancy.occupied}</span>
               <span>🟩 Vacant: {occupancy.vacant}</span>
               <span>🟨 Maintenance: {occupancy.maintenance}</span>
@@ -398,7 +398,7 @@ export default function SpacesPage() {
 
           {/* Zones */}
           <div className="card mb-4">
-            <h2 className="font-semibold text-slate-900 mb-3">Zones</h2>
+            <h2 className="font-semibold text-white mb-3">Zones</h2>
             <DataTable
               columns={[
                 { key: 'name', label: 'Name' },
@@ -424,7 +424,7 @@ export default function SpacesPage() {
           {/* Units grid */}
           <div className="card">
             <div className="flex items-center justify-between mb-3">
-              <h2 className="font-semibold text-slate-900">Units</h2>
+              <h2 className="font-semibold text-white">Units</h2>
               <button className="btn-primary btn-sm" onClick={() => setModal({ kind: 'unit', mode: 'add', data: { zoneId: zones[0]?.id } })}>+ Add unit</button>
             </div>
             {units.length === 0 ? (
@@ -432,13 +432,13 @@ export default function SpacesPage() {
             ) : (
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                 {units.map((u) => (
-                  <div key={u.id} className={`border rounded-xl p-3 ${STATUS_COLORS[u.status] || 'border-slate-200'}`}>
+                  <div key={u.id} className={`border rounded-xl p-3 ${STATUS_COLORS[u.status] || 'border-white/10'}`}>
                     <div className="flex items-center justify-between mb-1">
-                      <span className="font-bold text-slate-900">{u.code}</span>
+                      <span className="font-bold text-white">{u.code}</span>
                       <Badge tone={STATUS_TONE[u.status] || 'slate'}>{u.status || 'vacant'}</Badge>
                     </div>
-                    <p className="text-xs text-slate-500 capitalize">{(u.type || '').replace(/_/g, ' ')}</p>
-                    <p className="text-sm font-semibold text-slate-800 mt-1">
+                    <p className="text-xs text-slate-400 capitalize">{(u.type || '').replace(/_/g, ' ')}</p>
+                    <p className="text-sm font-semibold text-slate-100 mt-1">
                       Rs {Number(u.monthlyPrice || 0).toLocaleString()}/mo
                     </p>
                     <div className="flex gap-1.5 mt-2">

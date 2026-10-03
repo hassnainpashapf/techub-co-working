@@ -17,6 +17,8 @@ app.get('/api/health', (_req, res) => {
 });
 
 app.use('/api/auth', require('./routes/auth'));
+app.use('/api/auth', require('./routes/auth-extended'));
+app.use('/api/audit-logs', require('./routes/audit-logs'));
 app.use('/api/tenants', require('./routes/tenants'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/dashboard', require('./routes/dashboard'));
@@ -24,6 +26,7 @@ app.use('/api/spaces', require('./routes/spaces'));
 app.use('/api/buildings', require('./routes/buildings'));
 app.use('/api/members', require('./routes/members'));
 app.use('/api/contracts', require('./routes/contracts'));
+app.use('/api/membership-plans', require('./routes/membership-plans'));
 app.use('/api/billing', require('./routes/billing'));
 app.use('/api/finance', require('./routes/finance'));
 app.use('/api/attendance', require('./routes/attendance'));

@@ -97,9 +97,9 @@ export default function RemindersPage() {
               key: 'title',
               label: 'Notification',
               render: (r) => (
-                <div className={!r.read && !r.readAt ? 'font-semibold text-slate-900' : 'text-slate-600'}>
+                <div className={!r.read && !r.readAt ? 'font-semibold text-white' : 'text-slate-400'}>
                   <p>{r.title || r.message?.slice(0, 60) || 'Notification'}</p>
-                  {r.message && <p className="text-xs text-slate-500 font-normal">{r.message}</p>}
+                  {r.message && <p className="text-xs text-slate-400 font-normal">{r.message}</p>}
                 </div>
               ),
             },

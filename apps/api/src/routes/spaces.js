@@ -204,6 +204,8 @@ const unitSchema = z.object({
   monthlyPrice: z.number().nonnegative(),
   capacity: z.number().int().positive().default(1),
   zoneId: z.string().min(1),
+  posX: z.number().int().min(0).default(0),
+  posY: z.number().int().min(0).default(0),
 });
 const unitUpdateSchema = z
   .object({
@@ -213,6 +215,8 @@ const unitUpdateSchema = z
     monthlyPrice: z.number().nonnegative().optional(),
     capacity: z.number().int().positive().optional(),
     zoneId: z.string().min(1).optional(),
+    posX: z.number().int().min(0).optional(),
+    posY: z.number().int().min(0).optional(),
   })
   .refine((d) => Object.keys(d).length > 0, { message: 'No fields to update' });
 

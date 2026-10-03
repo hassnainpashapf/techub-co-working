@@ -29,7 +29,23 @@ router.get('/', async (req, res, next) => {
 });
 
 // Mark read: only notifications targeted at me personally or at my role.
-router.patch('/:id/read', async (req, res, next) => {
+router.post('/read-all', async (req, res, next) => {
+  try {
+    const result = await prisma.notification.updateMany({
+      where: {
+        tenantId: req.user.tenantId,
+        OR: [{ userId: req.user.sub }, { role: req.user.role }],
+        isRead: false,
+      },
+      data: { isRead: true },
+    });
+    return res.json({ updated: result.count });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+async function markOneRead(req, res, next) {
   try {
     const existing = await prisma.notification.findFirst({
       where: {
@@ -49,7 +65,10 @@ router.patch('/:id/read', async (req, res, next) => {
   } catch (err) {
     return next(err);
   }
-});
+};
+
+router.patch('/:id/read', markOneRead);
+router.post('/:id/read', markOneRead);
 
 // Generate rent-due and contract-expiry reminders (idempotent-ish via dedupe).
 router.post('/generate', requireRole('ceo', 'admin', 'finance_officer'), async (req, res, next) => {

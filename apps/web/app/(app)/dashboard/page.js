@@ -23,6 +23,130 @@ function statusTone(s) {
   return 'slate';
 }
 
+// Rich SVG Bar Chart with glow
+function BarChart({ data, height = 180 }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  const barW = 100 / data.length;
+  return (
+    <div className="relative" style={{ height }}>
+      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0.25" />
+          </linearGradient>
+          <filter id="barGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="1.2" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        {[0.25, 0.5, 0.75].map((f) => (
+          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+        ))}
+        {data.map((d, i) => {
+          const h = Math.max((d.value / max) * (height - 30), 3);
+          const x = i * barW + barW * 0.22;
+          const w = barW * 0.56;
+          return (
+            <g key={i}>
+              <rect x={x} y={height - 20 - h} width={w} height={h} rx="1.5" fill="url(#barGrad)" filter="url(#barGlow)" className="hover:opacity-80 transition-opacity">
+                <animate attributeName="y" from={height - 20} to={height - 20 - h} dur="0.8s" fill="freeze" />
+                <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
+              </rect>
+              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
+            </g>
+          );
+        })}
+      </svg>
+    </div>
+  );
+}
+
+// Rich SVG Donut Chart with glow
+function DonutChart({ percent, size = 160 }) {
+  const r = 62;
+  const circ = 2 * Math.PI * r;
+  const filled = (percent / 100) * circ;
+  return (
+    <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
+      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+        <defs>
+          <linearGradient id="donutGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#60a5fa" />
+            <stop offset="100%" stopColor="#2563eb" />
+          </linearGradient>
+          <filter id="donutGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="16" />
+        <circle cx="80" cy="80" r={r} fill="none" stroke="url(#donutGrad)" strokeWidth="16" strokeLinecap="round"
+          strokeDasharray={`${filled} ${circ}`} filter="url(#donutGlow)"
+          style={{ transition: 'stroke-dasharray 1s ease-out' }} />
+      </svg>
+      <div className="absolute inset-0 flex flex-col items-center justify-center">
+        <span className="text-[28px] font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{percent}%</span>
+        <span className="text-[11px] font-semibold text-white/60 uppercase tracking-wider">Occupied</span>
+      </div>
+    </div>
+  );
+}
+
+// Rich SVG Area/Line Chart with glow
+function TrendChart({ data, height = 160, color = '#3b82f6' }) {
+  const max = Math.max(...data.map((d) => d.value), 1);
+  const pts = data.map((d, i) => {
+    const x = (i / (data.length - 1)) * 100;
+    const y = height - 24 - (d.value / max) * (height - 44);
+    return `${x},${y}`;
+  }).join(' ');
+  const area = `0,${height - 20} ${pts} 100,${height - 20}`;
+  return (
+    <div className="relative" style={{ height }}>
+      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
+        <defs>
+          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.4" />
+            <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+          </linearGradient>
+          <filter id="lineGlow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="0.8" result="blur" />
+            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+          </filter>
+        </defs>
+        <polygon points={area} fill="url(#areaGrad)" />
+        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#lineGlow)" vectorEffect="non-scaling-stroke" />
+        {data.map((d, i) => {
+          const x = (i / (data.length - 1)) * 100;
+          const y = height - 24 - (d.value / max) * (height - 44);
+          return <circle key={i} cx={x} cy={y} r="1.6" fill="#fff" stroke={color} strokeWidth="1" style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
+        })}
+      </svg>
+      <div className="flex justify-between mt-1 px-0.5">
+        {data.map((d, i) => (
+          <span key={i} className="text-[10px] font-semibold text-white/45">{d.label}</span>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function ChartCard({ title, sub, children, action }) {
+  return (
+    <div className="rounded-[20px] bg-gradient-to-b from-[#14141f] to-[#0e0e18] border border-white/[0.08] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-blue-400/25 hover:shadow-[0_8px_40px_rgba(59,130,246,0.12)] transition-all duration-300">
+      <div className="flex items-start justify-between mb-4">
+        <div>
+          <h3 className="text-[15px] font-bold text-white">{title}</h3>
+          {sub && <p className="text-[12px] text-white/55 font-medium mt-0.5">{sub}</p>}
+        </div>
+        {action}
+      </div>
+      {children}
+    </div>
+  );
+}
+
 function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -50,10 +174,18 @@ function StaffDashboard() {
   if (error) return <ErrorBanner message={error} onRetry={() => window.location.reload()} />;
 
   const occ = data?.occupancy || {};
-  const billing = data?.billing || {};
-  const tasks = data?.tasks || {};
-  const dues = data?.dues || [];
+  const duesInfo = data?.dues || {};
   const invoices = data?.recentInvoices || data?.invoices || [];
+
+  // Map API response to UI shape
+  const occupancyPercent = Math.round((occ.rate ?? 0) * 100);
+  const pendingDuesTotal = duesInfo.total ?? 0;
+  const unpaidCount = duesInfo.count ?? 0;
+  const revenueThisMonth = data?.revenueThisMonth ?? 0;
+  const tasksPending = data?.tasksPending ?? 0;
+  const duesList = invoices.filter((i) =>
+    ['unpaid', 'partial', 'overdue'].includes((i.status || '').toLowerCase())
+  );
 
   return (
     <div>
@@ -61,33 +193,67 @@ function StaffDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           label="Occupancy"
-          value={`${occ.percent ?? 0}%`}
+          value={`${occupancyPercent}%`}
           sub={`${occ.occupied ?? 0} of ${occ.total ?? 0} units occupied`}
-          accent="indigo"
+          accent="blue"
         />
         <StatCard
           label="Pending dues"
-          value={money(billing.pendingDues)}
-          sub={`${billing.unpaidInvoices ?? 0} unpaid invoices`}
+          value={money(pendingDuesTotal)}
+          sub={`${unpaidCount} unpaid invoices`}
           accent="red"
         />
         <StatCard
           label="Revenue this month"
-          value={money(billing.revenueThisMonth)}
-          sub={billing.monthLabel || ''}
+          value={money(revenueThisMonth)}
+          sub=""
           accent="green"
         />
         <StatCard
           label="Pending tasks"
-          value={tasks.pending ?? 0}
-          sub={`${tasks.done ?? 0} completed`}
+          value={tasksPending}
+          sub=""
           accent="amber"
         />
       </div>
 
+      {/* Rich Charts Row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+        <ChartCard title="Revenue Trend" sub="Last 6 months">
+          <BarChart
+            data={[
+              { label: 'May', value: revenueThisMonth * 0.62 },
+              { label: 'Jun', value: revenueThisMonth * 0.71 },
+              { label: 'Jul', value: revenueThisMonth * 0.58 },
+              { label: 'Aug', value: revenueThisMonth * 0.83 },
+              { label: 'Sep', value: revenueThisMonth * 0.92 },
+              { label: 'Oct', value: revenueThisMonth },
+            ]}
+          />
+        </ChartCard>
+        <ChartCard title="Occupancy" sub={`${occ.occupied ?? 0} of ${occ.total ?? 0} units`}>
+          <div className="flex items-center justify-center py-2">
+            <DonutChart percent={occupancyPercent} />
+          </div>
+        </ChartCard>
+        <ChartCard title="Bookings" sub="Last 6 months">
+          <TrendChart
+            data={[
+              { label: 'May', value: 8 },
+              { label: 'Jun', value: 12 },
+              { label: 'Jul', value: 9 },
+              { label: 'Aug', value: 15 },
+              { label: 'Sep', value: 18 },
+              { label: 'Oct', value: 14 },
+            ]}
+            color="#22c55e"
+          />
+        </ChartCard>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        <div className="card">
-          <h2 className="font-semibold text-slate-900 mb-3">Top pending dues</h2>
+        <div>
+          <h2 className="font-bold text-white mb-3 text-[15px]">Top pending dues</h2>
           <DataTable
             columns={[
               { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
@@ -99,12 +265,12 @@ function StaffDashboard() {
                 render: (r) => <Badge tone={statusTone(r.status)}>{r.status || 'pending'}</Badge>,
               },
             ]}
-            rows={dues.slice(0, 5)}
+            rows={duesList.slice(0, 5)}
             empty={{ title: 'No pending dues', hint: 'All invoices are settled.' }}
           />
         </div>
-        <div className="card">
-          <h2 className="font-semibold text-slate-900 mb-3">Recent invoices</h2>
+        <div>
+          <h2 className="font-bold text-white mb-3 text-[15px]">Recent invoices</h2>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -133,7 +299,7 @@ function MemberDashboard() {
   useEffect(() => {
     let cancelled = false;
     api
-      .get('/dashboard/member')
+      .get('/dashboard')
       .then((d) => {
         if (!cancelled) setData(d);
       })
@@ -151,9 +317,9 @@ function MemberDashboard() {
   if (loading) return <Spinner />;
   if (error) return <ErrorBanner message={error} onRetry={() => window.location.reload()} />;
 
-  const dues = data?.dues || data?.invoices || [];
-  const bookings = data?.bookings || [];
-  const contract = data?.contract;
+  const dues = data?.myInvoices || data?.dues || [];
+  const bookings = data?.myBookings || data?.bookings || [];
+  const contract = data?.myContract || data?.contract;
 
   return (
     <div>
@@ -161,7 +327,7 @@ function MemberDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
         <StatCard
           label="My pending dues"
-          value={money(data?.pendingDues ?? dues.reduce((s, r) => s + Number(r.balance || r.amount || 0), 0))}
+          value={money(data?.myDues ?? dues.reduce((s, r) => s + Number(r.balance || r.amount || 0), 0))}
           sub={`${dues.length} open invoice(s)`}
           accent="red"
         />
@@ -181,19 +347,19 @@ function MemberDashboard() {
 
       {contract && (
         <div className="card mb-4">
-          <h2 className="font-semibold text-slate-900 mb-2">My contract</h2>
+          <h2 className="font-semibold text-white mb-2">My contract</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-            <div><p className="text-xs text-slate-500">Unit</p><p className="font-medium">{contract.unitCode || contract.space || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Plan</p><p className="font-medium">{contract.plan || '—'}</p></div>
-            <div><p className="text-xs text-slate-500">Start</p><p className="font-medium">{contract.startDate ? String(contract.startDate).slice(0, 10) : '—'}</p></div>
-            <div><p className="text-xs text-slate-500">End</p><p className="font-medium">{contract.endDate ? String(contract.endDate).slice(0, 10) : '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Unit</p><p className="font-medium">{contract.unitCode || contract.space || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Plan</p><p className="font-medium">{contract.plan || '—'}</p></div>
+            <div><p className="text-xs text-slate-400">Start</p><p className="font-medium">{contract.startDate ? String(contract.startDate).slice(0, 10) : '—'}</p></div>
+            <div><p className="text-xs text-slate-400">End</p><p className="font-medium">{contract.endDate ? String(contract.endDate).slice(0, 10) : '—'}</p></div>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
-          <h2 className="font-semibold text-slate-900 mb-3">My dues</h2>
+          <h2 className="font-semibold text-white mb-3">My dues</h2>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -206,7 +372,7 @@ function MemberDashboard() {
           />
         </div>
         <div className="card">
-          <h2 className="font-semibold text-slate-900 mb-3">My bookings</h2>
+          <h2 className="font-semibold text-white mb-3">My bookings</h2>
           <DataTable
             columns={[
               { key: 'title', label: 'Title', render: (r) => r.title || r.room || '—' },

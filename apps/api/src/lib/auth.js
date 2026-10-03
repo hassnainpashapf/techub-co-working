@@ -47,6 +47,21 @@ function verifyRefreshToken(token) {
   return jwt.verify(token, REFRESH_SECRET());
 }
 
+// Short-lived pre-2FA token (5 min) — authorizes the 2FA verification step only.
+function signPreAuthToken(user) {
+  return jwt.sign({ ...buildPayload(user, 'pre2fa'), pre2fa: true }, ACCESS_SECRET(), {
+    expiresIn: '5m',
+  });
+}
+
+function verifyPreAuthToken(token) {
+  const payload = jwt.verify(token, ACCESS_SECRET());
+  if (payload.type !== 'pre2fa' || !payload.pre2fa) {
+    throw new Error('Invalid pre-auth token');
+  }
+  return payload;
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
@@ -54,4 +69,6 @@ module.exports = {
   signRefreshToken,
   verifyAccessToken,
   verifyRefreshToken,
+  signPreAuthToken,
+  verifyPreAuthToken,
 };
