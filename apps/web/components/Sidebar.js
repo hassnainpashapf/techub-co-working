@@ -67,6 +67,7 @@ const NAV_MAIN = [
       { label: 'Billing & Invoices', path: '/billing' },
       { label: 'Inventory & Assets', path: '/inventory' },
       { label: 'Documents & Credits', path: '/documents' },
+      { label: 'Refunds', path: '/refunds' },
       { label: 'Reports', path: '/reports' },
     ],
   },

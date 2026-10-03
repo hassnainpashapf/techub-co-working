@@ -61,6 +61,7 @@ model Tenant {
   assets Asset[]
   documents Document[]
   creditNotes CreditNote[]
+  refunds Refund[]
   emailSetting EmailSetting?
   settings      Setting[]
   auditLogs     AuditLog[]
@@ -105,6 +106,8 @@ model User {
   inventoryMovements  InventoryMovement[]
   uploadedDocuments   Document[]
   createdCreditNotes  CreditNote[]
+  requestedRefunds    Refund[] @relation("RefundRequester")
+  processedRefunds    Refund[] @relation("RefundProcessor")
 
   @@index([tenantId, role])
   @@map("users")
@@ -230,6 +233,7 @@ model Member {
   hostedVisits Visitor[]
   documents Document[]
   creditNotes CreditNote[]
+  refunds Refund[]
 
   @@index([tenantId, status])
   @@map("members")
@@ -335,6 +339,7 @@ model Payment {
   paidAt    DateTime @default(now()) @map("paid_at")
   note      String?
   createdAt DateTime @default(now()) @map("created_at")
+  refunds   Refund[]
 
   @@index([tenantId, invoiceId])
   @@map("payments")
@@ -724,6 +729,39 @@ model CreditNote {
   @@unique([tenantId, number])
   @@index([tenantId, memberId])
   @@map("credit_notes")
+}
+
+// ---------------------------------------------------------------- refunds ---
+enum RefundStatus {
+  pending
+  approved
+  rejected
+  processed
+}
+
+model Refund {
+  id          String       @id @default(cuid())
+  tenantId    String       @map("tenant_id")
+  tenant      Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  number      String // RFD-202610-0001, unique per tenant
+  paymentId   String?      @map("payment_id")
+  payment     Payment?     @relation(fields: [paymentId], references: [id], onDelete: SetNull)
+  memberId    String       @map("member_id")
+  member      Member       @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  amount      Decimal      @db.Decimal(12, 2)
+  reason      String?
+  status      RefundStatus @default(pending)
+  requestedById String?    @map("requested_by_id")
+  requestedBy User?        @relation("RefundRequester", fields: [requestedById], references: [id], onDelete: SetNull)
+  processedById String?    @map("processed_by_id")
+  processedBy User?        @relation("RefundProcessor", fields: [processedById], references: [id], onDelete: SetNull)
+  processedAt DateTime?    @map("processed_at")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+
+  @@unique([tenantId, number])
+  @@index([tenantId, status])
+  @@map("refunds")
 }
 
 // ---------------------------------------------------------- email settings ---
