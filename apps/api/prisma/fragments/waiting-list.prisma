@@ -1,0 +1,33 @@
+// Phase 38 Track 8: Waiting List Management — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model WaitingListEntry {
+  id                String    @id @default(cuid())
+  tenantId          String    @map("tenant_id")
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name              String
+  email             String?
+  phone             String?
+  desiredType       String?   @map("desired_type") // unit type of interest (hot_desk, private_office, ...)
+  desiredDate       DateTime? @map("desired_date")
+  notes             String?   @db.Text
+  priority          Int       @default(0) // higher = served first
+  status            String    @default("waiting") // waiting | offered | converted | expired
+  offersMade        Int       @default(0) @map("offers_made")
+  offeredAt         DateTime? @map("offered_at")
+  convertedMemberId String?   @map("converted_member_id")
+  convertedMember   Member?   @relation("WaitingListConversion", fields: [convertedMemberId], references: [id], onDelete: SetNull)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@map("waiting_list_entries")
+}
+
+// ADD TO Tenant model:
+//   waitingListEntries WaitingListEntry[]
+//
+// ADD TO Member model:
+//   convertedFromWaitingList WaitingListEntry? @relation("WaitingListConversion")

@@ -1,0 +1,61 @@
+// Phase 38 Track 6: Task Automation Rules — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+//
+// Migration SQL:
+// CREATE TABLE "automation_rules" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "name" TEXT NOT NULL,
+//     "trigger" TEXT NOT NULL, "conditions" JSONB NOT NULL DEFAULT '{}',
+//     "actions" JSONB NOT NULL DEFAULT '[]',
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "automation_rules_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "automation_rules_tenant_id_idx" ON "automation_rules"("tenant_id");
+// ALTER TABLE "automation_rules" ADD CONSTRAINT "automation_rules_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "automation_runs" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "rule_id" TEXT NOT NULL,
+//     "trigger" TEXT NOT NULL, "entity_id" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "automation_runs_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "automation_runs_rule_id_idx" ON "automation_runs"("rule_id");
+// ALTER TABLE "automation_runs" ADD CONSTRAINT "automation_runs_rule_id_fkey"
+//   FOREIGN KEY ("rule_id") REFERENCES "automation_rules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+model AutomationRule {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name       String
+  trigger    String   // invoice_overdue | ticket_urgent_created | booking_cancelled | contract_expiring | member_inactive
+  conditions Json     @default("{}") // e.g. {"minDaysOverdue":7,"minAmount":5000}
+  actions    Json     @default("[]") // [{type:"create_task"|"send_email"|"notify_slack"|"assign_ticket", ...}]
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  runs       AutomationRun[]
+
+  @@index([tenantId])
+  @@map("automation_rules")
+}
+
+model AutomationRun {
+  id        String         @id @default(cuid())
+  tenantId  String         @map("tenant_id")
+  ruleId    String         @map("rule_id")
+  rule      AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  trigger   String
+  entityId  String?        @map("entity_id") // invoice/ticket/booking/contract/member id (dedupe)
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@index([ruleId])
+  @@index([tenantId, trigger, createdAt])
+  @@map("automation_runs")
+}
+
+// ADD TO Tenant model:
+//   automationRules AutomationRule[]
+//   automationRuns  AutomationRun[]

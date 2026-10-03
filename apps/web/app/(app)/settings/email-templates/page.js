@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { PageHeader, Field, Spinner, ErrorBanner, Badge } from '../../../../components/ui';
+import Link from 'next/link';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
 export default function EmailTemplatesPage() {
@@ -17,6 +18,9 @@ export default function EmailTemplatesPage() {
   const [error, setError] = useState('');
   const [msg, setMsg] = useState('');
   const [preview, setPreview] = useState(false);
+  const [testEmail, setTestEmail] = useState('');
+  const [testing, setTesting] = useState(false);
+  const [seeding, setSeeding] = useState(false);
 
   const load = async () => {
     setLoading(true); setError('');
@@ -68,6 +72,27 @@ export default function EmailTemplatesPage() {
     finally { setSaving(false); }
   };
 
+  const seedDefaults = async () => {
+    if (!confirm('Copy all 22 built-in templates into your workspace as editable defaults? Existing customizations will be kept.')) return;
+    setSeeding(true); setError(''); setMsg('');
+    try {
+      const d = await api.post('/email-templates/seed');
+      setMsg(`Seeded ${d.created} default templates (${d.total} total).`);
+      load();
+    } catch (err) { setError(err.message); }
+    finally { setSeeding(false); }
+  };
+
+  const sendTest = async () => {
+    if (!testEmail) { setError('Enter an email address to send the test to.'); return; }
+    setTesting(true); setError(''); setMsg('');
+    try {
+      const d = await api.post(`/email-templates/${encodeURIComponent(selected)}/test`, { email: testEmail });
+      setMsg(d.ok ? `Test email sent to ${testEmail}.` : `Test email not sent (${d.reason || 'unknown reason'}).`);
+    } catch (err) { setError(err.message); }
+    finally { setTesting(false); }
+  };
+
   const insertVar = (v) => {
     const ta = document.getElementById('tpl-html');
     const token = `{{${v}}}`;
@@ -92,12 +117,22 @@ export default function EmailTemplatesPage() {
   return (
     <div>
       <PageHeader title="Email Templates" sub="Customize the emails your workspace sends. Use {{variables}} — they are filled in automatically." />
+      <div className="mb-4 rounded-xl bg-violet-500/10 border border-violet-400/30 px-4 py-3 text-sm text-violet-200">
+        ⚙️ Want these emails sent automatically? Set up{' '}
+        <Link href="/settings/lifecycle" className="underline font-semibold">Lifecycle Automation</Link>
+        {' '}— trial ending, contract expiring, inactivity & overdue reminders.
+      </div>
       {error && <ErrorBanner message={error} />}
       {msg && <div className="mb-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm px-4 py-2.5">{msg}</div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="card-premium p-4">
-          <h3 className="text-sm font-bold text-white mb-3">Templates</h3>
+          <div className="flex items-center justify-between mb-3">
+            <h3 className="text-sm font-bold text-white">Templates</h3>
+            <button type="button" className="text-[11px] text-blue-300 hover:text-blue-200 underline" onClick={seedDefaults} disabled={seeding}>
+              {seeding ? 'Seeding…' : 'Seed all defaults'}
+            </button>
+          </div>
           <div className="space-y-1">
             {builtins.map((b) => (
               <button
@@ -120,7 +155,7 @@ export default function EmailTemplatesPage() {
                 <h3 className="text-lg font-bold text-white font-mono">{selected}</h3>
                 <div className="flex items-center gap-2">
                   {tpl.custom
-                    ? <Badge tone="green">customized</Badge>
+                    ? (tpl.isCustom ? <Badge tone="green">customized</Badge> : <Badge tone="blue">seeded default</Badge>)
                     : <Badge tone="slate">built-in default</Badge>}
                 </div>
               </div>
@@ -148,6 +183,15 @@ export default function EmailTemplatesPage() {
                 <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save template'}</button>
                 <button type="button" className="btn-secondary" onClick={() => setPreview(!preview)}>{preview ? 'Hide preview' : 'Preview'}</button>
                 {tpl.custom && <button type="button" className="btn-danger" onClick={resetDefault} disabled={saving}>Reset to default</button>}
+              </div>
+
+              <div className="mt-6 rounded-xl border border-white/10 p-4">
+                <h4 className="text-xs font-semibold text-slate-300 mb-2">SEND TEST EMAIL</h4>
+                <div className="flex flex-wrap gap-2">
+                  <input className="input flex-1 min-w-[200px]" type="email" placeholder="you@example.com" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
+                  <button type="button" className="btn-secondary" onClick={sendTest} disabled={testing}>{testing ? 'Sending…' : 'Send test'}</button>
+                </div>
+                <p className="text-xs text-slate-500 mt-2">Sends this template with sample data (e.g. {"{{memberName}}"} → Ali Raza).</p>
               </div>
 
               {preview && (

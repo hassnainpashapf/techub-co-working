@@ -145,6 +145,37 @@ app.use('/api/ical', require('./routes/ical'));
 require('./lib/campaignJob'); // 'campaign-send'
 require('./lib/smsCampaigns'); // 'sms-campaign'
 require('./lib/apiUsageCleanup'); // 'api-usage-cleanup'
+// Phase 38: Automation & Growth Pack
+app.use('/api/scheduled-reports', require('./routes/scheduled-reports'));
+app.use('/api/lifecycle', require('./routes/lifecycle'));
+app.use('/api/automation', require('./routes/automation'));
+app.use('/api/reminders', require('./routes/reminders'));
+app.use('/api/waiting-list', require('./routes/waiting-list'));
+app.use('/api/member-import', require('./routes/member-import'));
+app.use('/api/member-bulk', require('./routes/member-bulk'));
+require('./lib/scheduledReports'); // 'scheduled-report-send'
+require('./lib/lifecycleEngine'); // 'lifecycle-run'
+require('./lib/automationEngine'); // 'automation-inactive-scan'
+require('./lib/docExpiryJob'); // 'doc-expiry'
+require('./lib/waitingListExpiry'); // 'waiting-list-expiry'
+require('./lib/reminders'); // 'reminders'
+try {
+  const { enqueue } = require('./lib/jobs');
+  const prisma = require('./lib/prisma');
+  const PHASE38_DAILY = ['lifecycle-run', 'automation-inactive-scan', 'waiting-list-expiry', 'reminders']; // doc-expiry self-schedules via ensureDocExpiryScheduled()
+  const schedulePhase38Jobs = async () => {
+    try {
+      require('./lib/scheduledReports').ensureScheduledReportsScheduled();
+      require('./lib/docExpiryJob').ensureDocExpiryScheduled();
+      for (const type of PHASE38_DAILY) {
+        const pending = await prisma.job.count({ where: { type, status: 'pending' } }).catch(() => 1);
+        if (!pending) await enqueue(type, {}, { runAt: new Date(Date.now() + 24 * 60 * 60 * 1000) }).catch(() => {});
+      }
+    } catch (e) { console.error('[phase38] daily schedule failed:', e.message); }
+  };
+  schedulePhase38Jobs();
+  setInterval(schedulePhase38Jobs, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase38] scheduler init failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

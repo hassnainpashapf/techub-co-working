@@ -1,28 +1,54 @@
-// Phase 29 Track 8: Member Feedback System — schema fragment.
-// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// Phase 38 Track 9: Feedback & Suggestions Box — schema EXTENSION.
+// (Phase 29 Track 8 created the Feedback model; this extends it.)
+// Coordinator: merge these ADDITIVE changes into apps/api/prisma/schema.prisma
 // and create the matching migration. DO NOT edit schema.prisma here.
+//
+// Changes to existing Feedback model:
+//   - memberId -> optional (anonymous feedback), member -> Member?
+//   - ADD title String?
+//   - RENAME message -> body (@db.Text)
+//   - ADD isAnonymous Boolean @default(false)
+//   - ADD upvotes Int @default(0)
+//   - ADD upvotedBy FeedbackUpvote[]
+//   - categories extended: suggestion | complaint | praise | facility | service | staff | cleanliness | other
+//   - statuses extended: new | reviewed | planned | done | rejected | resolved
+// New model: FeedbackUpvote (one upvote per member per feedback)
 
-model Feedback {
+model FeedbackUpvote {
   id         String   @id @default(cuid())
   tenantId   String   @map("tenant_id")
   tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  feedbackId String   @map("feedback_id")
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
   memberId   String   @map("member_id")
-  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  category   String   @default("other") // facility | service | staff | cleanliness | other
-  rating     Int      @default(5) // 1..5
-  message    String   @db.Text
-  status     String   @default("new") // new | reviewed | resolved
-  adminReply String?  @map("admin_reply") @db.Text
   createdAt  DateTime @default(now()) @map("created_at")
-  updatedAt  DateTime @updatedAt @map("updated_at")
 
-  @@index([tenantId, status])
-  @@index([memberId])
-  @@map("feedback")
+  @@unique([feedbackId, memberId])
+  @@index([tenantId])
+  @@map("feedback_upvotes")
 }
 
 // ADD TO Tenant model:
-//   feedbacks Feedback[]
+//   feedbackUpvotes FeedbackUpvote[]
 
-// ADD TO Member model:
-//   feedbacks Feedback[]
+// ADD TO Feedback model:
+//   upvotedBy FeedbackUpvote[]
+
+// --- Migration SQL (Phase 38 Track 9) ---
+// ALTER TABLE "feedback" ADD COLUMN "title" TEXT;
+// ALTER TABLE "feedback" RENAME COLUMN "message" TO "body";
+// ALTER TABLE "feedback" ALTER COLUMN "member_id" DROP NOT NULL;
+// ALTER TABLE "feedback" ADD COLUMN "is_anonymous" BOOLEAN NOT NULL DEFAULT false;
+// ALTER TABLE "feedback" ADD COLUMN "upvotes" INTEGER NOT NULL DEFAULT 0;
+// CREATE TABLE "feedback_upvotes" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "feedback_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "feedback_upvotes_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "feedback_upvotes_feedback_id_member_id_key" ON "feedback_upvotes"("feedback_id", "member_id");
+// CREATE INDEX "feedback_upvotes_tenant_id_idx" ON "feedback_upvotes"("tenant_id");
+// ALTER TABLE "feedback_upvotes" ADD CONSTRAINT "feedback_upvotes_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "feedback_upvotes" ADD CONSTRAINT "feedback_upvotes_feedback_id_fkey" FOREIGN KEY ("feedback_id") REFERENCES "feedback"("id") ON DELETE CASCADE ON UPDATE CASCADE;

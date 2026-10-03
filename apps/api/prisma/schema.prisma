@@ -129,6 +129,16 @@ model Tenant {
   apiUsageLogs            ApiUsageLog[]
   calendarFeedTokens      CalendarFeedToken[]
   smsCampaigns            SmsCampaign[]
+  // Phase 38: Automation & Growth Pack
+  scheduledReports        ScheduledReport[]
+  lifecycleRules          LifecycleRule[]
+  lifecycleRuns           LifecycleRun[]
+  automationRules         AutomationRule[]
+  automationRuns          AutomationRun[]
+  waitingListEntries      WaitingListEntry[]
+  feedbackUpvotes         FeedbackUpvote[]
+  reminderRules           ReminderRule[]
+  reminderLogs            ReminderLog[]
 
   @@map("tenants")
 }
@@ -360,6 +370,9 @@ model Member {
   wifiVouchers           WifiVoucher[]
   lostFoundItems         LostFoundItem[]
   calendarFeedTokens     CalendarFeedToken[] // Phase 36
+  // Phase 38: Automation & Growth Pack
+  lifecycleRuns           LifecycleRun[]
+  convertedFromWaitingList WaitingListEntry? @relation("WaitingListConversion")
 
   @@index([tenantId, status])
   @@map("members")
@@ -854,12 +867,18 @@ model Document {
   mimeType     String?  @map("mime_type")
   storagePath  String?  @map("storage_path") // local disk path or S3 key
   notes        String?
+  // Phase 38: document expiry tracking
+  issuedAt        DateTime? @map("issued_at")
+  expiresAt       DateTime? @map("expires_at")
+  reminderDays    Json      @default("[30,7,1]") @map("reminder_days")
+  lastReminderKey String?   @map("last_reminder_key")
   uploadedById String?  @map("uploaded_by_id")
   uploadedBy   User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
   createdAt    DateTime @default(now()) @map("created_at")
   updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@index([tenantId, memberId])
+  @@index([expiresAt]) // Phase 38: document expiry tracking
   @@map("documents")
 }
 
@@ -1342,19 +1361,190 @@ model Feedback {
   id         String   @id @default(cuid())
   tenantId   String   @map("tenant_id")
   tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
-  memberId   String   @map("member_id")
-  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
-  category   String   @default("other") // facility | service | staff | cleanliness | other
+  memberId   String?  @map("member_id") // null => anonymous
+  member     Member?  @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  category   String   @default("suggestion") // suggestion | complaint | praise | facility | service | staff | cleanliness | other
   rating     Int      @default(5) // 1..5
-  message    String   @db.Text
-  status     String   @default("new") // new | reviewed | resolved
+  title      String?
+  body       String   @db.Text
+  isAnonymous Boolean @default(false) @map("is_anonymous")
+  upvotes    Int      @default(0)
+  status     String   @default("new") // new | reviewed | planned | done | rejected | resolved
   adminReply String?  @map("admin_reply") @db.Text
   createdAt  DateTime @default(now()) @map("created_at")
   updatedAt  DateTime @updatedAt @map("updated_at")
 
+  upvotedBy FeedbackUpvote[]
+
   @@index([tenantId, status])
   @@index([memberId])
   @@map("feedback")
+}
+
+// ------------------------------------------------- Phase 38: Automation & Growth Pack
+model ScheduledReport {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name        String
+  reportType  String    @map("report_type") // occupancy | revenue | expenses | churn | pnl
+  frequency   String    @default("weekly") @map("frequency") // weekly | monthly
+  dayOfWeek   Int?      @map("day_of_week") // 0-6 (weekly) — default 1 (Monday)
+  dayOfMonth  Int?      @map("day_of_month") // 1-28 (monthly) — default 1
+  recipients  Json      @default("[]") // ["a@x.com", ...]
+  format      String    @default("pdf") @map("format") // pdf | csv
+  isActive    Boolean   @default(true) @map("is_active")
+  lastSentAt  DateTime? @map("last_sent_at")
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@map("scheduled_reports")
+}
+
+model LifecycleRule {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trigger     String    // trial_ending_3d | contract_expiring_30d | member_inactive_14d | invoice_overdue_7d
+  action      String    @default("email") // email | sms
+  templateKey String?   @map("template_key")
+  message     String?   @db.Text
+  isActive    Boolean   @default(true) @map("is_active")
+  lastRunAt   DateTime? @map("last_run_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  runs LifecycleRun[]
+
+  @@unique([tenantId, trigger])
+  @@index([tenantId])
+  @@map("lifecycle_rules")
+}
+
+model LifecycleRun {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ruleId    String        @map("rule_id")
+  rule      LifecycleRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  memberId  String        @map("member_id")
+  member    Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channel   String        // email | sms
+  sent      Boolean       @default(false)
+  error     String?
+  sentAt    DateTime      @default(now()) @map("sent_at")
+
+  @@index([tenantId])
+  @@index([ruleId, memberId])
+  @@index([sentAt])
+  @@map("lifecycle_runs")
+}
+
+model AutomationRule {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name       String
+  trigger    String   // invoice_overdue | ticket_urgent_created | booking_cancelled | contract_expiring | member_inactive
+  conditions Json     @default("{}")
+  actions    Json     @default("[]")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  runs       AutomationRun[]
+
+  @@index([tenantId])
+  @@map("automation_rules")
+}
+
+model AutomationRun {
+  id        String         @id @default(cuid())
+  tenantId  String         @map("tenant_id")
+  tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ruleId    String         @map("rule_id")
+  rule      AutomationRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  trigger   String
+  entityId  String?        @map("entity_id")
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@index([ruleId])
+  @@index([tenantId, trigger, createdAt])
+  @@map("automation_runs")
+}
+
+model WaitingListEntry {
+  id                String    @id @default(cuid())
+  tenantId          String    @map("tenant_id")
+  tenant            Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name              String
+  email             String?
+  phone             String?
+  desiredType       String?   @map("desired_type")
+  desiredDate       DateTime? @map("desired_date")
+  notes             String?   @db.Text
+  priority          Int       @default(0)
+  status            String    @default("waiting") // waiting | offered | converted | expired
+  offersMade        Int       @default(0) @map("offers_made")
+  offeredAt         DateTime? @map("offered_at")
+  convertedMemberId String?   @unique @map("converted_member_id")
+  convertedMember   Member?   @relation("WaitingListConversion", fields: [convertedMemberId], references: [id], onDelete: SetNull)
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@map("waiting_list_entries")
+}
+
+model FeedbackUpvote {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  feedbackId String   @map("feedback_id")
+  feedback   Feedback @relation(fields: [feedbackId], references: [id], onDelete: Cascade)
+  memberId   String   @map("member_id")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@unique([feedbackId, memberId])
+  @@index([tenantId])
+  @@map("feedback_upvotes")
+}
+
+model ReminderRule {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name       String
+  entity     String // invoice | contract | booking | maintenance | document
+  timing     String // before | after
+  daysOffset Int      @map("days_offset")
+  channels   String[] @default([])
+  templateKey String? @map("template_key")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdById String? @map("created_by")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  logs ReminderLog[]
+
+  @@index([tenantId, isActive])
+  @@map("reminder_rules")
+}
+
+model ReminderLog {
+  id           String       @id @default(cuid())
+  ruleId       String       @map("rule_id")
+  rule         ReminderRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  tenantId     String       @map("tenant_id")
+  tenant       Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  entityId     String       @map("entity_id")
+  channelsSent String[]     @default([]) @map("channels_sent")
+  sentAt       DateTime     @default(now()) @map("sent_at")
+
+  @@unique([ruleId, entityId])
+  @@index([tenantId, sentAt])
+  @@map("reminder_logs")
 }
 
 // ------------------------------------------------- Phase 30: Polish Pack
@@ -1365,6 +1555,8 @@ model EmailTemplate {
   key       String // e.g. 'bookingConfirmed' — matches mailer's notify() template names
   subject   String
   htmlBody  String   @map("html_body") @db.Text
+  variables Json     @default("[]") @map("variables")
+  isCustom  Boolean  @default(false) @map("is_custom")
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")

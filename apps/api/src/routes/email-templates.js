@@ -1,4 +1,5 @@
 // Phase 30 Track 5: Email template editor — per-tenant custom templates.
+// Phase 38 Track 3: extended with preview / test / seed endpoints.
 const express = require('express');
 const { z } = require('zod');
 
@@ -8,7 +9,8 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { writeAudit } = require('../middleware/audit');
-const { listBuiltinTemplates, renderCustom } = require('../lib/mailer');
+const { listBuiltinTemplates, renderCustom, sendEmail } = require('../lib/mailer');
+const { getDefaultTemplate, sampleDataFor } = require('../lib/emailTemplateDefaults');
 
 const router = express.Router();
 
@@ -17,36 +19,101 @@ router.use(authenticate, requireTenantUser);
 const ADMIN_ROLES = ['ceo', 'admin', 'super_admin'];
 const adminWrite = requireRole(...ADMIN_ROLES);
 
+function auditWrite(req, action, key) {
+  return writeAudit({
+    tenantId: req.user.tenantId, actorId: req.user.sub, action,
+    entity: 'EmailTemplate', newValue: { key },
+    ip: req.ip, userAgent: req.headers['user-agent'],
+  }).catch(() => {});
+}
+
+// Effective template for a tenant: DB override if present, else the
+// built-in default in {{variable}} form.
+async function effectiveTemplate(tenantId, key) {
+  const def = getDefaultTemplate(key);
+  if (!def) return null;
+  let row = null;
+  try {
+    row = await prisma.emailTemplate.findUnique({
+      where: { tenantId_key: { tenantId, key } },
+    });
+  } catch { /* table may not exist yet — fall back to default */ }
+  if (row) {
+    return {
+      key, custom: true, isCustom: !!row.isCustom, isActive: row.isActive,
+      subject: row.subject, htmlBody: row.htmlBody, variables: def.variables,
+      updatedAt: row.updatedAt,
+    };
+  }
+  return { ...def, custom: false };
+}
+
 // List custom templates + available built-in keys
 router.get('/', async (req, res, next) => {
   try {
-    const templates = await prisma.emailTemplate.findMany({
-      where: { ...tenantFilter(req) },
-      select: { key: true, isActive: true, updatedAt: true },
-      orderBy: { key: 'asc' },
-    });
+    let templates = [];
+    try {
+      templates = await prisma.emailTemplate.findMany({
+        where: { ...tenantFilter(req) },
+        select: { key: true, isCustom: true, isActive: true, updatedAt: true },
+        orderBy: { key: 'asc' },
+      });
+    } catch { /* table pending */ }
     res.json({ templates, builtins: listBuiltinTemplates() });
+  } catch (e) { next(e); }
+});
+
+// Seed built-in defaults into the tenant (idempotent — only missing keys).
+router.post('/seed', adminWrite, async (req, res, next) => {
+  try {
+    const keys = (listBuiltinTemplates() || []).map((b) => b.key);
+    let created = 0;
+    for (const key of keys) {
+      const def = getDefaultTemplate(key);
+      if (!def) continue;
+      const existing = await prisma.emailTemplate.findUnique({
+        where: { tenantId_key: { tenantId: req.user.tenantId, key } },
+        select: { id: true },
+      });
+      if (!existing) {
+        await prisma.emailTemplate.create({
+          data: {
+            tenantId: req.user.tenantId, key, subject: def.subject,
+            htmlBody: def.htmlBody, variables: def.variables, isCustom: false, isActive: true,
+          },
+        });
+        created += 1;
+      }
+    }
+    await auditWrite(req, 'email_template.seed', `${created} new`);
+    res.json({ ok: true, created, total: keys.length });
+  } catch (e) { next(e); }
+});
+
+// Preview: render a template (saved or ad-hoc) with sample data.
+const previewSchema = z.object({
+  key: z.string().min(1).max(100),
+  subject: z.string().min(1).max(300).optional(),
+  htmlBody: z.string().min(1).max(200000).optional(),
+});
+
+router.post('/preview', validateBody(previewSchema), async (req, res, next) => {
+  try {
+    const { key, subject, htmlBody } = req.body;
+    const tpl = await effectiveTemplate(req.user.tenantId, key);
+    if (!tpl) return res.status(404).json({ error: { message: 'Unknown template key.' } });
+    const data = sampleDataFor(tpl.variables);
+    const rendered = renderCustom({ subject: subject || tpl.subject, htmlBody: htmlBody || tpl.htmlBody }, data);
+    res.json({ key, subject: rendered.subject, html: rendered.html, sampleData: data });
   } catch (e) { next(e); }
 });
 
 // Get one template — custom if saved, else the built-in default
 router.get('/:key', async (req, res, next) => {
   try {
-    const { key } = req.params;
-    const builtins = listBuiltinTemplates();
-    const builtin = builtins.find((b) => b.key === key);
-    if (!builtin) return res.status(404).json({ error: { message: 'Unknown template key.' } });
-    const custom = await prisma.emailTemplate.findUnique({
-      where: { tenantId_key: { tenantId: req.user.tenantId, key } },
-    });
-    if (custom) {
-      return res.json({ key, custom: true, isActive: custom.isActive, subject: custom.subject, htmlBody: custom.htmlBody, variables: builtin.variables });
-    }
-    // Built-in default rendered with empty data (sample preview values)
-    const sample = {};
-    for (const v of builtin.variables) sample[v] = `{{${v}}}`;
-    const rendered = renderCustom({ subject: defaultSubject(key), htmlBody: defaultHtml(key) }, sample);
-    res.json({ key, custom: false, isActive: true, subject: rendered.subject, htmlBody: rendered.htmlBody, variables: builtin.variables, note: 'Showing built-in default. Save to create a custom override.' });
+    const tpl = await effectiveTemplate(req.user.tenantId, req.params.key);
+    if (!tpl) return res.status(404).json({ error: { message: 'Unknown template key.' } });
+    res.json({ ...tpl, note: tpl.custom ? undefined : 'Showing built-in default. Save to create a custom override.' });
   } catch (e) { next(e); }
 });
 
@@ -56,81 +123,54 @@ const upsertSchema = z.object({
   isActive: z.boolean().optional(),
 });
 
-// Create/update a custom template
+// Create/update a custom template (marks isCustom = true)
 router.put('/:key', adminWrite, validateBody(upsertSchema), async (req, res, next) => {
   try {
     const { key } = req.params;
-    const builtins = listBuiltinTemplates();
-    if (!builtins.some((b) => b.key === key)) {
-      return res.status(400).json({ error: { message: 'Unknown template key.' } });
-    }
+    const def = getDefaultTemplate(key);
+    if (!def) return res.status(400).json({ error: { message: 'Unknown template key.' } });
     const { subject, htmlBody, isActive = true } = req.body;
     const tpl = await prisma.emailTemplate.upsert({
       where: { tenantId_key: { tenantId: req.user.tenantId, key } },
-      update: { subject, htmlBody, isActive },
-      create: { tenantId: req.user.tenantId, key, subject, htmlBody, isActive },
+      update: { subject, htmlBody, variables: def.variables, isCustom: true, isActive },
+      create: {
+        tenantId: req.user.tenantId, key, subject, htmlBody,
+        variables: def.variables, isCustom: true, isActive,
+      },
     });
-    await writeAudit({
-      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'email_template.saved',
-      entity: 'EmailTemplate', entityId: tpl.id, newValue: { key },
-      ip: req.ip, userAgent: req.headers['user-agent'],
-    }).catch(() => {});
+    await auditWrite(req, 'email_template.saved', key);
     res.json({ template: tpl });
+  } catch (e) { next(e); }
+});
+
+// Send a test email using the effective template + sample data
+const testSchema = z.object({ email: z.string().email() });
+
+router.post('/:key/test', adminWrite, validateBody(testSchema), async (req, res, next) => {
+  try {
+    const tpl = await effectiveTemplate(req.user.tenantId, req.params.key);
+    if (!tpl) return res.status(404).json({ error: { message: 'Unknown template key.' } });
+    const data = sampleDataFor(tpl.variables);
+    const rendered = renderCustom({ subject: tpl.subject, htmlBody: tpl.htmlBody }, data);
+    const result = await sendEmail(req.user.tenantId, {
+      to: req.body.email,
+      subject: `[TEST] ${rendered.subject}`,
+      html: rendered.html,
+    });
+    await auditWrite(req, 'email_template.test', req.params.key);
+    res.json({ ok: result.sent, reason: result.reason || null });
   } catch (e) { next(e); }
 });
 
 // Reset to built-in default (deletes the custom override)
 router.delete('/:key', adminWrite, async (req, res, next) => {
   try {
-    const { key } = req.params;
     await prisma.emailTemplate.deleteMany({
-      where: { ...tenantFilter(req), key },
+      where: { ...tenantFilter(req), key: req.params.key },
     });
-    await writeAudit({
-      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'email_template.reset',
-      entity: 'EmailTemplate', newValue: { key },
-      ip: req.ip, userAgent: req.headers['user-agent'],
-    }).catch(() => {});
+    await auditWrite(req, 'email_template.reset', req.params.key);
     res.json({ ok: true });
   } catch (e) { next(e); }
 });
-
-// Built-in defaults expressed in {{variable}} form so the editor starts
-// from something meaningful. These mirror lib/mailer's wrap() layout.
-function defaultSubject(key) {
-  const map = {
-    invoiceCreated: 'New invoice {{number}} — Rs {{amount}}',
-    bookingConfirmed: 'Booking confirmed — {{unitCode}}',
-    ticketUpdate: 'Ticket #{{ticketNo}} — {{status}}',
-    visitorCheckin: 'Visitor arrived — {{visitorName}}',
-    paymentReceived: 'Payment received — Rs {{amount}}',
-    emailVerification: 'Verify your email address',
-    announcement: '📢 {{title}}',
-  };
-  return map[key] || key;
-}
-
-function defaultHtml(key) {
-  const titles = {
-    invoiceCreated: 'New Invoice',
-    bookingConfirmed: 'Booking Confirmed',
-    ticketUpdate: 'Ticket Update',
-    visitorCheckin: 'Visitor Check-in',
-    paymentReceived: 'Payment Received',
-    emailVerification: 'Verify Your Email',
-    announcement: 'Announcement',
-  };
-  const title = titles[key] || key;
-  const body = {
-    invoiceCreated: '<p>Hi {{memberName}},</p><p>A new invoice <b>{{number}}</b> for <b>Rs {{amount}}</b> has been issued, due <b>{{dueDate}}</b>.</p><p>Please pay at your earliest convenience.</p>',
-    bookingConfirmed: '<p>Hi {{memberName}},</p><p>Your booking for <b>{{unitCode}}</b> on <b>{{date}}</b> at <b>{{startTime}}</b> is confirmed.</p>',
-    ticketUpdate: '<p>Hi {{memberName}},</p><p>Your ticket <b>#{{ticketNo}}</b> status is now <b>{{status}}</b>.</p>',
-    visitorCheckin: '<p>Hi {{hostName}},</p><p><b>{{visitorName}}</b> has checked in at reception and is waiting to meet you.</p>',
-    paymentReceived: '<p>Hi {{memberName}},</p><p>We received your payment of <b>Rs {{amount}}</b> for invoice <b>{{invoiceNumber}}</b>. Thank you!</p>',
-    emailVerification: '<p>Hi {{name}},</p><p>Please verify your email address by clicking the link below:</p><p><a href="{{verifyUrl}}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Verify Email</a></p><p>This link expires in 24 hours.</p>',
-    announcement: '<p>Hi {{name}},</p><h3>{{title}}</h3><p>{{body}}</p>',
-  }[key] || '<p>Hi {{memberName}},</p>';
-  return `<div style="font-family:Arial,sans-serif;max-width:560px;margin:0 auto;background:#0f0f1a;color:#e5e7eb;border-radius:12px;overflow:hidden"><div style="padding:20px 24px;background:linear-gradient(135deg,#7c3aed,#2563eb)"><h2 style="margin:0;color:#fff;font-size:18px">${title}</h2></div><div style="padding:24px">${body}</div><div style="padding:16px 24px;color:#6b7280;font-size:12px;border-top:1px solid #1f2937">This is an automated message from your coworking space.</div></div>`;
-}
 
 module.exports = router;

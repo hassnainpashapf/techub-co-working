@@ -125,6 +125,13 @@ async function processDunning(tenantId) {
     const ok = !!(result && (result.sent || result.queued));
     if (ok) {
       sent++;
+      // Phase 38: automation rules on overdue invoices — fire-and-forget
+      require('./automationEngine').evaluateAutomation(tenantId, 'invoice_overdue', {
+        invoiceId: inv.id, invoiceNumber: inv.number,
+        memberId: inv.memberId, memberName: inv.memberName, memberEmail: inv.memberEmail,
+        amount: inv.amount, balance: inv.balance, daysOverdue: inv.daysOverdue,
+        level: inv.level, entityId: inv.id,
+      }).catch(() => {});
       try {
         await prisma.dunningLog.create({
           data: { tenantId, invoiceId: inv.id, level: inv.level, channel: 'email' },

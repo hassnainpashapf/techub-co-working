@@ -1,0 +1,24 @@
+// Phase 38 Track 7: Document Expiry Tracking — schema fragment.
+// Deviation note (coordinator ke liye): task me naya `TrackedDocument` model tha,
+// lekin `/api/documents` pehle se mounted hai aur `Document` model (contract/id/policy
+// docs ke liye) maujud hai. Is liye alag model banane ke bajaye Document model ko
+// expiry fields se extend kiya gaya hai — koi mount conflict nahi, koi duplication nahi.
+//
+// Coordinator merge karega: schema.prisma me `Document` model me neeche wali fields add karein.
+// status store nahi kiya gaya — valid/expiring/expired `expiresAt` se derive hota hai
+// (API responses me `expiryStatus` + `daysLeft` computed fields ke tor par aata hai).
+
+// --- Coordinator: schema.prisma me Document model me add karein ---
+//   issuedAt         DateTime? @map("issued_at")        // kab issue hua
+//   expiresAt        DateTime? @map("expires_at")       // kab expire hoga
+//   reminderDays     Json      @default("[30,7,1]") @map("reminder_days") // kin daysLeft par remind karna hai
+//   lastReminderKey  String?   @map("last_reminder_key") // duplicate reminders se bachao: "<expiresAtISO>:<days>"
+//
+//   @@index([expiresAt])  // model ke existing @@map("documents") ke sath
+
+// --- Coordinator: migration SQL (existing `documents` table par) ---
+// ALTER TABLE "documents" ADD COLUMN "issued_at" TIMESTAMP(3);
+// ALTER TABLE "documents" ADD COLUMN "expires_at" TIMESTAMP(3);
+// ALTER TABLE "documents" ADD COLUMN "reminder_days" JSONB NOT NULL DEFAULT '[30,7,1]';
+// ALTER TABLE "documents" ADD COLUMN "last_reminder_key" TEXT;
+// CREATE INDEX "documents_expires_at_idx" ON "documents"("expires_at");

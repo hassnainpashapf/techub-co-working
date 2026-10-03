@@ -56,6 +56,11 @@ async function checkExpiringContracts() {
         });
       }
       results.notified += 1;
+      // Phase 38: automation rules — fire-and-forget
+      require('./automationEngine').evaluateAutomation(c.tenantId, 'contract_expiring', {
+        contractId: c.id, memberName: c.member?.name, unitCode: c.unit?.code,
+        daysLeft: days, endDate: c.endDate, entityId: c.id,
+      }).catch(() => {});
     }
   }
   return results;

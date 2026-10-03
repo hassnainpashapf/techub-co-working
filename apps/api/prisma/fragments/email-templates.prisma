@@ -1,6 +1,7 @@
 // Phase 30 Track 5: Email template editor — schema fragment.
-// Coordinator: merge this model into apps/api/prisma/schema.prisma
-// and create the matching migration. DO NOT edit schema.prisma here
+// Coordinator: this model is ALREADY merged into apps/api/prisma/schema.prisma.
+// For Phase 38, apply the field additions below (variables, isCustom) to
+// schema.prisma and include the matching migration SQL. DO NOT edit schema.prisma here
 // (parallel agents — merge conflicts se bachne ke liye).
 
 model EmailTemplate {
@@ -10,6 +11,8 @@ model EmailTemplate {
   key       String   // e.g. 'bookingConfirmed' — matches mailer's notify() template names
   subject   String
   htmlBody  String   @map("html_body") @db.Text
+  variables Json     @default("[]") // available {{variable}} names (documented in editor)
+  isCustom  Boolean  @default(false) @map("is_custom") // false = seeded default, true = user-edited
   isActive  Boolean  @default(true) @map("is_active")
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -21,3 +24,7 @@ model EmailTemplate {
 
 // ADD TO Tenant model:
 //   emailTemplates EmailTemplate[]
+
+// --- Migration SQL (append to the phase migration) ---
+// ALTER TABLE "email_templates" ADD COLUMN "variables" JSONB NOT NULL DEFAULT '[]';
+// ALTER TABLE "email_templates" ADD COLUMN "is_custom" BOOLEAN NOT NULL DEFAULT FALSE;

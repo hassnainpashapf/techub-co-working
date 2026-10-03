@@ -15,8 +15,8 @@ router.use(authenticate, requireTenantUser);
 const STAFF = ['ceo', 'admin', 'super_admin', 'manager'];
 const staffOnly = requireRole(...STAFF);
 
-const CATEGORIES = ['facility', 'service', 'staff', 'cleanliness', 'other'];
-const STATUSES = ['new', 'reviewed', 'resolved'];
+const CATEGORIES = ['suggestion', 'complaint', 'praise', 'facility', 'service', 'staff', 'cleanliness', 'other'];
+const STATUSES = ['new', 'reviewed', 'planned', 'done', 'rejected', 'resolved'];
 
 // Resolve the member record for the logged-in user (memberId from JWT, fallback to email).
 async function myMember(req) {
@@ -33,26 +33,59 @@ async function myMember(req) {
 }
 
 const createSchema = z.object({
-  category: z.enum(CATEGORIES).optional().default('other'),
-  rating: z.number().int().min(1).max(5),
-  message: z.string().min(1).max(5000),
+  category: z.enum(CATEGORIES).optional().default('suggestion'),
+  rating: z.number().int().min(1).max(5).optional().default(5),
+  title: z.string().max(200).optional().nullable(),
+  body: z.string().min(1).max(5000),
+  message: z.string().min(1).max(5000).optional(), // legacy alias
+  isAnonymous: z.boolean().optional().default(false),
 });
 
-// POST /api/feedback — member submits feedback (linked to own member record)
+// POST /api/feedback — member submits feedback (linked to own member record, or anonymous)
 router.post('/', validateBody(createSchema), async (req, res, next) => {
   try {
     const tf = tenantFilter(req);
     const member = await myMember(req);
-    if (!member) return res.status(404).json({ error: { message: 'Member record not found.' } });
-    const { category, rating, message } = req.body;
+    const { category, rating, title, isAnonymous } = req.body;
+    const body = (req.body.body || req.body.message || '').trim();
+    if (!body) return res.status(400).json({ error: { message: 'Feedback text is required.' } });
+    if (!member && !isAnonymous) {
+      return res.status(404).json({ error: { message: 'Member record not found.' } });
+    }
     const fb = await prisma.feedback.create({
-      data: { tenantId: tf.tenantId, memberId: member.id, category, rating, message, status: 'new' },
+      data: {
+        tenantId: tf.tenantId,
+        memberId: isAnonymous ? null : member.id,
+        isAnonymous: !!isAnonymous,
+        category, rating,
+        title: title || null,
+        body, status: 'new',
+      },
     });
     writeAudit({
       tenantId: tf.tenantId, actorId: req.user.sub, action: 'feedback.create',
-      entity: 'Feedback', entityId: fb.id, newValue: { category, rating },
+      entity: 'Feedback', entityId: fb.id, newValue: { category, rating, isAnonymous },
       ip: req.ip, userAgent: req.headers['user-agent'],
     }).catch(() => {});
+
+    // Notify staff admins (in-app) about new feedback
+    try {
+      const admins = await prisma.user.findMany({
+        where: { tenantId: tf.tenantId, isActive: true, role: { in: ['ceo', 'admin', 'super_admin', 'manager'] } },
+        select: { id: true },
+      });
+      if (admins.length) {
+        await prisma.notification.createMany({
+          data: admins.map((a) => ({
+            tenantId: tf.tenantId,
+            userId: a.id,
+            type: 'general',
+            message: `💡 New ${category} feedback${title ? `: ${title.slice(0, 80)}` : ''}`,
+          })),
+        });
+      }
+    } catch { /* notification best-effort */ }
+
     return res.status(201).json({ feedback: fb });
   } catch (err) {
     return next(err);
@@ -70,6 +103,67 @@ router.get('/mine', async (req, res, next) => {
       orderBy: { createdAt: 'desc' },
     });
     return res.json({ items });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// GET /api/feedback/board — public suggestions board (members): non-anonymous,
+// non-rejected feedback ordered by upvotes, with my upvote state
+router.get('/board', async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const member = await myMember(req);
+    const items = await prisma.feedback.findMany({
+      where: { ...tf, isAnonymous: false, status: { not: 'rejected' } },
+      include: { member: { select: { id: true, name: true } } },
+      orderBy: [{ upvotes: 'desc' }, { createdAt: 'desc' }],
+      take: 100,
+    });
+    let mine = new Set();
+    if (member) {
+      const ups = await prisma.feedbackUpvote.findMany({
+        where: { tenantId: tf.tenantId, memberId: member.id },
+        select: { feedbackId: true },
+      });
+      mine = new Set(ups.map((u) => u.feedbackId));
+    }
+    return res.json({
+      items: items.map((f) => ({ ...f, upvotedByMe: mine.has(f.id) })),
+    });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// POST /api/feedback/:id/upvote — toggle my upvote (members only)
+router.post('/:id/upvote', async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const member = await myMember(req);
+    if (!member) return res.status(404).json({ error: { message: 'Member record not found.' } });
+    const fb = await prisma.feedback.findFirst({ where: { id: req.params.id, ...tf } });
+    if (!fb) return res.status(404).json({ error: { message: 'Feedback not found.' } });
+    const existing = await prisma.feedbackUpvote.findUnique({
+      where: { feedbackId_memberId: { feedbackId: fb.id, memberId: member.id } },
+    });
+    const updated = await prisma.$transaction(async (tx) => {
+      if (existing) {
+        await tx.feedbackUpvote.delete({ where: { id: existing.id } });
+        return tx.feedback.update({
+          where: { id: fb.id },
+          data: { upvotes: { decrement: 1 } },
+        });
+      }
+      await tx.feedbackUpvote.create({
+        data: { tenantId: tf.tenantId, feedbackId: fb.id, memberId: member.id },
+      });
+      return tx.feedback.update({
+        where: { id: fb.id },
+        data: { upvotes: { increment: 1 } },
+      });
+    });
+    return res.json({ feedback: updated, upvoted: !existing });
   } catch (err) {
     return next(err);
   }
@@ -128,10 +222,11 @@ router.patch('/:id', staffOnly, validateBody(patchSchema), async (req, res, next
 
     // Notify the member's login (if any) via in-app notification
     try {
-      const user = await prisma.user.findFirst({
-        where: { memberId: existing.memberId, tenantId: tf.tenantId, isActive: true },
-        select: { id: true },
-      });
+      if (existing.memberId) {
+        const user = await prisma.user.findFirst({
+          where: { memberId: existing.memberId, tenantId: tf.tenantId, isActive: true },
+          select: { id: true },
+        });
       if (user) {
         await prisma.notification.create({
           data: {
@@ -143,6 +238,7 @@ router.patch('/:id', staffOnly, validateBody(patchSchema), async (req, res, next
               : `✅ Your feedback is now ${fb.status}.`,
           },
         });
+      }
       }
     } catch { /* notification best-effort */ }
 

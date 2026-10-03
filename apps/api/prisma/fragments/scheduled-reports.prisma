@@ -1,0 +1,49 @@
+// Phase 38 Track 1: Scheduled Report Emails schema fragment.
+// Coordinator merge karega: schema.prisma me ScheduledReport model +
+// Tenant me `scheduledReports ScheduledReport[]` back-relation.
+
+model ScheduledReport {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  name        String
+  reportType  String    @map("report_type") // occupancy | revenue | expenses | churn | pnl
+  frequency   String    @default("weekly") @map("frequency") // weekly | monthly
+  dayOfWeek   Int?      @map("day_of_week") // 0-6 (weekly) — default 1 (Monday)
+  dayOfMonth  Int?      @map("day_of_month") // 1-28 (monthly) — default 1
+  recipients  Json      @default("[]") // ["a@x.com", ...]
+  format      String    @default("pdf") @map("format") // pdf | csv
+  isActive    Boolean   @default(true) @map("is_active")
+  lastSentAt  DateTime? @map("last_sent_at")
+  createdBy   String?   @map("created_by")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@map("scheduled_reports")
+}
+
+// --- Coordinator: schema.prisma merge ---
+// model Tenant me add karein:
+//   scheduledReports ScheduledReport[]
+
+// --- Coordinator: migration SQL ---
+// CREATE TABLE "scheduled_reports" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "name" TEXT NOT NULL,
+//     "report_type" TEXT NOT NULL,
+//     "frequency" TEXT NOT NULL DEFAULT 'weekly',
+//     "day_of_week" INTEGER,
+//     "day_of_month" INTEGER,
+//     "recipients" JSONB NOT NULL DEFAULT '[]',
+//     "format" TEXT NOT NULL DEFAULT 'pdf',
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "last_sent_at" TIMESTAMP(3),
+//     "created_by" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "scheduled_reports_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "scheduled_reports_tenant_id_idx" ON "scheduled_reports"("tenant_id");
+// ALTER TABLE "scheduled_reports" ADD CONSTRAINT "scheduled_reports_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

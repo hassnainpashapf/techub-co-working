@@ -266,6 +266,16 @@ router.delete('/:id', async (req, res, next) => {
       include: includeBooking,
     });
     emitWebhook(req.user.tenantId, 'booking.cancelled', { id: booking.id, title: booking.title });
+    // Phase 38: automation rules — fire-and-forget, never blocks cancel
+    try {
+      const hoursBeforeStart = booking.startAt ? Math.max(0, (new Date(booking.startAt) - Date.now()) / 3600000) : null;
+      require('../lib/automationEngine').evaluateAutomation(req.user.tenantId, 'booking_cancelled', {
+        bookingId: booking.id, title: booking.title,
+        unitCode: booking.unit?.code, unitType: booking.unit?.type,
+        memberId: booking.member?.id, memberName: booking.member?.name,
+        startAt: booking.startAt, hoursBeforeStart, entityId: booking.id,
+      }).catch(() => {});
+    } catch { /* never block */ }
     // Phase 36: Google Calendar event delete (fire-and-forget)
     try {
       const gcal = require('../lib/googleCalendar');

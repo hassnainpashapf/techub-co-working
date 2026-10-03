@@ -1,13 +1,20 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useRequireRoles } from '../../../components/Protected';
 import { PageHeader, StatCard, Modal, Field, Badge, Spinner, EmptyState, ErrorBanner } from '../../../components/ui';
 
-const CATS = ['facility', 'service', 'staff', 'cleanliness', 'other'];
-const STATUSES = ['new', 'reviewed', 'resolved'];
-const STATUS_COLOR = { new: 'amber', reviewed: 'blue', resolved: 'green' };
+const CATS = ['suggestion', 'complaint', 'praise', 'facility', 'service', 'staff', 'cleanliness', 'other'];
+const STATUSES = ['new', 'reviewed', 'planned', 'done', 'rejected', 'resolved'];
+const STATUS_COLOR = { new: 'amber', reviewed: 'blue', planned: 'violet', done: 'green', rejected: 'red', resolved: 'green' };
+const COLUMNS = [
+  { v: 'new', l: '🆕 New' },
+  { v: 'reviewed', l: '👀 Reviewed' },
+  { v: 'planned', l: '📋 Planned' },
+  { v: 'done', l: '✅ Done' },
+  { v: 'rejected', l: '🚫 Rejected' },
+];
 
 export default function AdminFeedbackPage() {
   useRequireRoles('ceo', 'admin', 'super_admin', 'manager');
@@ -17,6 +24,7 @@ export default function AdminFeedbackPage() {
   const [error, setError] = useState('');
   const [statusF, setStatusF] = useState('');
   const [catF, setCatF] = useState('');
+  const [view, setView] = useState('kanban'); // kanban | list
   const [replyFor, setReplyFor] = useState(null);
   const [reply, setReply] = useState('');
   const [newStatus, setNewStatus] = useState('reviewed');
@@ -33,6 +41,16 @@ export default function AdminFeedbackPage() {
       .finally(() => setLoading(false));
   };
   useEffect(load, [statusF, catF]);
+
+  const byStatus = useMemo(() => {
+    const m = {};
+    for (const c of COLUMNS) m[c.v] = [];
+    for (const f of items) {
+      const k = f.status === 'resolved' ? 'done' : f.status;
+      (m[k] || m.new).push(f);
+    }
+    return m;
+  }, [items]);
 
   const openReply = (f) => {
     setReplyFor(f);
@@ -53,29 +71,31 @@ export default function AdminFeedbackPage() {
     }
   };
 
-  const resolve = async (id) => {
+  const setStatus = async (id, status) => {
     try {
-      await api.patch(`/feedback/${id}`, { status: 'resolved' });
+      await api.patch(`/feedback/${id}`, { status });
       load();
     } catch (err) {
       setError(err.message);
     }
   };
 
+  const who = (f) => (f.isAnonymous ? '🕵️ Anonymous' : f.member?.name || '—');
+
   return (
     <div>
-      <PageHeader title="Member Feedback" subtitle="Members ki raye aur ratings" />
+      <PageHeader title="Feedback & Suggestions" subtitle="Members ki raye, shikayat aur tajaveez" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard label="Total feedback" value={summary.total} />
-        <StatCard label="Avg rating" value={summary.avgRating != null ? `⭐ ${summary.avgRating}` : '—'} />
         <StatCard label="New" value={items.filter((i) => i.status === 'new').length} />
-        <StatCard label="Resolved" value={items.filter((i) => i.status === 'resolved').length} />
+        <StatCard label="Avg rating" value={summary.avgRating != null ? `⭐ ${summary.avgRating}` : '—'} />
+        <StatCard label="Done" value={items.filter((i) => ['done', 'resolved'].includes(i.status)).length} />
       </div>
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex gap-3 mb-4">
+      <div className="flex flex-wrap gap-3 mb-4 items-center">
         <select className="input max-w-48" value={statusF} onChange={(e) => setStatusF(e.target.value)}>
           <option value="">All statuses</option>
           {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -84,10 +104,48 @@ export default function AdminFeedbackPage() {
           <option value="">All categories</option>
           {CATS.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
+        <div className="flex gap-1 ml-auto">
+          {[{ v: 'kanban', l: '📊 Board' }, { v: 'list', l: '📋 List' }].map((t) => (
+            <button
+              key={t.v}
+              onClick={() => setView(t.v)}
+              className={`text-sm rounded-lg px-3 py-1.5 border ${view === t.v ? 'bg-blue-500/20 border-blue-400/40 text-blue-200' : 'bg-white/5 border-white/10 text-slate-400'}`}
+            >
+              {t.l}
+            </button>
+          ))}
+        </div>
       </div>
 
       {loading ? <Spinner /> : items.length === 0 ? (
         <EmptyState title="Koi feedback nahi" />
+      ) : view === 'kanban' ? (
+        <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-4">
+          {COLUMNS.map((col) => (
+            <div key={col.v} className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-3 min-h-40">
+              <p className="text-sm font-bold text-white mb-3">{col.l} <span className="text-slate-500">({byStatus[col.v].length})</span></p>
+              <div className="space-y-2">
+                {byStatus[col.v].map((f) => (
+                  <div key={f.id} className="rounded-lg bg-white/[0.04] border border-white/[0.08] p-3">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-xs text-slate-500">{f.category}</span>
+                      <span className="text-xs text-slate-400">👍 {f.upvotes || 0}</span>
+                    </div>
+                    {f.title && <p className="text-sm font-semibold text-white">{f.title}</p>}
+                    <p className="text-xs text-slate-300 line-clamp-3">{f.body}</p>
+                    <p className="text-xs text-slate-500 mt-1">{who(f)}</p>
+                    <div className="flex gap-1 mt-2">
+                      <button className="text-xs text-blue-300 underline" onClick={() => openReply(f)}>Reply</button>
+                      {col.v !== 'done' && (
+                        <button className="text-xs text-emerald-300 underline" onClick={() => setStatus(f.id, 'done')}>Done</button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
@@ -95,8 +153,8 @@ export default function AdminFeedbackPage() {
               <tr className="text-left text-xs text-slate-400 border-b border-white/10">
                 <th className="p-3">Member</th>
                 <th className="p-3">Category</th>
-                <th className="p-3">Rating</th>
-                <th className="p-3">Message</th>
+                <th className="p-3">Title / Message</th>
+                <th className="p-3">👍</th>
                 <th className="p-3">Status</th>
                 <th className="p-3">Actions</th>
               </tr>
@@ -104,15 +162,17 @@ export default function AdminFeedbackPage() {
             <tbody>
               {items.map((f) => (
                 <tr key={f.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-3 text-white">{f.member?.name || '—'}</td>
+                  <td className="p-3 text-white">{who(f)}</td>
                   <td className="p-3 text-slate-300">{f.category}</td>
-                  <td className="p-3">{'⭐'.repeat(f.rating)}</td>
-                  <td className="p-3 text-slate-300 max-w-xs truncate" title={f.message}>{f.message}</td>
+                  <td className="p-3 text-slate-300 max-w-xs truncate" title={f.body}>
+                    {f.title ? <span className="font-semibold text-white">{f.title} — </span> : ''}{f.body}
+                  </td>
+                  <td className="p-3 text-slate-300">{f.upvotes || 0}</td>
                   <td className="p-3"><Badge color={STATUS_COLOR[f.status] || 'slate'}>{f.status}</Badge></td>
                   <td className="p-3 flex gap-2">
                     <button className="btn-secondary text-xs" onClick={() => openReply(f)}>Reply</button>
-                    {f.status !== 'resolved' && (
-                      <button className="btn-secondary text-xs" onClick={() => resolve(f.id)}>Resolve</button>
+                    {!['done', 'resolved'].includes(f.status) && (
+                      <button className="btn-secondary text-xs" onClick={() => setStatus(f.id, 'done')}>Done</button>
                     )}
                   </td>
                 </tr>
@@ -123,8 +183,9 @@ export default function AdminFeedbackPage() {
       )}
 
       {replyFor && (
-        <Modal title={`Reply — ${replyFor.member?.name || 'member'}`} onClose={() => setReplyFor(null)}>
-          <p className="text-sm text-slate-300 mb-4 p-3 rounded-lg bg-white/5">"{replyFor.message}"</p>
+        <Modal title={`Reply — ${who(replyFor)}`} onClose={() => setReplyFor(null)}>
+          {replyFor.title && <p className="text-sm font-semibold text-white mb-2">{replyFor.title}</p>}
+          <p className="text-sm text-slate-300 mb-4 p-3 rounded-lg bg-white/5">"{replyFor.body}"</p>
           <Field label="Status">
             <select className="input" value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}

@@ -158,6 +158,13 @@ router.post('/', validateBody(ticketSchema), async (req, res, next) => {
     // Slack integration (Phase 36) — urgent tickets only, fire-and-forget
     if (ticket.priority === 'urgent') {
       require('../lib/slack').notifyEvent(req.user.tenantId, 'ticket_urgent', { id: ticket.id, ticketNumber: ticket.ticketNumber, title: ticket.title }).catch(() => {});
+      // Phase 38: automation rules — fire-and-forget, never blocks ticket creation
+      require('../lib/automationEngine').evaluateAutomation(req.user.tenantId, 'ticket_urgent_created', {
+        ticketId: ticket.id, ticketNumber: ticket.ticketNumber, title: ticket.title,
+        category: ticket.category, priority: ticket.priority,
+        memberId: ticket.member?.id, memberName: ticket.member?.name,
+        unitCode: ticket.unit?.code, entityId: ticket.id,
+      }).catch(() => {});
     }
     res.status(201).json({ ticket });
   } catch (e) { next(e); }

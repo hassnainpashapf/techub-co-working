@@ -443,8 +443,14 @@ export default function MembersPage() {
   const [saving, setSaving] = useState(false);
   // Phase 30: bulk selection
   const [selectedIds, setSelectedIds] = useState([]);
-  const [bulkStatus, setBulkStatus] = useState('active');
   const [bulkBusy, setBulkBusy] = useState(false);
+  // Phase 38 Track 5: extended bulk actions
+  const [bulkAction, setBulkAction] = useState('suspend');
+  const [bulkModal, setBulkModal] = useState(null); // 'email' | 'tag'
+  const [bulkSubject, setBulkSubject] = useState('');
+  const [bulkBody, setBulkBody] = useState('');
+  const [bulkTag, setBulkTag] = useState('');
+  const [bulkResult, setBulkResult] = useState(null);
   // Phase 29 Track 4: expiring contracts
   const [expiring, setExpiring] = useState([]);
   const [renewTarget, setRenewTarget] = useState(null);
@@ -540,11 +546,13 @@ export default function MembersPage() {
   const toggleSelectAll = () => {
     setSelectedIds((prev) => (prev.length === filtered.length ? [] : filtered.map((m) => m.id)));
   };
-  async function handleBulkStatus() {
+  // Phase 38 Track 5: extended bulk actions (suspend/activate/email/tag/export)
+  async function handleBulkDelete() {
     if (selectedIds.length === 0) return;
+    if (!window.confirm(`Mark ${selectedIds.length} member(s) as exited?`)) return;
     setBulkBusy(true);
     try {
-      const d = await api.post('/members/bulk/status', { ids: selectedIds, status: bulkStatus });
+      await api.post('/members/bulk/delete', { ids: selectedIds });
       setSelectedIds([]);
       await refresh();
       setError('');
@@ -554,14 +562,53 @@ export default function MembersPage() {
       setBulkBusy(false);
     }
   }
-  async function handleBulkDelete() {
+
+  // Phase 38 Track 5: extended bulk actions (suspend/activate/email/tag/export)
+  async function runBulkAction(payload) {
+    setBulkBusy(true);
+    setBulkResult(null);
+    try {
+      const d = await api.post('/member-bulk', payload);
+      setBulkResult({ action: payload.action, done: d.done ?? 0, failed: d.failed || [] });
+      setSelectedIds([]);
+      setBulkModal(null);
+      setBulkSubject('');
+      setBulkBody('');
+      setBulkTag('');
+      setError('');
+      await refresh();
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setBulkBusy(false);
+    }
+  }
+  async function handleBulkGo() {
     if (selectedIds.length === 0) return;
-    if (!window.confirm(`Mark ${selectedIds.length} member(s) as exited?`)) return;
+    if (bulkAction === 'send_email') { setBulkModal('email'); return; }
+    if (bulkAction === 'add_tag') { setBulkModal('tag'); return; }
+    if (bulkAction === 'export') { return handleBulkExport(); }
+    if (!window.confirm(`${bulkAction === 'suspend' ? 'Suspend (set on hold)' : 'Activate'} ${selectedIds.length} member(s)?`)) return;
+    await runBulkAction({ memberIds: selectedIds, action: bulkAction });
+  }
+  async function handleBulkExport() {
     setBulkBusy(true);
     try {
-      await api.post('/members/bulk/delete', { ids: selectedIds });
+      const { access } = getTokens();
+      const res = await fetch(`${API_BASE}/member-bulk`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', ...(access ? { Authorization: `Bearer ${access}` } : {}) },
+        body: JSON.stringify({ memberIds: selectedIds, action: 'export' }),
+      });
+      if (!res.ok) throw new Error('Export failed');
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `members-export-${new Date().toISOString().slice(0, 10)}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
       setSelectedIds([]);
-      await refresh();
       setError('');
     } catch (e) {
       setError(e.message);
@@ -652,22 +699,34 @@ export default function MembersPage() {
       </div>
 
       <div className="card">
-        {/* Phase 30: bulk actions bar */}
+        {/* Phase 38 Track 5: extended bulk actions bar */}
         {canBulk && selectedIds.length > 0 && (
           <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
             <span className="text-sm font-semibold text-blue-200">{selectedIds.length} selected</span>
-            <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
-              <option value="active">Active</option>
-              <option value="trial">Trial</option>
-              <option value="on_hold">On hold</option>
+            <select className="input max-w-[180px] !w-auto" value={bulkAction} onChange={(e) => setBulkAction(e.target.value)}>
+              <option value="suspend">Suspend (on hold)</option>
+              <option value="activate">Activate</option>
+              <option value="send_email">Send email</option>
+              <option value="add_tag">Add tag</option>
+              <option value="export">Export CSV</option>
             </select>
-            <button className="btn-primary btn-sm" onClick={handleBulkStatus} disabled={bulkBusy}>
-              {bulkBusy ? 'Applying…' : 'Apply status'}
+            <button className="btn-primary btn-sm" onClick={handleBulkGo} disabled={bulkBusy}>
+              {bulkBusy ? 'Working…' : 'Go'}
             </button>
             <button className="btn-danger btn-sm" onClick={handleBulkDelete} disabled={bulkBusy}>
               Mark exited
             </button>
             <button className="btn-ghost btn-sm" onClick={() => setSelectedIds([])}>Clear</button>
+          </div>
+        )}
+        {/* Phase 38 Track 5: bulk result summary */}
+        {bulkResult && (
+          <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-400/30 text-sm">
+            <span className="text-emerald-200 font-medium">{bulkResult.done} done</span>
+            {bulkResult.failed.length > 0 && (
+              <span className="text-amber-200"> — {bulkResult.failed.length} failed ({bulkResult.failed.slice(0, 5).map((f) => f.reason || f.id).join(', ')}{bulkResult.failed.length > 5 ? '…' : ''})</span>
+            )}
+            <button className="ml-3 underline text-slate-300" onClick={() => setBulkResult(null)}>Dismiss</button>
           </div>
         )}
         <DataTable
@@ -701,6 +760,49 @@ export default function MembersPage() {
       )}
       {modal?.mode === 'detail' && (
         <MemberDetail member={modal.data} onClose={() => setModal(null)} onChanged={refresh} />
+      )}
+
+      {/* Phase 38 Track 5: bulk send-email modal */}
+      {bulkModal === 'email' && (
+        <Modal title={`Send email — ${selectedIds.length} member(s)`} onClose={() => setBulkModal(null)}>
+          <Field label="Subject">
+            <input className="input" value={bulkSubject} onChange={(e) => setBulkSubject(e.target.value)} placeholder="Important update" />
+          </Field>
+          <Field label="Message">
+            <textarea className="input" rows={5} value={bulkBody} onChange={(e) => setBulkBody(e.target.value)} placeholder={'Hi everyone,\n\n…'} />
+          </Field>
+          <p className="text-xs text-slate-400 mb-4">Members without an email address are skipped automatically.</p>
+          <div className="flex justify-end gap-2">
+            <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
+            <button
+              className="btn-primary"
+              disabled={bulkBusy || !bulkSubject.trim() || !bulkBody.trim()}
+              onClick={() => runBulkAction({ memberIds: selectedIds, action: 'send_email', subject: bulkSubject.trim(), body: bulkBody })}
+            >
+              {bulkBusy ? 'Sending…' : 'Send emails'}
+            </button>
+          </div>
+        </Modal>
+      )}
+
+      {/* Phase 38 Track 5: bulk add-tag modal */}
+      {bulkModal === 'tag' && (
+        <Modal title={`Add tag — ${selectedIds.length} member(s)`} onClose={() => setBulkModal(null)}>
+          <Field label="Tag">
+            <input className="input" value={bulkTag} onChange={(e) => setBulkTag(e.target.value)} placeholder="vip" maxLength={40} />
+          </Field>
+          <p className="text-xs text-slate-400 mb-4">Tag is stored on the member's notes as [tag:name]. Duplicates are skipped.</p>
+          <div className="flex justify-end gap-2">
+            <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
+            <button
+              className="btn-primary"
+              disabled={bulkBusy || !bulkTag.trim()}
+              onClick={() => runBulkAction({ memberIds: selectedIds, action: 'add_tag', tag: bulkTag.trim().toLowerCase() })}
+            >
+              {bulkBusy ? 'Applying…' : 'Add tag'}
+            </button>
+          </div>
+        </Modal>
       )}
 
       {/* Phase 29 Track 4: renew contract modal */}

@@ -93,7 +93,7 @@ async function getTenantBrand(tenantId) {
 
 // Direct SMTP send — used by the queue worker and as a fallback when the
 // queue is unavailable. Never enqueues (no recursion).
-async function sendEmailDirect(tenantId, { to, subject, html, text }) {
+async function sendEmailDirect(tenantId, { to, subject, html, text, attachments }) {
   if (!to) return { sent: false, reason: 'no-recipient' };
   const entry = await getTransporter(tenantId);
   if (!entry) return { sent: false, reason: 'email-disabled' };
@@ -103,7 +103,7 @@ async function sendEmailDirect(tenantId, { to, subject, html, text }) {
     ? `"${settings.fromName || brand.brandName}" <${settings.fromEmail}>`
     : settings.username;
   try {
-    await transporter.sendMail({ from, to, subject, html, text: text || html?.replace(/<[^>]+>/g, '') });
+    await transporter.sendMail({ from, to, subject, html, text: text || html?.replace(/<[^>]+>/g, ''), ...(attachments ? { attachments: normalizeAttachments(attachments) } : {}) });
     return { sent: true };
   } catch (err) {
     console.error('[mailer] send failed:', err.message);
@@ -131,20 +131,33 @@ function isRateLimited(to) {
 // Public send: enqueue a background job and return immediately.
 // Falls back to direct SMTP when the queue is unavailable.
 // If called from inside the email worker itself (loop guard), sends directly.
-async function sendEmail(tenantId, { to, subject, html, text }) {
+// Attachments may carry Buffer content; the job queue JSON-serializes the
+// payload, so normalize to base64 (nodemailer accepts encoding:'base64').
+function normalizeAttachments(attachments) {
+  if (!attachments) return undefined;
+  return attachments.map((a) => {
+    if (a && a.content && Buffer.isBuffer(a.content)) {
+      return { ...a, content: a.content.toString('base64'), encoding: 'base64' };
+    }
+    return a;
+  });
+}
+
+async function sendEmail(tenantId, { to, subject, html, text, attachments }) {
   if (!to) return { sent: false, reason: 'no-recipient' };
-  if (inEmailHandler) return sendEmailDirect(tenantId, { to, subject, html, text });
+  const atts = normalizeAttachments(attachments);
+  if (inEmailHandler) return sendEmailDirect(tenantId, { to, subject, html, text, attachments: atts });
   if (isRateLimited(to)) return { sent: false, reason: 'rate-limited' };
   const jobs = getJobs();
   if (jobs) {
     try {
-      await jobs.enqueue('email', { to, subject, html, text }, { tenantId });
+      await jobs.enqueue('email', { to, subject, html, text, ...(atts ? { attachments: atts } : {}) }, { tenantId });
       return { queued: true };
     } catch (err) {
       console.error('[mailer] enqueue failed, sending directly:', err.message);
     }
   }
-  return sendEmailDirect(tenantId, { to, subject, html, text });
+  return sendEmailDirect(tenantId, { to, subject, html, text, attachments: atts });
 }
 
 function wrap(title, body) {
@@ -253,6 +266,36 @@ const templates = {
     subject: 'We value you — a special offer just for you',
     html: wrap('We Value You', `<p>Hi ${memberName || 'there'},</p><p>We've noticed you haven't been around as much lately, and we wanted to reach out personally — your membership matters to us.</p>${customMessage ? `<p style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${customMessage}</p>` : ''}<p>We'd love to hear how we can make your experience better. Just reply to this email and our team will take care of the rest.</p><p>Warm regards,<br/>Your coworking team</p>`),
   }),
+  // Phase 38 Track 2: lifecycle automation built-ins.
+  trialEnding: ({ memberName, trialEndsAt }) => ({
+    subject: '⏳ Your trial ends soon — keep your space',
+    html: wrap('Trial Ending Soon', `<p>Hi ${memberName || 'there'},</p><p>Your trial ends on <b>${trialEndsAt || 'soon'}</b>. We'd love to keep you around — upgrade to a full membership to keep your space, your bookings and your perks.</p><p>Just reply to this email and our team will set everything up for you.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
+  contractExpiring: ({ memberName, unitCode, endDate, rentAmount }) => ({
+    subject: `📄 Your contract${unitCode ? ` (${unitCode})` : ''} expires on ${endDate || 'soon'}`,
+    html: wrap('Contract Expiring', `<p>Hi ${memberName || 'there'},</p><p>Your contract${unitCode ? ` for <b>${unitCode}</b>` : ''} expires on <b>${endDate || 'soon'}</b>${rentAmount ? ` (current rent Rs ${Number(rentAmount).toLocaleString()})` : ''}.</p><p>Renew now to avoid any interruption — reply to this email and we'll prepare your renewal.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
+  // Phase 38 Track 10: Smart Reminders Engine built-ins.
+  invoiceReminder: ({ memberName, invoiceNumber, amount, dueDate }) => ({
+    subject: `💰 Reminder: invoice ${invoiceNumber} due ${dueDate}`,
+    html: wrap('Payment Reminder', `<p>Hi ${memberName || 'there'},</p><p>This is a friendly reminder that invoice <b>${invoiceNumber}</b> of <b>${amount}</b> is due on <b>${dueDate}</b>.</p><p>Please pay at your earliest convenience to avoid any interruption.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
+  contractReminder: ({ memberName, unitCode, endDate }) => ({
+    subject: `📄 Reminder: contract${unitCode ? ` (${unitCode})` : ''} ends ${endDate}`,
+    html: wrap('Contract Reminder', `<p>Hi ${memberName || 'there'},</p><p>Just a reminder that your contract${unitCode ? ` for <b>${unitCode}</b>` : ''} ends on <b>${endDate}</b>.</p><p>Reply to this email if you'd like to renew or discuss options.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
+  bookingReminder: ({ memberName, title, unitCode, startAt }) => ({
+    subject: `📅 Reminder: "${title}" ${startAt}`,
+    html: wrap('Booking Reminder', `<p>Hi ${memberName || 'there'},</p><p>Just a reminder about your upcoming booking:</p><p><b>${title}</b><br/>${unitCode ? `📍 ${unitCode}<br/>` : ''}📅 ${startAt}</p><p>See you soon!</p>`),
+  }),
+  maintenanceReminder: ({ name, title, location, daysOpen }) => ({
+    subject: `🔧 Reminder: "${title}" open for ${daysOpen} days`,
+    html: wrap('Maintenance Reminder', `<p>Hi ${name || 'there'},</p><p>The maintenance request <b>"${title}"</b>${location ? ` at <b>${location}</b>` : ''} has been open for <b>${daysOpen} days</b>.</p><p>Please take action or assign it to the ops team.</p>`),
+  }),
+  documentReminder: ({ memberName, title, expiresAt }) => ({
+    subject: `🗂️ Reminder: "${title}" expires ${expiresAt}`,
+    html: wrap('Document Expiry Reminder', `<p>Hi ${memberName || 'there'},</p><p>Your document <b>"${title}"</b> expires on <b>${expiresAt}</b>.</p><p>Please renew it and upload the new copy to avoid any issues.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -308,6 +351,7 @@ function renderCustom(custom, data) {
       subject: p.subject || '',
       html: p.html || '',
       text: p.text,
+      attachments: p.attachments,
     });
     // Permanent failures — don't burn retries on them.
     if (!result.sent && (result.reason === 'email-disabled' || result.reason === 'no-recipient')) {
@@ -343,6 +387,13 @@ const TEMPLATE_VARS = {
   assetOverdue: ['name', 'count', 'list'],
   tenantWelcome: ['adminName', 'tenantName', 'loginUrl', 'email', 'tempPassword'],
   retentionOffer: ['memberName', 'customMessage'],
+  trialEnding: ['memberName', 'trialEndsAt'],
+  contractExpiring: ['memberName', 'unitCode', 'endDate', 'rentAmount'],
+  invoiceReminder: ['memberName', 'invoiceNumber', 'amount', 'dueDate'],
+  contractReminder: ['memberName', 'unitCode', 'endDate'],
+  bookingReminder: ['memberName', 'title', 'unitCode', 'startAt'],
+  maintenanceReminder: ['name', 'title', 'location', 'daysOpen'],
+  documentReminder: ['memberName', 'title', 'expiresAt'],
 };
 
 function listBuiltinTemplates() {

@@ -34,7 +34,38 @@ const docSchema = z.object({
   fileSize: z.number().int().optional().nullable(),
   mimeType: z.string().optional().nullable(),
   notes: z.string().optional().nullable(),
+  // Phase 38 Track 7: expiry tracking (optional)
+  issuedAt: z.string().datetime().optional().nullable(),
+  expiresAt: z.string().datetime().optional().nullable(),
+  reminderDays: z.array(z.number().int().min(0)).optional().nullable(),
 });
+
+const expirySchema = z.object({
+  issuedAt: z.string().datetime().optional().nullable(),
+  expiresAt: z.string().datetime().optional().nullable(),
+  reminderDays: z.array(z.number().int().min(0)).optional().nullable(),
+});
+
+// Phase 38 Track 7: expiry columns migrate na hue hon to 503.
+async function expiryReady() {
+  try {
+    await prisma.document.findFirst({ select: { expiresAt: true } });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function expiryOf(doc) {
+  if (!doc || !doc.expiresAt) return { expiryStatus: 'none', daysLeft: null };
+  const daysLeft = Math.ceil((new Date(doc.expiresAt).getTime() - Date.now()) / 86400000);
+  const expiryStatus = daysLeft < 0 ? 'expired' : daysLeft <= 30 ? 'expiring' : 'valid';
+  return { expiryStatus, daysLeft };
+}
+
+function withExpiry(doc) {
+  return { ...doc, ...expiryOf(doc) };
+}
 
 router.get('/documents', async (req, res, next) => {
   try {
@@ -51,14 +82,64 @@ router.get('/documents', async (req, res, next) => {
       },
       orderBy: { createdAt: 'desc' },
     });
-    res.json({ documents });
+    res.json({ documents: documents.map(withExpiry) });
+  } catch (e) { next(e); }
+});
+
+// Phase 38 Track 7: expiring documents (default 30 din me expire hone wale)
+router.get('/documents/expiring', async (req, res, next) => {
+  try {
+    if (!(await expiryReady())) {
+      return res.status(503).json({ error: 'Expiry tracking not migrated yet' });
+    }
+    const days = Math.max(1, parseInt(req.query.days, 10) || 30);
+    const cutoff = new Date(Date.now() + days * 86400000);
+    const where = {
+      ...tenantFilter(req),
+      expiresAt: { not: null, lte: cutoff },
+    };
+    if (req.user.role === 'member' && req.user.memberId) where.memberId = req.user.memberId;
+    else if (req.query.memberId) where.memberId = String(req.query.memberId);
+    if (req.query.status === 'expired') where.expiresAt = { lt: new Date() };
+    const documents = await prisma.document.findMany({
+      where,
+      include: { member: { select: { id: true, name: true } } },
+      orderBy: { expiresAt: 'asc' },
+    });
+    res.json({ documents: documents.map(withExpiry), count: documents.length });
+  } catch (e) { next(e); }
+});
+
+// Phase 38 Track 7: expiry set/update karo
+router.put('/documents/:id/expiry', write, validateBody(expirySchema), async (req, res, next) => {
+  try {
+    if (!(await expiryReady())) {
+      return res.status(503).json({ error: 'Expiry tracking not migrated yet' });
+    }
+    const doc = await prisma.document.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
+    if (!doc) return res.status(404).json({ error: 'Document not found' });
+    const data = {};
+    if (req.body.issuedAt !== undefined) data.issuedAt = req.body.issuedAt ? new Date(req.body.issuedAt) : null;
+    if (req.body.expiresAt !== undefined) data.expiresAt = req.body.expiresAt ? new Date(req.body.expiresAt) : null;
+    if (req.body.reminderDays !== undefined) data.reminderDays = req.body.reminderDays;
+    // expiresAt badla to reminder cycle reset (nayi key base)
+    if (req.body.expiresAt !== undefined) data.lastReminderKey = null;
+    const updated = await prisma.document.update({ where: { id: doc.id }, data });
+    await writeAudit(req, 'document.expiry_update', 'Document', doc.id, null, {
+      expiresAt: updated.expiresAt,
+      reminderDays: updated.reminderDays,
+    });
+    res.json({ document: withExpiry(updated) });
   } catch (e) { next(e); }
 });
 
 router.post('/documents', write, validateBody(docSchema), async (req, res, next) => {
   try {
+    const data = { ...req.body, tenantId: req.user.tenantId, uploadedById: req.user.id };
+    if (data.issuedAt) data.issuedAt = new Date(data.issuedAt);
+    if (data.expiresAt) data.expiresAt = new Date(data.expiresAt);
     const doc = await prisma.document.create({
-      data: { ...req.body, tenantId: req.user.tenantId, uploadedById: req.user.id },
+      data,
       include: { member: { select: { id: true, name: true } } },
     });
     await writeAudit(req, 'document.create', 'Document', doc.id, null, { title: doc.title });
@@ -81,7 +162,7 @@ router.delete('/documents/:id', write, async (req, res, next) => {
 router.post('/documents/upload', write, upload.single('file'), async (req, res, next) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    const { title, category, memberId, notes } = req.body;
+    const { title, category, memberId, notes, issuedAt, expiresAt, reminderDays } = req.body;
     if (memberId) {
       const member = await prisma.member.findFirst({ where: { id: memberId, ...tenantFilter(req) } });
       if (!member) return res.status(400).json({ error: 'Member not found' });
@@ -91,6 +172,10 @@ router.post('/documents/upload', write, upload.single('file'), async (req, res, 
       filename: req.file.originalname,
       mimetype: req.file.mimetype,
     });
+    let parsedReminders;
+    try {
+      parsedReminders = reminderDays ? JSON.parse(reminderDays) : undefined;
+    } catch { parsedReminders = undefined; }
     const doc = await prisma.document.create({
       data: {
         tenantId: req.user.tenantId,
@@ -103,6 +188,10 @@ router.post('/documents/upload', write, upload.single('file'), async (req, res, 
         mimeType: req.file.mimetype,
         storagePath,
         uploadedById: req.user.id,
+        // Phase 38 Track 7: expiry (columns migrate na hue hon to ignore)
+        ...(issuedAt ? { issuedAt: new Date(issuedAt) } : {}),
+        ...(expiresAt ? { expiresAt: new Date(expiresAt) } : {}),
+        ...(Array.isArray(parsedReminders) ? { reminderDays: parsedReminders } : {}),
       },
       include: { member: { select: { id: true, name: true } } },
     });

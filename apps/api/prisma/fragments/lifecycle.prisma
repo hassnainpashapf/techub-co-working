@@ -1,0 +1,91 @@
+// Phase 38 Track 2: Member Lifecycle Automation — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+//
+// Triggers: trial_ending_3d | contract_expiring_30d | member_inactive_14d | invoice_overdue_7d
+// Actions: email | sms
+// Dedupe: per rule+member, at most one send per 30 days (LifecycleRun).
+
+model LifecycleRule {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  tenant      Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  trigger     String    // trial_ending_3d | contract_expiring_30d | member_inactive_14d | invoice_overdue_7d
+  action      String    @default("email") // email | sms
+  templateKey String?   @map("template_key") // EmailTemplate key (custom or built-in); null = trigger default
+  message     String?   @db.Text // custom SMS body or email customMessage override (supports {{variables}})
+  isActive    Boolean   @default(true) @map("is_active")
+  lastRunAt   DateTime? @map("last_run_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  runs LifecycleRun[]
+
+  @@unique([tenantId, trigger])
+  @@index([tenantId])
+  @@map("lifecycle_rules")
+}
+
+model LifecycleRun {
+  id        String        @id @default(cuid())
+  tenantId  String        @map("tenant_id")
+  tenant    Tenant        @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ruleId    String        @map("rule_id")
+  rule      LifecycleRule @relation(fields: [ruleId], references: [id], onDelete: Cascade)
+  memberId  String        @map("member_id")
+  member    Member        @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  channel   String        // email | sms
+  sent      Boolean       @default(false)
+  error     String?
+  sentAt    DateTime      @default(now()) @map("sent_at")
+
+  @@index([tenantId])
+  @@index([ruleId, memberId])
+  @@index([sentAt])
+  @@map("lifecycle_runs")
+}
+
+// ADD TO Tenant model:
+//   lifecycleRules LifecycleRule[]
+//   lifecycleRuns  LifecycleRun[]
+//
+// ADD TO Member model:
+//   lifecycleRuns LifecycleRun[]
+
+// --- Migration SQL ---
+// CREATE TABLE "lifecycle_rules" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "trigger" TEXT NOT NULL,
+//     "action" TEXT NOT NULL DEFAULT 'email',
+//     "template_key" TEXT,
+//     "message" TEXT,
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "last_run_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "lifecycle_rules_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "lifecycle_rules_tenant_id_trigger_key" ON "lifecycle_rules"("tenant_id", "trigger");
+// CREATE INDEX "lifecycle_rules_tenant_id_idx" ON "lifecycle_rules"("tenant_id");
+// ALTER TABLE "lifecycle_rules" ADD CONSTRAINT "lifecycle_rules_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "lifecycle_runs" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "rule_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "channel" TEXT NOT NULL,
+//     "sent" BOOLEAN NOT NULL DEFAULT false,
+//     "error" TEXT,
+//     "sent_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "lifecycle_runs_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "lifecycle_runs_tenant_id_idx" ON "lifecycle_runs"("tenant_id");
+// CREATE INDEX "lifecycle_runs_rule_id_member_id_idx" ON "lifecycle_runs"("rule_id", "member_id");
+// CREATE INDEX "lifecycle_runs_sent_at_idx" ON "lifecycle_runs"("sent_at");
+// ALTER TABLE "lifecycle_runs" ADD CONSTRAINT "lifecycle_runs_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lifecycle_runs" ADD CONSTRAINT "lifecycle_runs_rule_id_fkey"
+//   FOREIGN KEY ("rule_id") REFERENCES "lifecycle_rules"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "lifecycle_runs" ADD CONSTRAINT "lifecycle_runs_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;
