@@ -1,0 +1,132 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { api } from '../../../lib/api';
+import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, DataTable } from '../../../components/ui';
+import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+
+const money = (n) => `Rs ${Number(n || 0).toLocaleString()}`;
+const CN_TONES = { open: 'blue', applied: 'green', cancelled: 'slate' };
+const DOC_CATS = ['contract', 'id', 'invoice', 'policy', 'other'];
+
+function DocForm({ members, onSave, saving }) {
+  const [f, setF] = useState({ title: '', category: 'general', memberId: '', notes: '' });
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, memberId: f.memberId || null }); }}>
+      <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} required placeholder="e.g. Membership Agreement" /></Field>
+      <div className="grid grid-cols-2 gap-x-4">
+        <Field label="Category">
+          <select className="input" value={f.category} onChange={(e) => setF({ ...f, category: e.target.value })}>
+            {DOC_CATS.map((c) => <option key={c} value={c} className="capitalize">{c}</option>)}
+          </select>
+        </Field>
+        <Field label="Member (optional)">
+          <select className="input" value={f.memberId} onChange={(e) => setF({ ...f, memberId: e.target.value })}>
+            <option value="">—</option>
+            {members.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+          </select>
+        </Field>
+      </div>
+      <Field label="Notes"><input className="input" value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} /></Field>
+      <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Add Document'}</button>
+    </form>
+  );
+}
+
+function CnForm({ members, onSave, saving }) {
+  const [f, setF] = useState({ memberId: '', amount: '', reason: '' });
+  return (
+    <form onSubmit={(e) => { e.preventDefault(); onSave({ memberId: f.memberId, amount: Number(f.amount), reason: f.reason || null }); }}>
+      <Field label="Member">
+        <select className="input" value={f.memberId} onChange={(e) => setF({ ...f, memberId: e.target.value })} required>
+          <option value="">Select member…</option>
+          {members.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+        </select>
+      </Field>
+      <Field label="Amount (Rs)"><input type="number" min="1" className="input" value={f.amount} onChange={(e) => setF({ ...f, amount: e.target.value })} required /></Field>
+      <Field label="Reason"><input className="input" value={f.reason} onChange={(e) => setF({ ...f, reason: e.target.value })} placeholder="e.g. Overcharged for October" /></Field>
+      <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Creating…' : 'Issue Credit Note'}</button>
+    </form>
+  );
+}
+
+export default function DocumentsPage() {
+  const { allowed } = useRequireRoles(['ceo', 'admin', 'manager', 'finance_officer', 'receptionist']);
+  const [tab, setTab] = useState('docs');
+  const [docs, setDocs] = useState([]);
+  const [cns, setCns] = useState([]);
+  const [members, setMembers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+  const [showDocForm, setShowDocForm] = useState(false);
+  const [showCnForm, setShowCnForm] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const load = () => {
+    setLoading(true);
+    Promise.all([api.get('/documents/documents'), api.get('/documents/credit-notes'), api.get('/members')])
+      .then(([d, c, m]) => { setDocs(d.documents || []); setCns(c.creditNotes || []); setMembers(m.members || []); })
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  };
+  useEffect(() => { if (allowed) load(); }, [allowed]);
+
+  if (!allowed) return <AccessDenied />;
+
+  const addDoc = async (data) => {
+    setSaving(true);
+    try { await api.post('/documents/documents', data); setShowDocForm(false); load(); }
+    catch (e) { setError(e.message); } finally { setSaving(false); }
+  };
+  const addCn = async (data) => {
+    setSaving(true);
+    try { await api.post('/documents/credit-notes', data); setShowCnForm(false); load(); }
+    catch (e) { setError(e.message); } finally { setSaving(false); }
+  };
+  const delDoc = async (id) => {
+    if (!confirm('Delete this document record?')) return;
+    try { await api.del(`/documents/documents/${id}`); load(); }
+    catch (e) { setError(e.message); }
+  };
+
+  const docCols = [
+    { key: 'title', label: 'Document', render: (d) => <div><div className="font-medium text-white">{d.title}</div><div className="text-xs text-slate-400 capitalize">{d.category}</div></div> },
+    { key: 'member', label: 'Member', render: (d) => <span className="text-sm text-slate-300">{d.member?.name || '—'}</span> },
+    { key: 'by', label: 'Uploaded by', render: (d) => <span className="text-sm text-slate-300">{d.uploadedBy?.name || '—'}</span> },
+    { key: 'date', label: 'Date', render: (d) => <span className="text-xs text-slate-400">{d.createdAt?.slice(0, 10)}</span> },
+    { key: 'action', label: '', render: (d) => <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button> },
+  ];
+  const cnCols = [
+    { key: 'number', label: 'Number', render: (c) => <span className="font-mono text-sm text-slate-300">{c.number}</span> },
+    { key: 'member', label: 'Member', render: (c) => <span className="text-sm text-white">{c.member?.name}</span> },
+    { key: 'amount', label: 'Amount', render: (c) => <div><div className="text-white font-medium">{money(c.amount)}</div><div className="text-xs text-slate-400">Used: {money(c.amountUsed)}</div></div> },
+    { key: 'status', label: 'Status', render: (c) => <Badge tone={CN_TONES[c.status]}>{c.status}</Badge> },
+    { key: 'reason', label: 'Reason', render: (c) => <span className="text-xs text-slate-400">{c.reason || '—'}</span> },
+  ];
+
+  return (
+    <div>
+      <PageHeader
+        title="Documents & Credits"
+        subtitle="Member documents and credit notes"
+        action={tab === 'docs'
+          ? <button className="btn-primary" onClick={() => setShowDocForm(true)}>+ Add Document</button>
+          : <button className="btn-primary" onClick={() => setShowCnForm(true)}>+ Issue Credit Note</button>}
+      />
+      {error && <ErrorBanner message={error} onClose={() => setError('')} />}
+      <div className="flex gap-2 mb-4">
+        {[['docs', `Documents (${docs.length})`], ['credits', `Credit Notes (${cns.length})`]].map(([v, l]) => (
+          <button key={v} onClick={() => setTab(v)}
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            {l}
+          </button>
+        ))}
+      </div>
+      {loading ? <Spinner /> : tab === 'docs'
+        ? <DataTable columns={docCols} rows={docs} emptyText="No documents." />
+        : <DataTable columns={cnCols} rows={cns} emptyText="No credit notes." />}
+      {showDocForm && <Modal title="Add Document" onClose={() => setShowDocForm(false)}><DocForm members={members} onSave={addDoc} saving={saving} /></Modal>}
+      {showCnForm && <Modal title="Issue Credit Note" onClose={() => setShowCnForm(false)}><CnForm members={members} onSave={addCn} saving={saving} /></Modal>}
+    </div>
+  );
+}

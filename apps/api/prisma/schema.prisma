@@ -59,6 +59,8 @@ model Tenant {
   inventoryItems InventoryItem[]
   inventoryMovements InventoryMovement[]
   assets Asset[]
+  documents Document[]
+  creditNotes CreditNote[]
   settings      Setting[]
   auditLogs     AuditLog[]
 
@@ -100,6 +102,8 @@ model User {
   assignedMaintenance MaintenanceOrder[]
   createdMaintenance  MaintenanceOrder[] @relation("MaintenanceCreator")
   inventoryMovements  InventoryMovement[]
+  uploadedDocuments   Document[]
+  createdCreditNotes  CreditNote[]
 
   @@index([tenantId, role])
   @@map("users")
@@ -223,6 +227,8 @@ model Member {
   bookings  Booking[]
   tickets   Ticket[]
   hostedVisits Visitor[]
+  documents Document[]
+  creditNotes CreditNote[]
 
   @@index([tenantId, status])
   @@map("members")
@@ -308,6 +314,7 @@ model Invoice {
   updatedAt   DateTime      @updatedAt @map("updated_at")
 
   payments Payment[]
+  creditNotes CreditNote[]
 
   @@unique([tenantId, number])
   @@index([tenantId, status])
@@ -663,6 +670,59 @@ model Asset {
 
   @@index([tenantId, status])
   @@map("assets")
+}
+
+// --------------------------------------------------------------- documents ---
+model Document {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title       String
+  category    String   @default("general") // contract | id | invoice | policy | other
+  memberId    String?  @map("member_id")
+  member      Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  fileName    String?  @map("file_name")
+  fileUrl     String?  @map("file_url")
+  fileSize    Int?     @map("file_size")
+  mimeType    String?  @map("mime_type")
+  notes       String?
+  uploadedById String? @map("uploaded_by_id")
+  uploadedBy  User?    @relation(fields: [uploadedById], references: [id], onDelete: SetNull)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, memberId])
+  @@map("documents")
+}
+
+// ------------------------------------------------------------ credit notes ---
+enum CreditNoteStatus {
+  open
+  applied
+  cancelled
+}
+
+model CreditNote {
+  id          String           @id @default(cuid())
+  tenantId    String           @map("tenant_id")
+  tenant      Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  number      String // CN-202610-0001, unique per tenant
+  memberId    String           @map("member_id")
+  member      Member           @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  invoiceId   String?          @map("invoice_id")
+  invoice     Invoice?         @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  amount      Decimal          @db.Decimal(12, 2)
+  amountUsed  Decimal          @default(0) @map("amount_used") @db.Decimal(12, 2)
+  status      CreditNoteStatus @default(open)
+  reason      String?
+  createdById String?          @map("created_by_id")
+  createdBy   User?            @relation(fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt   DateTime         @default(now()) @map("created_at")
+  updatedAt   DateTime         @updatedAt @map("updated_at")
+
+  @@unique([tenantId, number])
+  @@index([tenantId, memberId])
+  @@map("credit_notes")
 }
 
 // --------------------------------------------------------------- settings ---
