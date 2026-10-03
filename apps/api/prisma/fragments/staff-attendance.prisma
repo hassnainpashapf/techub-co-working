@@ -1,0 +1,52 @@
+// Phase 42 Track 2: Staff Attendance — schema fragment.
+// Coordinator: merge these into apps/api/prisma/schema.prisma and create
+// the matching migration. DO NOT edit schema.prisma here.
+// (10 parallel agents — merge conflicts se bachne ke liye.)
+// NOTE: Track 1 (Employee) fragment must be merged FIRST — this references it.
+
+model StaffAttendance {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employeeId   String   @map("employee_id")
+  employee     Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date         DateTime @map("date") // attendance day (midnight UTC)
+  checkIn      DateTime? @map("check_in")
+  checkOut     DateTime? @map("check_out")
+  status       String   @default("present") @map("status") // present|late|absent|half_day|on_leave
+  lateMinutes  Int?     @map("late_minutes")
+  workedMinutes Int?    @map("worked_minutes")
+  note         String?  @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([tenantId, employeeId, date]) // one attendance row per employee per day
+  @@index([tenantId, date])
+  @@index([employeeId, date])
+  @@map("staff_attendance")
+}
+
+// ADD TO Tenant model:
+//   staffAttendance StaffAttendance[]
+//
+// ADD TO Employee model (Track 1):
+//   staffAttendance StaffAttendance[]
+
+// Migration SQL (coordinator):
+// CREATE TABLE "staff_attendance" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "employee_id" TEXT NOT NULL,
+//     "date" TIMESTAMP(3) NOT NULL, "check_in" TIMESTAMP(3), "check_out" TIMESTAMP(3),
+//     "status" TEXT NOT NULL DEFAULT 'present', "late_minutes" INTEGER,
+//     "worked_minutes" INTEGER, "note" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "staff_attendance_pkey" PRIMARY KEY ("id")
+// );
+// ALTER TABLE "staff_attendance" ADD CONSTRAINT "staff_attendance_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "staff_attendance" ADD CONSTRAINT "staff_attendance_employee_id_fkey"
+//   FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE UNIQUE INDEX "staff_attendance_tenant_id_employee_id_date_key"
+//   ON "staff_attendance"("tenant_id", "employee_id", "date");
+// CREATE INDEX "staff_attendance_tenant_id_date_idx" ON "staff_attendance"("tenant_id", "date");
+// CREATE INDEX "staff_attendance_employee_id_date_idx" ON "staff_attendance"("employee_id", "date");

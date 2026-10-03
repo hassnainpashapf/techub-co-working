@@ -103,6 +103,18 @@ app.use('/api/procurement', require('./routes/procurement-dashboard'));
 app.use('/api/inventory/reorder-alerts', require('./routes/reorder-alerts'));
 require('./lib/vendorContractExpiry'); // 'vendor-contract-expiry' (self-schedule via ensure)
 require('./lib/reorderAlerts'); // 'reorder-alerts' (self-schedule via ensure)
+// Phase 42: HR & Payroll Pro Pack (additive) — /api/employee-onboarding is distinct from Phase 35's /api/onboarding
+app.use('/api/employees', require('./routes/employees'));
+app.use('/api/staff-attendance', require('./routes/staff-attendance'));
+app.use('/api/leaves', require('./routes/leaves'));
+app.use('/api/overtime', require('./routes/overtime'));
+app.use('/api/reviews', require('./routes/reviews'));
+app.use('/api/advances', require('./routes/advances'));
+app.use('/api/employee-onboarding', require('./routes/employee-onboarding'));
+app.use('/api/exits', require('./routes/exits'));
+app.use('/api/hr-documents', require('./routes/hr-documents'));
+app.use('/api/hr', require('./routes/hr-dashboard'));
+require('./lib/reviewReminders'); // 'review-reminders' (self-schedule via ensure)
 require('./lib/milestones'); // 'milestones' (self-schedule via ensure)
 require('./lib/badges'); // 'badges-run' auto-register on require
 require('./lib/newsletterJob'); // 'newsletter-send' auto-register on require
@@ -249,6 +261,10 @@ try {
   require('./lib/vendorContractExpiry').ensureVendorContractExpiryScheduled();
   require('./lib/reorderAlerts').ensureReorderAlertsScheduled();
 } catch (e) { console.error('[phase41] scheduler init failed:', e.message); }
+// Phase 42: review reminders (daily self-schedule)
+try {
+  require('./lib/reviewReminders').ensureReviewRemindersScheduled();
+} catch (e) { console.error('[phase42] scheduler init failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

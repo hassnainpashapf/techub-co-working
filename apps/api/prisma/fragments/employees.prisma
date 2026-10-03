@@ -1,0 +1,48 @@
+// Phase 42 Track 1: Employee Directory
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { employees Employee[] }
+//   User   { employee Employee? }   // optional link (userId unique)
+// schema.prisma untouched by this track.
+
+model Employee {
+  id               String   @id @default(cuid())
+  tenantId         String   @map("tenant_id")
+  userId           String?  @unique @map("user_id") // linked login (User)
+  name             String
+  email            String?
+  phone            String?
+  department       String   @default("ops") // ops | finance | sales | admin | support
+  designation      String   @default("Staff")
+  joiningDate      DateTime @default(now()) @map("joining_date")
+  employmentType   String   @default("full_time") @map("employment_type") // full_time | part_time | contract
+  status           String   @default("active") // active | on_leave | exited
+  emergencyContact String?  @map("emergency_contact")
+  cnic             String?
+  address          String?
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, department])
+  @@map("employees")
+}
+
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_employees) ---
+// CREATE TABLE "employees" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "user_id" TEXT UNIQUE,
+//   "name" TEXT NOT NULL,
+//   "email" TEXT,
+//   "phone" TEXT,
+//   "department" TEXT NOT NULL DEFAULT 'ops',
+//   "designation" TEXT NOT NULL DEFAULT 'Staff',
+//   "joining_date" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "employment_type" TEXT NOT NULL DEFAULT 'full_time',
+//   "status" TEXT NOT NULL DEFAULT 'active',
+//   "emergency_contact" TEXT,
+//   "cnic" TEXT,
+//   "address" TEXT,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "employees_tenant_id_status_idx" ON "employees"("tenant_id", "status");
+// CREATE INDEX "employees_tenant_id_department_idx" ON "employees"("tenant_id", "department");

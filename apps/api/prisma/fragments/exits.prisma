@@ -1,0 +1,45 @@
+// Phase 42 Track 8: Exit / Offboarding Process
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant   { employeeExits EmployeeExit[] }
+//   Employee { exits EmployeeExit[] }
+//   User     { initiatedExits EmployeeExit[] @relation("ExitInitiator") }
+// schema.prisma untouched by this track.
+
+model EmployeeExit {
+  id              String    @id @default(cuid())
+  tenantId        String    @map("tenant_id")
+  employeeId      String    @map("employee_id")
+  type            String    // resignation | termination
+  lastWorkingDay  DateTime  @map("last_working_day")
+  reason          String?
+  noticeDays      Int?      @map("notice_days")
+  clearanceItems  Json      @default("[]") @map("clearance_items") // [{title, dept, done, doneBy, doneAt}]
+  status          String    @default("initiated") // initiated | clearance_pending | completed
+  initiatedBy     String    @map("initiated_by")
+  initiatedAt     DateTime  @default(now()) @map("initiated_at")
+  completedAt     DateTime? @map("completed_at")
+
+  @@index([tenantId, status])
+  @@index([tenantId, employeeId])
+  @@map("employee_exits")
+}
+
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_exits) ---
+// CREATE TABLE "employee_exits" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "employee_id" TEXT NOT NULL,
+//   "type" TEXT NOT NULL,
+//   "last_working_day" TIMESTAMPTZ NOT NULL,
+//   "reason" TEXT,
+//   "notice_days" INTEGER,
+//   "clearance_items" JSONB NOT NULL DEFAULT '[]',
+//   "status" TEXT NOT NULL DEFAULT 'initiated',
+//   "initiated_by" TEXT NOT NULL,
+//   "initiated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "completed_at" TIMESTAMPTZ,
+//   CONSTRAINT "employee_exits_employee_id_fkey" FOREIGN KEY ("employee_id") REFERENCES "employees"("id") ON DELETE CASCADE,
+//   CONSTRAINT "employee_exits_initiated_by_fkey" FOREIGN KEY ("initiated_by") REFERENCES "users"("id") ON DELETE RESTRICT
+// );
+// CREATE INDEX "employee_exits_tenant_id_status_idx" ON "employee_exits"("tenant_id", "status");
+// CREATE INDEX "employee_exits_tenant_id_employee_id_idx" ON "employee_exits"("tenant_id", "employee_id");

@@ -1,0 +1,51 @@
+// Phase 42 Track 5: Performance Reviews
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant   { performanceReviews PerformanceReview[] }
+//   Employee { performanceReviews PerformanceReview[] @relation("ReviewEmployee") }
+//   User     { reviewsGiven PerformanceReview[] @relation("ReviewReviewer") }
+// schema.prisma untouched by this track.
+
+model PerformanceReview {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  employeeId  String    @map("employee_id")
+  period      String                      // e.g. "2026-Q3"
+  reviewerId  String    @map("reviewer_id") // User jis ne review likha
+  ratings     Json                        // { punctuality: 4, quality: 5, teamwork: 4 }
+  overall     Decimal?  @db.Decimal(3, 1)  // criteria ka average (1-5)
+  strengths   String?
+  improvements String?
+  goals       String?                     // aglay period ke goals
+  status      String    @default("draft") // draft | submitted | acknowledged
+  submittedAt DateTime? @map("submitted_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@unique([tenantId, employeeId, period]) // ek employee, ek period, ek review
+  @@index([tenantId, employeeId])
+  @@index([tenantId, period])
+  @@index([tenantId, status])
+  @@map("performance_reviews")
+}
+
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_reviews) ---
+// CREATE TABLE "performance_reviews" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "employee_id" TEXT NOT NULL,
+//   "period" TEXT NOT NULL,
+//   "reviewer_id" TEXT NOT NULL,
+//   "ratings" JSONB NOT NULL,
+//   "overall" DECIMAL(3,1),
+//   "strengths" TEXT,
+//   "improvements" TEXT,
+//   "goals" TEXT,
+//   "status" TEXT NOT NULL DEFAULT 'draft',
+//   "submitted_at" TIMESTAMPTZ,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE UNIQUE INDEX "performance_reviews_tenant_employee_period_key" ON "performance_reviews"("tenant_id", "employee_id", "period");
+// CREATE INDEX "performance_reviews_tenant_id_employee_id_idx" ON "performance_reviews"("employee_id", "tenant_id");
+// CREATE INDEX "performance_reviews_tenant_id_period_idx" ON "performance_reviews"("tenant_id", "period");
+// CREATE INDEX "performance_reviews_tenant_id_status_idx" ON "performance_reviews"("tenant_id", "status");

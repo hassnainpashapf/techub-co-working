@@ -1,0 +1,17 @@
+// Phase 42 Track 9: HR Documents Vault
+// COORDINATOR: merge into schema.prisma (Document model me fields joddo):
+//   Document {
+//     employeeId String?  @map("employee_id")
+//     employee   Employee? @relation(fields: [employeeId], references: [id], onDelete: SetNull)
+//     @@index([tenantId, employeeId])
+//   }
+//   Employee { documents Document[] }
+// schema.prisma untouched by this track.
+//
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_hr) ---
+// ALTER TABLE "documents" ADD COLUMN "employee_id" TEXT;
+// CREATE INDEX "documents_tenant_id_employee_id_idx" ON "documents"("tenant_id", "employee_id");
+//
+// HR doc types (stored in Document.category as "hr:<type>"):
+//   hr:offer_letter | hr:contract | hr:cnic | hr:police_verification | hr:other
+// Missing-doc alerts: contract + cnic required (admin notification).

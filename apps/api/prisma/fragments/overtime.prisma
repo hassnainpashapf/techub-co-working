@@ -1,0 +1,43 @@
+// Phase 42 Track 4: Overtime Tracking
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Employee { overtime Overtime[] }
+//   Tenant   { overtime Overtime[] }
+//   User     { overtimeDecided Overtime[] @relation("OvertimeDecided") }
+// schema.prisma untouched by this track.
+
+model Overtime {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  employeeId  String   @map("employee_id")
+  employee    Employee @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  date        DateTime @db.Date
+  minutes     Int      // overtime minutes worked
+  reason      String
+  status      String   @default("pending") // pending | approved | rejected
+  requestedAt DateTime @default(now()) @map("requested_at")
+  decidedBy   String?  @map("decided_by")
+  decider     User?    @relation("OvertimeDecided", fields: [decidedBy], references: [id], onDelete: SetNull)
+  decidedAt   DateTime? @map("decided_at")
+
+  @@unique([employeeId, date])
+  @@index([tenantId, status])
+  @@index([tenantId, date])
+  @@map("overtime")
+}
+
+// --- migration SQL (coordinator: merge into phase42 migration) ---
+// CREATE TABLE "overtime" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "employee_id" TEXT NOT NULL REFERENCES "employees"("id") ON DELETE CASCADE,
+//   "date" DATE NOT NULL,
+//   "minutes" INTEGER NOT NULL,
+//   "reason" TEXT NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'pending',
+//   "requested_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "decided_by" TEXT NULL REFERENCES "users"("id") ON DELETE SET NULL,
+//   "decided_at" TIMESTAMPTZ NULL,
+//   UNIQUE ("employee_id", "date")
+// );
+// CREATE INDEX "overtime_tenant_id_status_idx" ON "overtime"("tenant_id", "status");
+// CREATE INDEX "overtime_tenant_id_date_idx" ON "overtime"("tenant_id", "date");

@@ -1,0 +1,56 @@
+// Phase 42 Track 7: Employee Onboarding Checklists
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant   { onboardingTemplates OnboardingTemplate[], employeeOnboardings EmployeeOnboarding[] }
+//   Employee { onboardings EmployeeOnboarding[] }
+// NOTE: route file ka naam employee-onboarding.js hai (onboarding.js Phase 35 ka tenant wizard pehle se hai).
+// schema.prisma untouched by this track.
+
+model OnboardingTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  tasks     Json     // [{ title, dept, dayOffset }]
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@map("onboarding_templates")
+}
+
+model EmployeeOnboarding {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  employeeId  String    @map("employee_id")
+  templateId  String?   @map("template_id")
+  items       Json      // [{ title, dept, dayOffset, done, doneBy, doneAt }]
+  status      String    @default("in_progress") // in_progress | completed
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  @@index([tenantId, status])
+  @@index([employeeId])
+  @@map("employee_onboardings")
+}
+
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_onboarding) ---
+// CREATE TABLE "onboarding_templates" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "tasks" JSONB NOT NULL DEFAULT '[]',
+//   "is_default" BOOLEAN NOT NULL DEFAULT FALSE,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "onboarding_templates_tenant_id_idx" ON "onboarding_templates"("tenant_id");
+// CREATE TABLE "employee_onboardings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "employee_id" TEXT NOT NULL,
+//   "template_id" TEXT,
+//   "items" JSONB NOT NULL DEFAULT '[]',
+//   "status" TEXT NOT NULL DEFAULT 'in_progress',
+//   "started_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "completed_at" TIMESTAMPTZ
+// );
+// CREATE INDEX "employee_onboardings_tenant_id_status_idx" ON "employee_onboardings"("tenant_id","status");
+// CREATE INDEX "employee_onboardings_employee_id_idx" ON "employee_onboardings"("employee_id");

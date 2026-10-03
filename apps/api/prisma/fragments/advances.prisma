@@ -1,0 +1,82 @@
+// Phase 42 Track 6: Salary Advances & Loans
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant   { salaryAdvances SalaryAdvance[] ; advanceDeductions AdvanceDeduction[] }
+//   Employee { salaryAdvances SalaryAdvance[] }
+//   User     { salaryAdvancesDecided SalaryAdvance[] @relation("AdvanceDecidedBy")
+//              advanceDeductionsPaidBy? (no — paidBy via User not needed; skip) }
+//   PayrollRun? no relation; AdvanceDeduction.payslipId is plain String (no FK to Payslip —
+//              coordinator does NOT need a back-relation on Payslip).
+// schema.prisma untouched by this track.
+
+model SalaryAdvance {
+  id               String    @id @default(cuid())
+  tenantId         String    @map("tenant_id")
+  tenant           Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  employeeId       String    @map("employee_id")
+  employee         Employee  @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  amount           Decimal   @db.Decimal(12, 2)
+  type             String    @default("advance") // advance | loan
+  installments     Int       @default(1) // advance=1, loan>=2
+  installmentAmount Decimal  @default(0) @map("installment_amount") @db.Decimal(12, 2)
+  deductedSoFar    Decimal   @default(0) @map("deducted_so_far") @db.Decimal(12, 2)
+  status           String    @default("pending") // pending | approved | rejected | deducting | closed
+  reason           String?
+  requestedAt      DateTime  @default(now()) @map("requested_at")
+  decidedById      String?   @map("decided_by_id")
+  decidedBy        User?     @relation("AdvanceDecidedBy", fields: [decidedById], references: [id], onDelete: SetNull)
+  decidedAt        DateTime? @map("decided_at")
+  decideNote       String?   @map("decide_note")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  deductions AdvanceDeduction[]
+
+  @@index([tenantId, status])
+  @@index([tenantId, employeeId])
+  @@map("salary_advances")
+}
+
+model AdvanceDeduction {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  advanceId   String   @map("advance_id")
+  advance     SalaryAdvance @relation(fields: [advanceId], references: [id], onDelete: Cascade)
+  payslipId   String?  @map("payslip_id") // linked payslip (plain id, no FK — payslip may be deleted/recreated)
+  amount      Decimal  @db.Decimal(12, 2)
+  deductedAt  DateTime @default(now()) @map("deducted_at")
+
+  @@index([tenantId, advanceId])
+  @@index([advanceId])
+  @@map("advance_deductions")
+}
+
+// --- migration SQL (coordinator: 2026100351xxxx_phase42_advances) ---
+// CREATE TABLE "salary_advances" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "employee_id" TEXT NOT NULL,
+//   "amount" DECIMAL(12,2) NOT NULL,
+//   "type" TEXT NOT NULL DEFAULT 'advance',
+//   "installments" INTEGER NOT NULL DEFAULT 1,
+//   "installment_amount" DECIMAL(12,2) NOT NULL DEFAULT 0,
+//   "deducted_so_far" DECIMAL(12,2) NOT NULL DEFAULT 0,
+//   "status" TEXT NOT NULL DEFAULT 'pending',
+//   "reason" TEXT,
+//   "requested_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "decided_by_id" TEXT,
+//   "decided_at" TIMESTAMPTZ,
+//   "decide_note" TEXT,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE TABLE "advance_deductions" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "advance_id" TEXT NOT NULL,
+//   "payslip_id" TEXT,
+//   "amount" DECIMAL(12,2) NOT NULL,
+//   "deducted_at" TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "salary_advances_tenant_id_status_idx" ON "salary_advances"("tenant_id", "status");
+// CREATE INDEX "salary_advances_tenant_id_employee_id_idx" ON "salary_advances"("tenant_id", "employee_id");
+// CREATE INDEX "advance_deductions_tenant_id_advance_id_idx" ON "advance_deductions"("tenant_id", "advance_id");
+// CREATE INDEX "advance_deductions_advance_id_idx" ON "advance_deductions"("advance_id");

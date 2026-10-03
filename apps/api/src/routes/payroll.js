@@ -147,11 +147,27 @@ router.post('/runs', payrollWrite, validateBody(runSchema), async (req, res, nex
 
     let total = new Prisma.Decimal(0);
     const payslipRows = [];
+    const [yy, mm] = month.split('-').map(Number);
+    const mEnd = new Date(Date.UTC(yy, mm, 1)); // next month start (exclusive)
     for (const s of latestByUser.values()) {
       const basic = Number(s.basicSalary);
       const allow = sumJson(s.allowances);
       const ded = sumJson(s.deductions);
-      const gross = basic + allow;
+      // Phase 42: approved overtime for this month (additive earnings, 1.5x)
+      let otPay = 0, otMins = 0;
+      try {
+        if (prisma.overtime && prisma.employee) {
+          const empOt = await prisma.employee.findFirst({ where: { tenantId: req.user.tenantId, userId: s.userId }, select: { id: true } });
+          if (empOt) {
+            const otRows = await prisma.overtime.findMany({
+              where: { tenantId: req.user.tenantId, employeeId: empOt.id, status: 'approved', date: { gte: monthStart, lt: mEnd } },
+            });
+            otMins = otRows.reduce((a, r) => a + (r.minutes || 0), 0);
+            if (otMins > 0 && basic > 0) otPay = Math.round((otMins / 60) * (basic / 160) * 1.5 * 100) / 100;
+          }
+        }
+      } catch {}
+      const gross = basic + allow + otPay;
       const net = Math.max(0, gross - ded);
       total = total.plus(net);
       payslipRows.push({
@@ -159,7 +175,7 @@ router.post('/runs', payrollWrite, validateBody(runSchema), async (req, res, nex
         grossSalary: new Prisma.Decimal(gross),
         totalDeductions: new Prisma.Decimal(ded),
         netPay: new Prisma.Decimal(net),
-        details: { basic, allowances: s.allowances, deductions: s.deductions },
+        details: { basic, allowances: s.allowances, deductions: s.deductions, ...(otMins > 0 ? { overtime: { minutes: otMins, pay: otPay } } : {}) },
         status: 'pending',
       });
     }
@@ -176,6 +192,29 @@ router.post('/runs', payrollWrite, validateBody(runSchema), async (req, res, nex
       include: { _count: { select: { payslips: true } } },
     });
     audit(req, 'payroll.run_created', run.id, { month, payslips: payslipRows.length });
+    // Phase 42: salary advance deductions (per employee, per payslip) — additive
+    try {
+      if (prisma.salaryAdvance) {
+        const { applyAdvanceDeductions } = require('../lib/advanceDeductions');
+        const created = await prisma.payslip.findMany({ where: { runId: run.id } });
+        for (const ps of created) {
+          const emp = await prisma.employee.findFirst({ where: { tenantId: req.user.tenantId, userId: ps.userId }, select: { id: true } }).catch(() => null);
+          if (!emp) continue;
+          const ad = await applyAdvanceDeductions({ tenantId: req.user.tenantId, employeeId: emp.id, payslipId: ps.id });
+          if (ad.totalDeducted > 0) {
+            const amt = new Prisma.Decimal(ad.totalDeducted);
+            const details = { ...(ps.details || {}), salary_advance: { total: ad.totalDeducted, items: ad.deductions } };
+            const newNet = new Prisma.Decimal(ps.netPay).minus(amt);
+            await prisma.payslip.update({
+              where: { id: ps.id },
+              data: { totalDeductions: new Prisma.Decimal(ps.totalDeductions).plus(amt), netPay: newNet.isNegative() ? new Prisma.Decimal(0) : newNet, details },
+            });
+          }
+        }
+        const agg = await prisma.payslip.aggregate({ where: { runId: run.id }, _sum: { netPay: true } });
+        await prisma.payrollRun.update({ where: { id: run.id }, data: { totalAmount: agg._sum.netPay || 0 } });
+      }
+    } catch (e) { console.error('[phase42] advance deductions failed:', e.message); }
     res.status(201).json({ run });
   } catch (e) { next(e); }
 });
