@@ -225,6 +225,10 @@ const templates = {
     subject: `⏰ Reminder: uncollected ${itemType === 'letter' ? 'letter' : 'package'} (${daysWaiting} days)`,
     html: wrap('Mail Pickup Reminder', `<p>Hi ${memberName || 'there'},</p><p>This is a friendly reminder that your <b>${itemType === 'letter' ? 'letter' : 'package'}</b>${sender ? ` from <b>${sender}</b>` : ''} received <b>${receivedAt || ''}</b> (${daysWaiting} day${daysWaiting === 1 ? '' : 's'} ago) is still waiting at reception.</p>${trackingNumber ? `<p>Tracking: <b>${trackingNumber}</b></p>` : ''}<p>Please collect it soon.</p>`),
   }),
+  contractSignatureRequest: ({ signerName, memberName, unitCode, signUrl, expiresAt }) => ({
+    subject: `✍️ Please sign your contract${unitCode ? ` — ${unitCode}` : ''}`,
+    html: wrap('Contract Signature Request', `<p>Hi ${signerName || 'there'},</p><p>Your coworking contract${memberName ? ` for <b>${memberName}</b>` : ''}${unitCode ? ` (unit <b>${unitCode}</b>)` : ''} is ready for signature.</p><p><a href="${signUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Review &amp; Sign</a></p><p style="color:#6b7280;font-size:13px">This link expires on <b>${expiresAt || ''}</b> and can only be used once. Your IP address and timestamp will be recorded with your signature.</p>`),
+  }),
   shiftReminder: ({ name, shiftWhen, startTime, endTime, shiftRole }) => ({
     subject: `⏰ Shift reminder — ${startTime} today`,
     html: wrap('Shift Reminder', `<p>Hi ${name || 'there'},</p><p>This is a reminder that <b>${shiftRole || 'your shift'}</b> starts in about <b>2 hours</b>:</p><p>📅 ${shiftWhen || ''}<br/>🕐 ${startTime || ''} – ${endTime || ''}</p><p>Please be on time!</p>`),
@@ -332,6 +336,7 @@ const TEMPLATE_VARS = {
   eventReminder: ['memberName', 'eventTitle', 'eventWhen', 'eventLocation'],
   mailReceived: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt'],
   mailReminder: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt', 'daysWaiting'],
+  contractSignatureRequest: ['signerName', 'memberName', 'unitCode', 'signUrl', 'expiresAt'],
   shiftReminder: ['name', 'shiftWhen', 'startTime', 'endTime', 'shiftRole'],
   wifiVoucher: ['memberName', 'code', 'durationHours', 'maxDevices'],
   maintenanceUrgent: ['name', 'title', 'priority', 'location', 'reporter', 'createdAt'],

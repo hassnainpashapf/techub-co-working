@@ -132,6 +132,30 @@ app.use('/api/kpi-dashboards', require('./routes/kpi-dashboards'));
 app.use('/api/white-label', require('./routes/white-label'));
 app.use('/api/onboarding', require('./routes/onboarding'));
 app.use('/api/admin/tenants', require('./routes/admin-tenants'));
+// Phase 36: Integrations & API Pack
+app.use('/api/docs', require('./routes/docs'));
+app.use('/api/calendar', require('./routes/calendar'));
+app.use('/api/slack', require('./routes/slack'));
+app.use('/api/esign', require('./routes/esign'));
+app.use('/api/campaigns', require('./routes/campaigns'));
+app.use('/api/sms-campaigns', require('./routes/sms-campaigns'));
+app.use('/api/api-usage', require('./routes/api-usage'));
+app.use('/api/accounting-export', require('./routes/accounting-export'));
+app.use('/api/ical', require('./routes/ical'));
+require('./lib/campaignJob'); // 'campaign-send'
+require('./lib/smsCampaigns'); // 'sms-campaign'
+require('./lib/apiUsageCleanup'); // 'api-usage-cleanup'
+try {
+  const { enqueue } = require('./lib/jobs');
+  const scheduleApiUsageCleanup = async () => {
+    try {
+      const pending = await require('./lib/prisma').job.count({ where: { type: 'api-usage-cleanup', status: 'pending' } }).catch(() => 1);
+      if (!pending) await enqueue('api-usage-cleanup', {}, { runAt: new Date(Date.now() + 24 * 60 * 60 * 1000) }).catch(() => {});
+    } catch (e) { console.error('[phase36] api-usage-cleanup schedule failed:', e.message); }
+  };
+  scheduleApiUsageCleanup();
+  setInterval(scheduleApiUsageCleanup, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase36] scheduler init failed:', e.message); }
 require('./lib/healthCheck');
 require('./lib/healthCheck').startHealthScheduler();
 require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler

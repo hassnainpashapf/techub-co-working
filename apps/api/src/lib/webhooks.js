@@ -4,18 +4,7 @@
 const crypto = require('crypto');
 const prisma = require('./prisma');
 const { safePost } = require('./safeFetch');
-
-const WEBHOOK_EVENTS = [
-  'member.created',
-  'booking.created',
-  'booking.cancelled',
-  'payment.received',
-  'invoice.created',
-  'ticket.created',
-  'ticket.updated',
-  'visitor.checkin',
-  'contract.created',
-];
+const { WEBHOOK_EVENTS, samplePayloadFor } = require('./webhookEvents');
 
 // Retry schedule: 1m, 5m, 30m, 2h, then 2h — max 8 attempts total.
 const WEBHOOK_RETRY_DELAYS = [60e3, 5 * 60e3, 30 * 60e3, 2 * 3600e3, 2 * 3600e3, 2 * 3600e3, 2 * 3600e3];
@@ -225,12 +214,20 @@ function emitWebhook(tenantId, event, payload) {
 
 // Send a test event directly to one webhook (immediate feedback for the UI).
 async function testWebhook(webhook) {
-  await deliver(webhook, 'webhook.test', { test: true, message: 'Test event from CoworkOS', at: new Date().toISOString() });
+  await testWebhookEvent(webhook, 'webhook.test');
+}
+
+// Send a catalog sample payload for any known event (test console).
+// Falls back to an empty object for unknown events.
+async function testWebhookEvent(webhook, event) {
+  const payload = samplePayloadFor(event) || {};
+  await deliver(webhook, event, payload);
 }
 
 module.exports = {
   emitWebhook,
   testWebhook,
+  testWebhookEvent,
   dispatchWebhook,
   registerWebhookHandler,
   signPayload,

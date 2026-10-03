@@ -1,0 +1,45 @@
+// Phase 36 Track 9: SMS Campaigns schema fragment.
+// Coordinator merge karega: schema.prisma me SmsCampaign model +
+// Tenant me `smsCampaigns SmsCampaign[]` back-relation.
+
+model SmsCampaign {
+  id        String    @id @default(cuid())
+  tenantId  String    @map("tenant_id")
+  name      String
+  message   String    @db.Text
+  segment   Json      @default("{}") // { type: "all_active" | "overdue" | "trial" }
+  status    String    @default("draft") @map("status") // draft | sending | sent | failed
+  sentCount Int       @default(0) @map("sent_count")
+  failCount Int       @default(0) @map("fail_count")
+  createdBy String?   @map("created_by")
+  sentAt    DateTime? @map("sent_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@map("sms_campaigns")
+}
+
+// --- Coordinator: schema.prisma merge ---
+// model Tenant me add karein:
+//   smsCampaigns SmsCampaign[]
+
+// --- Coordinator: migration SQL ---
+// CREATE TABLE "sms_campaigns" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "name" TEXT NOT NULL,
+//     "message" TEXT NOT NULL,
+//     "segment" JSONB NOT NULL DEFAULT '{}',
+//     "status" TEXT NOT NULL DEFAULT 'draft',
+//     "sent_count" INTEGER NOT NULL DEFAULT 0,
+//     "fail_count" INTEGER NOT NULL DEFAULT 0,
+//     "created_by" TEXT,
+//     "sent_at" TIMESTAMP(3),
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "sms_campaigns_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "sms_campaigns_tenant_id_idx" ON "sms_campaigns"("tenant_id");
+// ALTER TABLE "sms_campaigns" ADD CONSTRAINT "sms_campaigns_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;

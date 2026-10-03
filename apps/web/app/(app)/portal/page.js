@@ -241,6 +241,79 @@ function DirectoryProfileSection() {
   );
 }
 
+// iCal feed section — subscribe to upcoming bookings from any calendar app.
+function CalendarFeedSection() {
+  const [feed, setFeed] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [copied, setCopied] = useState(false);
+  const [regen, setRegen] = useState(false);
+
+  const load = async () => {
+    try {
+      const d = await api.get('/ical/my');
+      setFeed(d);
+    } catch {
+      setFeed(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+  useEffect(() => { load(); }, []);
+
+  const base = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api').replace(/\/api\/?$/, '');
+  const feedUrl = feed ? `${base}/api${feed.path}` : '';
+  const webcalUrl = feedUrl.replace(/^https?:\/\//, 'webcal://');
+  const googleUrl = feedUrl ? `https://calendar.google.com/calendar/r?cid=${encodeURIComponent(feedUrl)}` : '';
+
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(feedUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch { /* clipboard unavailable */ }
+  };
+
+  const regenerate = async () => {
+    if (!confirm('Get a new calendar link? The old link will stop working.')) return;
+    setRegen(true);
+    try {
+      const d = await api.post('/ical/regenerate');
+      setFeed(d);
+    } finally {
+      setRegen(false);
+    }
+  };
+
+  return (
+    <div className="card-premium p-5 mt-6">
+      <h2 className="text-white font-bold mb-1">📅 Add to Calendar</h2>
+      <p className="text-slate-400 text-sm mb-4">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
+      {loading ? (
+        <p className="text-slate-500 text-sm">Loading…</p>
+      ) : !feed ? (
+        <p className="text-slate-500 text-sm">Calendar feed unavailable.</p>
+      ) : (
+        <div className="space-y-3">
+          <div className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
+            <code className="flex-1 text-xs text-slate-300 truncate">{feedUrl}</code>
+            <button onClick={copy} className="text-xs text-blue-300 hover:text-blue-200 border border-blue-500/30 rounded-lg px-3 py-1.5 whitespace-nowrap">
+              {copied ? '✓ Copied' : 'Copy link'}
+            </button>
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg px-3 py-1.5">Add to Google Calendar</a>
+            <a href={webcalUrl} className="text-xs text-white bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
+            <button onClick={regenerate} disabled={regen} className="text-xs text-slate-400 hover:text-slate-200 underline">
+              {regen ? '…' : 'Get new link'}
+            </button>
+          </div>
+          <p className="text-slate-500 text-xs">Keep this link private — anyone with it can see your upcoming bookings.</p>
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function PortalPage() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
@@ -346,6 +419,8 @@ export default function PortalPage() {
           )}
         </div>
       </div>
+
+      <CalendarFeedSection />
 
       {/* Announcements feed */}
       <AnnouncementsFeed />

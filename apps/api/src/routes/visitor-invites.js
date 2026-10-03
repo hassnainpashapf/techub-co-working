@@ -99,7 +99,7 @@ router.post('/', validateBody(inviteSchema), async (req, res, next) => {
     });
 
     writeAudit(req, 'visitor_invite.created', { inviteId: invite.id, code }).catch(() => {});
-    emitWebhook(tenantId, 'visitor_invite.created', { inviteId: invite.id, code }).catch(() => {});
+    emitWebhook(tenantId, 'visitor.invite_created', { inviteId: invite.id, code }).catch(() => {});
 
     // Email the visitor their check-in code (fire-and-forget)
     if (invite.visitorEmail) {

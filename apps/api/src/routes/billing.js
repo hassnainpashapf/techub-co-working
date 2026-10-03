@@ -375,6 +375,8 @@ router.post('/payments', paymentWrite, validateBody(paymentSchema), async (req, 
       }).catch(() => {});
     }
     emitWebhook(req.user.tenantId, 'payment.received', { id: result.payment.id, amount: result.payment.amount, method: result.payment.method, invoiceNumber: invoice.number });
+    // Slack integration (Phase 36) — fire-and-forget, never blocks the request
+    require('../lib/slack').notifyEvent(req.user.tenantId, 'payment_received', { id: result.payment.id, amount: result.payment.amount, method: result.payment.method, invoiceNumber: invoice.number }).catch(() => {});
 
     // Phase 33: loyalty auto-earn — invoice just flipped to fully paid -> points (non-blocking)
     if (result.invoice.status === 'paid' && invoice.status !== 'paid') {

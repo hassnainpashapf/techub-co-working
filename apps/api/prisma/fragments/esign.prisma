@@ -1,0 +1,52 @@
+// Phase 36 Track 4: E-Signatures for contracts.
+// Coordinator merge: add model to schema.prisma + back-relations:
+//   Tenant: contractSignatures ContractSignature[]
+//   Contract: signatures ContractSignature[]
+// Migration SQL:
+// CREATE TABLE "contract_signatures" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "contract_id" TEXT NOT NULL,
+//     "signer_name" TEXT NOT NULL,
+//     "signer_email" TEXT NOT NULL,
+//     "token_hash" TEXT,
+//     "signature_image" TEXT,
+//     "signed_at" TIMESTAMP(3),
+//     "ip_address" TEXT,
+//     "user_agent" TEXT,
+//     "status" TEXT NOT NULL DEFAULT 'pending',
+//     "expires_at" TIMESTAMP(3),
+//     "decline_reason" TEXT,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "contract_signatures_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "contract_signatures_token_hash_key" ON "contract_signatures"("token_hash");
+// CREATE INDEX "contract_signatures_tenant_id_status_idx" ON "contract_signatures"("tenant_id", "status");
+// CREATE INDEX "contract_signatures_contract_id_idx" ON "contract_signatures"("contract_id");
+// ALTER TABLE "contract_signatures" ADD CONSTRAINT "contract_signatures_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "contract_signatures" ADD CONSTRAINT "contract_signatures_contract_id_fkey" FOREIGN KEY ("contract_id") REFERENCES "contracts"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+model ContractSignature {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contractId     String    @map("contract_id")
+  contract       Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  signerName     String    @map("signer_name")
+  signerEmail    String    @map("signer_email")
+  tokenHash      String?   @unique @map("token_hash")
+  signatureImage String?   @map("signature_image") @db.Text
+  signedAt       DateTime? @map("signed_at")
+  ipAddress      String?   @map("ip_address")
+  userAgent      String?   @map("user_agent")
+  status         String    @default("pending") @map("status") // pending | signed | declined | expired
+  expiresAt      DateTime? @map("expires_at")
+  declineReason  String?   @map("decline_reason")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([contractId])
+  @@map("contract_signatures")
+}

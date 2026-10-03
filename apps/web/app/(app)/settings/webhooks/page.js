@@ -79,22 +79,57 @@ function Deliveries({ webhookId }) {
   return <DataTable columns={cols} rows={rows} emptyText="No deliveries yet." />;
 }
 
+function TestConsole({ webhook, catalog, onClose }) {
+  const [event, setEvent] = useState('webhook.test');
+  const [sending, setSending] = useState(false);
+  const [result, setResult] = useState('');
+  const def = catalog.find((e) => e.name === event);
+  const send = async () => {
+    setSending(true); setResult('');
+    try {
+      await api.post(`/webhooks/${webhook.id}/test`, { event });
+      setResult(`Sent "${event}" — check the Logs tab for delivery status.`);
+    } catch (e) { setResult(`Error: ${e.message}`); } finally { setSending(false); }
+  };
+  return (
+    <div>
+      <p className="text-sm text-slate-400 mb-3">
+        Send a real signed test delivery to <span className="font-mono text-xs text-slate-200">{webhook.url}</span> using a catalog sample payload.
+      </p>
+      <Field label="Event">
+        <select className="input" value={event} onChange={(e) => setEvent(e.target.value)}>
+          {catalog.map((e) => <option key={e.name} value={e.name}>{e.name} — {e.description}</option>)}
+        </select>
+      </Field>
+      <Field label="Payload preview (signed envelope wraps this in {event, tenantId, at, data})">
+        <pre className="text-[11px] font-mono text-slate-300 bg-black/40 border border-white/10 rounded-xl p-3 max-h-56 overflow-auto whitespace-pre-wrap">
+          {JSON.stringify(def?.samplePayload || {}, null, 2)}
+        </pre>
+      </Field>
+      {result && <p className="text-xs text-slate-300 mb-3">{result}</p>}
+      <button className="btn-primary w-full" disabled={sending} onClick={send}>{sending ? 'Sending…' : 'Send test delivery'}</button>
+    </div>
+  );
+}
+
 export default function WebhooksPage() {
   const { allowed } = useRequireRoles(['ceo', 'admin', 'super_admin']);
   const [hooks, setHooks] = useState([]);
   const [events, setEvents] = useState([]);
+  const [catalog, setCatalog] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null);
   const [saving, setSaving] = useState(false);
   const [viewDeliveries, setViewDeliveries] = useState(null);
+  const [testConsole, setTestConsole] = useState(null); // webhook object for test console
   const [secretModal, setSecretModal] = useState(null); // one-time secret display
 
   const load = () => {
     setLoading(true);
-    api.get('/webhooks')
-      .then((d) => { setHooks(d.webhooks || []); setEvents(d.availableEvents || []); })
+    Promise.all([api.get('/webhooks'), api.get('/webhooks/events').catch(() => ({ events: [] }))])
+      .then(([d, c]) => { setHooks(d.webhooks || []); setEvents(d.availableEvents || []); setCatalog(c.events || []); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
   };
@@ -129,10 +164,7 @@ export default function WebhooksPage() {
     catch (e) { setError(e.message); }
   };
 
-  const sendTest = async (id) => {
-    try { await api.post(`/webhooks/${id}/test`); setError(''); alert('Test event sent — check deliveries.'); }
-    catch (e) { setError(e.message); }
-  };
+  const sendTest = (h) => setTestConsole(h);
 
   const cols = [
     { key: 'name', label: 'Name', render: (h) => <div><div className="font-medium text-white">{h.name}</div><div className="text-xs text-slate-400 font-mono truncate max-w-[260px]">{h.url}</div></div> },
@@ -142,7 +174,7 @@ export default function WebhooksPage() {
       key: 'action', label: '', render: (h) => (
         <div className="flex gap-2 flex-wrap">
           <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => setViewDeliveries(h)}>Logs</button>
-          <button className="text-xs text-slate-300 hover:text-white" onClick={() => sendTest(h.id)}>Test</button>
+          <button className="text-xs text-slate-300 hover:text-white" onClick={() => sendTest(h)}>Test</button>
           <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => regenSecret(h)}>Secret</button>
           <button className="text-xs text-slate-300 hover:text-white" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>
           <button className="text-xs text-red-300 hover:text-red-200" onClick={() => remove(h.id)}>Delete</button>
@@ -168,6 +200,11 @@ export default function WebhooksPage() {
       {viewDeliveries && (
         <Modal title={`Deliveries — ${viewDeliveries.name}`} onClose={() => setViewDeliveries(null)}>
           <Deliveries webhookId={viewDeliveries.id} />
+        </Modal>
+      )}
+      {testConsole && (
+        <Modal title={`Test console — ${testConsole.name}`} onClose={() => setTestConsole(null)}>
+          <TestConsole webhook={testConsole} catalog={catalog} onClose={() => setTestConsole(null)} />
         </Modal>
       )}
       {secretModal && (

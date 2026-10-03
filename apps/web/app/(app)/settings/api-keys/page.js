@@ -6,10 +6,10 @@ import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, DataTable } from
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
 function KeyForm({ scopes, onSave, saving }) {
-  const [f, setF] = useState({ name: '', scopes: ['bookings:read', 'members:read'], expiresInDays: 365 });
+  const [f, setF] = useState({ name: '', scopes: ['bookings:read', 'members:read'], expiresInDays: 365, rateLimitPerMin: '' });
   const toggle = (s) => setF({ ...f, scopes: f.scopes.includes(s) ? f.scopes.filter((x) => x !== s) : [...f.scopes, s] });
   return (
-    <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, expiresInDays: f.expiresInDays || null }); }}>
+    <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, expiresInDays: f.expiresInDays || null, rateLimitPerMin: f.rateLimitPerMin ? Number(f.rateLimitPerMin) : null }); }}>
       <Field label="Name"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required placeholder="e.g. Accounting sync" /></Field>
       <Field label="Scopes">
         <div className="flex flex-wrap gap-2">
@@ -23,6 +23,9 @@ function KeyForm({ scopes, onSave, saving }) {
       </Field>
       <Field label="Expires in (days — blank for never)">
         <input type="number" min="1" max="3650" className="input" value={f.expiresInDays || ''} onChange={(e) => setF({ ...f, expiresInDays: e.target.value ? Number(e.target.value) : null })} placeholder="Never" />
+      </Field>
+      <Field label="Rate limit (requests/min — blank for unlimited)">
+        <input type="number" min="1" max="100000" className="input" value={f.rateLimitPerMin} onChange={(e) => setF({ ...f, rateLimitPerMin: e.target.value })} placeholder="Unlimited" />
       </Field>
       <button type="submit" className="btn-primary w-full" disabled={saving || !f.scopes.length}>{saving ? 'Creating…' : 'Generate API Key'}</button>
     </form>
@@ -65,6 +68,15 @@ export default function ApiKeysPage() {
     catch (e) { setError(e.message); }
   };
 
+  const setLimit = async (r) => {
+    const v = prompt(`Rate limit for "${r.name}" (requests per minute, blank = unlimited):`, r.rateLimitPerMin || '');
+    if (v === null) return;
+    const n = v.trim() === '' ? null : Number(v);
+    if (n !== null && (!Number.isInteger(n) || n < 1 || n > 100000)) { alert('Enter 1–100000 or leave blank.'); return; }
+    try { await api.patch(`/api-keys/${r.id}`, { rateLimitPerMin: n }); load(); }
+    catch (e) { setError(e.message); }
+  };
+
   const copy = async () => {
     try { await navigator.clipboard.writeText(newKey); setCopied(true); setTimeout(() => setCopied(false), 2000); }
     catch { /* ignore */ }
@@ -79,9 +91,13 @@ export default function ApiKeysPage() {
     { key: 'scopes', label: 'Scopes', render: (r) => <span className="font-mono text-[11px] text-slate-400">{(r.scopes || []).join(', ')}</span> },
     { key: 'lastUsed', label: 'Last used', render: (r) => <span className="text-xs text-slate-400">{r.lastUsedAt ? new Date(r.lastUsedAt).toLocaleString() : 'Never'}</span> },
     { key: 'expires', label: 'Expires', render: (r) => <span className="text-xs text-slate-400">{r.expiresAt ? new Date(r.expiresAt).toLocaleDateString() : 'Never'}</span> },
+    { key: 'rateLimit', label: 'Rate limit', render: (r) => <span className="text-xs text-slate-400">{r.rateLimitPerMin ? `${r.rateLimitPerMin}/min` : 'Unlimited'}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'active' ? 'green' : r.status === 'expired' ? 'amber' : 'red'}>{r.status}</Badge> },
     { key: 'actions', label: '', render: (r) => r.status === 'active' ? (
-      <button onClick={() => revoke(r.id)} className="text-xs text-red-300 hover:text-red-200 underline">Revoke</button>
+      <span className="flex gap-3">
+        <button onClick={() => setLimit(r)} className="text-xs text-indigo-300 hover:text-indigo-200 underline">Set limit</button>
+        <button onClick={() => revoke(r.id)} className="text-xs text-red-300 hover:text-red-200 underline">Revoke</button>
+      </span>
     ) : null },
   ];
 

@@ -230,6 +230,12 @@ function MemberDetail({ member, onClose, onChanged }) {
   const [error, setError] = useState('');
   const [detail, setDetail] = useState(null);
   const [tab, setTab] = useState('overview');
+  // Phase 36: e-signature request
+  const [esignTarget, setEsignTarget] = useState(null);
+  const [esignName, setEsignName] = useState('');
+  const [esignEmail, setEsignEmail] = useState('');
+  const [esignMsg, setEsignMsg] = useState('');
+  const [esignBusy, setEsignBusy] = useState(false);
 
   // Phase 31: credit balance bar (computed from loaded invoices)
   function CreditBar({ m }) {
@@ -367,10 +373,43 @@ function MemberDetail({ member, onClose, onChanged }) {
               { key: 'start', label: 'Start', render: (r) => (r.startDate ? String(r.startDate).slice(0, 10) : '—') },
               { key: 'end', label: 'End', render: (r) => (r.endDate ? String(r.endDate).slice(0, 10) : '—') },
               { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status || '—'}</Badge> },
+              { key: 'esign', label: 'E-Sign', render: (r) => (
+                <button
+                  onClick={() => { setEsignTarget(r); setEsignName(m.name || ''); setEsignEmail(m.email || ''); setEsignMsg(''); }}
+                  className="text-[11px] px-2 py-1 rounded-lg border border-violet-400/40 text-violet-200 hover:bg-violet-500/15">
+                  ✍️ Request
+                </button>
+              ) },
             ]}
             rows={contracts}
             empty={{ title: 'No contracts' }}
           />
+          {/* Phase 36: e-signature request modal */}
+          {esignTarget && (
+            <Modal title={`Request signature — ${esignTarget.unitCode || esignTarget.unit?.code || 'contract'}`} onClose={() => setEsignTarget(null)}>
+              <form onSubmit={async (e) => {
+                e.preventDefault();
+                setEsignBusy(true); setEsignMsg('');
+                try {
+                  await api.post(`/esign/contracts/${esignTarget.id}/request`, { signerName: esignName.trim(), signerEmail: esignEmail.trim() });
+                  setEsignMsg('✅ Signing link sent to ' + esignEmail.trim());
+                } catch (err) { setEsignMsg('❌ ' + (err.message || 'Request failed')); }
+                finally { setEsignBusy(false); }
+              }}>
+                <div className="space-y-3">
+                  <Field label="Signer name">
+                    <input className="input w-full" value={esignName} onChange={(e) => setEsignName(e.target.value)} required maxLength={120} />
+                  </Field>
+                  <Field label="Signer email">
+                    <input type="email" className="input w-full" value={esignEmail} onChange={(e) => setEsignEmail(e.target.value)} required maxLength={160} />
+                  </Field>
+                  <p className="text-xs text-slate-500">The signer gets an email with a one-time link (valid 14 days). Their IP and timestamp are recorded on signing.</p>
+                  {esignMsg && <p className="text-sm text-slate-300">{esignMsg}</p>}
+                  <button type="submit" disabled={esignBusy} className="btn-primary w-full">{esignBusy ? 'Sending…' : 'Send signing link'}</button>
+                </div>
+              </form>
+            </Modal>
+          )}
 
           <h3 className="font-semibold text-white mb-2 mt-5">Invoices ({invoices.length})</h3>
           <DataTable

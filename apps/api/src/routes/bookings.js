@@ -180,6 +180,13 @@ router.post('/', validateBody(bookingSchema), async (req, res, next) => {
       }).catch(() => {});
     }
     emitWebhook(tf.tenantId, 'booking.created', { id: booking.id, title: booking.title, unitCode: booking.unit?.code, startAt: booking.startAt, endAt: booking.endAt });
+    // Slack integration (Phase 36) — fire-and-forget, never blocks the request
+    require('../lib/slack').notifyEvent(tf.tenantId, 'booking_created', { id: booking.id, title: booking.title, unitCode: booking.unit?.code, startAt: booking.startAt, endAt: booking.endAt }).catch(() => {});
+    // Phase 36: Google Calendar auto-sync (fire-and-forget — booking kabhi nahi tootega)
+    try {
+      const gcal = require('../lib/googleCalendar');
+      gcal.syncBookingCreated(tf.tenantId, booking, req.user.sub);
+    } catch { /* never block booking */ }
     auditAsync({ tenantId: tf.tenantId, actorId: req.user.sub, action: 'booking.create', entity: 'Booking', entityId: booking.id, newValue: { title: booking.title }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ booking });
   } catch (err) {
@@ -216,6 +223,22 @@ router.patch('/:id', validateBody(bookingUpdateSchema), async (req, res, next) =
       data: req.body,
       include: includeBooking,
     });
+    // Phase 36: Google Calendar event update (fire-and-forget)
+    (async () => {
+      try {
+        const gcal = require('../lib/googleCalendar');
+        const log = await prisma.calendarSyncLog.findFirst({
+          where: { bookingId: booking.id, userId: req.user.sub, status: { in: ['synced', 'updated'] } },
+          orderBy: { syncedAt: 'desc' },
+        });
+        if (log && log.eventId) {
+          await gcal.updateEvent(req.user.sub, log.eventId, booking);
+          await prisma.calendarSyncLog.create({
+            data: { tenantId: req.user.tenantId, bookingId: booking.id, userId: req.user.sub, eventId: log.eventId, status: 'updated' },
+          });
+        }
+      } catch { /* never block booking update */ }
+    })();
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'booking.update', entity: 'Booking', entityId: booking.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ booking });
   } catch (err) {
@@ -243,6 +266,11 @@ router.delete('/:id', async (req, res, next) => {
       include: includeBooking,
     });
     emitWebhook(req.user.tenantId, 'booking.cancelled', { id: booking.id, title: booking.title });
+    // Phase 36: Google Calendar event delete (fire-and-forget)
+    try {
+      const gcal = require('../lib/googleCalendar');
+      gcal.syncBookingCancelled(req.user.tenantId, booking.id, req.user.sub);
+    } catch { /* never block cancel */ }
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'booking.cancel', entity: 'Booking', entityId: booking.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ booking });
   } catch (err) {

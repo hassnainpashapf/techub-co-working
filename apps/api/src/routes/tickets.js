@@ -155,6 +155,10 @@ router.post('/', validateBody(ticketSchema), async (req, res, next) => {
     const ticket = await prisma.ticket.create({ data, include: includeTicket });
     await writeAudit(req, 'ticket.create', 'Ticket', ticket.id, null, { title: ticket.title });
     emitWebhook(req.user.tenantId, 'ticket.created', { id: ticket.id, title: ticket.title, priority: ticket.priority });
+    // Slack integration (Phase 36) — urgent tickets only, fire-and-forget
+    if (ticket.priority === 'urgent') {
+      require('../lib/slack').notifyEvent(req.user.tenantId, 'ticket_urgent', { id: ticket.id, ticketNumber: ticket.ticketNumber, title: ticket.title }).catch(() => {});
+    }
     res.status(201).json({ ticket });
   } catch (e) { next(e); }
 });

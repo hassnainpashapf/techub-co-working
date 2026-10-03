@@ -1,0 +1,40 @@
+// ------------------------------------------------- Phase 36: API Usage Analytics
+model ApiUsageLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  apiKeyId   String?  @map("api_key_id")
+  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint   String // normalized path, e.g. /api/bookings/:id
+  method     String
+  statusCode Int      @map("status_code")
+  durationMs Int      @map("duration_ms")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("api_usage_logs")
+}
+
+// ---- Coordinator merge notes ----
+// ADD TO model ApiKey:
+//   rateLimitPerMin Int?          @map("rate_limit_per_min") // null = unlimited
+//   usageLogs       ApiUsageLog[]
+// ADD TO model Tenant:
+//   apiUsageLogs ApiUsageLog[]
+//
+// Migration SQL:
+// CREATE TABLE "api_usage_logs" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "api_key_id" TEXT,
+//     "endpoint" TEXT NOT NULL,
+//     "method" TEXT NOT NULL,
+//     "status_code" INTEGER NOT NULL,
+//     "duration_ms" INTEGER NOT NULL,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "api_usage_logs_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "api_usage_logs_tenant_id_created_at_idx" ON "api_usage_logs"("tenant_id", "created_at");
+// ALTER TABLE "api_usage_logs" ADD CONSTRAINT "api_usage_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "api_usage_logs" ADD CONSTRAINT "api_usage_logs_api_key_id_fkey" FOREIGN KEY ("api_key_id") REFERENCES "api_keys"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+// ALTER TABLE "api_keys" ADD COLUMN "rate_limit_per_min" INTEGER;

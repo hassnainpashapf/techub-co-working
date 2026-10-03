@@ -3,6 +3,7 @@
 // Stores only sha256(key) in the DB. Does NOT touch existing JWT auth.
 const crypto = require('crypto');
 const { verifyAccessToken } = require('../lib/auth');
+const { checkRateLimit, logApiUsage } = require('./apiUsage');
 const prisma = require('../lib/prisma');
 
 const KEY_PREFIX = 'cwk_';
@@ -44,6 +45,15 @@ async function authenticateApiKey(req, res, next) {
       keyId: record.id,
       role: 'integration', // never matches 'member' scoping or admin roles
     };
+    // Phase 36: per-key rate limit (null = unlimited), then usage logging
+    const rl = checkRateLimit(record.id, record.rateLimitPerMin);
+    if (!rl.allowed) {
+      res.setHeader('Retry-After', String(rl.retryAfterSec));
+      return res.status(429).json({
+        error: { message: 'API key rate limit exceeded. Try again shortly.', code: 'RATE_LIMIT_EXCEEDED' },
+      });
+    }
+    logApiUsage(req, res, record);
     // Fire-and-forget last-used update
     prisma.apiKey.update({ where: { id: record.id }, data: { lastUsedAt: new Date() } }).catch(() => {});
     return next();

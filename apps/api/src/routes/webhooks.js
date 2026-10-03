@@ -9,6 +9,7 @@ const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { writeAudit } = require('../middleware/audit');
 const { WEBHOOK_EVENTS } = require('../lib/webhooks');
+const { WEBHOOK_EVENT_CATALOG, isKnownEvent } = require('../lib/webhookEvents');
 
 const router = express.Router();
 
@@ -93,6 +94,12 @@ router.delete('/:id', adminWrite, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
+// Event catalog — central list of every event CoworkOS can emit,
+// with descriptions and sample payloads for the test console.
+router.get('/events', adminWrite, async (req, res) => {
+  res.json({ events: WEBHOOK_EVENT_CATALOG });
+});
+
 // Delivery logs
 router.get('/:id/deliveries', adminWrite, async (req, res, next) => {
   try {
@@ -107,14 +114,22 @@ router.get('/:id/deliveries', adminWrite, async (req, res, next) => {
   } catch (e) { next(e); }
 });
 
-// Send a test event
-router.post('/:id/test', adminWrite, async (req, res, next) => {
+// Send a test event — optionally a specific catalog event whose sample
+// payload is delivered (real HTTP, HMAC-signed). No event = generic test.
+const testEventSchema = z.object({
+  event: z.string().optional(),
+});
+
+router.post('/:id/test', adminWrite, validateBody(testEventSchema), async (req, res, next) => {
   try {
     const webhook = await prisma.webhook.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
     if (!webhook) return res.status(404).json({ error: 'Webhook not found' });
-    const { testWebhook } = require('../lib/webhooks');
-    await testWebhook(webhook);
-    res.json({ ok: true });
+    const event = req.body.event || 'webhook.test';
+    if (!isKnownEvent(event)) return res.status(400).json({ error: `Unknown event: ${event}` });
+    const { testWebhookEvent } = require('../lib/webhooks');
+    await testWebhookEvent(webhook, event);
+    await writeAudit(req, 'webhook.test', 'Webhook', webhook.id, null, { event });
+    res.json({ ok: true, event });
   } catch (e) { next(e); }
 });
 

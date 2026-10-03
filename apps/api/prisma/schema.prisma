@@ -120,6 +120,15 @@ model Tenant {
   lostFoundItems          LostFoundItem[]
   cleaningTasks           CleaningTask[]
   kpiDashboards           KpiDashboard[] // Phase 35
+  // Phase 36: Integrations & API Pack
+  calendarSyncLogs        CalendarSyncLog[]
+  slackIntegration        SlackIntegration?
+  contractSignatures      ContractSignature[]
+  emailCampaigns          EmailCampaign[]
+  emailUnsubscribes       EmailUnsubscribe[]
+  apiUsageLogs            ApiUsageLog[]
+  calendarFeedTokens      CalendarFeedToken[]
+  smsCampaigns            SmsCampaign[]
 
   @@map("tenants")
 }
@@ -187,6 +196,7 @@ model User {
   pushSubscriptions           PushSubscription[]
   announcementReads           AnnouncementRead[]       @relation("AnnouncementReads")
   kpiDashboards               KpiDashboard[]           @relation("KpiDashboardOwner") // Phase 35
+  calendarConnections         CalendarConnection[] // Phase 36
 
   @@index([tenantId, role])
   @@map("users")
@@ -349,6 +359,7 @@ model Member {
   printJobs              PrintJob[]
   wifiVouchers           WifiVoucher[]
   lostFoundItems         LostFoundItem[]
+  calendarFeedTokens     CalendarFeedToken[] // Phase 36
 
   @@index([tenantId, status])
   @@map("members")
@@ -424,6 +435,7 @@ model Contract {
   updatedAt  DateTime        @updatedAt @map("updated_at")
 
   invoices Invoice[]
+  signatures ContractSignature[] // Phase 36
 
   @@index([tenantId, status])
   @@map("contracts")
@@ -603,6 +615,8 @@ model Booking {
   createdById String?  @map("created_by_id")
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+
+  calendarSyncLogs CalendarSyncLog[] // Phase 36
 
   @@index([tenantId, unitId, startAt])
   @@map("bookings")
@@ -1173,6 +1187,9 @@ model ApiKey {
   createdBy  String    @map("created_by") // user id
   createdAt  DateTime  @default(now()) @map("created_at")
   updatedAt  DateTime  @updatedAt @map("updated_at")
+
+  rateLimitPerMin Int?          @map("rate_limit_per_min") // null = unlimited (Phase 36)
+  usageLogs       ApiUsageLog[] // Phase 36
 
   @@index([tenantId])
   @@map("api_keys")
@@ -2110,4 +2127,160 @@ model KpiDashboard {
 
   @@index([tenantId, userId])
   @@map("kpi_dashboards")
+}
+
+// -------------------------------------- Phase 36: Integrations & API Pack ---
+model CalendarConnection {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider     String   @default("google")
+  accessToken  String?  @map("access_token") @db.Text
+  refreshToken String   @map("refresh_token") @db.Text // AES-256-GCM encrypted (lib/crypto.js)
+  expiry       DateTime?
+  scope        String?
+  email        String?
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, provider])
+  @@map("calendar_connections")
+}
+
+model CalendarSyncLog {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  bookingId String   @map("booking_id")
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  eventId   String?  @map("event_id")
+  status    String   @default("synced")
+  error     String?
+  syncedAt  DateTime @default(now()) @map("synced_at")
+
+  @@index([bookingId])
+  @@index([userId])
+  @@map("calendar_sync_logs")
+}
+
+model SlackIntegration {
+  id         String   @id @default(cuid())
+  tenantId   String   @unique @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  webhookUrl String   @map("webhook_url") // AES-256-GCM encrypted (gcm1: prefix)
+  channel    String?
+  events     Json     @default("[]")
+  isActive   Boolean  @default(true) @map("is_active")
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@map("slack_integrations")
+}
+
+model ContractSignature {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  contractId     String    @map("contract_id")
+  contract       Contract  @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  signerName     String    @map("signer_name")
+  signerEmail    String    @map("signer_email")
+  tokenHash      String?   @unique @map("token_hash")
+  signatureImage String?   @map("signature_image") @db.Text
+  signedAt       DateTime? @map("signed_at")
+  ipAddress      String?   @map("ip_address")
+  userAgent      String?   @map("user_agent")
+  status         String    @default("pending") @map("status")
+  expiresAt      DateTime? @map("expires_at")
+  declineReason  String?   @map("decline_reason")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([contractId])
+  @@map("contract_signatures")
+}
+
+model EmailCampaign {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name           String
+  subject        String
+  bodyHtml       String    @map("body_html") @db.Text
+  segment        Json      @default("{}")
+  status         String    @default("draft")
+  scheduledAt    DateTime? @map("scheduled_at")
+  recipientCount Int       @default(0) @map("recipient_count")
+  sentCount      Int       @default(0) @map("sent_count")
+  createdById    String?   @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@map("email_campaigns")
+}
+
+model EmailUnsubscribe {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  email     String
+  token     String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, email])
+  @@unique([token])
+  @@index([tenantId])
+  @@map("email_unsubscribes")
+}
+
+model ApiUsageLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  apiKeyId   String?  @map("api_key_id")
+  apiKey     ApiKey?  @relation(fields: [apiKeyId], references: [id], onDelete: SetNull)
+  endpoint   String
+  method     String
+  statusCode Int      @map("status_code")
+  durationMs Int      @map("duration_ms")
+  createdAt  DateTime @default(now()) @map("created_at")
+
+  @@index([tenantId, createdAt])
+  @@map("api_usage_logs")
+}
+
+model CalendarFeedToken {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, memberId])
+  @@index([token])
+  @@map("calendar_feed_tokens")
+}
+
+model SmsCampaign {
+  id        String    @id @default(cuid())
+  tenantId  String    @map("tenant_id")
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name      String
+  message   String    @db.Text
+  segment   Json      @default("{}")
+  status    String    @default("draft") @map("status")
+  sentCount Int       @default(0) @map("sent_count")
+  failCount Int       @default(0) @map("fail_count")
+  createdBy String?   @map("created_by")
+  sentAt    DateTime? @map("sent_at")
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@map("sms_campaigns")
 }

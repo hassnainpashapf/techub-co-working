@@ -1,0 +1,37 @@
+// Phase 36 Track 7: iCal Booking Feeds — fragment (coordinator merges into schema.prisma).
+//
+// Migration SQL (coordinator: add to 20261003460000_phase36 migration):
+// CREATE TABLE "calendar_feed_tokens" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "token" TEXT NOT NULL,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "calendar_feed_tokens_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "calendar_feed_tokens_token_key" ON "calendar_feed_tokens"("token");
+// CREATE UNIQUE INDEX "calendar_feed_tokens_tenant_id_member_id_key" ON "calendar_feed_tokens"("tenant_id", "member_id");
+// ALTER TABLE "calendar_feed_tokens" ADD CONSTRAINT "calendar_feed_tokens_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "calendar_feed_tokens" ADD CONSTRAINT "calendar_feed_tokens_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+//
+// Back-relations to add:
+//   Tenant: calendarFeedTokens CalendarFeedToken[]
+//   Member: calendarFeedTokens CalendarFeedToken[]
+
+model CalendarFeedToken {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  // Unguessable 48-char hex feed secret. Anyone with the URL can read
+  // this member's upcoming bookings — treat like a password.
+  token     String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@unique([tenantId, memberId])
+  @@index([token])
+  @@map("calendar_feed_tokens")
+}

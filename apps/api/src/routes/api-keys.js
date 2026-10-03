@@ -33,6 +33,7 @@ const createSchema = z.object({
     { message: 'Invalid scope' }
   ),
   expiresInDays: z.number().int().min(1).max(3650).optional().nullable(),
+  rateLimitPerMin: z.number().int().min(1).max(100000).optional().nullable(),
 });
 
 function safeKey(k) {
@@ -42,6 +43,7 @@ function safeKey(k) {
     keyPrefix: k.keyPrefix,
     scopes: k.scopes,
     expiresAt: k.expiresAt,
+    rateLimitPerMin: k.rateLimitPerMin ?? null,
     lastUsedAt: k.lastUsedAt,
     revokedAt: k.revokedAt,
     createdAt: k.createdAt,
@@ -74,6 +76,7 @@ router.post('/', adminOnly, validateBody(createSchema), async (req, res, next) =
         expiresAt: req.body.expiresInDays
           ? new Date(Date.now() + req.body.expiresInDays * 24 * 60 * 60 * 1000)
           : null,
+        rateLimitPerMin: req.body.rateLimitPerMin ?? null,
         createdBy: req.user.sub,
       },
     });
@@ -87,6 +90,37 @@ router.post('/', adminOnly, validateBody(createSchema), async (req, res, next) =
       userAgent: req.headers['user-agent'],
     });
     res.status(201).json({ apiKey: safeKey(key), key: raw });
+  } catch (e) { next(e); }
+});
+
+// Update key rate limit
+router.patch('/:id', adminOnly, async (req, res, next) => {
+  try {
+    const schema = z.object({
+      rateLimitPerMin: z.number().int().min(1).max(100000).nullable(),
+    });
+    const parsed = schema.safeParse(req.body);
+    if (!parsed.success) {
+      return res.status(400).json({ error: { message: 'rateLimitPerMin must be 1-100000 or null.' } });
+    }
+    const key = await prisma.apiKey.findFirst({
+      where: { id: req.params.id, ...tenantFilter(req) },
+    });
+    if (!key) return res.status(404).json({ error: { message: 'API key not found.' } });
+    const updated = await prisma.apiKey.update({
+      where: { id: key.id },
+      data: { rateLimitPerMin: parsed.data.rateLimitPerMin },
+    });
+    await writeAudit({
+      tenantId: req.user.tenantId,
+      actorId: req.user.sub,
+      action: 'apikey.ratelimit_updated',
+      entity: 'ApiKey',
+      entityId: key.id,
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    });
+    res.json({ apiKey: safeKey(updated) });
   } catch (e) { next(e); }
 });
 

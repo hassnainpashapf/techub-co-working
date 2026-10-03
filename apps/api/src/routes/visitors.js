@@ -74,6 +74,8 @@ router.post('/check-in', write, validateBody(visitorSchema), async (req, res, ne
     });
     await writeAudit(req, 'visitor.checkin', 'Visitor', visitor.id, null, { name: visitor.name });
     emitWebhook(req.user.tenantId, 'visitor.checkin', { id: visitor.id, name: visitor.name, host: visitor.hostMember?.name || visitor.hostName });
+    // Slack integration (Phase 36) — fire-and-forget, never blocks the request
+    require('../lib/slack').notifyEvent(req.user.tenantId, 'visitor_checkin', { id: visitor.id, name: visitor.name, host: visitor.hostMember?.name || visitor.hostName }).catch(() => {});
     // Notify host member by email (non-blocking)
     if (visitor.hostMember?.email) {
       const { notify } = require('../lib/mailer');

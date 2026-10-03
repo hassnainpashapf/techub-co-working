@@ -1,0 +1,48 @@
+// Phase 36 Track 2: Google Calendar Sync — schema fragment.
+// Coordinator: merge these models into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+
+model CalendarConnection {
+  id           String   @id @default(cuid())
+  userId       String   @map("user_id")
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider     String   @default("google") // sirf google supported hai abhi
+  // accessToken short-lived (~1h) hota hai — plaintext theek hai.
+  // refreshToken LONG-LIVED credential hai — AES-256-GCM encrypted (lib/crypto.js,
+  // TOTP_ENCRYPTION_KEY reuse). Kabhi plaintext DB me nahi.
+  accessToken  String?  @map("access_token") @db.Text
+  refreshToken String   @map("refresh_token") @db.Text // encrypted
+  expiry       DateTime? // accessToken kab expire hoga
+  scope        String?  // granted OAuth scopes
+  email        String?  // connected Google account ka email
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@unique([userId, provider])
+  @@map("calendar_connections")
+}
+
+model CalendarSyncLog {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  bookingId String   @map("booking_id")
+  booking   Booking  @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id") // kis user ke calendar me sync hua
+  eventId   String?  @map("event_id") // Google Calendar event id
+  status    String   @default("synced") // synced | updated | deleted | failed
+  error     String?  // failed par reason
+  syncedAt  DateTime @default(now()) @map("synced_at")
+
+  @@index([bookingId])
+  @@index([userId])
+  @@map("calendar_sync_logs")
+}
+
+// ADD TO User model:
+//   calendarConnections CalendarConnection[]
+// ADD TO Tenant model:
+//   calendarSyncLogs CalendarSyncLog[]
+// ADD TO Booking model:
+//   calendarSyncLogs CalendarSyncLog[]
