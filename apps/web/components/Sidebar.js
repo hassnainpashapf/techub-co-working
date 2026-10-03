@@ -74,6 +74,7 @@ const NAV_MAIN = [
   { key: 'school', label: 'School', path: '/members', icon: 'school',
     children: [
       { label: 'Members', path: '/members' },
+      { label: 'Companies', path: '/companies' },
       { label: 'Membership Plans', path: '/plans' },
     ],
   },
@@ -89,14 +90,30 @@ const NAV_MAIN = [
   { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
 ];
 
+// Limited nav for member-portal users — own data only
+const NAV_MEMBER = [
+  { key: 'portal', label: 'My Portal', path: '/portal', icon: 'overview' },
+  { key: 'mybookings', label: 'My Bookings', path: '/bookings', icon: 'workspaces' },
+  { key: 'myinvoices', label: 'My Invoices', path: '/billing', icon: 'investor' },
+  { key: 'mytickets', label: 'My Tickets', path: '/tickets', icon: 'launchpad' },
+  { key: 'mydocs', label: 'My Documents', path: '/documents', icon: 'school' },
+];
+
 const NAV_OTHERS = [
-  { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', roles: ['super_admin'] },
+  { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', chevron: true, roles: ['super_admin'],
+    children: [
+      { label: 'Overview', path: '/saas-admin' },
+      { label: 'Plans', path: '/saas-admin/plans' },
+    ],
+  },
   { key: 'settings', label: 'Settings', path: '/settings', icon: 'settings', chevron: true,
     children: [
       { label: 'General', path: '/settings' },
       { label: 'Branding', path: '/settings/branding' },
       { label: 'Email', path: '/settings/email' },
       { label: 'Webhooks', path: '/settings/webhooks' },
+      { label: 'API Keys', path: '/settings/api-keys' },
+      { label: 'Subscription', path: '/settings/subscription' },
     ],
   },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },
@@ -208,10 +225,19 @@ export default function Sidebar() {
 
       {/* Nav */}
       <nav className="flex-1 px-3.5 space-y-1 overflow-y-auto">
-        <p className="px-3.5 pb-2 text-[12px] font-medium text-slate-600">Main</p>
-        {NAV_MAIN.map(renderItem)}
-        <p className="px-3.5 pt-5 pb-2 text-[12px] font-medium text-slate-600">Others</p>
-        {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
+        {user.role === 'member' ? (
+          <>
+            <p className="px-3.5 pb-2 text-[12px] font-medium text-slate-600">My Space</p>
+            {NAV_MEMBER.map(renderItem)}
+          </>
+        ) : (
+          <>
+            <p className="px-3.5 pb-2 text-[12px] font-medium text-slate-600">Main</p>
+            {NAV_MAIN.map(renderItem)}
+            <p className="px-3.5 pt-5 pb-2 text-[12px] font-medium text-slate-600">Others</p>
+            {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
+          </>
+        )}
       </nav>
     </aside>
   );

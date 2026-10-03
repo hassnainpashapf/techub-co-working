@@ -25,6 +25,7 @@ app.use('/api/dashboard', require('./routes/dashboard'));
 app.use('/api/spaces', require('./routes/spaces'));
 app.use('/api/buildings', require('./routes/buildings'));
 app.use('/api/members', require('./routes/members'));
+app.use('/api/companies', require('./routes/companies'));
 app.use('/api/contracts', require('./routes/contracts'));
 app.use('/api/membership-plans', require('./routes/membership-plans'));
 app.use('/api/billing', require('./routes/billing'));
@@ -40,10 +41,13 @@ app.use('/api/email-settings', require('./routes/email-settings'));
 app.use('/api/refunds', require('./routes/refunds'));
 app.use('/api/rides', require('./routes/rides'));
 app.use('/api/webhooks', require('./routes/webhooks'));
+app.use('/api/api-keys', require('./routes/api-keys'));
+app.use('/api/subscriptions', require('./routes/subscriptions'));
 app.use('/api/bookings', require('./routes/bookings'));
 app.use('/api/notifications', require('./routes/notifications'));
 app.use('/api/reports', require('./routes/reports'));
 app.use('/api/settings', require('./routes/settings'));
+app.use('/api/portal', require('./routes/portal'));
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

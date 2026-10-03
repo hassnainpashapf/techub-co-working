@@ -3,14 +3,15 @@ const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
 const { emitWebhook } = require('../lib/webhooks');
-const { authenticate } = require('../middleware/auth');
+const { authenticateAny, requireScope } = require('../middleware/apiKey');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
+const { checkLimit } = require('../lib/limits');
 
 const router = express.Router();
 
-router.use(authenticate, requireTenantUser);
+router.use(authenticateAny, requireTenantUser);
 
 const WRITE_ROLES = ['ceo', 'admin', 'manager', 'receptionist', 'operations_manager'];
 const write = requireRole(...WRITE_ROLES);
@@ -23,6 +24,7 @@ const memberSchema = z.object({
   phone: z.string().min(1),
   cnic: z.string().optional().nullable(),
   companyName: z.string().optional().nullable(),
+  companyId: z.string().optional().nullable(),
   emergencyContact: z.string().optional().nullable(),
   status: z.enum(MEMBER_STATUSES).default('active'),
   notes: z.string().optional().nullable(),
@@ -30,6 +32,21 @@ const memberSchema = z.object({
 const memberUpdateSchema = memberSchema
   .partial()
   .refine((d) => Object.keys(d).length > 0, { message: 'No fields to update' });
+
+// Resolve companyId (tenant-scoped) and sync companyName from the linked company.
+async function resolveCompany(tenantId, data) {
+  const out = { ...data };
+  if (out.companyId) {
+    const company = await prisma.company.findFirst({ where: { id: out.companyId, tenantId } });
+    if (!company) {
+      const err = new Error('Company not found');
+      err.status = 400;
+      throw err;
+    }
+    out.companyName = company.name;
+  }
+  return out;
+}
 
 function memberScope(req) {
   const where = { ...tenantFilter(req) };
@@ -52,7 +69,7 @@ router.get('/me', async (req, res, next) => {
   }
 });
 
-router.get('/', async (req, res, next) => {
+router.get('/', requireScope('members:read'), async (req, res, next) => {
   try {
     const where = memberScope(req);
     if (req.query.status) where.status = String(req.query.status);
@@ -76,8 +93,16 @@ router.get('/', async (req, res, next) => {
 
 router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
   try {
+    // Phase 22: enforce plan member limit
+    const limit = await checkLimit(req.user.tenantId, 'members');
+    if (!limit.allowed) {
+      return res.status(402).json({
+        error: { message: `Member limit reached (${limit.used}/${limit.limit}). Upgrade your plan to add more members.` },
+      });
+    }
+    const data = await resolveCompany(req.user.tenantId, req.body);
     const member = await prisma.member.create({
-      data: { ...tenantFilter(req), ...req.body },
+      data: { ...tenantFilter(req), ...data },
     });
     emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
     return res.status(201).json({ member });
@@ -156,6 +181,7 @@ router.get('/:id', async (req, res, next) => {
     const member = await prisma.member.findFirst({
       where: { id: req.params.id, ...tenantFilter(req) },
       include: {
+        company: { select: { id: true, name: true, industry: true } },
         contracts: {
           include: { unit: { select: { id: true, code: true, type: true } } },
           orderBy: { createdAt: 'desc' },
@@ -184,7 +210,8 @@ router.patch('/:id', write, validateBody(memberUpdateSchema), async (req, res, n
       where: { id: req.params.id, ...tenantFilter(req) },
     });
     if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
-    const member = await prisma.member.update({ where: { id: existing.id }, data: req.body });
+    const data = await resolveCompany(req.user.tenantId, req.body);
+    const member = await prisma.member.update({ where: { id: existing.id }, data });
     return res.json({ member });
   } catch (err) {
     return next(err);

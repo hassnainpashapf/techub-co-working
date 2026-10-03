@@ -22,15 +22,24 @@ function MemberForm({ initial, onSave, saving }) {
     email: initial?.email || '',
     cnic: initial?.cnic || '',
     companyName: initial?.companyName || '',
+    companyId: initial?.companyId || '',
     emergencyContact: initial?.emergencyContact || '',
     status: initial?.status || 'active',
     notes: initial?.notes || '',
   });
+  const [companies, setCompanies] = useState([]);
+  useEffect(() => {
+    api.get('/companies').then((d) => setCompanies(d.companies || [])).catch(() => {});
+  }, []);
   return (
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSave(form);
+        const payload = { ...form };
+        // If a company is selected from dropdown, backend syncs companyName — drop free text
+        if (payload.companyId) delete payload.companyName;
+        else delete payload.companyId;
+        onSave(payload);
       }}
     >
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
@@ -38,7 +47,23 @@ function MemberForm({ initial, onSave, saving }) {
         <Field label="Phone"><input className="input" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} required placeholder="03xx-xxxxxxx" /></Field>
         <Field label="Email"><input type="email" className="input" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} /></Field>
         <Field label="CNIC"><input className="input" value={form.cnic} onChange={(e) => setForm({ ...form, cnic: e.target.value })} placeholder="xxxxx-xxxxxxx-x" /></Field>
-        <Field label="Company"><input className="input" value={form.companyName} onChange={(e) => setForm({ ...form, companyName: e.target.value })} /></Field>
+        <Field label="Company (linked)">
+          <select className="input" value={form.companyId} onChange={(e) => setForm({ ...form, companyId: e.target.value })}>
+            <option value="">— Select company —</option>
+            {companies.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </Field>
+        <Field label="Company (free text)">
+          <input
+            className="input"
+            value={form.companyName}
+            onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+            placeholder="Used when no company selected"
+            disabled={!!form.companyId}
+          />
+        </Field>
         <Field label="Emergency contact"><input className="input" value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} /></Field>
         <Field label="Status">
           <select className="input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>

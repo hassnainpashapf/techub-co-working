@@ -3,14 +3,14 @@ const { z } = require('zod');
 
 const prisma = require('../lib/prisma');
 const { emitWebhook } = require('../lib/webhooks');
-const { authenticate } = require('../middleware/auth');
+const { authenticateAny, requireScope } = require('../middleware/apiKey');
 const { requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 
 const router = express.Router();
 
-router.use(authenticate, requireTenantUser);
+router.use(authenticateAny, requireTenantUser);
 
 const PRIVILEGED = ['ceo', 'admin', 'operations_manager', 'manager', 'receptionist'];
 const isPrivileged = (role) => PRIVILEGED.includes(role);
@@ -61,7 +61,7 @@ async function findOverlap(tenantId, unitId, startAt, endAt, excludeId = null) {
   return prisma.booking.findFirst({ where });
 }
 
-router.get('/', async (req, res, next) => {
+router.get('/', requireScope('bookings:read'), async (req, res, next) => {
   try {
     const where = bookingScope(req);
     if (req.query.unitId) where.unitId = String(req.query.unitId);
