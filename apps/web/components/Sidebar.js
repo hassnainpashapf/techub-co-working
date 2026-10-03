@@ -78,6 +78,7 @@ const NAV_MAIN = [
     children: [
       { label: 'Tasks', path: '/tasks' },
       { label: 'Tickets', path: '/tickets' },
+      { label: 'Maintenance', path: '/maintenance' },
       { label: 'Visitors', path: '/visitors' },
       { label: 'Reminders', path: '/reminders' },
     ],
