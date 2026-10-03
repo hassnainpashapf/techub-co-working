@@ -36,6 +36,11 @@ const WEBHOOK_EVENT_CATALOG = [
     samplePayload: { id: 'bk_9f3ka2m1', title: 'Client demo', unitCode: 'MR-02', approvedBy: 'staff' },
   },
   {
+    name: 'booking.checked_in',
+    description: 'Fired when a member checks in to their booking (portal or reception).',
+    samplePayload: { bookingId: 'bk_9f3ka2m1', memberId: 'mem_1a2b3c', checkedInAt: '2026-10-05T09:02:00.000Z' },
+  },
+  {
     name: 'invoice.created',
     description: 'Fired when an invoice is created (manual, recurring billing, or overage).',
     samplePayload: {

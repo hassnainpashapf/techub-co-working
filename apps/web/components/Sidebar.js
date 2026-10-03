@@ -62,6 +62,8 @@ const NAV_MAIN = [
       { label: 'Team Members', path: '/users' },
       { label: 'Attendance', path: '/attendance' },
       { label: 'Scan QR', path: '/attendance/scan' },
+      { label: 'Check-in Desk', path: '/reception/checkin' },
+      { label: 'Mobile', path: '/mobile' },
       { label: 'Shifts', path: '/staff/shifts' },
     ],
   },
@@ -205,7 +207,7 @@ export default function Sidebar() {
       setCurrent(p);
       if (p.startsWith('/discover') || p.startsWith('/bookings') || p.startsWith('/rides') || p.startsWith('/spaces')) {
         setOpenMenu('workspaces');
-      } else if (p.startsWith('/users') || p.startsWith('/attendance')) {
+      } else if (p.startsWith('/users') || p.startsWith('/attendance') || p.startsWith('/reception') || p.startsWith('/mobile')) {
         setOpenMenu('team');
       } else if (p.startsWith('/finance') || p.startsWith('/billing') || p.startsWith('/reports')) {
         setOpenMenu('investor');

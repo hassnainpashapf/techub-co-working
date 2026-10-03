@@ -158,6 +158,8 @@ try {
 } catch (e) { console.error('[phase36] scheduler init failed:', e.message); }
 require('./lib/healthCheck');
 require('./lib/healthCheck').startHealthScheduler();
+// Phase 37: Mobile & Portal Pack
+app.use('/api/member-id', require('./routes/member-id'));
 require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler
 require('./lib/backup').registerBackupJob();
 require('./lib/backup').ensureBackupScheduled();

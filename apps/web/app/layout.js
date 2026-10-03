@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import './globals.css';
 import { AuthProvider } from '../context/AuthContext';
+import PwaInstall from '../components/PwaInstall';
 
 export default function RootLayout({ children }) {
   // Register service worker (production only)
@@ -16,9 +17,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <title>Techub Co-Working</title>
-        <link rel="manifest" href="/manifest.json" />
+        <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#0a0a14" />
         <link rel="apple-touch-icon" href="/icon-192.png" />
+        <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -27,6 +29,7 @@ export default function RootLayout({ children }) {
       </head>
       <body>
         <AuthProvider>{children}</AuthProvider>
+        <PwaInstall />
       </body>
     </html>
   );

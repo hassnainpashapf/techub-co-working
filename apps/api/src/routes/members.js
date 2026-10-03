@@ -1,5 +1,6 @@
 const express = require('express');
 const { z } = require('zod');
+const multer = require('multer');
 
 const prisma = require('../lib/prisma');
 const { emitWebhook } = require('../lib/webhooks');
@@ -9,11 +10,42 @@ const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { checkLimit } = require('../lib/limits');
 const { invalidateTenantCache } = require('../middleware/cache');
+const { saveFile, deleteFile, getFileStream, fileExists, MAX_BYTES } = require('../lib/storage');
 // Phase 28: audit coverage
 const { writeAudit } = require('../middleware/audit');
 const auditAsync = (data) => writeAudit(data).catch(() => {});
 
 const router = express.Router();
+
+// ---------------------------------------------------------------------------
+// Phase 37 Track 7: member profile photo inline stream for <img> tags.
+// Query-token auth (img tag Authorization header nahi bhej sakta).
+// router.use(auth...) se PEHLE hai taake middleware block na kare.
+// ---------------------------------------------------------------------------
+router.get('/me/photo/stream', async (req, res, next) => {
+  try {
+    let payload = null;
+    try {
+      payload = require('../lib/auth').verifyAccessToken(String(req.query.token || ''));
+    } catch { /* fallthrough → 401 */ }
+    if (!payload || payload.type !== 'access' || !payload.memberId) {
+      return res.status(401).end();
+    }
+    const doc = await prisma.document.findFirst({
+      where: { memberId: payload.memberId, category: 'profile_photo', tenantId: payload.tenantId },
+      orderBy: { createdAt: 'desc' },
+    });
+    if (!doc || !doc.storagePath || !(await fileExists(doc.storagePath))) {
+      return res.status(404).end();
+    }
+    res.setHeader('Content-Type', doc.mimeType || 'image/jpeg');
+    res.setHeader('Content-Disposition', 'inline');
+    res.setHeader('Cache-Control', 'private, max-age=300');
+    (await getFileStream(doc.storagePath)).pipe(res);
+  } catch (err) {
+    return next(err);
+  }
+});
 
 router.use(authenticateAny, requireTenantUser);
 router.use(invalidateTenantCache);
@@ -123,6 +155,113 @@ router.get('/me', async (req, res, next) => {
     });
     if (!member) return res.status(404).json({ error: { message: 'Member not found' } });
     return res.json({ member });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Phase 37 Track 7: member self-service profile update (no migration).
+// Whitelisted fields only — member role ke paas 'write' scope nahi hota.
+// ---------------------------------------------------------------------------
+const memberSelfUpdateSchema = z.object({
+  name: z.string().min(2).max(120).optional(),
+  phone: z.string().min(7).max(25).optional(),
+  companyName: z.string().max(160).optional().nullable(),
+  emergencyContact: z.string().max(160).optional().nullable(),
+});
+
+router.patch('/me', validateBody(memberSelfUpdateSchema), async (req, res, next) => {
+  try {
+    if (!req.user.memberId) return res.status(404).json({ error: { message: 'No member record linked' } });
+    const existing = await prisma.member.findFirst({
+      where: { id: req.user.memberId, ...tenantFilter(req) },
+    });
+    if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
+    const member = await prisma.member.update({ where: { id: existing.id }, data: req.body });
+    auditAsync({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.self_update',
+      entity: 'Member', entityId: member.id, newValue: req.body, ip: req.ip, userAgent: req.headers['user-agent'],
+    });
+    return res.json({ member });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// Phase 37 Track 7: member profile photo upload (no migration — stored as a
+// Document with category 'profile_photo', latest one is the current photo).
+// ---------------------------------------------------------------------------
+const photoUpload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: Math.min(MAX_BYTES, 5 * 1024 * 1024) },
+  fileFilter: (_req, file, cb) => {
+    if (/^image\/(jpeg|png|webp|gif)$/.test(file.mimetype)) return cb(null, true);
+    cb(new Error('Sirf image file (JPG/PNG/WebP/GIF) upload karein.'));
+  },
+});
+
+router.post('/me/photo', photoUpload.single('photo'), async (req, res, next) => {
+  try {
+    if (!req.user.memberId) return res.status(404).json({ error: { message: 'No member record linked' } });
+    if (!req.file) return res.status(400).json({ error: { message: 'Koi file nahi mili.' } });
+    const existing = await prisma.member.findFirst({
+      where: { id: req.user.memberId, ...tenantFilter(req) },
+    });
+    if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
+
+    const { path: storagePath } = await saveFile(req.file.buffer, {
+      folder: `${req.user.tenantId}/profile-photos`,
+      filename: req.file.originalname,
+      mimetype: req.file.mimetype,
+    });
+
+    // Purani profile photos hatao (storage + record)
+    const old = await prisma.document.findMany({
+      where: { memberId: existing.id, category: 'profile_photo', ...tenantFilter(req) },
+    });
+    for (const doc of old) {
+      if (doc.storagePath) await deleteFile(doc.storagePath).catch(() => {});
+      await prisma.document.delete({ where: { id: doc.id } }).catch(() => {});
+    }
+
+    const doc = await prisma.document.create({
+      data: {
+        tenantId: req.user.tenantId,
+        title: 'Profile photo',
+        category: 'profile_photo',
+        memberId: existing.id,
+        fileName: req.file.originalname,
+        fileSize: req.file.size,
+        mimeType: req.file.mimetype,
+        storagePath,
+        uploadedById: req.user.sub,
+      },
+    });
+    auditAsync({
+      tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.photo_updated',
+      entity: 'Member', entityId: existing.id, ip: req.ip, userAgent: req.headers['user-agent'],
+    });
+    return res.status(201).json({ document: doc });
+  } catch (err) {
+    if (err.message && err.message.startsWith('Sirf image')) {
+      return res.status(400).json({ error: { message: err.message } });
+    }
+    return next(err);
+  }
+});
+
+// Latest profile photo document id (for avatar display)
+router.get('/me/photo', async (req, res, next) => {
+  try {
+    if (!req.user.memberId) return res.status(404).json({ error: { message: 'No member record linked' } });
+    const doc = await prisma.document.findFirst({
+      where: { memberId: req.user.memberId, category: 'profile_photo', ...tenantFilter(req) },
+      orderBy: { createdAt: 'desc' },
+      select: { id: true, mimeType: true, createdAt: true },
+    });
+    return res.json({ photo: doc || null });
   } catch (err) {
     return next(err);
   }

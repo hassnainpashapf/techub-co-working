@@ -196,4 +196,140 @@ router.post(
   }
 );
 
+// Phase 37 Track 9: Reception desk manual check-in/out by memberId
+// (for walk-ins whose QR can't be scanned). No migration, additive only.
+const manualSchema = z.object({ memberId: z.string().min(1) });
+
+async function resolveMemberUserId(member, tf) {
+  // FK lives on User.memberId, not on Member.
+  const u = await prisma.user.findFirst({
+    where: { memberId: member.id, ...tf },
+    select: { id: true },
+  });
+  if (u) return u.id;
+  if (member.email) {
+    const e = await prisma.user.findFirst({
+      where: { email: member.email, ...tf },
+      select: { id: true },
+    });
+    if (e) return e.id;
+  }
+  return null;
+}
+
+router.post(
+  '/manual-check-in',
+  requireRole(...STAFF_SCAN_ROLES),
+  validateBody(manualSchema),
+  async (req, res, next) => {
+    try {
+      const tf = tenantFilter(req);
+      const member = await prisma.member.findFirst({
+        where: { id: req.body.memberId, ...tf },
+        select: { id: true, name: true, email: true },
+      });
+      if (!member) return res.status(404).json({ error: { message: 'Member not found.' } });
+      const userId = await resolveMemberUserId(member, tf);
+      if (!userId) {
+        return res.status(400).json({
+          error: { message: 'This member has no linked login account, so attendance cannot be marked.' },
+        });
+      }
+      const date = todayDateOnly();
+      const existing = await prisma.attendanceRecord.findFirst({ where: { ...tf, userId, date } });
+      if (existing && existing.checkIn) {
+        return res.json({
+          alreadyCheckedIn: true,
+          member: { id: member.id, name: member.name },
+          checkedInAt: existing.checkIn,
+        });
+      }
+      let record;
+      if (existing) {
+        record = await prisma.attendanceRecord.update({
+          where: { id: existing.id },
+          data: { checkIn: new Date() },
+        });
+      } else {
+        record = await prisma.attendanceRecord.create({
+          data: { ...tf, userId, date, checkIn: new Date() },
+        });
+      }
+      writeAudit({
+        tenantId: req.user.tenantId,
+        actorId: req.user.sub,
+        action: 'attendance.manual_checkin',
+        entity: 'AttendanceRecord',
+        entityId: record.id,
+        newValue: { memberId: member.id, userId },
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+      }).catch(() => {});
+      return res.json({
+        checkedIn: true,
+        member: { id: member.id, name: member.name },
+        checkedInAt: record.checkIn,
+      });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
+router.post(
+  '/manual-check-out',
+  requireRole(...STAFF_SCAN_ROLES),
+  validateBody(manualSchema),
+  async (req, res, next) => {
+    try {
+      const tf = tenantFilter(req);
+      const member = await prisma.member.findFirst({
+        where: { id: req.body.memberId, ...tf },
+        select: { id: true, name: true, email: true },
+      });
+      if (!member) return res.status(404).json({ error: { message: 'Member not found.' } });
+      const userId = await resolveMemberUserId(member, tf);
+      if (!userId) {
+        return res.status(400).json({
+          error: { message: 'This member has no linked login account.' },
+        });
+      }
+      const record = await prisma.attendanceRecord.findFirst({
+        where: { ...tf, userId, date: todayDateOnly() },
+      });
+      if (!record || !record.checkIn) {
+        return res.status(400).json({ error: { message: 'No check-in record found for today.' } });
+      }
+      if (record.checkOut) {
+        return res.json({
+          alreadyCheckedOut: true,
+          member: { id: member.id, name: member.name },
+          checkedOutAt: record.checkOut,
+        });
+      }
+      const updated = await prisma.attendanceRecord.update({
+        where: { id: record.id },
+        data: { checkOut: new Date() },
+      });
+      writeAudit({
+        tenantId: req.user.tenantId,
+        actorId: req.user.sub,
+        action: 'attendance.manual_checkout',
+        entity: 'AttendanceRecord',
+        entityId: updated.id,
+        newValue: { memberId: member.id, userId },
+        ip: req.ip,
+        userAgent: req.headers['user-agent'],
+      }).catch(() => {});
+      return res.json({
+        checkedOut: true,
+        member: { id: member.id, name: member.name },
+        checkedOutAt: updated.checkOut,
+      });
+    } catch (err) {
+      return next(err);
+    }
+  }
+);
+
 module.exports = router;

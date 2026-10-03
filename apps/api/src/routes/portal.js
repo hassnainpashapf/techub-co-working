@@ -241,6 +241,104 @@ router.delete('/bookings/:id', async (req, res, next) => {
   }
 });
 
+// POST /api/portal/bookings/:id/check-in — member checks into own booking (Phase 37).
+// No migration: uses the free-form status field ('checked_in').
+router.post('/bookings/:id/check-in', async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const member = await myMember(req);
+    if (!member) return res.status(403).json({ error: { message: 'Member record required.' } });
+    const booking = await prisma.booking.findFirst({
+      where: { id: req.params.id, memberId: member.id, ...tf },
+    });
+    if (!booking) return res.status(404).json({ error: { message: 'Booking not found.' } });
+    if (booking.status === 'cancelled') {
+      return res.status(400).json({ error: { message: 'Cancelled bookings cannot be checked in.' } });
+    }
+    if (booking.status === 'checked_in') {
+      return res.json({ booking });
+    }
+    // Only on the booking day (local date comparison, generous window).
+    const now = new Date();
+    const start = new Date(booking.startAt);
+    const sameDay =
+      now.getFullYear() === start.getFullYear() &&
+      now.getMonth() === start.getMonth() &&
+      now.getDate() === start.getDate();
+    if (!sameDay) {
+      return res.status(400).json({ error: { message: 'Check-in is only available on the booking day.' } });
+    }
+    const updated = await prisma.booking.update({
+      where: { id: booking.id },
+      data: { status: 'checked_in' },
+    });
+    emitWebhook(tf.tenantId, 'booking.checked_in', { bookingId: booking.id }).catch(() => {});
+    const { writeAudit } = require('../middleware/audit');
+    writeAudit({
+      tenantId: tf.tenantId, actorId: req.user.sub, action: 'portal.booking.checkin',
+      entity: 'Booking', entityId: booking.id,
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    }).catch(() => {});
+    return res.json({ booking: updated });
+  } catch (err) {
+    return next(err);
+  }
+});
+
+// PUT /api/portal/bookings/:id — reschedule own upcoming confirmed booking (Phase 37)
+const portalRescheduleSchema = z
+  .object({
+    startAt: z.coerce.date(),
+    endAt: z.coerce.date(),
+  })
+  .refine((d) => d.endAt > d.startAt, { message: 'endAt must be after startAt' });
+
+router.put('/bookings/:id', validateBody(portalRescheduleSchema), async (req, res, next) => {
+  try {
+    const tf = tenantFilter(req);
+    const member = await myMember(req);
+    if (!member) return res.status(403).json({ error: { message: 'Member record required.' } });
+    const booking = await prisma.booking.findFirst({
+      where: { id: req.params.id, memberId: member.id, ...tf },
+    });
+    if (!booking) return res.status(404).json({ error: { message: 'Booking not found.' } });
+    if (booking.status !== 'confirmed') {
+      return res.status(400).json({ error: { message: 'Only confirmed bookings can be rescheduled.' } });
+    }
+    if (new Date(booking.startAt) < new Date()) {
+      return res.status(400).json({ error: { message: 'Past bookings cannot be rescheduled.' } });
+    }
+    const { startAt, endAt } = req.body;
+    // Phase 34 booking rules (buffer / max duration / notice / advance window)
+    const { validateBookingRules } = require('../lib/bookingRules');
+    const rules = await validateBookingRules({
+      tenantId: tf.tenantId, unitId: booking.unitId, startAt, endAt, excludeId: booking.id,
+    });
+    if (!rules.valid) {
+      return res.status(422).json({ error: { message: rules.message, code: rules.code } });
+    }
+    const clash = await findOverlap(tf.tenantId, booking.unitId, startAt, endAt, booking.id);
+    if (clash) {
+      return res.status(409).json({ error: { message: 'This time slot is already booked.' } });
+    }
+    const updated = await prisma.booking.update({
+      where: { id: booking.id },
+      data: { startAt, endAt },
+      include: { unit: { select: { id: true, code: true, type: true } } },
+    });
+    // Phase 28: audit (fire-and-forget)
+    const { writeAudit } = require('../middleware/audit');
+    writeAudit({
+      tenantId: tf.tenantId, actorId: req.user.sub, action: 'portal.booking.reschedule',
+      entity: 'Booking', entityId: booking.id, newValue: { startAt, endAt },
+      ip: req.ip, userAgent: req.headers['user-agent'],
+    }).catch(() => {});
+    return res.json({ booking: updated });
+  } catch (err) {
+    return next(err);
+  }
+});
+
 // GET /api/portal/documents — documents shared with me
 router.get('/documents', async (req, res, next) => {
   try {
