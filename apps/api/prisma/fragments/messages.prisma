@@ -1,0 +1,102 @@
+// Phase 40 Track 3: Internal Messaging (Chat) — schema fragment.
+// Coordinator: merge these models into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model Conversation {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  type      String   @default("direct") // direct | group | support
+  title     String?
+  ticketId  String?  @map("ticket_id") // optional: support ticket se link (Phase 40 Track 9)
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([tenantId, updatedAt])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String?      @map("user_id") // staff user ya member-linked user
+  user           User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memberId       String?      @map("member_id") // member bina user account ke
+  member         Member?      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+
+  @@unique([conversationId, userId])
+  @@unique([conversationId, memberId])
+  @@index([userId])
+  @@index([memberId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderUserId   String?      @map("sender_user_id")
+  senderUser     User?        @relation(fields: [senderUserId], references: [id], onDelete: SetNull)
+  senderMemberId String?      @map("sender_member_id")
+  senderMember   Member?      @relation(fields: [senderMemberId], references: [id], onDelete: SetNull)
+  body           String       @db.Text
+  attachments    Json? // [{name, url, type}] — metadata only
+  readBy         Json         @default("[]") // [userId/memberId...] jinhon ne parha
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+// ADD TO Tenant model:
+//   conversations Conversation[]
+//
+// ADD TO User model:
+//   conversationParticipants ConversationParticipant[]
+//   sentMessages             Message[]
+//
+// ADD TO Member model:
+//   conversationParticipants ConversationParticipant[]
+//   sentMessages             Message[]
+//
+// ADD TO Ticket model:
+//   conversations Conversation[]
+
+// Migration SQL (for coordinator):
+// CREATE TABLE "conversations" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//   "type" TEXT NOT NULL DEFAULT 'direct',
+//   "title" TEXT,
+//   "ticket_id" TEXT REFERENCES "tickets"("id") ON DELETE SET NULL,
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   "updated_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE TABLE "conversation_participants" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "conversation_id" TEXT NOT NULL REFERENCES "conversations"("id") ON DELETE CASCADE,
+//   "user_id" TEXT REFERENCES "users"("id") ON DELETE CASCADE,
+//   "member_id" TEXT REFERENCES "members"("id") ON DELETE CASCADE,
+//   "joined_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE TABLE "messages" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "conversation_id" TEXT NOT NULL REFERENCES "conversations"("id") ON DELETE CASCADE,
+//   "sender_user_id" TEXT REFERENCES "users"("id") ON DELETE SET NULL,
+//   "sender_member_id" TEXT REFERENCES "members"("id") ON DELETE SET NULL,
+//   "body" TEXT NOT NULL,
+//   "attachments" JSONB,
+//   "read_by" JSONB NOT NULL DEFAULT '[]',
+//   "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+// );
+// CREATE INDEX "conversations_tenant_id_updated_at_idx" ON "conversations"("tenant_id", "updated_at");
+// CREATE INDEX "conversation_participants_user_id_idx" ON "conversation_participants"("user_id");
+// CREATE INDEX "conversation_participants_member_id_idx" ON "conversation_participants"("member_id");
+// CREATE INDEX "messages_conversation_id_created_at_idx" ON "messages"("conversation_id", "created_at");

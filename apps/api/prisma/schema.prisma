@@ -145,6 +145,15 @@ model Tenant {
   reminderLogs            ReminderLog[]
 
   @@map("tenants")
+  celebrationLogs CelebrationLog[]
+  perks            Perk[]
+  perkClaims       PerkClaim[]
+  conversations    Conversation[]
+  polls            Poll[]
+  pollVotes        PollVote[]
+  badges           Badge[]
+  newsletters      Newsletter[]
+  memberIntros     MemberIntro[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -218,6 +227,8 @@ model User {
 
   @@index([tenantId, role])
   @@map("users")
+  conversationParticipants   ConversationParticipant[]
+  sentMessages               Message[]
 }
 
 // ---------------------------------------------------------------- space ---
@@ -384,6 +395,16 @@ model Member {
 
   @@index([tenantId, status])
   @@map("members")
+  dateOfBirth                DateTime?                @map("date_of_birth")
+  celebrationLogs            CelebrationLog[]
+  perkClaims                 PerkClaim[]
+  conversationParticipants   ConversationParticipant[]
+  sentMessages               Message[]
+  eventCheckins              EventCheckin[]
+  memberBadges               MemberBadge[]
+  newsletterSends            NewsletterSend[]
+  introsAsNew                MemberIntro[] @relation("IntroNew")
+  introsAsSuggested          MemberIntro[] @relation("IntroSuggested")
 }
 
 // ------------------------------------------------------------ company ------
@@ -713,6 +734,7 @@ model Ticket {
   @@index([tenantId, status])
   @@index([tenantId, assignedToId])
   @@map("tickets")
+  conversations Conversation[]
 }
 
 model TicketComment {
@@ -1950,6 +1972,7 @@ model CommunityEvent {
   @@index([tenantId, status])
   @@index([tenantId, startsAt])
   @@map("community_events")
+  checkins EventCheckin[]
 }
 
 model EventRsvp {
@@ -2575,4 +2598,247 @@ model SmsCampaign {
 
   @@index([tenantId])
   @@map("sms_campaigns")
+}
+
+
+// =============================================================
+// Phase 40: Member Engagement Pack — merged models
+// =============================================================
+
+model CelebrationLog {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  kind      String   // birthday | anniversary
+  year      Int      // calendar year — dedupe: same kind + year me 1 dafa
+  sentAt    DateTime @default(now()) @map("sent_at")
+
+  @@unique([memberId, kind, year])
+  @@index([tenantId, year])
+  @@map("celebration_logs")
+}
+
+model Perk {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  partnerName String    @map("partner_name")
+  title       String
+  description String?
+  discountText String   @map("discount_text")
+  tenant         Tenant     @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  category    String    @default("other") // food | fitness | tech | travel | other
+  code        String?   // redeem code shown to member on claim
+  expiryDate  DateTime? @map("expiry_date")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  claims PerkClaim[]
+
+  @@index([tenantId, isActive])
+  @@map("perks")
+}
+
+model PerkClaim {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  perkId    String   @map("perk_id")
+  memberId  String   @map("member_id")
+  claimedAt DateTime @default(now()) @map("claimed_at")
+
+  perk   Perk   @relation(fields: [perkId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([perkId, memberId]) // ek member ek perk sirf 1 dafa claim kar sakta hai
+  @@index([tenantId])
+  @@index([memberId])
+  @@map("perk_claims")
+}
+
+model Conversation {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  type      String   @default("direct") // direct | group | support
+  title     String?
+  ticketId  String?  @map("ticket_id") // optional: support ticket se link (Phase 40 Track 9)
+  ticket    Ticket?  @relation(fields: [ticketId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  participants ConversationParticipant[]
+  messages     Message[]
+
+  @@index([tenantId, updatedAt])
+  @@map("conversations")
+}
+
+model ConversationParticipant {
+  id             String       @id @default(cuid())
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String?      @map("user_id") // staff user ya member-linked user
+  user           User?        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  memberId       String?      @map("member_id") // member bina user account ke
+  member         Member?      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  joinedAt       DateTime     @default(now()) @map("joined_at")
+
+  @@unique([conversationId, userId])
+  @@unique([conversationId, memberId])
+  @@index([userId])
+  @@index([memberId])
+  @@map("conversation_participants")
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String       @map("conversation_id")
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderUserId   String?      @map("sender_user_id")
+  senderUser     User?        @relation(fields: [senderUserId], references: [id], onDelete: SetNull)
+  senderMemberId String?      @map("sender_member_id")
+  senderMember   Member?      @relation(fields: [senderMemberId], references: [id], onDelete: SetNull)
+  body           String       @db.Text
+  attachments    Json? // [{name, url, type}] — metadata only
+  readBy         Json         @default("[]") // [userId/memberId...] jinhon ne parha
+  createdAt      DateTime     @default(now()) @map("created_at")
+
+  @@index([conversationId, createdAt])
+  @@map("messages")
+}
+
+model Poll {
+  id        String    @id @default(cuid())
+  tenantId  String    @map("tenant_id")
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  question  String    @db.Text
+  options   Json // [{ "id": "o1", "text": "Yes" }]
+  status    String    @default("draft") @db.VarChar(16) // draft | open | closed
+  closesAt  DateTime? @map("closes_at")
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  votes PollVote[]
+
+  @@index([tenantId, status])
+  @@map("polls")
+}
+
+model PollVote {
+  id       String   @id @default(cuid())
+  tenantId String   @map("tenant_id")
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pollId   String   @map("poll_id")
+  poll     Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  memberId String   @map("member_id")
+  optionId String   @map("option_id")
+  votedAt  DateTime @default(now()) @map("voted_at")
+
+  @@unique([pollId, memberId]) // one member, one vote per poll
+  @@index([tenantId])
+  @@index([pollId])
+  @@map("poll_votes")
+}
+
+model Badge {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  key         String // early_bird | event_regular | referrer | super_connector | loyal_member | feedback_champion
+  name        String
+  description String?  @db.Text
+  icon        String? // emoji or icon name
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  awarded MemberBadge[]
+
+  @@unique([tenantId, key])
+  @@index([tenantId])
+  @@map("badges")
+}
+
+model MemberBadge {
+  id        String   @id @default(cuid())
+  badgeId   String   @map("badge_id")
+  badge     Badge    @relation(fields: [badgeId], references: [id], onDelete: Cascade)
+  memberId  String   @map("member_id")
+  member    Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  awardedAt DateTime @default(now()) @map("awarded_at")
+
+  @@unique([badgeId, memberId])
+  @@index([memberId])
+  @@map("member_badges")
+}
+
+model EventCheckin {
+  id          String         @id @default(cuid())
+  eventId     String         @map("event_id")
+  event       CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  memberId    String         @map("member_id")
+  member      Member         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  checkedInAt DateTime       @default(now()) @map("checked_in_at")
+  checkedInBy String?        @map("checked_in_by") // staff user id jis ne check-in kiya
+  method      String         @default("manual") // manual | qr | bulk
+
+  @@unique([eventId, memberId]) // dedupe: ek member ek event par 1 dafa
+  @@index([eventId])
+  @@index([memberId])
+  @@map("event_checkins")
+}
+
+model Newsletter {
+  id             String    @id @default(cuid())
+  tenantId       String    @map("tenant_id")
+  tenant         Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  title          String
+  subject        String
+  sections       Json      @default("[]")
+  segment        String    @default("all") // all | active | new | events
+  status         String    @default("draft") // draft | scheduled | sending | sent
+  scheduledFor   DateTime? @map("scheduled_for")
+  sentAt         DateTime? @map("sent_at")
+  recipientCount Int       @default(0) @map("recipient_count")
+  sentCount      Int       @default(0) @map("sent_count")
+  createdById    String?   @map("created_by")
+  createdAt      DateTime  @default(now()) @map("created_at")
+  updatedAt      DateTime  @updatedAt @map("updated_at")
+  sends          NewsletterSend[]
+
+  @@index([tenantId, status])
+  @@map("newsletters")
+}
+
+model NewsletterSend {
+  id           String     @id @default(cuid())
+  newsletterId String     @map("newsletter_id")
+  newsletter   Newsletter @relation(fields: [newsletterId], references: [id], onDelete: Cascade)
+  memberId     String     @map("member_id")
+  member       Member     @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  sentAt       DateTime   @default(now()) @map("sent_at")
+
+  @@unique([newsletterId, memberId])
+  @@index([newsletterId])
+  @@map("newsletter_sends")
+}
+
+model MemberIntro {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  newMemberId       String   @map("new_member_id")
+  suggestedMemberId String   @map("suggested_member_id")
+  reason            String   // human-readable: "same industry: fintech" / "shared tags: design, startups"
+  score             Int      @default(0) // 0-100 match strength (explainable, rule-based)
+  status            String   @default("suggested") // suggested | introduced | dismissed
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  newMember       Member @relation("IntroNew", fields: [newMemberId], references: [id], onDelete: Cascade)
+  tenant          Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  suggestedMember Member @relation("IntroSuggested", fields: [suggestedMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, newMemberId, suggestedMemberId]) // same pair dobara suggest nahi
+  @@index([tenantId, status])
+  @@map("member_intros")
 }

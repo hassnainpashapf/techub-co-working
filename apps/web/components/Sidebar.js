@@ -136,6 +136,10 @@ const NAV_MEMBER = [
   { key: 'mytickets', label: 'My Tickets', path: '/tickets', icon: 'launchpad' },
   { key: 'mydocs', label: 'My Documents', path: '/documents', icon: 'school' },
   { key: 'myfeedback', label: 'Feedback', path: '/portal/feedback', icon: 'message' },
+  { key: 'mybadges', label: 'Badges', path: '/portal/badges', icon: 'investor' },
+  { key: 'myperks', label: 'Perks', path: '/portal/perks', icon: 'investor' },
+  { key: 'mypolls', label: 'Polls', path: '/portal/polls', icon: 'team' },
+  { key: 'mymessages', label: 'Messages', path: '/portal/messages', icon: 'message' },
   { key: 'events', label: 'Events', path: '/portal/events', icon: 'team' },
   { key: 'marketplace', label: 'Marketplace', path: '/portal/marketplace', icon: 'launchpad' },
   { key: 'directory', label: 'Directory', path: '/portal/directory', icon: 'team' },
@@ -147,6 +151,16 @@ const NAV_MEMBER = [
 ];
 
 const NAV_OTHERS = [
+  { key: 'messages', label: 'Messages', path: '/messages', icon: 'message' },
+  { key: 'community', label: 'Community', path: '/community/celebrations', icon: 'team', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Celebrations', path: '/community/celebrations' },
+      { label: 'Perks & Benefits', path: '/community/perks' },
+      { label: 'Polls', path: '/community/polls' },
+      { label: 'Newsletters', path: '/community/newsletters' },
+      { label: 'Engagement', path: '/community/engagement' },
+    ],
+  },
   { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', chevron: true, roles: ['super_admin'],
     children: [
       { label: 'Overview', path: '/saas-admin' },

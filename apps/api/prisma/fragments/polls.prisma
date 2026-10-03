@@ -1,0 +1,69 @@
+// Phase 40 Track 4: Community Polls — schema.
+// Coordinator: merge these into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model Poll {
+  id        String    @id @default(cuid())
+  tenantId  String    @map("tenant_id")
+  tenant    Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  question  String    @db.Text
+  options   Json // [{ "id": "o1", "text": "Yes" }]
+  status    String    @default("draft") @db.VarChar(16) // draft | open | closed
+  closesAt  DateTime? @map("closes_at")
+  createdBy String    @map("created_by")
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  votes PollVote[]
+
+  @@index([tenantId, status])
+  @@map("polls")
+}
+
+model PollVote {
+  id       String   @id @default(cuid())
+  tenantId String   @map("tenant_id")
+  tenant   Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  pollId   String   @map("poll_id")
+  poll     Poll     @relation(fields: [pollId], references: [id], onDelete: Cascade)
+  memberId String   @map("member_id")
+  optionId String   @map("option_id")
+  votedAt  DateTime @default(now()) @map("voted_at")
+
+  @@unique([pollId, memberId]) // one member, one vote per poll
+  @@index([tenantId])
+  @@index([pollId])
+  @@map("poll_votes")
+}
+
+// ADD TO Tenant model:
+//   polls Poll[]
+//   pollVotes PollVote[]
+
+// --- Migration SQL (Phase 40 Track 4) ---
+// CREATE TABLE "polls" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "question" TEXT NOT NULL,
+//   "options" JSONB NOT NULL,
+//   "status" VARCHAR(16) NOT NULL DEFAULT 'draft',
+//   "closes_at" TIMESTAMP(3),
+//   "created_by" TEXT NOT NULL,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "polls_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "polls_tenant_id_status_idx" ON "polls"("tenant_id", "status");
+// ALTER TABLE "polls" ADD CONSTRAINT "polls_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// CREATE TABLE "poll_votes" (
+//   "id" TEXT NOT NULL,
+//   "tenant_id" TEXT NOT NULL,
+//   "poll_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "option_id" TEXT NOT NULL,
+//   "voted_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "poll_votes_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "poll_votes_poll_id_member_id_key" ON "poll_votes"("poll_id", "member_id");
+// CREATE INDEX "poll_votes_tenant_id_idx" ON "poll_votes"("tenant_id");
+// CREATE INDEX "poll_votes_poll_id_idx" ON "poll_votes"("poll_id");
+// ALTER TABLE "poll_votes" ADD CONSTRAINT "poll_votes_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "poll_votes" ADD CONSTRAINT "poll_votes_poll_id_fkey" FOREIGN KEY ("poll_id") REFERENCES "polls"("id") ON DELETE CASCADE ON UPDATE CASCADE;

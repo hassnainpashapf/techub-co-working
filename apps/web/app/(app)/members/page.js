@@ -14,6 +14,7 @@ import {
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 import SavedViews from '../../../components/SavedViews';
 import { useAuth } from '../../../context/AuthContext';
+import IntroductionsWidget from '../../../components/IntroductionsWidget'; // Phase 40 Track 9
 
 const STATUS_TONE = { active: 'green', inactive: 'slate', suspended: 'red', pending: 'amber' };
 const BULK_ROLES = ['ceo', 'admin', 'manager', 'super_admin'];
@@ -124,6 +125,7 @@ function MemberForm({ initial, onSave, saving }) {
     companyName: initial?.companyName || '',
     companyId: initial?.companyId || '',
     emergencyContact: initial?.emergencyContact || '',
+    dateOfBirth: initial?.dateOfBirth ? new Date(initial.dateOfBirth).toISOString().slice(0, 10) : '', // Phase 40: birthday automation
     status: initial?.status || 'active',
     notes: initial?.notes || '',
     creditLimit: initial?.creditLimit ?? '',
@@ -144,6 +146,8 @@ function MemberForm({ initial, onSave, saving }) {
         // Normalize credit limit: empty => null (unlimited), otherwise number
         if (payload.creditLimit === '' || payload.creditLimit == null) payload.creditLimit = null;
         else payload.creditLimit = Number(payload.creditLimit);
+        // Phase 40: empty DOB => null
+        if (payload.dateOfBirth === '' || payload.dateOfBirth == null) payload.dateOfBirth = null;
         onSave(payload);
       }}
     >
@@ -170,6 +174,7 @@ function MemberForm({ initial, onSave, saving }) {
           />
         </Field>
         <Field label="Emergency contact"><input className="input" value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} /></Field>
+        <Field label="Date of birth"><input type="date" className="input" value={form.dateOfBirth} onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })} /></Field>
         <Field label="Status">
           <select className="input" value={form.status} onChange={(e) => setForm({ ...form, status: e.target.value })}>
             <option value="active">Active</option>
@@ -643,6 +648,7 @@ export default function MembersPage() {
         }
       />
       <ErrorBanner message={error} onRetry={refresh} />
+      <IntroductionsWidget /> {/* Phase 40 Track 9: pending member introductions */}
 
       {/* Phase 29 Track 4: contracts expiring soon */}
       {expiring.length > 0 && (

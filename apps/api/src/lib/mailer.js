@@ -178,6 +178,15 @@ const templates = {
     subject: `Welcome aboard${planName ? ` — ${planName}` : ''}! 🎉`,
     html: wrap('Welcome to Your Coworking Space', `<p>Hi ${memberName || 'there'},</p><p>Your membership is now <b>active</b> — welcome to the community! 🎉</p>${planName ? `<p>Plan: <b>${planName}</b></p>` : ''}${unitCode ? `<p>Your space: <b>${unitCode}</b></p>` : ''}<p>We can't wait to see you around. Reach out anytime if you need anything.</p><p>Warm regards,<br/>Your coworking team</p>`),
   }),
+  // Phase 40 Track 1: birthday & anniversary celebration emails.
+  birthday: ({ memberName }) => ({
+    subject: `Happy Birthday, ${memberName || 'friend'}! 🎂`,
+    html: wrap('Happy Birthday!', `<p>Hi ${memberName || 'there'},</p><p>🎂 <b>Happy Birthday!</b> Wishing you a wonderful day and an amazing year ahead.</p><p>As a little gift, we've added <b>50 loyalty points</b> to your account. Enjoy! 🎁</p><p>Warm regards,<br/>Your coworking community</p>`),
+  }),
+  anniversary: ({ memberName, years }) => ({
+    subject: `Happy ${years || ''} Anniversary! 🎉`,
+    html: wrap('Community Anniversary', `<p>Hi ${memberName || 'there'},</p><p>🎉 Congratulations on completing <b>${years || 'another'} year${Number(years) === 1 ? '' : 's'}</b> with our community!</p><p>Thank you for being part of this journey. We've added <b>100 loyalty points</b> as a token of appreciation. 🙏</p><p>Warm regards,<br/>Your coworking community</p>`),
+  }),
   bookingConfirmed: ({ memberName, unitCode, date, startTime }) => ({
     subject: `Booking confirmed — ${unitCode}`,
     html: wrap('Booking Confirmed', `<p>Hi ${memberName || 'there'},</p><p>Your booking for <b>${unitCode}</b> on <b>${date}</b> at <b>${startTime}</b> is confirmed.</p>`),
@@ -372,6 +381,8 @@ function renderCustom(custom, data) {
 const TEMPLATE_VARS = {
   invoiceCreated: ['memberName', 'number', 'amount', 'dueDate'],
   memberWelcome: ['memberName', 'planName', 'unitCode'],
+  birthday: ['memberName'],
+  anniversary: ['memberName', 'years'],
   bookingConfirmed: ['memberName', 'unitCode', 'date', 'startTime'],
   ticketUpdate: ['memberName', 'ticketNo', 'status'],
   visitorCheckin: ['hostName', 'visitorName'],

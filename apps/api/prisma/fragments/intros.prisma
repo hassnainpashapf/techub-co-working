@@ -1,0 +1,41 @@
+// Phase 40 Track 9: Member Introductions (New Member Match)
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { memberIntros MemberIntro[] }
+//   Member { introsAsNew MemberIntro[] @relation("IntroNew"); introsAsSuggested MemberIntro[] @relation("IntroSuggested") }
+// schema.prisma untouched by this track.
+
+model MemberIntro {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  newMemberId       String   @map("new_member_id")
+  suggestedMemberId String   @map("suggested_member_id")
+  reason            String   // human-readable: "same industry: fintech" / "shared tags: design, startups"
+  score             Int      @default(0) // 0-100 match strength (explainable, rule-based)
+  status            String   @default("suggested") // suggested | introduced | dismissed
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  newMember       Member @relation("IntroNew", fields: [newMemberId], references: [id], onDelete: Cascade)
+  suggestedMember Member @relation("IntroSuggested", fields: [suggestedMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, newMemberId, suggestedMemberId]) // same pair dobara suggest nahi
+  @@index([tenantId, status])
+  @@map("member_intros")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase40_intros) ---
+// CREATE TABLE "member_intros" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "new_member_id" TEXT NOT NULL,
+//   "suggested_member_id" TEXT NOT NULL,
+//   "reason" TEXT NOT NULL,
+//   "score" INTEGER NOT NULL DEFAULT 0,
+//   "status" TEXT NOT NULL DEFAULT 'suggested',
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "member_intros_new_member_id_fkey" FOREIGN KEY ("new_member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "member_intros_suggested_member_id_fkey" FOREIGN KEY ("suggested_member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "member_intros_tenant_id_new_member_id_suggested_member_id_key" ON "member_intros"("tenant_id", "new_member_id", "suggested_member_id");
+// CREATE INDEX "member_intros_tenant_id_status_idx" ON "member_intros"("tenant_id", "status");

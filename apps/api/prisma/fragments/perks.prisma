@@ -1,0 +1,66 @@
+// Phase 40 Track 2: Member Perks & Benefits Catalog
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { perks Perk[]; perkClaims PerkClaim[] }
+//   Member { perkClaims PerkClaim[] }
+// schema.prisma untouched by this track.
+
+model Perk {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  partnerName String    @map("partner_name")
+  title       String
+  description String?
+  discountText String   @map("discount_text")
+  category    String    @default("other") // food | fitness | tech | travel | other
+  code        String?   // redeem code shown to member on claim
+  expiryDate  DateTime? @map("expiry_date")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  claims PerkClaim[]
+
+  @@index([tenantId, isActive])
+  @@map("perks")
+}
+
+model PerkClaim {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  perkId    String   @map("perk_id")
+  memberId  String   @map("member_id")
+  claimedAt DateTime @default(now()) @map("claimed_at")
+
+  perk Perk @relation(fields: [perkId], references: [id], onDelete: Cascade)
+
+  @@unique([perkId, memberId]) // ek member ek perk sirf 1 dafa claim kar sakta hai
+  @@index([tenantId])
+  @@index([memberId])
+  @@map("perk_claims")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase40_perks) ---
+// CREATE TABLE "perks" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "partner_name" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "description" TEXT,
+//   "discount_text" TEXT NOT NULL,
+//   "category" TEXT NOT NULL DEFAULT 'other',
+//   "code" TEXT,
+//   "expiry_date" TIMESTAMP(3),
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP
+// );
+// CREATE INDEX "perks_tenant_id_is_active_idx" ON "perks"("tenant_id", "is_active");
+// CREATE TABLE "perk_claims" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "perk_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "claimed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "perk_claims_perk_id_fkey" FOREIGN KEY ("perk_id") REFERENCES "perks"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "perk_claims_perk_id_member_id_key" ON "perk_claims"("perk_id", "member_id");
+// CREATE INDEX "perk_claims_tenant_id_idx" ON "perk_claims"("tenant_id");
+// CREATE INDEX "perk_claims_member_id_idx" ON "perk_claims"("member_id");

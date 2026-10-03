@@ -1,0 +1,44 @@
+// Phase 40 Track 6: Event Check-in & Attendance Tracking — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma and create
+// the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model EventCheckin {
+  id          String         @id @default(cuid())
+  eventId     String         @map("event_id")
+  event       CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  memberId    String         @map("member_id")
+  member      Member         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  checkedInAt DateTime       @default(now()) @map("checked_in_at")
+  checkedInBy String?        @map("checked_in_by") // staff user id jis ne check-in kiya
+  method      String         @default("manual") // manual | qr | bulk
+
+  @@unique([eventId, memberId]) // dedupe: ek member ek event par 1 dafa
+  @@index([eventId])
+  @@index([memberId])
+  @@map("event_checkins")
+}
+
+// ADD TO CommunityEvent model:
+//   checkins EventCheckin[]
+//
+// ADD TO Member model:
+//   eventCheckins EventCheckin[]
+
+// Migration SQL (coordinator):
+// CREATE TABLE "event_checkins" (
+//     "id" TEXT NOT NULL,
+//     "event_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL,
+//     "checked_in_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "checked_in_by" TEXT,
+//     "method" TEXT NOT NULL DEFAULT 'manual',
+//     CONSTRAINT "event_checkins_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "event_checkins_event_id_member_id_key" ON "event_checkins"("event_id", "member_id");
+// CREATE INDEX "event_checkins_event_id_idx" ON "event_checkins"("event_id");
+// CREATE INDEX "event_checkins_member_id_idx" ON "event_checkins"("member_id");
+// ALTER TABLE "event_checkins" ADD CONSTRAINT "event_checkins_event_id_fkey"
+//   FOREIGN KEY ("event_id") REFERENCES "community_events"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "event_checkins" ADD CONSTRAINT "event_checkins_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;

@@ -106,6 +106,7 @@ const memberSchema = z.object({
   companyName: z.string().optional().nullable(),
   companyId: z.string().optional().nullable(),
   emergencyContact: z.string().optional().nullable(),
+  dateOfBirth: z.coerce.date().optional().nullable(), // Phase 40 Track 1: birthday automation
   status: z.enum(MEMBER_STATUSES).default('active'),
   notes: z.string().optional().nullable(),
   creditLimit: z.number().nonnegative().optional().nullable(),
@@ -119,6 +120,15 @@ const CREDIT_ROLES = ['ceo', 'admin', 'super_admin', 'finance_officer'];
 function stripCreditLimit(user, data) {
   if (data.creditLimit !== undefined && !CREDIT_ROLES.includes(user.role)) {
     const { creditLimit: _omit, ...rest } = data;
+    return rest;
+  }
+  return data;
+}
+
+// Phase 40 Track 1: dateOfBirth column merge se pehle strip kar do (client me field na ho to error na aaye).
+function stripDob(user, data) {
+  if (data.dateOfBirth !== undefined && typeof prisma.celebrationLog === 'undefined') {
+    const { dateOfBirth: _omit, ...rest } = data;
     return rest;
   }
   return data;
@@ -300,9 +310,11 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
     }
     const data = await resolveCompany(req.user.tenantId, req.body);
     const member = await prisma.member.create({
-      data: { ...tenantFilter(req), ...stripCreditLimit(req.user, data) },
+      data: { ...tenantFilter(req), ...stripDob(req.user, stripCreditLimit(req.user, data)) },
     });
     emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
+    // Phase 40 Track 9: new-member intro matching (fire-and-forget — member creation kabhi fail nahi hoti)
+    try { require('../lib/introMatcher').onNewMember(req.user.tenantId, member.id); } catch {}
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.create', entity: 'Member', entityId: member.id, newValue: { name: member.name }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ member });
   } catch (err) {
@@ -410,7 +422,7 @@ router.patch('/:id', write, validateBody(memberUpdateSchema), async (req, res, n
     });
     if (!existing) return res.status(404).json({ error: { message: 'Member not found' } });
     const data = await resolveCompany(req.user.tenantId, req.body);
-    const member = await prisma.member.update({ where: { id: existing.id }, data: stripCreditLimit(req.user, data) });
+    const member = await prisma.member.update({ where: { id: existing.id }, data: stripDob(req.user, stripCreditLimit(req.user, data)) });
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.update', entity: 'Member', entityId: member.id, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.json({ member });
   } catch (err) {

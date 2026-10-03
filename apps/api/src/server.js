@@ -80,6 +80,21 @@ app.use('/api/lead-import', require('./routes/lead-import'));
 require('./lib/quotationExpiry'); // 'quotation-expiry'
 require('./lib/leadFollowupDigest'); // 'lead-followup-digest'
 require('./lib/tourReminders'); // 'tour-reminders'
+// Phase 40: member engagement pack (additive)
+app.use('/api/celebrations', require('./routes/celebrations'));
+app.use('/api/perks', require('./routes/perks'));
+app.use('/api/messages', require('./routes/messages'));
+app.use('/api/polls', require('./routes/polls'));
+app.use('/api/badges', require('./routes/badges'));
+app.use('/api/events', require('./routes/event-checkins').router); // events.js ke baad
+app.use('/api/newsletters', require('./routes/newsletters'));
+app.use('/api/intros', require('./routes/intros'));
+app.use('/api/milestones', require('./routes/milestones'));
+app.use('/api/engagement', require('./routes/engagement'));
+require('./lib/celebrations'); // 'celebrations' (self-schedule via ensure)
+require('./lib/milestones'); // 'milestones' (self-schedule via ensure)
+require('./lib/badges'); // 'badges-run' auto-register on require
+require('./lib/newsletterJob'); // 'newsletter-send' auto-register on require
 app.use('/api/contract-renewals', require('./routes/contract-renewals'));
 app.use('/api/member-qr', require('./routes/member-qr'));
 app.use('/api/feedback', require('./routes/feedback'));
@@ -201,6 +216,22 @@ try {
   schedulePhase39Jobs();
   setInterval(schedulePhase39Jobs, 60 * 60 * 1000).unref();
 } catch (e) { console.error('[phase39] scheduler init failed:', e.message); }
+
+// Phase 40: member engagement jobs (additive) — celebrations + milestones (daily self-schedule), badges-run (daily)
+try {
+  const { enqueue } = require('./lib/jobs');
+  const prisma40 = require('./lib/prisma');
+  const schedulePhase40Jobs = async () => {
+    try {
+      require('./lib/celebrations').ensureCelebrationsScheduled();
+      require('./lib/milestones').ensureMilestonesScheduled();
+      const pendingB = await prisma40.job.count({ where: { type: 'badges-run', status: 'pending' } }).catch(() => 1);
+      if (!pendingB) await enqueue('badges-run', {}, { runAt: new Date(Date.now() + 24 * 60 * 60 * 1000) }).catch(() => {});
+    } catch (e) { console.error('[phase40] schedule failed:', e.message); }
+  };
+  schedulePhase40Jobs();
+  setInterval(schedulePhase40Jobs, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase40] scheduler init failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {
