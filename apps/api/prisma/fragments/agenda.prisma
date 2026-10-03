@@ -1,0 +1,72 @@
+// Phase 44 Track 7 — Agenda & Speakers (naye models)
+// Coordinator: schema.prisma me ye 2 models jorna + back-relations.
+//
+// CommunityEvent model me back-relations jorna:
+//   speakers EventSpeaker[]
+//   sessions EventSession[]
+//
+// Migration SQL (coordinator migration file me):
+//   CREATE TABLE "event_speakers" (
+//     "id" TEXT NOT NULL PRIMARY KEY,
+//     "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//     "event_id" TEXT NOT NULL REFERENCES "community_events"("id") ON DELETE CASCADE,
+//     "name" TEXT NOT NULL,
+//     "title" TEXT,
+//     "company" TEXT,
+//     "bio" TEXT,
+//     "photo_url" TEXT,
+//     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+//   );
+//   CREATE INDEX "event_speakers_event_id_idx" ON "event_speakers"("event_id");
+//   CREATE TABLE "event_sessions" (
+//     "id" TEXT NOT NULL PRIMARY KEY,
+//     "tenant_id" TEXT NOT NULL REFERENCES "tenants"("id") ON DELETE CASCADE,
+//     "event_id" TEXT NOT NULL REFERENCES "community_events"("id") ON DELETE CASCADE,
+//     "title" TEXT NOT NULL,
+//     "description" TEXT,
+//     "speaker_id" TEXT REFERENCES "event_speakers"("id") ON DELETE SET NULL,
+//     "start_time" TIMESTAMPTZ NOT NULL,
+//     "end_time" TIMESTAMPTZ NOT NULL,
+//     "location" TEXT,
+//     "sort_order" INTEGER NOT NULL DEFAULT 0,
+//     "created_at" TIMESTAMPTZ NOT NULL DEFAULT NOW()
+//   );
+//   CREATE INDEX "event_sessions_event_id_idx" ON "event_sessions"("event_id");
+
+model EventSpeaker {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId   String   @map("event_id")
+  event     CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  title     String?
+  company   String?
+  bio       String?  @db.Text
+  photoUrl  String?  @map("photo_url")
+  sessions  EventSession[]
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([eventId])
+  @@map("event_speakers")
+}
+
+model EventSession {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId     String   @map("event_id")
+  event       CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  title       String
+  description String?  @db.Text
+  speakerId   String?  @map("speaker_id")
+  speaker     EventSpeaker? @relation(fields: [speakerId], references: [id], onDelete: SetNull)
+  startTime   DateTime @map("start_time")
+  endTime     DateTime @map("end_time")
+  location    String?
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([eventId])
+  @@map("event_sessions")
+}

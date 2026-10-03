@@ -184,6 +184,13 @@ model Tenant {
   foodRatings          FoodRating[]
   cafeStaff            CafeStaff[]
   foodWaste            FoodWaste[]
+  // Phase 44: Events & Ticketing Pro Pack
+  ticketTypes          TicketType[]
+  eventTickets         EventTicket[]
+  ticketTransfers      TicketTransfer[]
+  eventSponsors        EventSponsor[]
+  eventSpeakers        EventSpeaker[]
+  eventSessions        EventSession[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -455,6 +462,8 @@ model Member {
   foodOrders                 FoodOrder[]
   mealPlans                  MemberMealPlan[]
   foodRatings                FoodRating[]
+  // Phase 44: Events & Ticketing Pro Pack
+  eventTickets               EventTicket[]
 }
 
 // ------------------------------------------------------------ company ------
@@ -2030,7 +2039,18 @@ model CommunityEvent {
   @@index([tenantId, status])
   @@index([tenantId, startsAt])
   @@map("community_events")
-  checkins EventCheckin[]
+  checkins    EventCheckin[]
+  // Phase 44: public ticketing
+  isPublic    Boolean   @default(false) @map("is_public")
+  slug        String?   @map("slug")
+  externalUrl String?   @map("external_url")
+  ticketTypes TicketType[]
+  tickets     EventTicket[]
+  sponsors    EventSponsor[]
+  speakers    EventSpeaker[]
+  sessions    EventSession[]
+
+  @@unique([tenantId, slug])
 }
 
 model EventRsvp {
@@ -2046,6 +2066,133 @@ model EventRsvp {
   @@index([eventId])
   @@map("event_rsvps")
 }
+
+// ----------------------------------------------------------------- Phase 44: Events & Ticketing Pro Pack
+model TicketType {
+  id            String         @id @default(cuid())
+  tenantId      String         @map("tenant_id")
+  tenant        Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId       String         @map("event_id")
+  event         CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name          String // Early Bird | Regular | VIP | ...
+  price         Decimal        @db.Decimal(12, 2)
+  quantity      Int            // total tickets iss type ke
+  soldCount     Int            @default(0) @map("sold_count")
+  saleStart     DateTime?      @map("sale_start")
+  saleEnd       DateTime?      @map("sale_end")
+  isActive      Boolean        @default(true) @map("is_active")
+  perOrderLimit Int?           @map("per_order_limit") // ek order me max kitne
+  tickets       EventTicket[]
+  createdAt     DateTime       @default(now()) @map("created_at")
+  updatedAt     DateTime       @updatedAt @map("updated_at")
+
+  @@index([tenantId, eventId])
+  @@index([eventId, isActive])
+  @@map("ticket_types")
+}
+
+model EventTicket {
+  id           String         @id @default(cuid())
+  tenantId     String         @map("tenant_id")
+  eventId      String         @map("event_id")
+  ticketTypeId String         @map("ticket_type_id")
+  buyerName    String         @map("buyer_name")
+  buyerEmail   String         @map("buyer_email")
+  buyerPhone   String?        @map("buyer_phone")
+  memberId     String?        @map("member_id") // optional link agar buyer member ho
+  code         String         @unique // HMAC-signed QR token (member-qr pattern)
+  status       String         @default("valid") @map("status") // valid | used | refunded | transferred | payment_pending
+  price        Decimal        @db.Decimal(12, 2)
+  purchasedAt  DateTime       @default(now()) @map("purchased_at")
+  usedAt       DateTime?      @map("used_at")
+  refundReason String?        @map("refund_reason")
+  refundedAt   DateTime?      @map("refunded_at")
+
+  tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  event      CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType TicketType     @relation(fields: [ticketTypeId], references: [id], onDelete: Restrict)
+  member     Member?        @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  transfers  TicketTransfer[]
+
+  @@index([tenantId, eventId])
+  @@index([tenantId, buyerEmail])
+  @@index([ticketTypeId, status])
+  @@map("event_tickets")
+}
+
+model TicketTransfer {
+  id            String       @id @default(cuid())
+  tenantId      String       @map("tenant_id")
+  tenant        Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  ticketId      String       @map("ticket_id") // purana (invalidate hua) ticket
+  ticket        EventTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  fromEmail     String       @map("from_email")
+  toName        String       @map("to_name")
+  toEmail       String       @map("to_email")
+  transferredAt DateTime     @default(now()) @map("transferred_at")
+
+  @@index([tenantId, ticketId])
+  @@index([toEmail])
+  @@map("ticket_transfers")
+}
+
+model EventSponsor {
+  id        String         @id @default(cuid())
+  tenantId  String         @map("tenant_id")
+  tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId   String         @map("event_id")
+  event     CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  tier      String         @default("silver") // platinum | gold | silver
+  logoUrl   String?        @map("logo_url")
+  website   String?
+  amount    Decimal?       @db.Decimal(12, 2)
+  isActive  Boolean        @default(true) @map("is_active")
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@index([tenantId])
+  @@index([eventId])
+  @@map("event_sponsors")
+}
+
+model EventSpeaker {
+  id        String         @id @default(cuid())
+  tenantId  String         @map("tenant_id")
+  tenant    Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId   String         @map("event_id")
+  event     CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name      String
+  title     String?
+  company   String?
+  bio       String?        @db.Text
+  photoUrl  String?        @map("photo_url")
+  sessions  EventSession[]
+  createdAt DateTime       @default(now()) @map("created_at")
+
+  @@index([eventId])
+  @@map("event_speakers")
+}
+
+model EventSession {
+  id          String         @id @default(cuid())
+  tenantId    String         @map("tenant_id")
+  tenant      Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  eventId     String         @map("event_id")
+  event       CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  title       String
+  description String?        @db.Text
+  speakerId   String?        @map("speaker_id")
+  speaker     EventSpeaker?  @relation(fields: [speakerId], references: [id], onDelete: SetNull)
+  startTime   DateTime       @map("start_time")
+  endTime     DateTime       @map("end_time")
+  location    String?
+  sortOrder   Int            @default(0) @map("sort_order")
+  createdAt   DateTime       @default(now()) @map("created_at")
+
+  @@index([eventId])
+  @@map("event_sessions")
+}
+// ----------------------------------------------------------------- end Phase 44
 
 model ReferralCode {
   id        String     @id @default(cuid())

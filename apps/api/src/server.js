@@ -86,6 +86,18 @@ app.use('/api/perks', require('./routes/perks'));
 app.use('/api/messages', require('./routes/messages'));
 app.use('/api/polls', require('./routes/polls'));
 app.use('/api/badges', require('./routes/badges'));
+// Phase 44: events & ticketing pro pack (additive)
+// events-public AUTH-FREE hai — is liye /api/events ke auth routes se PEHLE mount karein.
+app.use('/api/events', require('./routes/events-public'));
+app.use('/api/ticket-types', require('./routes/ticket-types'));
+app.use('/api/event-tickets', require('./routes/event-tickets'));
+app.use('/api/tickets', require('./routes/ticket-refunds')); // multi-router, support-tickets ke sath
+app.use('/api/ticket-scan', require('./routes/ticket-scan'));
+app.use('/api/sponsors', require('./routes/sponsors'));
+app.use('/api/event-agenda', require('./routes/event-agenda').router);
+app.use('/api/event-agenda', require('./routes/event-agenda').publicRouter);
+app.use('/api/event-analytics', require('./routes/event-analytics'));
+app.use('/api/events-dashboard', require('./routes/events-dashboard'));
 app.use('/api/events', require('./routes/event-checkins').router); // events.js ke baad
 app.use('/api/newsletters', require('./routes/newsletters'));
 app.use('/api/intros', require('./routes/intros'));
@@ -276,6 +288,10 @@ try {
 try {
   require('./lib/reviewReminders').ensureReviewRemindersScheduled();
 } catch (e) { console.error('[phase42] scheduler init failed:', e.message); }
+// Phase 44: event ticket emails (additive) — confirmation/reminder/thanks daily job
+try {
+  require('./lib/eventEmails').ensureEventEmailsScheduled();
+} catch (e) { console.error('[phase44] event emails schedule failed:', e.message); }
 try {
   const { enqueue } = require('./lib/jobs');
   const scheduleApiUsageCleanup = async () => {

@@ -1,0 +1,16 @@
+// Phase 44 Track 1 — Public Events Page (delta fragment, CommunityEvent par fields)
+// Coordinator: schema.prisma me CommunityEvent model me ye 3 fields + unique jorna.
+// imageUrl pehle se maujood hai — wahi cover image hai, alag coverImageUrl nahi chahiye.
+//
+// model CommunityEvent me jorna:
+//   isPublic     Boolean  @default(false) @map("is_public")
+//   slug         String?  @map("slug")
+//   externalUrl  String?  @map("external_url")
+//   @@unique([tenantId, slug])
+//
+// Migration SQL (coordinator migration file me):
+//   ALTER TABLE "community_events" ADD COLUMN "is_public" BOOLEAN NOT NULL DEFAULT FALSE;
+//   ALTER TABLE "community_events" ADD COLUMN "slug" TEXT NULL;
+//   ALTER TABLE "community_events" ADD COLUMN "external_url" TEXT NULL;
+//   CREATE UNIQUE INDEX "community_events_tenant_id_slug_key" ON "community_events"("tenant_id", "slug");
+//   CREATE INDEX "community_events_is_public_starts_at_idx" ON "community_events"("is_public", "starts_at");

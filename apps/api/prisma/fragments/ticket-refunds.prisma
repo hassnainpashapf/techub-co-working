@@ -1,0 +1,51 @@
+// Phase 44 Track 5: Ticket Refunds & Transfers — schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma and create the matching
+// migration. DO NOT edit schema.prisma here (10 parallel agents — merge conflicts
+// se bachne ke liye).
+//
+// NOTE: EventTicket model Track 3 (tickets.prisma) me hai — yahan sirf DELTA hai.
+
+// DELTA — EventTicket model (Track 3) par 2 naye fields:
+model EventTicket {
+  // ... (Track 3 ke fields)
+  refundReason String?   @map("refund_reason") // staff ne kyun refund kiya
+  refundedAt   DateTime? @map("refunded_at")
+
+  transfers TicketTransfer[] // meray transfer records (ticket as source)
+}
+
+model TicketTransfer {
+  id            String       @id @default(cuid())
+  tenantId      String       @map("tenant_id")
+  ticketId      String       @map("ticket_id") // purana (invalidate hua) ticket
+  ticket        EventTicket  @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  fromEmail     String       @map("from_email")
+  toName        String       @map("to_name")
+  toEmail       String       @map("to_email")
+  transferredAt DateTime     @default(now()) @map("transferred_at")
+
+  @@index([tenantId, ticketId])
+  @@index([toEmail])
+  @@map("ticket_transfers")
+}
+
+// Migration SQL (coordinator):
+// -- Track 3 ki CREATE TABLE "event_tickets" ke BAAD lagayein (table name
+// -- Track 3 ke fragment se verify karna — yahan "event_tickets" assume kiya hai):
+// ALTER TABLE "event_tickets" ADD COLUMN "refund_reason" TEXT;
+// ALTER TABLE "event_tickets" ADD COLUMN "refunded_at" TIMESTAMP(3);
+//
+// CREATE TABLE "ticket_transfers" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "ticket_id" TEXT NOT NULL,
+//     "from_email" TEXT NOT NULL,
+//     "to_name" TEXT NOT NULL,
+//     "to_email" TEXT NOT NULL,
+//     "transferred_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "ticket_transfers_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "ticket_transfers_tenant_id_ticket_id_idx" ON "ticket_transfers"("tenant_id", "ticket_id");
+// CREATE INDEX "ticket_transfers_to_email_idx" ON "ticket_transfers"("to_email");
+// ALTER TABLE "ticket_transfers" ADD CONSTRAINT "ticket_transfers_ticket_id_fkey"
+//   FOREIGN KEY ("ticket_id") REFERENCES "event_tickets"("id") ON DELETE CASCADE ON UPDATE CASCADE;

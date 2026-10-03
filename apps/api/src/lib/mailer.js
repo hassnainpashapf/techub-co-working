@@ -244,6 +244,16 @@ const templates = {
     subject: `🎉 Reminder: ${eventTitle} tomorrow`,
     html: wrap('Event Reminder', `<p>Hi ${memberName || 'there'},</p><p>Just a reminder that <b>${eventTitle}</b> is happening <b>tomorrow</b>:</p><p>📅 ${eventWhen || ''}<br/>📍 ${eventLocation || ''}</p><p>We look forward to seeing you!</p>`),
   }),
+  // Phase 44 Track 8: ticket purchase confirmation with QR entry code.
+  eventTicket: ({ buyerName, eventTitle, eventWhen, eventLocation, ticketCode, ticketType, price }) => ({
+    subject: `🎟️ Your ticket — ${eventTitle}`,
+    html: wrap('Event Ticket', `<p>Hi ${buyerName || 'there'},</p><p>Your booking for <b>${eventTitle}</b>${ticketType ? ` (${ticketType})` : ''} is confirmed${price ? ` — <b>Rs ${Number(price).toLocaleString()}</b>` : ''}.</p><p>📅 ${eventWhen || ''}<br/>📍 ${eventLocation || ''}</p><p>Show this entry code at the gate:</p><p style="font-size:26px;font-weight:800;letter-spacing:6px;">${ticketCode || ''}</p><p style="color:#6b7280;font-size:13px">Please arrive 15 minutes early. See you there!</p>`),
+  }),
+  // Phase 44 Track 8: post-event thank-you + feedback survey invite.
+  eventThanks: ({ buyerName, eventTitle, feedbackUrl }) => ({
+    subject: `Thank you for joining — ${eventTitle} 🙏`,
+    html: wrap('Thank You', `<p>Hi ${buyerName || 'there'},</p><p>Thank you for attending <b>${eventTitle}</b>! We hope you had a great time.</p><p>We'd love your feedback — it helps us make future events even better.</p>${feedbackUrl ? `<p><a href="${feedbackUrl}" style="display:inline-block;padding:12px 24px;background:#7c3aed;color:#fff;border-radius:8px;text-decoration:none;">Share Feedback</a></p>` : ''}<p style="color:#6b7280;font-size:13px">See you at the next one!</p>`),
+  }),
   mailReceived: ({ memberName, itemType, sender, trackingNumber, receivedAt }) => ({
     subject: `📦 You have mail — ${itemType === 'letter' ? 'letter' : 'package'} received`,
     html: wrap('Mail Received', `<p>Hi ${memberName || 'there'},</p><p>A <b>${itemType === 'letter' ? 'letter' : 'package'}</b>${sender ? ` from <b>${sender}</b>` : ''} has arrived for you at reception${receivedAt ? ` (${receivedAt})` : ''}.</p>${trackingNumber ? `<p>Tracking: <b>${trackingNumber}</b></p>` : ''}<p>Please collect it at your convenience.</p>`),
@@ -395,6 +405,8 @@ const TEMPLATE_VARS = {
   invoiceOverdue: ['memberName', 'number', 'amount', 'dueDate', 'daysOverdue', 'level'],
   systemHealthAlert: ['name', 'issues'],
   eventReminder: ['memberName', 'eventTitle', 'eventWhen', 'eventLocation'],
+  eventTicket: ['buyerName', 'eventTitle', 'eventWhen', 'eventLocation', 'ticketCode', 'ticketType', 'price'],
+  eventThanks: ['buyerName', 'eventTitle', 'feedbackUrl'],
   mailReceived: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt'],
   mailReminder: ['memberName', 'itemType', 'sender', 'trackingNumber', 'receivedAt', 'daysWaiting'],
   contractSignatureRequest: ['signerName', 'memberName', 'unitCode', 'signUrl', 'expiresAt'],

@@ -118,6 +118,8 @@ const NAV_MAIN = [
       { label: 'Housekeeping', path: '/housekeeping' },
       { label: 'WiFi Vouchers', path: '/wifi' },
       { label: 'Events', path: '/events' },
+      { label: 'Organizer Dashboard', path: '/events/dashboard' },
+      { label: 'Ticket Scanning', path: '/events/scan' },
       { label: 'NPS Surveys', path: '/surveys' },
       { label: 'Reminders', path: '/reminders' },
     ],

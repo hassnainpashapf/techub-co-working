@@ -1,0 +1,50 @@
+// Phase 44 Track 2: Ticket Types — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma and create
+// the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model TicketType {
+  id           String         @id @default(cuid())
+  tenantId     String         @map("tenant_id")
+  eventId      String         @map("event_id")
+  event        CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  name         String // Early Bird | Regular | VIP | ...
+  price        Decimal        @db.Decimal(12, 2)
+  quantity     Int            // total tickets iss type ke
+  soldCount    Int            @default(0) @map("sold_count")
+  saleStart    DateTime?      @map("sale_start")
+  saleEnd      DateTime?      @map("sale_end")
+  isActive     Boolean        @default(true) @map("is_active")
+  perOrderLimit Int?          @map("per_order_limit") // ek order me max kitne
+  createdAt    DateTime       @default(now()) @map("created_at")
+  updatedAt    DateTime       @updatedAt @map("updated_at")
+
+  @@index([tenantId, eventId])
+  @@index([eventId, isActive])
+  @@map("ticket_types")
+}
+
+// ADD TO CommunityEvent model:
+//   ticketTypes TicketType[]
+
+// Migration SQL (coordinator):
+// CREATE TABLE "ticket_types" (
+//     "id" TEXT NOT NULL,
+//     "tenant_id" TEXT NOT NULL,
+//     "event_id" TEXT NOT NULL,
+//     "name" TEXT NOT NULL,
+//     "price" DECIMAL(12,2) NOT NULL,
+//     "quantity" INTEGER NOT NULL,
+//     "sold_count" INTEGER NOT NULL DEFAULT 0,
+//     "sale_start" TIMESTAMP(3),
+//     "sale_end" TIMESTAMP(3),
+//     "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "per_order_limit" INTEGER,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "ticket_types_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "ticket_types_tenant_id_event_id_idx" ON "ticket_types"("tenant_id", "event_id");
+// CREATE INDEX "ticket_types_event_id_is_active_idx" ON "ticket_types"("event_id", "is_active");
+// ALTER TABLE "ticket_types" ADD CONSTRAINT "ticket_types_event_id_fkey"
+//   FOREIGN KEY ("event_id") REFERENCES "community_events"("id") ON DELETE CASCADE ON UPDATE CASCADE;

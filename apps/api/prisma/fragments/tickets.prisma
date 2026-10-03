@@ -1,0 +1,57 @@
+// Phase 44 Track 3: Ticket Purchase Flow — schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma + add back-relations:
+//   Tenant { eventTickets EventTicket[] }
+//   CommunityEvent { tickets EventTicket[] }
+//   TicketType { tickets EventTicket[] }
+//   Member { eventTickets EventTicket[] }
+// schema.prisma untouched by this track (10 parallel agents).
+
+model EventTicket {
+  id           String         @id @default(cuid())
+  tenantId     String         @map("tenant_id")
+  eventId      String         @map("event_id")
+  ticketTypeId String         @map("ticket_type_id")
+  buyerName    String         @map("buyer_name")
+  buyerEmail   String         @map("buyer_email")
+  buyerPhone   String?        @map("buyer_phone")
+  memberId     String?        @map("member_id") // optional link agar buyer member ho
+  code         String         @unique // HMAC-signed QR token (member-qr pattern)
+  status       String         @default("valid") @map("status") // valid | used | refunded | transferred | payment_pending
+  price        Decimal        @db.Decimal(12, 2)
+  purchasedAt  DateTime       @default(now()) @map("purchased_at")
+  usedAt       DateTime?      @map("used_at")
+
+  tenant     Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  event      CommunityEvent @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  ticketType TicketType     @relation(fields: [ticketTypeId], references: [id], onDelete: Restrict)
+  member     Member?        @relation(fields: [memberId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, eventId])
+  @@index([tenantId, buyerEmail])
+  @@index([ticketTypeId, status])
+  @@map("event_tickets")
+}
+
+// --- migration SQL (coordinator: 2026100353xxxx_phase44_ticketing) ---
+// CREATE TABLE "event_tickets" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "event_id" TEXT NOT NULL,
+//   "ticket_type_id" TEXT NOT NULL,
+//   "buyer_name" TEXT NOT NULL,
+//   "buyer_email" TEXT NOT NULL,
+//   "buyer_phone" TEXT,
+//   "member_id" TEXT,
+//   "code" TEXT NOT NULL UNIQUE,
+//   "status" TEXT NOT NULL DEFAULT 'valid',
+//   "price" DECIMAL(12,2) NOT NULL,
+//   "purchased_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "used_at" TIMESTAMP(3),
+//   CONSTRAINT "event_tickets_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "event_tickets_event_id_fkey" FOREIGN KEY ("event_id") REFERENCES "community_events"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "event_tickets_ticket_type_id_fkey" FOREIGN KEY ("ticket_type_id") REFERENCES "ticket_types"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+//   CONSTRAINT "event_tickets_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "event_tickets_tenant_id_event_id_idx" ON "event_tickets"("tenant_id", "event_id");
+// CREATE INDEX "event_tickets_tenant_id_buyer_email_idx" ON "event_tickets"("tenant_id", "buyer_email");
+// CREATE INDEX "event_tickets_ticket_type_id_status_idx" ON "event_tickets"("ticket_type_id", "status");

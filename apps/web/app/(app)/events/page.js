@@ -5,6 +5,7 @@ import { api } from '../../../lib/api';
 import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, EmptyState, StatCard } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 import EventAttendeesTab from '../../../components/EventAttendeesTab'; // Phase 40 Track 6
+import EventTicketingTabs from '../../../components/EventTicketingTabs'; // Phase 44
 
 const STATUS_TONE = { upcoming: 'blue', ongoing: 'green', completed: 'slate', cancelled: 'red' };
 
@@ -70,6 +71,7 @@ export default function EventsPage() {
   const [rsvps, setRsvps] = useState(null);
   const [rsvpEvent, setRsvpEvent] = useState(null);
   const [attendEvent, setAttendEvent] = useState(null); // Phase 40 Track 6: attendees modal
+  const [ticketEvent, setTicketEvent] = useState(null); // Phase 44: ticketing tabs modal
 
   const load = () => {
     setLoading(true);
@@ -135,6 +137,7 @@ export default function EventsPage() {
               <div className="flex gap-2">
                 <button className="btn-secondary text-sm" onClick={() => viewRsvps(ev)}>RSVPs</button>
                 <button className="btn-secondary text-sm" onClick={() => setAttendEvent(ev)}>Attendees</button>
+                <button className="btn-secondary text-sm" onClick={() => setTicketEvent(ev)}>🎟️ Tickets</button>
                 <button className="btn-secondary text-sm" onClick={() => { setEditing(ev); setShowForm(true); }}>Edit</button>
                 <button className="text-sm text-red-300 hover:text-red-200 px-2" onClick={() => remove(ev.id)}>Delete</button>
               </div>
@@ -166,6 +169,11 @@ export default function EventsPage() {
       {attendEvent && (
         <Modal title={`Attendees — ${attendEvent.title}`} onClose={() => setAttendEvent(null)}>
           <EventAttendeesTab eventId={attendEvent.id} />
+        </Modal>
+      )}
+      {ticketEvent && (
+        <Modal title={`Tickets — ${ticketEvent.title}`} onClose={() => setTicketEvent(null)}>
+          <EventTicketingTabs eventId={ticketEvent.id} />
         </Modal>
       )}
     </div>
