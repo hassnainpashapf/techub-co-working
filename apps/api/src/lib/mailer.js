@@ -66,6 +66,31 @@ function invalidateTransporter(tenantId) {
   transporters.delete(tenantId);
 }
 
+// White-label brand lookup (cached 5 min): whiteLabel.brandName setting,
+// fallback to tenant name, then CoworkOS.
+const brandCache = new Map();
+async function getTenantBrand(tenantId) {
+  if (!tenantId) return { brandName: 'CoworkOS', supportEmail: null };
+  const cached = brandCache.get(tenantId);
+  if (cached && Date.now() - cached.at < 5 * 60 * 1000) return cached.brand;
+  const brand = { brandName: 'CoworkOS', supportEmail: null };
+  try {
+    const rows = await prisma.setting.findMany({
+      where: { tenantId, key: { in: ['whiteLabel.brandName', 'whiteLabel.supportEmail'] } },
+    });
+    const map = Object.fromEntries(rows.map((r) => [r.key, r.value]));
+    if (map['whiteLabel.brandName']) brand.brandName = map['whiteLabel.brandName'];
+    if (map['whiteLabel.supportEmail']) brand.supportEmail = map['whiteLabel.supportEmail'];
+    if (!map['whiteLabel.brandName']) {
+      const t = await prisma.tenant.findUnique({ where: { id: tenantId }, select: { name: true } });
+      if (t?.name) brand.brandName = t.name;
+    }
+  } catch { /* ignore — default brand */ }
+  brandCache.set(tenantId, { at: Date.now(), brand });
+  if (brandCache.size > 500) brandCache.delete(brandCache.keys().next().value);
+  return brand;
+}
+
 // Direct SMTP send — used by the queue worker and as a fallback when the
 // queue is unavailable. Never enqueues (no recursion).
 async function sendEmailDirect(tenantId, { to, subject, html, text }) {
@@ -73,8 +98,9 @@ async function sendEmailDirect(tenantId, { to, subject, html, text }) {
   const entry = await getTransporter(tenantId);
   if (!entry) return { sent: false, reason: 'email-disabled' };
   const { transporter, settings } = entry;
+  const brand = await getTenantBrand(tenantId);
   const from = settings.fromEmail
-    ? `"${settings.fromName || 'CoworkOS'}" <${settings.fromEmail}>`
+    ? `"${settings.fromName || brand.brandName}" <${settings.fromEmail}>`
     : settings.username;
   try {
     await transporter.sendMail({ from, to, subject, html, text: text || html?.replace(/<[^>]+>/g, '') });
@@ -215,6 +241,14 @@ const templates = {
     subject: `📦 ${count} overdue asset checkout${count === 1 ? '' : 's'}`,
     html: wrap('Overdue Assets', `<p>Hi ${name || 'Admin'},</p><p>The following asset checkout(s) are past their due date:</p><pre style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${list || 'n/a'}</pre><p>Please follow up on the Assets page.</p>`),
   }),
+  tenantWelcome: ({ adminName, tenantName, loginUrl, email, tempPassword }) => ({
+    subject: `🎉 Welcome to ${tenantName || 'CoworkOS'} — your admin account is ready`,
+    html: wrap('Welcome aboard', `<p>Hi ${adminName || 'there'},</p><p>Your workspace <b>${tenantName || ''}</b> is ready. Sign in with these one-time credentials and set a new password right away:</p><p>🔗 <a href="${loginUrl || '#'}">${loginUrl || 'login page'}</a><br/>📧 Email: <b>${email || ''}</b><br/>🔑 Temporary password: <b style="font-size:18px;letter-spacing:1px">${tempPassword || ''}</b></p><p style="color:#b91c1c"><b>Note:</b> you will be asked to change this password on your first login. Do not share it.</p>`),
+  }),
+  retentionOffer: ({ memberName, customMessage }) => ({
+    subject: 'We value you — a special offer just for you',
+    html: wrap('We Value You', `<p>Hi ${memberName || 'there'},</p><p>We've noticed you haven't been around as much lately, and we wanted to reach out personally — your membership matters to us.</p>${customMessage ? `<p style="background:#f3f4f6;padding:12px;border-radius:8px;white-space:pre-wrap">${customMessage}</p>` : ''}<p>We'd love to hear how we can make your experience better. Just reply to this email and our team will take care of the rest.</p><p>Warm regards,<br/>Your coworking team</p>`),
+  }),
 };
 
 async function notify(tenantId, to, templateName, data) {
@@ -233,7 +267,18 @@ async function notify(tenantId, to, templateName, data) {
   }
   const tpl = templates[templateName];
   if (!tpl) return { sent: false, reason: 'unknown-template' };
-  return sendEmail(tenantId, { to, ...tpl(data) });
+  const rendered = tpl(data);
+  // White-label: brand the email footer with the tenant's brand name.
+  if (rendered && rendered.html) {
+    try {
+      const brand = await getTenantBrand(tenantId);
+      rendered.html = rendered.html.replace(
+        'This is an automated message from your coworking space.',
+        `This is an automated message from ${brand.brandName}.`
+      );
+    } catch { /* keep default footer */ }
+  }
+  return sendEmail(tenantId, { to, ...rendered });
 }
 
 // Mustache-style {{variable}} replace against the notify() data object.
@@ -291,10 +336,12 @@ const TEMPLATE_VARS = {
   wifiVoucher: ['memberName', 'code', 'durationHours', 'maxDevices'],
   maintenanceUrgent: ['name', 'title', 'priority', 'location', 'reporter', 'createdAt'],
   assetOverdue: ['name', 'count', 'list'],
+  tenantWelcome: ['adminName', 'tenantName', 'loginUrl', 'email', 'tempPassword'],
+  retentionOffer: ['memberName', 'customMessage'],
 };
 
 function listBuiltinTemplates() {
   return Object.keys(templates).map((key) => ({ key, variables: TEMPLATE_VARS[key] || [] }));
 }
 
-module.exports = { sendEmail, sendEmailDirect, notify, invalidateTransporter, getTransporter, listBuiltinTemplates, renderCustom };
+module.exports = { sendEmail, sendEmailDirect, notify, invalidateTransporter, getTransporter, listBuiltinTemplates, renderCustom, getTenantBrand };

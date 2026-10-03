@@ -4,6 +4,8 @@
 const { verifyAccessToken } = require('../lib/auth');
 // Phase 32 Track 5: revoked login sessions ko block karo
 const { isSessionRevoked } = require('../lib/userSessions');
+// Phase 35: suspended tenants ko API-wide block karo
+const { isTenantSuspended } = require('../lib/tenantStatus');
 
 async function authenticate(req, res, next) {
   const header = req.headers.authorization || '';
@@ -19,6 +21,12 @@ async function authenticate(req, res, next) {
     // Revoked session par token invalid (sirf sid wale naye tokens check hote hain)
     if (payload.sid && (await isSessionRevoked(payload.sid))) {
       return res.status(401).json({ error: { message: 'Session revoked. Please log in again.' } });
+    }
+    // Phase 35: suspended tenant → 403 (impersonation tokens bypass karte hain — super_admin ka explicit intent)
+    if (payload.tenantId && !payload.impersonated && (await isTenantSuspended(payload.tenantId))) {
+      return res.status(403).json({
+        error: { message: 'This workspace has been suspended. Please contact support.', code: 'TENANT_SUSPENDED' },
+      });
     }
     req.user = payload; // { sub, role, tenantId, email, memberId, type, sid? }
     return next();

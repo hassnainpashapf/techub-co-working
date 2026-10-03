@@ -62,6 +62,17 @@ function verifyPreAuthToken(token) {
   return payload;
 }
 
+// Phase 35: short-lived impersonation token for super_admin tenant management.
+// 15 minutes, carries impersonatedBy (the super_admin user id) so every action
+// is auditable and the frontend can show an "impersonating" banner.
+function signImpersonationToken(user, impersonatorId) {
+  return jwt.sign(
+    { ...buildPayload(user, 'access'), impersonated: true, impersonatedBy: impersonatorId },
+    ACCESS_SECRET(),
+    { expiresIn: '15m' }
+  );
+}
+
 module.exports = {
   hashPassword,
   comparePassword,
@@ -71,4 +82,5 @@ module.exports = {
   verifyRefreshToken,
   signPreAuthToken,
   verifyPreAuthToken,
+  signImpersonationToken,
 };

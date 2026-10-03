@@ -33,6 +33,8 @@ model Tenant {
   address      String?
   plan         String   @default("starter") // starter | growth | enterprise
   isActive     Boolean  @default(true) @map("is_active")
+  suspendedAt  DateTime? @map("suspended_at") // Phase 35: tenant suspension
+  suspendedReason String? @map("suspended_reason")
   logoPath     String?  @map("logo_path")
   primaryColor String?  @map("primary_color")
   tagline      String?
@@ -117,6 +119,7 @@ model Tenant {
   wifiVouchers            WifiVoucher[]
   lostFoundItems          LostFoundItem[]
   cleaningTasks           CleaningTask[]
+  kpiDashboards           KpiDashboard[] // Phase 35
 
   @@map("tenants")
 }
@@ -183,6 +186,7 @@ model User {
   assignedCleaningTasks       CleaningTask[]           @relation("CleaningTaskAssignee")
   pushSubscriptions           PushSubscription[]
   announcementReads           AnnouncementRead[]       @relation("AnnouncementReads")
+  kpiDashboards               KpiDashboard[]           @relation("KpiDashboardOwner") // Phase 35
 
   @@index([tenantId, role])
   @@map("users")
@@ -2090,4 +2094,20 @@ model CleaningTask {
   @@index([tenantId, status])
   @@index([tenantId, dueDate])
   @@map("cleaning_tasks")
+}
+
+// ------------------------------------------- Phase 35: KPI dashboards ---
+model KpiDashboard {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  tenant    Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  userId    String   @map("user_id")
+  user      User     @relation("KpiDashboardOwner", fields: [userId], references: [id], onDelete: Cascade)
+  name      String
+  layout    Json     @default("[]")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, userId])
+  @@map("kpi_dashboards")
 }

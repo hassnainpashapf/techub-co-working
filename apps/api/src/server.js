@@ -120,6 +120,18 @@ app.use('/api/wifi', require('./routes/wifi'));
 app.use('/api/lost-found', require('./routes/lost-found'));
 app.use('/api/housekeeping', require('./routes/housekeeping'));
 app.use('/api/booking-rules', require('./routes/booking-rules'));
+
+// Phase 35: Investor & Analytics Pack
+app.use('/api/location-compare', require('./routes/location-compare'));
+app.use('/api/pnl', require('./routes/pnl'));
+app.use('/api/forecast', require('./routes/forecast'));
+app.use('/api/projections', require('./routes/projections'));
+app.use('/api/churn', require('./routes/churn'));
+app.use('/api/expense-trends', require('./routes/expense-trends'));
+app.use('/api/kpi-dashboards', require('./routes/kpi-dashboards'));
+app.use('/api/white-label', require('./routes/white-label'));
+app.use('/api/onboarding', require('./routes/onboarding'));
+app.use('/api/admin/tenants', require('./routes/admin-tenants'));
 require('./lib/healthCheck');
 require('./lib/healthCheck').startHealthScheduler();
 require('./lib/auditRetention'); // auto-registers 'audit-retention' job handler

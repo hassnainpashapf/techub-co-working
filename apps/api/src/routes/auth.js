@@ -21,6 +21,8 @@ const { checkIpAllowed, recordBlockedIp, trackLogin } = require('../lib/loginSec
 const { writeAudit } = require('../middleware/audit');
 // Phase 32 Track 5: login session tracking (session manager UI)
 const { recordLoginSession, latestActiveSession } = require('../lib/userSessions');
+// Phase 35 Track 9: force temp-password change flag (tenant onboarding wizard)
+const { mustChangePassword } = require('../lib/onboarding');
 // Phase 32: DB-backed refresh token rotation
 const {
   issueRefreshToken,
@@ -105,7 +107,7 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
     }
     const user = await prisma.user.findUnique({
       where: { email },
-      include: { tenant: { select: { id: true, name: true, slug: true } } },
+      include: { tenant: { select: { id: true, name: true, slug: true, isActive: true, suspendedAt: true } } },
     });
     if (!user || !user.isActive) {
       recordFailure(email, req.ip);
@@ -117,6 +119,12 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
       return res.status(401).json({ error: { message: 'Invalid credentials' } });
     }
     recordSuccess(email, req.ip);
+    // Phase 35: suspended tenant → login blocked (super_admin has no tenant, skips this)
+    if (user.tenant && (user.tenant.isActive === false || user.tenant.suspendedAt)) {
+      return res.status(403).json({
+        error: { message: 'This workspace has been suspended. Please contact support.', code: 'TENANT_SUSPENDED' },
+      });
+    }
     // Phase 32: IP allowlist enforcement (applies to all roles; empty = disabled)
     const ipCheck = await checkIpAllowed(user.tenantId, req.ip);
     if (!ipCheck.allowed) {
@@ -147,11 +155,14 @@ router.post('/login', loginLimiter, validateBody(loginSchema), async (req, res, 
       ip: req.ip,
       userAgent: req.headers['user-agent'],
     });
+    // Phase 35 Track 9: tell the frontend when a temp password must be changed
+    const forcePwChange = await mustChangePassword(user.tenantId, user.id).catch(() => false);
     return res.json({
       ...tokens,
       user: {
         ...publicUser(user),
         tenant: user.tenant ? user.tenant.name : null,
+        ...(forcePwChange ? { mustChangePassword: true } : {}),
       },
     });
   } catch (err) {
@@ -208,11 +219,14 @@ router.post('/login/2fa', loginLimiter, validateBody(verify2faLoginSchema), asyn
       ip: req.ip,
       userAgent: req.headers['user-agent'],
     });
+    // Phase 35 Track 9: tell the frontend when a temp password must be changed
+    const forcePwChange = await mustChangePassword(user.tenantId, user.id).catch(() => false);
     return res.json({
       ...tokens,
       user: {
         ...publicUser(user),
         tenant: user.tenant ? user.tenant.name : null,
+        ...(forcePwChange ? { mustChangePassword: true } : {}),
       },
     });
   } catch (err) {

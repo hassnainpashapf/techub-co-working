@@ -1,0 +1,8 @@
+// Phase 35 Track 10: Super Admin Tenant Management
+// ADD TO model Tenant:
+//   suspendedAt     DateTime? @map("suspended_at")
+//   suspendedReason String?   @map("suspended_reason")
+//
+// Migration SQL (coordinator merge karega):
+// ALTER TABLE "tenants" ADD COLUMN "suspended_at" TIMESTAMP(3);
+// ALTER TABLE "tenants" ADD COLUMN "suspended_reason" TEXT;
