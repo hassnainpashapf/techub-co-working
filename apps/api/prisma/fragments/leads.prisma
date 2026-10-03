@@ -1,0 +1,37 @@
+// Phase 29 Track 3: Leads CRM (kanban) — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+
+model Lead {
+  id                String   @id @default(cuid())
+  tenantId          String   @map("tenant_id")
+  tenant            Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  name              String
+  email             String?
+  phone             String?
+  company           String?
+  source            String   @default("walkin") // walkin | website | referral | social | other
+  interest          String?  // unit type of interest
+  budget            Decimal? @db.Decimal(12, 2)
+  stage             String   @default("new") // new | contacted | visit | booked | lost
+  notes             String?  @db.Text
+  assignedTo        String?  @map("assigned_to")
+  assignee          User?    @relation("LeadAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+  convertedMemberId String?  @map("converted_member_id")
+  convertedMember   Member?  @relation("LeadConversion", fields: [convertedMemberId], references: [id], onDelete: SetNull)
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, stage])
+  @@map("leads")
+}
+
+// ADD TO Tenant model:
+//   leads Lead[]
+//
+// ADD TO User model:
+//   assignedLeads Lead[] @relation("LeadAssignee")
+//
+// ADD TO Member model:
+//   convertedFromLead Lead? @relation("LeadConversion")

@@ -7,7 +7,7 @@ const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
-const { saveFile, readStream, fileExists, removeFile } = require('../lib/storage');
+const { saveFile, deleteFile } = require('../lib/storage');
 
 const router = express.Router();
 
@@ -93,34 +93,30 @@ router.put('/branding', validateBody(brandingSchema), async (req, res, next) => 
   } catch (err) { return next(err); }
 });
 
-// Upload logo (PNG/JPG/WebP/SVG, 5MB)
+// Upload logo (PNG/JPG/WebP/SVG, 5MB) — via storage abstraction (S3 or local)
 router.post('/branding/logo', logoUpload.single('logo'), async (req, res, next) => {
   try {
     if (!req.file) return res.status(400).json({ error: 'No file uploaded' });
-    const allowed = ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'];
-    if (!allowed.includes(req.file.mimetype)) {
-      return res.status(400).json({ error: 'Logo must be PNG, JPG, WebP or SVG' });
-    }
     const tenant = await prisma.tenant.findUnique({ where: { id: req.user.tenantId }, select: { logoPath: true } });
-    if (tenant?.logoPath) removeFile(tenant.logoPath);
-    // Reuse storage lib but bypass its mime allowlist via direct write
-    const fs = require('fs');
-    const path = require('path');
-    const crypto = require('crypto');
-    const dir = path.join(require('../lib/storage').UPLOAD_DIR, req.user.tenantId);
-    fs.mkdirSync(dir, { recursive: true });
-    const ext = path.extname(req.file.originalname).slice(0, 8) || '.png';
-    const fullPath = path.join(dir, `logo-${Date.now()}-${crypto.randomBytes(6).toString('hex')}${ext}`);
-    fs.writeFileSync(fullPath, req.file.buffer);
-    await prisma.tenant.update({ where: { id: req.user.tenantId }, data: { logoPath: fullPath } });
+    if (tenant?.logoPath) await deleteFile(tenant.logoPath);
+    const { path: logoPath } = await saveFile(req.file.buffer, {
+      folder: req.user.tenantId,
+      filename: req.file.originalname,
+      mimetype: req.file.mimetype,
+      allowedMime: ['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml'],
+    });
+    await prisma.tenant.update({ where: { id: req.user.tenantId }, data: { logoPath } });
     res.json({ ok: true });
-  } catch (err) { return next(err); }
+  } catch (err) {
+    if (err.status === 400) return res.status(400).json({ error: err.message });
+    return next(err);
+  }
 });
 
 router.delete('/branding/logo', async (req, res, next) => {
   try {
     const tenant = await prisma.tenant.findUnique({ where: { id: req.user.tenantId }, select: { logoPath: true } });
-    if (tenant?.logoPath) removeFile(tenant.logoPath);
+    if (tenant?.logoPath) await deleteFile(tenant.logoPath);
     await prisma.tenant.update({ where: { id: req.user.tenantId }, data: { logoPath: null } });
     res.json({ ok: true });
   } catch (err) { return next(err); }

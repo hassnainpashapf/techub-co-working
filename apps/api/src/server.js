@@ -68,6 +68,14 @@ app.use('/api/sms', require('./routes/sms'));
 app.use('/api/announcements', require('./routes/announcements'));
 app.use('/api/cache', require('./routes/cache'));
 app.use('/api/jobs', require('./routes/jobs'));
+app.use('/api/storage', require('./routes/storage'));
+app.use('/api/recurring-bookings', require('./routes/recurring-bookings'));
+app.use('/api/leads', require('./routes/leads'));
+app.use('/api/contract-renewals', require('./routes/contract-renewals'));
+app.use('/api/member-qr', require('./routes/member-qr'));
+app.use('/api/feedback', require('./routes/feedback'));
+app.use('/api/activity', require('./routes/activity'));
+require('./lib/renewalAlerts');
 
 // Public tenant branding (for login page) — lookup by slug, no auth
 app.get('/api/branding/:slug', async (req, res, next) => {

@@ -6,6 +6,7 @@ const { authenticate } = require('../middleware/auth');
 const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
+const { writeAudit } = require('../middleware/audit');
 
 const router = express.Router();
 
@@ -35,6 +36,9 @@ router.get('/expenses', async (req, res, next) => {
   try {
     const where = { ...tenantFilter(req) };
     if (req.query.category) where.category = String(req.query.category);
+    if (req.query.status && ['pending', 'approved', 'rejected'].includes(String(req.query.status))) {
+      where.status = String(req.query.status);
+    }
     if (req.query.month) {
       const m = String(req.query.month).match(/^(\d{4})-(\d{2})$/);
       if (m) {
@@ -57,15 +61,112 @@ router.get('/expenses', async (req, res, next) => {
 router.post('/expenses', validateBody(expenseSchema), async (req, res, next) => {
   try {
     const expense = await prisma.expense.create({
-      data: { ...tenantFilter(req), ...req.body, createdById: req.user.sub },
+      data: { ...tenantFilter(req), ...req.body, status: 'pending', createdById: req.user.sub },
     });
+    writeAudit({
+      tenantId: req.user.tenantId,
+      actorId: req.user.sub,
+      action: 'expense.created',
+      entity: 'Expense',
+      entityId: expense.id,
+      newValue: { category: expense.category, amount: String(expense.amount) },
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(() => {});
+    // Notify approvers (ceo + admin roles) about the new pending expense
+    for (const role of ['ceo', 'admin']) {
+      prisma.notification.create({
+        data: {
+          tenantId: req.user.tenantId,
+          role,
+          type: 'general',
+          message: `New expense pending approval: ${expense.category} — Rs ${Number(expense.amount).toLocaleString()}`,
+        },
+      }).catch(() => {});
+    }
     return res.status(201).json({ expense });
   } catch (err) {
     return next(err);
   }
 });
 
+// Approve / reject workflow (router already restricted to ceo/admin/finance_officer)
+const reviewSchema = z.object({ note: z.string().max(500).optional().nullable() });
+
+async function reviewExpense(req, res, next, decision) {
+  try {
+    const { note } = req.body || {};
+    if (decision === 'rejected' && !note) {
+      return res.status(400).json({ error: { message: 'A rejection note is required.' } });
+    }
+    const existing = await prisma.expense.findFirst({
+      where: { id: req.params.id, ...tenantFilter(req) },
+    });
+    if (!existing) return res.status(404).json({ error: { message: 'Expense not found' } });
+    if (existing.status !== 'pending') {
+      return res.status(400).json({ error: { message: `Expense is already ${existing.status}.` } });
+    }
+    const expense = await prisma.expense.update({
+      where: { id: existing.id },
+      data: {
+        status: decision,
+        reviewedBy: req.user.sub,
+        reviewedAt: new Date(),
+        reviewNote: note || null,
+      },
+    });
+    writeAudit({
+      tenantId: req.user.tenantId,
+      actorId: req.user.sub,
+      action: `expense.${decision}`,
+      entity: 'Expense',
+      entityId: expense.id,
+      oldValue: { status: 'pending' },
+      newValue: { status: decision, reviewNote: note || null },
+      ip: req.ip,
+      userAgent: req.headers['user-agent'],
+    }).catch(() => {});
+    // Notify the requester
+    if (existing.createdById && existing.createdById !== req.user.sub) {
+      prisma.notification.create({
+        data: {
+          tenantId: req.user.tenantId,
+          userId: existing.createdById,
+          type: 'general',
+          message: `Your expense (${expense.category} — Rs ${Number(expense.amount).toLocaleString()}) was ${decision}${note ? `: ${note}` : ''}`,
+        },
+      }).catch(() => {});
+    }
+    return res.json({ expense });
+  } catch (err) {
+    return next(err);
+  }
+}
+
+router.post('/expenses/:id/approve', validateBody(reviewSchema), (req, res, next) =>
+  reviewExpense(req, res, next, 'approved')
+);
+router.post('/expenses/:id/reject', validateBody(reviewSchema), (req, res, next) =>
+  reviewExpense(req, res, next, 'rejected')
+);
+
 router.patch('/expenses/:id', validateBody(expenseUpdateSchema), async (req, res, next) => {
+  try {
+    const existing = await prisma.expense.findFirst({
+      where: { id: req.params.id, ...tenantFilter(req) },
+    });
+    if (!existing) return res.status(404).json({ error: { message: 'Expense not found' } });
+    const expense = await prisma.expense.update({
+      where: { id: existing.id },
+      data: req.body,
+    });
+    return res.json({ expense });
+  } catch (err) {
+    return next(err);
+  }
+});
+// Alias: frontend sends PUT for edits
+router.put('/expenses/:id', validateBody(expenseUpdateSchema), async (req, res, next) => {
   try {
     const existing = await prisma.expense.findFirst({
       where: { id: req.params.id, ...tenantFilter(req) },

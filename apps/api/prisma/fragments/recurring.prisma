@@ -1,0 +1,37 @@
+// Phase 29 Track 2: Recurring Bookings — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model RecurringBooking {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId    String?  @map("member_id")
+  member      Member?  @relation(fields: [memberId], references: [id], onDelete: SetNull)
+  unitId      String   @map("unit_id")
+  unit        Unit     @relation(fields: [unitId], references: [id], onDelete: Cascade)
+  title       String
+  dayOfWeek   Int      @map("day_of_week") // 0=Sunday .. 6=Saturday
+  startTime   String   @map("start_time")  // "HH:mm"
+  endTime     String   @map("end_time")    // "HH:mm"
+  startDate   DateTime @map("start_date") @db.Date
+  endDate     DateTime? @map("end_date") @db.Date
+  status      String   @default("active") // active | paused | cancelled
+  generatedIds String[] @default([]) @map("generated_ids") // Booking ids created from this rule
+  createdBy   String?  @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId])
+  @@index([tenantId, status])
+  @@map("recurring_bookings")
+}
+
+// ADD TO Tenant model:
+//   recurringBookings RecurringBooking[]
+//
+// ADD TO Member model:
+//   recurringBookings RecurringBooking[]
+//
+// ADD TO Unit model:
+//   recurringBookings RecurringBooking[]

@@ -1,0 +1,28 @@
+// Phase 29 Track 8: Member Feedback System — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+
+model Feedback {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String   @map("member_id")
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  category   String   @default("other") // facility | service | staff | cleanliness | other
+  rating     Int      @default(5) // 1..5
+  message    String   @db.Text
+  status     String   @default("new") // new | reviewed | resolved
+  adminReply String?  @map("admin_reply") @db.Text
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, status])
+  @@index([memberId])
+  @@map("feedback")
+}
+
+// ADD TO Tenant model:
+//   feedbacks Feedback[]
+
+// ADD TO Member model:
+//   feedbacks Feedback[]

@@ -204,6 +204,12 @@ export default function MembersPage() {
   const [statusFilter, setStatusFilter] = useState('all');
   const [modal, setModal] = useState(null); // {mode:'add'|'edit', data} | {mode:'detail', data}
   const [saving, setSaving] = useState(false);
+  // Phase 29 Track 4: expiring contracts
+  const [expiring, setExpiring] = useState([]);
+  const [renewTarget, setRenewTarget] = useState(null);
+  const [renewDate, setRenewDate] = useState('');
+  const [renewRent, setRenewRent] = useState('');
+  const [renewing, setRenewing] = useState(false);
 
   const refresh = async () => {
     setError('');
@@ -221,6 +227,32 @@ export default function MembersPage() {
     refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // Phase 29 Track 4: load contracts expiring in the next 30 days
+  useEffect(() => {
+    api.get('/contract-renewals/expiring?days=30')
+      .then((d) => setExpiring(d.items || []))
+      .catch(() => setExpiring([]));
+  }, []);
+
+  async function handleRenew() {
+    if (!renewTarget || !renewDate) return;
+    setRenewing(true);
+    try {
+      const payload = { endDate: renewDate };
+      if (renewRent !== '') payload.rentAmount = Number(renewRent);
+      await api.post(`/contract-renewals/${renewTarget.id}/renew`, payload);
+      setRenewTarget(null);
+      setRenewDate('');
+      setRenewRent('');
+      const d = await api.get('/contract-renewals/expiring?days=30').catch(() => null);
+      setExpiring(d?.items || []);
+    } catch (e) {
+      setError(e.message);
+    } finally {
+      setRenewing(false);
+    }
+  }
 
   const filtered = useMemo(() => {
     const q = search.toLowerCase();
@@ -277,6 +309,34 @@ export default function MembersPage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
+      {/* Phase 29 Track 4: contracts expiring soon */}
+      {expiring.length > 0 && (
+        <div className="card mb-4 border-amber-400/30">
+          <div className="flex items-center gap-2 mb-3">
+            <span className="text-lg">⏳</span>
+            <h3 className="font-semibold text-white">Contracts expiring soon ({expiring.length})</h3>
+            <Badge tone="amber">next 30 days</Badge>
+          </div>
+          <DataTable
+            columns={[
+              { key: 'member', label: 'Member', render: (r) => <span className="font-medium text-white">{r.member?.name || '—'}</span> },
+              { key: 'unit', label: 'Unit', render: (r) => r.unit?.code || '—' },
+              { key: 'end', label: 'Ends', render: (r) => (r.endDate ? String(r.endDate).slice(0, 10) : '—') },
+              { key: 'left', label: 'Days left', render: (r) => <Badge tone={r.daysLeft <= 7 ? 'red' : r.daysLeft <= 14 ? 'amber' : 'slate'}>{r.daysLeft}</Badge> },
+              {
+                key: 'actions', label: '', render: (r) => (
+                  <button className="btn-primary btn-sm" onClick={() => { setRenewTarget(r); setRenewDate(''); setRenewRent(''); }}>
+                    Renew
+                  </button>
+                ),
+              },
+            ]}
+            rows={expiring}
+            empty={{ title: 'None' }}
+          />
+        </div>
+      )}
+
       <div className="card mb-4">
         <div className="flex flex-wrap gap-3 items-center">
           <input
@@ -326,6 +386,27 @@ export default function MembersPage() {
       )}
       {modal?.mode === 'detail' && (
         <MemberDetail member={modal.data} onClose={() => setModal(null)} />
+      )}
+
+      {/* Phase 29 Track 4: renew contract modal */}
+      {renewTarget && (
+        <Modal title={`Renew contract — ${renewTarget.member?.name || ''} (${renewTarget.unit?.code || ''})`} onClose={() => setRenewTarget(null)}>
+          <p className="text-sm text-slate-400 mb-4">
+            Current ends <b className="text-white">{String(renewTarget.endDate).slice(0, 10)}</b>. A new contract will start the next day; the old one will be marked expired.
+          </p>
+          <Field label="New end date">
+            <input type="date" className="input" value={renewDate} onChange={(e) => setRenewDate(e.target.value)} required />
+          </Field>
+          <Field label="Rent amount (optional — keep current if empty)">
+            <input type="number" min="0" step="0.01" className="input" value={renewRent} onChange={(e) => setRenewRent(e.target.value)} placeholder={String(renewTarget.rentAmount ?? '')} />
+          </Field>
+          <div className="flex justify-end gap-2 mt-4">
+            <button className="btn-secondary" onClick={() => setRenewTarget(null)}>Cancel</button>
+            <button className="btn-primary" disabled={!renewDate || renewing} onClick={handleRenew}>
+              {renewing ? 'Renewing…' : 'Renew contract'}
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   );

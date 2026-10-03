@@ -7,6 +7,7 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { writeAudit } = require('../middleware/audit');
+const { checkLowStock } = require('../lib/inventoryAlerts');
 
 const router = express.Router();
 
@@ -32,8 +33,16 @@ const movementSchema = z.object({
   note: z.string().optional().nullable(),
 });
 
-router.get('/items', async (req, res, next) => {
+// Phase 29: low-stock alerts — items at or below their reorder level
+router.get('/low-stock', async (req, res, next) => {
   try {
+    const { getLowStock } = require('../lib/inventoryAlerts');
+    const items = await getLowStock(req.user.tenantId);
+    res.json({ items, count: items.length });
+  } catch (e) { next(e); }
+});
+
+router.get('/items', async (req, res, next) => {  try {
     const where = { ...tenantFilter(req) };
     if (req.query.category) where.category = String(req.query.category);
     if (req.query.low === 'true') where.quantity = { lte: 5 };
@@ -77,6 +86,8 @@ router.post('/items/:id/movements', write, validateBody(movementSchema), async (
       }),
     ]);
     res.status(201).json({ item: updated, movement });
+    // Phase 29: low-stock auto-check (fire-and-forget, never blocks the response)
+    checkLowStock(req.user.tenantId, item.id).catch(() => {});
   } catch (e) { next(e); }
 });
 

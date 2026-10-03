@@ -50,6 +50,7 @@ const NAV_MAIN = [
     children: [
       { label: 'Discover Booking', path: '/discover' },
       { label: 'Booking History', path: '/bookings' },
+      { label: 'Recurring', path: '/bookings/recurring' },
       { label: 'Booking Calendar', path: '/bookings/calendar' },
       { label: 'Floor Plan', path: '/spaces/floorplan' },
       { label: 'Ride Sharing', path: '/rides' },
@@ -59,6 +60,7 @@ const NAV_MAIN = [
     children: [
       { label: 'Team Members', path: '/users' },
       { label: 'Attendance', path: '/attendance' },
+      { label: 'Scan QR', path: '/attendance/scan' },
     ],
   },
   { key: 'investor', label: 'Investor', path: '/finance', icon: 'investor',
@@ -75,6 +77,7 @@ const NAV_MAIN = [
     children: [
       { label: 'Members', path: '/members' },
       { label: 'Companies', path: '/companies' },
+      { label: 'Leads', path: '/leads' },
       { label: 'Membership Plans', path: '/plans' },
     ],
   },
@@ -88,16 +91,19 @@ const NAV_MAIN = [
     ],
   },
   { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
+  { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
   { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
 ];
 
 // Limited nav for member-portal users — own data only
 const NAV_MEMBER = [
   { key: 'portal', label: 'My Portal', path: '/portal', icon: 'overview' },
+  { key: 'myqr', label: 'My QR', path: '/portal/qr', icon: 'overview' },
   { key: 'mybookings', label: 'My Bookings', path: '/bookings', icon: 'workspaces' },
   { key: 'myinvoices', label: 'My Invoices', path: '/billing', icon: 'investor' },
   { key: 'mytickets', label: 'My Tickets', path: '/tickets', icon: 'launchpad' },
   { key: 'mydocs', label: 'My Documents', path: '/documents', icon: 'school' },
+  { key: 'myfeedback', label: 'Feedback', path: '/portal/feedback', icon: 'message' },
 ];
 
 const NAV_OTHERS = [
@@ -120,6 +126,7 @@ const NAV_OTHERS = [
       { label: 'Jobs', path: '/settings/jobs' },
       { label: 'Subscription', path: '/settings/subscription' },
       { label: 'Cache', path: '/settings/cache' },
+      { label: 'Audit Logs', path: '/settings/audit-logs' },
     ],
   },
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },

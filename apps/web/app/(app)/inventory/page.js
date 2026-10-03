@@ -99,7 +99,18 @@ export default function InventoryPage() {
   const lowStock = items.filter((i) => i.quantity <= i.reorderLevel);
 
   const itemCols = [
-    { key: 'name', label: 'Item', render: (i) => <div><div className="font-medium text-white">{i.name}</div><div className="text-xs text-slate-400 capitalize">{i.category}{i.sku ? ` · ${i.sku}` : ''}</div></div> },
+    { key: 'name', label: 'Item', render: (i) => {
+      const low = i.quantity <= i.reorderLevel;
+      return (
+        <div>
+          <div className="font-medium text-white flex items-center gap-2">
+            {i.name}
+            {low && <Badge tone="red">LOW</Badge>}
+          </div>
+          <div className="text-xs text-slate-400 capitalize">{i.category}{i.sku ? ` · ${i.sku}` : ''} · reorder at {i.reorderLevel}</div>
+        </div>
+      );
+    } },
     { key: 'qty', label: 'Stock', render: (i) => <span className={`font-bold ${i.quantity <= i.reorderLevel ? 'text-red-300' : 'text-emerald-300'}`}>{i.quantity} {i.unit}</span> },
     { key: 'price', label: 'Unit Price', render: (i) => <span className="text-sm text-slate-300">{i.unitPrice ? money(i.unitPrice) : '—'}</span> },
     { key: 'action', label: '', render: (i) => <button className="btn-secondary text-xs px-2 py-1" onClick={() => setMoveItem(i)}>Stock In/Out</button> },
@@ -128,6 +139,18 @@ export default function InventoryPage() {
           : <button className="btn-primary" onClick={() => setShowAssetForm(true)}>+ Add Asset</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
+      {/* Phase 29: low-stock alert banner */}
+      {!loading && tab === 'items' && lowStock.length > 0 && (
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3">
+          <span className="text-xl">⚠️</span>
+          <div className="flex-1">
+            <div className="text-sm font-semibold text-red-200">{lowStock.length} item{lowStock.length > 1 ? 's' : ''} low on stock</div>
+            <div className="text-xs text-red-300/70 truncate">
+              {lowStock.slice(0, 3).map((i) => i.name).join(', ')}{lowStock.length > 3 ? ` +${lowStock.length - 3} more` : ''}
+            </div>
+          </div>
+        </div>
+      )}
       <div className="flex gap-2 mb-4">
         {[['items', `Inventory (${items.length})`], ['assets', `Assets (${assets.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}

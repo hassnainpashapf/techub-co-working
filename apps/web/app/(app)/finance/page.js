@@ -68,6 +68,7 @@ export default function FinancePage() {
   const [pnl, setPnl] = useState(null);
   const [expenses, setExpenses] = useState([]);
   const [catFilter, setCatFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [modal, setModal] = useState(null); // {mode:'add'|'edit', data}
   const [saving, setSaving] = useState(false);
 
@@ -93,8 +94,13 @@ export default function FinancePage() {
   }, [month]);
 
   const filtered = useMemo(
-    () => expenses.filter((x) => catFilter === 'all' || x.category === catFilter),
-    [expenses, catFilter]
+    () =>
+      expenses.filter(
+        (x) =>
+          (catFilter === 'all' || x.category === catFilter) &&
+          (statusFilter === 'all' || (x.status || 'pending') === statusFilter)
+      ),
+    [expenses, catFilter, statusFilter]
   );
 
   const income = Number(pnl?.income ?? pnl?.totalIncome ?? 0);
@@ -125,6 +131,30 @@ export default function FinancePage() {
     }
   }
 
+  async function handleApprove(id) {
+    try {
+      await api.post(`/finance/expenses/${id}/approve`, {});
+      await refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  async function handleReject(id) {
+    const note = window.prompt('Rejection reason (required):');
+    if (note === null) return;
+    if (!note.trim()) return setError('A rejection note is required.');
+    try {
+      await api.post(`/finance/expenses/${id}/reject`, { note: note.trim() });
+      await refresh();
+    } catch (e) {
+      setError(e.message);
+    }
+  }
+
+  const statusTone = (s) => (s === 'approved' ? 'green' : s === 'rejected' ? 'red' : 'amber');
+  const pendingCount = expenses.filter((x) => (x.status || 'pending') === 'pending').length;
+
   if (allowed === null) return <Spinner />;
   if (allowed === false) return <AccessDenied />;
   if (loading) return <Spinner />;
@@ -151,19 +181,40 @@ export default function FinancePage() {
 
       <div className="card">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="font-semibold text-white">Expenses — {month}</h2>
-          <select className="input max-w-[200px]" value={catFilter} onChange={(e) => setCatFilter(e.target.value)}>
-            <option value="all">All categories</option>
-            {CATEGORIES.map((c) => (
-              <option key={c} value={c}>{c.replace(/_/g, ' ')}</option>
-            ))}
-          </select>
+          <h2 className="font-semibold text-white">
+            Expenses — {month}
+            {pendingCount > 0 && <Badge tone="amber" className="ml-2">{pendingCount} pending</Badge>}
+          </h2>
+          <div className="flex flex-wrap items-center gap-2">
+            <div className="flex gap-1">
+              {['all', 'pending', 'approved', 'rejected'].map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setStatusFilter(s)}
+                  className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition ${
+                    statusFilter === s
+                      ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(59,130,246,0.5)]'
+                      : 'bg-white/5 text-slate-400 hover:text-white'
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <select className="input max-w-[200px]" value={catFilter} onChange={(e) => setCatFilter(e.target.value)}>
+              <option value="all">All categories</option>
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c}>{c.replace(/_/g, ' ')}</option>
+              ))}
+            </select>
+          </div>
         </div>
         <DataTable
           columns={[
             { key: 'date', label: 'Date', render: (r) => (r.date ? String(r.date).slice(0, 10) : '—') },
             { key: 'category', label: 'Category', render: (r) => <Badge tone="blue" className="capitalize">{String(r.category || '').replace(/_/g, ' ')}</Badge> },
             { key: 'amount', label: 'Amount', render: (r) => <span className="font-medium">{money(r.amount)}</span> },
+            { key: 'status', label: 'Status', render: (r) => <Badge tone={statusTone(r.status || 'pending')} className="capitalize">{r.status || 'pending'}</Badge> },
             { key: 'paidBy', label: 'Paid by', render: (r) => r.paidBy || '—' },
             { key: 'note', label: 'Note', render: (r) => r.note || '—' },
             {
@@ -171,6 +222,12 @@ export default function FinancePage() {
               label: 'Actions',
               render: (r) => (
                 <div className="flex gap-2">
+                  {(r.status || 'pending') === 'pending' && (
+                    <>
+                      <button className="btn-primary btn-sm" onClick={() => handleApprove(r.id)}>Approve</button>
+                      <button className="btn-secondary btn-sm" onClick={() => handleReject(r.id)}>Reject</button>
+                    </>
+                  )}
                   <button className="btn-secondary btn-sm" onClick={() => setModal({ mode: 'edit', data: r })}>Edit</button>
                   <button className="btn-danger btn-sm" onClick={() => handleDelete(r.id)}>Delete</button>
                 </div>

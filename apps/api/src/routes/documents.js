@@ -8,7 +8,7 @@ const { requireRole, requireTenantUser } = require('../middleware/rbac');
 const { validateBody } = require('../middleware/validate');
 const { tenantFilter } = require('../lib/tenant');
 const { writeAudit } = require('../middleware/audit');
-const { saveFile, readStream, fileExists, removeFile, MAX_BYTES } = require('../lib/storage');
+const { saveFile, getFileStream, fileExists, deleteFile, MAX_BYTES } = require('../lib/storage');
 
 const upload = multer({
   storage: multer.memoryStorage(),
@@ -71,7 +71,7 @@ router.delete('/documents/:id', write, async (req, res, next) => {
     const doc = await prisma.document.findFirst({ where: { id: req.params.id, ...tenantFilter(req) } });
     if (!doc) return res.status(404).json({ error: 'Document not found' });
     await prisma.document.delete({ where: { id: req.params.id } });
-    if (doc.storagePath) removeFile(doc.storagePath);
+    if (doc.storagePath) await deleteFile(doc.storagePath);
     await writeAudit(req, 'document.delete', 'Document', doc.id, { title: doc.title }, null);
     res.json({ ok: true });
   } catch (e) { next(e); }
@@ -86,7 +86,11 @@ router.post('/documents/upload', write, upload.single('file'), async (req, res, 
       const member = await prisma.member.findFirst({ where: { id: memberId, ...tenantFilter(req) } });
       if (!member) return res.status(400).json({ error: 'Member not found' });
     }
-    const { storagePath } = saveFile(req.user.tenantId, req.file);
+    const { path: storagePath } = await saveFile(req.file.buffer, {
+      folder: req.user.tenantId,
+      filename: req.file.originalname,
+      mimetype: req.file.mimetype,
+    });
     const doc = await prisma.document.create({
       data: {
         tenantId: req.user.tenantId,
@@ -117,13 +121,13 @@ router.get('/documents/:id/download', async (req, res, next) => {
     if (req.user.role === 'member' && req.user.memberId) where.memberId = req.user.memberId;
     const doc = await prisma.document.findFirst({ where });
     if (!doc) return res.status(404).json({ error: 'Document not found' });
-    if (!doc.storagePath || !fileExists(doc.storagePath)) {
+    if (!doc.storagePath || !(await fileExists(doc.storagePath))) {
       return res.status(404).json({ error: 'File not available' });
     }
     res.setHeader('Content-Type', doc.mimeType || 'application/octet-stream');
     res.setHeader('Content-Disposition', `attachment; filename="${(doc.fileName || 'file').replace(/"/g, '')}"`);
     if (doc.fileSize) res.setHeader('Content-Length', doc.fileSize);
-    readStream(doc.storagePath).pipe(res);
+    (await getFileStream(doc.storagePath)).pipe(res);
   } catch (e) { next(e); }
 });
 

@@ -25,6 +25,8 @@ router.get('/', async (req, res, next) => {
     if (req.query.entity) where.entity = req.query.entity;
     if (req.query.action) where.action = { contains: req.query.action, mode: 'insensitive' };
     if (req.query.actorId) where.actorId = req.query.actorId;
+    // Phase 29: userId alias for actorId (frontend convenience, non-breaking)
+    if (req.query.userId) where.actorId = req.query.userId;
     if (req.query.from || req.query.to) {
       where.createdAt = {};
       if (req.query.from) where.createdAt.gte = new Date(req.query.from);

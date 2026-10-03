@@ -1,0 +1,14 @@
+// Phase 29 Track 7: Expense Approval Workflow — schema fragment.
+// Coordinator: merge into schema.prisma + migration. DO NOT edit schema.prisma here.
+
+// ADD TO Expense model:
+//   status     String    @default("pending") @map("status") // pending | approved | rejected
+//   reviewedBy String?   @map("reviewed_by")
+//   reviewedAt DateTime? @map("reviewed_at")
+//   reviewNote String?   @map("review_note")
+
+// --- Migration SQL (append to phase migration) ---
+// ALTER TABLE "expenses" ADD COLUMN "status" TEXT NOT NULL DEFAULT 'pending';
+// ALTER TABLE "expenses" ADD COLUMN "reviewed_by" TEXT;
+// ALTER TABLE "expenses" ADD COLUMN "reviewed_at" TIMESTAMP(3);
+// ALTER TABLE "expenses" ADD COLUMN "review_note" TEXT;

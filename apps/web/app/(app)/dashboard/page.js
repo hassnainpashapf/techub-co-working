@@ -147,12 +147,29 @@ function ChartCard({ title, sub, children, action }) {
   );
 }
 
+function timeAgo(t) {
+  const s = Math.floor((Date.now() - new Date(t).getTime()) / 1000);
+  if (s < 60) return 'just now';
+  if (s < 3600) return `${Math.floor(s / 60)}m ago`;
+  if (s < 86400) return `${Math.floor(s / 3600)}h ago`;
+  return `${Math.floor(s / 86400)}d ago`;
+}
+
+const QUICK_ACTIONS = [
+  { label: 'New Booking', icon: '📅', href: '/bookings' },
+  { label: 'New Member', icon: '👥', href: '/members' },
+  { label: 'New Invoice', icon: '🧾', href: '/billing' },
+  { label: 'New Ticket', icon: '🎫', href: '/tickets' },
+  { label: 'Check-in Visitor', icon: '✅', href: '/visitors' },
+];
+
 function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [data, setData] = useState(null);
   const [trends, setTrends] = useState(null);
   const [range, setRange] = useState('6m');
+  const [activity, setActivity] = useState([]);
 
   const rangeParams = () => {
     const to = new Date();
@@ -181,6 +198,20 @@ function StaffDashboard() {
       cancelled = true;
     };
   }, [range]);
+
+  // Activity feed (isolated — never blocks the main dashboard)
+  useEffect(() => {
+    let cancelled = false;
+    api
+      .get('/activity/feed?limit=8')
+      .then((d) => {
+        if (!cancelled) setActivity(d?.items || []);
+      })
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   if (loading) return <Spinner />;
   if (error) return <ErrorBanner message={error} onRetry={() => window.location.reload()} />;
@@ -214,6 +245,21 @@ function StaffDashboard() {
   return (
     <div>
       <PageHeader title="Dashboard" sub="Overview of your coworking space" />
+
+      {/* Quick Actions */}
+      <div className="flex flex-wrap gap-2.5 mb-6">
+        {QUICK_ACTIONS.map((a) => (
+          <button
+            key={a.label}
+            onClick={() => (window.location.href = a.href)}
+            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-b from-[#1a1a2e] to-[#12121f] border border-white/10 text-sm font-semibold text-slate-200 hover:border-blue-400/40 hover:text-white hover:shadow-[0_4px_20px_rgba(59,130,246,0.25)] transition-all duration-200"
+          >
+            <span className="text-base">{a.icon}</span>
+            {a.label}
+          </button>
+        ))}
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
         <StatCard
           label="Occupancy"
@@ -289,6 +335,34 @@ function StaffDashboard() {
           </ChartCard>
         </div>
       )}
+
+      {/* Activity Feed */}
+      <div className="mb-6">
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="font-bold text-white text-[15px]">Recent Activity</h2>
+          <button
+            onClick={() => (window.location.href = '/settings/audit-logs')}
+            className="text-xs font-semibold text-blue-400 hover:text-blue-300"
+          >
+            View all →
+          </button>
+        </div>
+        <div className="rounded-[20px] bg-gradient-to-b from-[#14141f] to-[#0e0e18] border border-white/[0.08] p-2 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+          {activity.length === 0 ? (
+            <p className="text-sm text-slate-500 px-4 py-6 text-center">No recent activity yet.</p>
+          ) : (
+            <ul className="divide-y divide-white/[0.06]">
+              {activity.map((item, i) => (
+                <li key={i} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.03] rounded-lg transition-colors">
+                  <span className="text-lg shrink-0">{item.icon || '📝'}</span>
+                  <span className="flex-1 text-[13px] text-slate-200 truncate">{item.text}</span>
+                  <span className="text-[11px] text-slate-500 shrink-0">{timeAgo(item.time)}</span>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div>
