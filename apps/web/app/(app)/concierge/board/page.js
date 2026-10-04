@@ -226,7 +226,7 @@ export default function ConciergeBoardPage() {
                         )}
                       </div>
                       <div className="mt-2 flex items-center justify-between text-xs">
-                        <span className="text-emerald-300">{fmtPrice(r.price)}</span>
+                        <span className="text-emerald-700">{fmtPrice(r.price)}</span>
                         <button
                           onClick={() => openAssign(r)}
                           className="text-[11px] px-2 py-1 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-100 truncate max-w-[130px]"

@@ -32,9 +32,9 @@ export default function MemberHome() {
       <h1 className="text-2xl font-extrabold text-gray-900">Welcome back 👋</h1>
 
       {/* Dues card */}
-      <div className={`card-premium p-5 ${dues > 0 ? 'border-red-400/30' : 'border-emerald-400/30'}`}>
+      <div className={`card-premium p-5 ${dues > 0 ? 'border-red-200' : 'border-emerald-200'}`}>
         <div className="text-sm text-gray-500">Outstanding dues</div>
-        <div className={`text-3xl font-extrabold mt-1 ${dues > 0 ? 'text-red-300' : 'text-emerald-300'}`}>
+        <div className={`text-3xl font-extrabold mt-1 ${dues > 0 ? 'text-red-700' : 'text-emerald-700'}`}>
           {money(dues)}
         </div>
         {dues > 0 && (
@@ -60,7 +60,7 @@ export default function MemberHome() {
       <div className="card-premium p-5">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-bold text-gray-900">Upcoming Bookings</h2>
-          <Link href="/m/bookings" className="text-xs text-teal-300 hover:text-violet-200">View all →</Link>
+          <Link href="/m/bookings" className="text-xs text-teal-700 hover:text-violet-700">View all →</Link>
         </div>
         {bookings.length === 0 ? (
           <p className="text-sm text-slate-500">No upcoming bookings.</p>

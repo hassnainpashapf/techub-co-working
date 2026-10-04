@@ -41,7 +41,7 @@ export function MilestonesList({ limit = 20, compact = false }) {
           </div>
           <div className="min-w-0 flex-1">
             <div className="truncate text-sm font-semibold text-gray-900">
-              {m.memberName} <span className="font-normal text-amber-300">— {m.label}</span>
+              {m.memberName} <span className="font-normal text-amber-700">— {m.label}</span>
             </div>
             <div className="text-xs text-gray-500">
               {m.celebratedAt ? new Date(m.celebratedAt).toLocaleDateString() : ''}

@@ -133,14 +133,14 @@ export default function ImportPage() {
         {result && (
           <div className="mt-4">
             <div className="flex gap-4 text-sm mb-3">
-              <span className="text-emerald-300 font-semibold">✅ Imported: {result.imported}</span>
-              <span className="text-amber-300 font-semibold">⏭ Skipped (duplicates): {result.skipped}</span>
-              <span className="text-red-300 font-semibold">❌ Errors: {(result.errors || []).length}</span>
+              <span className="text-emerald-700 font-semibold">✅ Imported: {result.imported}</span>
+              <span className="text-amber-700 font-semibold">⏭ Skipped (duplicates): {result.skipped}</span>
+              <span className="text-red-700 font-semibold">❌ Errors: {(result.errors || []).length}</span>
             </div>
             {(result.errors || []).length > 0 && (
               <div className="max-h-48 overflow-y-auto bg-black/30 rounded-lg p-3">
                 {result.errors.map((e, i) => (
-                  <div key={i} className="text-xs text-red-300 py-0.5">Row {e.row}: {e.message}</div>
+                  <div key={i} className="text-xs text-red-700 py-0.5">Row {e.row}: {e.message}</div>
                 ))}
               </div>
             )}

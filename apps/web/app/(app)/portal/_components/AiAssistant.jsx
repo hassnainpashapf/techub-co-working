@@ -102,7 +102,7 @@ export default function AiAssistant() {
                 <button
                   key={i}
                   onClick={() => send(c)}
-                  className="shrink-0 text-xs px-2.5 py-1.5 rounded-full border border-blue-400/30 text-blue-200 hover:bg-blue-500/20 transition-colors"
+                  className="shrink-0 text-xs px-2.5 py-1.5 rounded-full border border-blue-400/30 text-blue-700 hover:bg-blue-500/20 transition-colors"
                 >
                   {c}
                 </button>
@@ -110,7 +110,7 @@ export default function AiAssistant() {
             </div>
           )}
 
-          {error && <div className="px-3 pb-1 text-xs text-red-300">{error}</div>}
+          {error && <div className="px-3 pb-1 text-xs text-red-700">{error}</div>}
 
           {/* Input */}
           <div className="p-3 border-t border-white/10 flex gap-2">

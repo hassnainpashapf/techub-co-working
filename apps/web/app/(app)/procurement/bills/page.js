@@ -29,7 +29,7 @@ function MatchBadge({ match }) {
   return (
     <span className="flex flex-wrap gap-1">
       {chips.map((c, i) => (
-        <span key={i} className={`text-[11px] px-1.5 py-0.5 rounded ${c.ok ? 'bg-green-500/15 text-green-300' : 'bg-red-500/15 text-red-300'}`}>{c.t}</span>
+        <span key={i} className={`text-[11px] px-1.5 py-0.5 rounded ${c.ok ? 'bg-green-500/15 text-green-300' : 'bg-red-500/15 text-red-700'}`}>{c.t}</span>
       ))}
     </span>
   );

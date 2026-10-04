@@ -137,7 +137,7 @@ export default function AdminFeedbackPage() {
                     <div className="flex gap-1 mt-2">
                       <button className="text-xs text-teal-700 underline" onClick={() => openReply(f)}>Reply</button>
                       {col.v !== 'done' && (
-                        <button className="text-xs text-emerald-300 underline" onClick={() => setStatus(f.id, 'done')}>Done</button>
+                        <button className="text-xs text-emerald-700 underline" onClick={() => setStatus(f.id, 'done')}>Done</button>
                       )}
                     </div>
                   </div>

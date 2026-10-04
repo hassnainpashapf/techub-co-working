@@ -150,7 +150,7 @@ export default function AuditLogsPage() {
                     <td className="p-3 text-gray-500 font-mono text-xs">{r.entityId ? r.entityId.slice(0, 8) + '…' : '—'}</td>
                     <td className="p-3 text-gray-500 font-mono text-xs">{r.ip || '—'}</td>
                     <td className="p-3">
-                      <button className="text-xs text-teal-300 hover:text-violet-200" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                      <button className="text-xs text-teal-700 hover:text-violet-700" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
                         {expanded === r.id ? 'Hide' : 'Details'}
                       </button>
                     </td>

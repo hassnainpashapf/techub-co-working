@@ -82,7 +82,7 @@ export default function QrScanPage() {
           {busy ? 'Working…' : mode === 'verify' ? 'Verify member' : 'Check in'}
         </button>
         {result && (
-          <div className="mt-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
+          <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
             <div className="flex items-center gap-2 mb-1">
               <Badge tone={result.alreadyCheckedIn ? 'amber' : 'green'}>
                 {result.alreadyCheckedIn ? 'Already checked in' : 'Checked in'}

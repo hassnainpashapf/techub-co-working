@@ -40,7 +40,7 @@ export default function IntroductionsWidget() {
             </div>
             <div className="mt-1 text-xs text-gray-500">{i.reason}</div>
             <div className="mt-2 flex items-center gap-2">
-              <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-[11px] text-blue-300">score {i.score}</span>
+              <span className="rounded-full bg-blue-500/20 px-2 py-0.5 text-[11px] text-blue-700">score {i.score}</span>
               <button
                 onClick={() => act(i.id, 'introduce')}
                 className="rounded-lg bg-gradient-to-r from-blue-600 to-teal-700 px-3 py-1 text-xs font-semibold text-gray-900 hover:opacity-90"

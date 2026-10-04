@@ -20,7 +20,7 @@ function AttritionChart({ series }) {
         const y = H - padB - (H - padB - 12) * f;
         return (
           <g key={f}>
-            <line x1={padL} y1={y} x2={W} y2={y} stroke="#ffffff10" />
+            <line x1={padL} y1={y} x2={W} y2={y} stroke="rgba(0,0,0,0.07)" />
             <text x={padL - 6} y={y + 4} textAnchor="end" fontSize="10" fill="#64748b">
               {Math.round(max * f)}
             </text>
@@ -58,7 +58,7 @@ function Donut({ data, total }) {
   return (
     <div className="flex items-center gap-6 flex-wrap">
       <svg viewBox="0 0 160 160" className="w-40 h-40">
-        <circle cx="80" cy="80" r={R} fill="none" stroke="#ffffff10" strokeWidth="22" />
+        <circle cx="80" cy="80" r={R} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="22" />
         {segs.map((d, i) => {
           const frac = total ? d.count / total : 0;
           const dash = `${frac * C} ${C}`;
@@ -69,7 +69,7 @@ function Donut({ data, total }) {
               strokeWidth="22" strokeDasharray={dash} strokeDashoffset={off} transform="rotate(-90 80 80)" />
           );
         })}
-        <text x="80" y="76" textAnchor="middle" fontSize="20" fill="#fff" fontWeight="800">{total}</text>
+        <text x="80" y="76" textAnchor="middle" fontSize="20" fill="#111827" fontWeight="800">{total}</text>
         <text x="80" y="96" textAnchor="middle" fontSize="10" fill="#94a3b8">employees</text>
       </svg>
       <div className="space-y-2">
@@ -128,7 +128,7 @@ export default function HrDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-900 font-bold">Attrition — joins vs exits</h3>
             <div className="flex gap-3 text-xs text-gray-500">
@@ -140,13 +140,13 @@ export default function HrDashboardPage() {
             <>
               <AttritionChart series={attr.series} />
               {!attr.exitsSupported && (
-                <p className="text-xs text-amber-300 mt-2">⚠️ Exits tracking merge nahi hua — exits 0 dikh rahe hain</p>
+                <p className="text-xs text-amber-700 mt-2">⚠️ Exits tracking merge nahi hua — exits 0 dikh rahe hain</p>
               )}
             </>
           ) : <EmptyState title="No trend data" />}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-bold mb-3">Department breakdown</h3>
           {stats.departments.length > 0 ? (
             <Donut data={stats.departments} total={stats.departments.reduce((a, d) => a + d.count, 0)} />
@@ -155,7 +155,7 @@ export default function HrDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-bold mb-3">📥 Pending approvals inbox</h3>
           {inboxItems.length > 0 ? (
             <div className="space-y-2">
@@ -163,14 +163,14 @@ export default function HrDashboardPage() {
                 <Link key={i.key} href={i.path}
                   className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-100 px-4 py-3 hover:bg-gray-100 transition">
                   <span className="text-gray-800 text-sm">{i.icon} {i.label}</span>
-                  <span className="text-xl font-extrabold text-amber-300">{stats.pending[i.key]}</span>
+                  <span className="text-xl font-extrabold text-amber-600">{stats.pending[i.key]}</span>
                 </Link>
               ))}
             </div>
           ) : <EmptyState title="All clear 🎉" hint="Koi pending approval nahi" />}
         </div>
 
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-900 font-bold">🕐 Aaj ki attendance</h3>
             <Link href="/hr/attendance" className="text-xs text-teal-700 hover:underline">Details →</Link>

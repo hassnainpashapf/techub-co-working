@@ -136,7 +136,7 @@ export default function CommsSmsPage() {
             style={{ width: pct !== null ? `${pct}%` : '40%' }}
           />
         </div>
-        {it.failCount > 0 && <div className="text-xs text-red-300 mt-1">⚠️ {it.failCount} failed</div>}
+        {it.failCount > 0 && <div className="text-xs text-red-700 mt-1">⚠️ {it.failCount} failed</div>}
       </div>
     );
   };
@@ -151,12 +151,12 @@ export default function CommsSmsPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       {provider && !provider.configured && (
-        <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 mb-4 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-4 text-sm text-amber-700">
           ⚠️ <b>Console mode:</b> {provider.message}
         </div>
       )}
       {provider && provider.configured && (
-        <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 mb-4 text-sm text-emerald-200">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 mb-4 text-sm text-emerald-700">
           ✅ Twilio connected — real SMS delivery active.
         </div>
       )}
@@ -174,7 +174,7 @@ export default function CommsSmsPage() {
                   <div className="text-sm text-gray-600 mt-2 max-w-xl line-clamp-2">{it.message}</div>
                   <div className="text-xs text-gray-500 mt-1">
                     ✅ {it.sentCount || 0} sent
-                    {it.failCount > 0 && <span className="text-red-300"> · ❌ {it.failCount} failed</span>}
+                    {it.failCount > 0 && <span className="text-red-700"> · ❌ {it.failCount} failed</span>}
                   </div>
                 </div>
                 <div className="flex items-center gap-2">

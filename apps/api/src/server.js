@@ -5,9 +5,13 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const compression = require('compression');
 const { securityHeaders } = require('./middleware/security');
 
 const app = express();
+
+// Gzip responses — faster transfers for JSON payloads
+app.use(compression());
 
 // Phase 28: security headers first, before everything else
 app.use(securityHeaders);

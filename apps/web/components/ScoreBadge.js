@@ -4,9 +4,9 @@ import { useEffect, useRef, useState } from 'react';
 import { api } from '../lib/api';
 
 const GRADE_STYLES = {
-  A: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-  B: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
-  C: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+  A: 'bg-emerald-500/15 text-emerald-700 border-emerald-200',
+  B: 'bg-blue-500/15 text-blue-700 border-blue-200',
+  C: 'bg-amber-500/15 text-amber-700 border-amber-200',
   D: 'bg-slate-500/15 text-gray-500 border-slate-500/30',
 };
 
@@ -59,7 +59,7 @@ export function ScoreBadge({ leadId, score, grade }) {
               {(detail.breakdown || []).map((b, i) => (
                 <li key={i} className="flex items-center justify-between text-[11px]">
                   <span className="text-gray-500 truncate mr-2">{b.label}</span>
-                  <span className={b.points < 0 ? 'text-red-400' : 'text-emerald-300'}>
+                  <span className={b.points < 0 ? 'text-red-400' : 'text-emerald-700'}>
                     {b.points > 0 ? `+${b.points}` : b.points}
                   </span>
                 </li>

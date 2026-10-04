@@ -164,7 +164,7 @@ export default function AccessDeskPage() {
       <PageHeader title="🛎️ Access Desk" sub="Reception — member access, PIN, schedules, manual entry, visitor passes" />
 
       {err && <ErrorBanner message={err} />}
-      {msg && <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-emerald-200 text-sm">{msg}</div>}
+      {msg && <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-2 text-emerald-700 text-sm">{msg}</div>}
 
       {/* Member search */}
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
@@ -183,7 +183,7 @@ export default function AccessDeskPage() {
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {results.slice(0, 9).map((m) => (
               <button key={m.id} onClick={() => pick(m)}
-                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-[#0f766e]/50 bg-[#0f766e]/10' : 'border-gray-200 hover:border-white/25'}`}>
+                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-[#0f766e]/50 bg-[#0f766e]/10' : 'border-gray-200 hover:border-gray-300'}`}>
                 <div className="font-medium text-gray-900">{m.name}</div>
                 <div className="text-xs text-gray-500">{m.email || m.phone || ''}</div>
                 <Badge tone={m.status === 'active' ? 'green' : 'red'}>{m.status || 'unknown'}</Badge>
@@ -205,7 +205,7 @@ export default function AccessDeskPage() {
                 ? <Badge tone="red">🚫 Blocked</Badge>
                 : <Badge tone="green">✅ Active</Badge>}
             </div>
-            {blocked && <div className="text-sm text-red-300">{blocked}</div>}
+            {blocked && <div className="text-sm text-red-700">{blocked}</div>}
 
             <div>
               <div className="flex items-center justify-between mb-2">
@@ -227,7 +227,7 @@ export default function AccessDeskPage() {
                         <div className="flex items-center gap-2">
                           <Badge tone={c.isActive ? 'green' : 'slate'}>{c.isActive ? 'active' : 'revoked'}</Badge>
                           {c.isActive && (
-                            <button className="text-xs text-red-300 hover:text-red-200" onClick={() => revokeCred(c.id)}>Revoke</button>
+                            <button className="text-xs text-red-700 hover:text-red-700" onClick={() => revokeCred(c.id)}>Revoke</button>
                           )}
                         </div>
                       </div>
@@ -318,7 +318,7 @@ export default function AccessDeskPage() {
                   key: 'actions', label: 'Action', render: (p) => (
                     <div className="flex gap-2">
                       <button className="btn-primary text-xs" onClick={() => decidePass(p.id, true)}>Approve</button>
-                      <button className="text-xs text-red-300 hover:text-red-200" onClick={() => decidePass(p.id, false)}>Reject</button>
+                      <button className="text-xs text-red-700 hover:text-red-700" onClick={() => decidePass(p.id, false)}>Reject</button>
                     </div>
                   ),
                 },
@@ -333,7 +333,7 @@ export default function AccessDeskPage() {
           <p className="text-sm text-gray-600 mb-3">
             {pinModal.memberName} ka PIN <b className="text-gray-900">sirf ek dafa</b> dikhaya ja raha hai — abhi note kar lein:
           </p>
-          <div className="text-center text-4xl font-mono tracking-[0.5em] text-emerald-300 bg-black/40 rounded-lg py-4">
+          <div className="text-center text-4xl font-mono tracking-[0.5em] text-emerald-700 bg-black/40 rounded-lg py-4">
             {pinModal.pin}
           </div>
           <button className="btn-primary w-full mt-4" onClick={() => setPinModal(null)}>Ho gaya</button>

@@ -116,7 +116,7 @@ export default function PoliciesPage() {
         <button onClick={openNew} className="btn-primary">+ Nayi Policy</button>
       } />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-lg px-4 py-2">{msg}</div>}
+      {msg && <div className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">{msg}</div>}
 
       <DataTable
         columns={[
@@ -128,7 +128,7 @@ export default function PoliciesPage() {
               <button onClick={() => viewAcks(p)} className="btn-ghost text-xs">Acks</button>
               <button onClick={() => remind(p)} className="btn-ghost text-xs">🔔 Remind</button>
               <button onClick={() => openEdit(p)} className="btn-ghost text-xs">Edit</button>
-              <button onClick={() => remove(p)} className="btn-ghost text-xs text-red-300">Delete</button>
+              <button onClick={() => remove(p)} className="btn-ghost text-xs text-red-700">Delete</button>
             </div>
           ) },
         ]}
@@ -155,7 +155,7 @@ export default function PoliciesPage() {
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.reAckOnUpdate} onChange={e => setForm({ ...form, reAckOnUpdate: e.target.checked })} /> Update par dobara ack</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} /> Active</label>
             </div>
-            {msg && <div className="text-sm text-red-300">{msg}</div>}
+            {msg && <div className="text-sm text-red-700">{msg}</div>}
             <div className="flex justify-end gap-2">
               <button onClick={() => setShowModal(false)} className="btn-ghost">Cancel</button>
               <button onClick={save} disabled={saving} className="btn-primary">{saving ? 'Saving...' : 'Save'}</button>

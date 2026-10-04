@@ -111,7 +111,7 @@ export default function InventoryPage() {
         </div>
       );
     } },
-    { key: 'qty', label: 'Stock', render: (i) => <span className={`font-bold ${i.quantity <= i.reorderLevel ? 'text-red-300' : 'text-emerald-300'}`}>{i.quantity} {i.unit}</span> },
+    { key: 'qty', label: 'Stock', render: (i) => <span className={`font-bold ${i.quantity <= i.reorderLevel ? 'text-red-700' : 'text-emerald-700'}`}>{i.quantity} {i.unit}</span> },
     { key: 'price', label: 'Unit Price', render: (i) => <span className="text-sm text-gray-600">{i.unitPrice ? money(i.unitPrice) : '—'}</span> },
     { key: 'action', label: '', render: (i) => <button className="btn-secondary text-xs px-2 py-1" onClick={() => setMoveItem(i)}>Stock In/Out</button> },
   ];
@@ -141,11 +141,11 @@ export default function InventoryPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {/* Phase 29: low-stock alert banner */}
       {!loading && tab === 'items' && lowStock.length > 0 && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-500/10 px-4 py-3">
+        <div className="mb-4 flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-50 px-4 py-3">
           <span className="text-xl">⚠️</span>
           <div className="flex-1">
-            <div className="text-sm font-semibold text-red-200">{lowStock.length} item{lowStock.length > 1 ? 's' : ''} low on stock</div>
-            <div className="text-xs text-red-300/70 truncate">
+            <div className="text-sm font-semibold text-red-700">{lowStock.length} item{lowStock.length > 1 ? 's' : ''} low on stock</div>
+            <div className="text-xs text-red-700/70 truncate">
               {lowStock.slice(0, 3).map((i) => i.name).join(', ')}{lowStock.length > 3 ? ` +${lowStock.length - 3} more` : ''}
             </div>
           </div>
@@ -154,7 +154,7 @@ export default function InventoryPage() {
       <div className="flex gap-2 mb-4">
         {[['items', `Inventory (${items.length})`], ['assets', `Assets (${assets.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}

@@ -6,9 +6,9 @@ import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, EmptyState, Stat
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 
 const STATUS_STYLE = {
-  free: 'border-emerald-400/40 bg-emerald-500/10 hover:bg-emerald-500/20',
-  occupied: 'border-red-400/40 bg-red-500/10 hover:bg-red-500/20',
-  reserved: 'border-amber-400/40 bg-amber-500/10 hover:bg-amber-500/20',
+  free: 'border-emerald-400/40 bg-emerald-50 hover:bg-emerald-500/20',
+  occupied: 'border-red-400/40 bg-red-50 hover:bg-red-500/20',
+  reserved: 'border-amber-400/40 bg-amber-50 hover:bg-amber-500/20',
 };
 const STATUS_DOT = { free: 'bg-emerald-400', occupied: 'bg-red-400', reserved: 'bg-amber-400' };
 const STATUS_TONE = { free: 'green', occupied: 'red', reserved: 'amber' };

@@ -71,7 +71,7 @@ export default function CelebrationsPage() {
           </button>
         }
       />
-      {triggerMsg && <div className="mb-4 text-sm text-emerald-300">{triggerMsg}</div>}
+      {triggerMsg && <div className="mb-4 text-sm text-emerald-700">{triggerMsg}</div>}
       {error && <ErrorBanner message={error} />}
 
       <div className="flex gap-2 mb-4">

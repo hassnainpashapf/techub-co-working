@@ -43,7 +43,7 @@ function ResetForm() {
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Confirm password</label>
             <input type="password" className="input" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           </div>
-          {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
+          {error && <p className="text-sm text-red-700 mb-3">{error}</p>}
           <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Set new password'}</button>
         </form>
         <a href="/login" className="block text-center text-sm text-gray-500 hover:text-gray-900 mt-5">← Back to login</a>

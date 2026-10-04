@@ -28,20 +28,20 @@ export default function CurrencyWidget() {
   const anyPending = Object.values(migrated || {}).some((v) => v === false);
 
   return (
-    <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#141428] to-[#0d0d1a] p-5 shadow-xl">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-semibold text-white">💱 Currency Overview</h3>
+        <h3 className="text-lg font-semibold text-gray-900">💱 Currency Overview</h3>
         <Badge tone="blue">{baseCurrency} base</Badge>
       </div>
 
       {anyPending && (
-        <div className="mb-4 rounded-xl bg-amber-500/10 border border-amber-400/30 px-4 py-2 text-sm text-amber-200">
+        <div className="mb-4 rounded-xl bg-amber-50 border border-amber-200 px-4 py-2 text-sm text-amber-800">
           Kuch currency features abhi migrate ho rahe hain — kuch sections khali dikh sakte hain.
         </div>
       )}
 
       {staleRates.length > 0 && (
-        <div className="mb-4 rounded-xl bg-red-500/10 border border-red-400/30 px-4 py-2 text-sm text-red-200">
+        <div className="mb-4 rounded-xl bg-red-50 border border-red-200 px-4 py-2 text-sm text-red-700">
           ⚠️ Purane FX rates (7 din se zyada): {staleRates.join(', ')} — rates update karein.
         </div>
       )}
@@ -60,7 +60,7 @@ export default function CurrencyWidget() {
 
       <div className="grid md:grid-cols-2 gap-5">
         <div>
-          <h4 className="text-sm font-semibold text-slate-200 mb-2">Per-Currency Exposure</h4>
+          <h4 className="text-sm font-semibold text-gray-900 mb-2">Per-Currency Exposure</h4>
           <DataTable
             columns={['Currency', 'Invoices', `Total`, `Base (${baseCurrency})`]}
             rows={exposure.map((e) => [e.currency, e.invoices, fmt(e.total, e.currency), fmt(e.baseTotal, baseCurrency)])}
@@ -68,7 +68,7 @@ export default function CurrencyWidget() {
           />
         </div>
         <div>
-          <h4 className="text-sm font-semibold text-slate-200 mb-2">Latest FX Rates</h4>
+          <h4 className="text-sm font-semibold text-gray-900 mb-2">Latest FX Rates</h4>
           <DataTable
             columns={['Pair', 'Rate', 'Date', 'Status']}
             rows={rates.map((r) => [

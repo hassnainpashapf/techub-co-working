@@ -142,9 +142,55 @@ export async function apiDownload(path, filename) {
 }
 
 export const api = {
-  get: (path) => apiFetch(path),
-  post: (path, body) => apiFetch(path, { method: 'POST', body }),
-  put: (path, body) => apiFetch(path, { method: 'PUT', body }),
-  patch: (path, body) => apiFetch(path, { method: 'PATCH', body }),
-  del: (path) => apiFetch(path, { method: 'DELETE' }),
+  get: (path, opts = {}) => apiFetchCached(path, opts),
+  post: (path, body) => { invalidateCache(); return apiFetch(path, { method: 'POST', body }); },
+  put: (path, body) => { invalidateCache(); return apiFetch(path, { method: 'PUT', body }); },
+  patch: (path, body) => { invalidateCache(); return apiFetch(path, { method: 'PATCH', body }); },
+  del: (path) => { invalidateCache(); return apiFetch(path, { method: 'DELETE' }); },
 };
+
+// ---- Lightweight GET cache (stale-while-revalidate) ----
+// Makes page revisits instant and cuts server load. Mutations clear it.
+const CACHE_TTL = 45 * 1000; // 45 seconds
+const getCache = new Map(); // key -> { data, ts }
+const inflight = new Map(); // key -> promise (dedupes parallel identical requests)
+
+function cacheKey(path) {
+  const { access } = getTokens();
+  return `${access ? access.slice(-12) : 'anon'}::${path}`;
+}
+
+function invalidateCache() {
+  getCache.clear();
+}
+
+function isCacheable(path) {
+  // Don't cache auth, realtime feeds, or download endpoints
+  return !/^\/(auth|activity\/feed|notifications\/stream)/.test(path);
+}
+
+async function apiFetchCached(path, opts = {}) {
+  const { revalidate = false } = opts;
+  if (!isCacheable(path)) return apiFetch(path);
+  const key = cacheKey(path);
+  const now = Date.now();
+
+  const hit = getCache.get(key);
+  if (hit && now - hit.ts < CACHE_TTL && !revalidate) {
+    // Serve stale instantly, refresh quietly in background
+    if (now - hit.ts > CACHE_TTL / 2 && !inflight.has(key)) {
+      const p = apiFetch(path)
+        .then((data) => { getCache.set(key, { data, ts: Date.now() }); })
+        .catch(() => {})
+        .finally(() => inflight.delete(key));
+      inflight.set(key, p);
+    }
+    return hit.data;
+  }
+  if (inflight.has(key)) return inflight.get(key);
+  const p = apiFetch(path)
+    .then((data) => { getCache.set(key, { data, ts: Date.now() }); return data; })
+    .finally(() => inflight.delete(key));
+  inflight.set(key, p);
+  return p;
+}

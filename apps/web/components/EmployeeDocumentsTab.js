@@ -70,7 +70,7 @@ export default function EmployeeDocumentsTab({ employeeId }) {
     <div className="text-sm space-y-4">
       {err && <ErrorBanner message={err} />}
       {missing.length > 0 && (
-        <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-300">
+        <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-700">
           ⚠️ Missing documents: {missing.join(', ')}
         </div>
       )}

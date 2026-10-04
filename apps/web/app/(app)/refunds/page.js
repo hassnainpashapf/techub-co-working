@@ -69,7 +69,7 @@ export default function RefundsPage() {
         <div className="flex gap-1">
           {r.status === 'pending' && (<>
             <button className="btn-secondary text-xs px-2 py-1" onClick={() => act(r.id, 'approve')}>Approve</button>
-            <button className="text-xs px-2 py-1 text-red-300 hover:text-red-200" onClick={() => act(r.id, 'reject')}>Reject</button>
+            <button className="text-xs px-2 py-1 text-red-700 hover:text-red-700" onClick={() => act(r.id, 'reject')}>Reject</button>
           </>)}
           {r.status === 'approved' && <button className="btn-secondary text-xs px-2 py-1" onClick={() => act(r.id, 'process')}>Mark Processed</button>}
         </div>
@@ -88,7 +88,7 @@ export default function RefundsPage() {
       <div className="flex gap-2 mb-4">
         {[{ v: '', l: 'All' }, ...Object.keys(TONES).map((s) => ({ v: s, l: s[0].toUpperCase() + s.slice(1) }))].map((s) => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {s.l}
           </button>
         ))}

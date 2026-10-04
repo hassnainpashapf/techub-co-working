@@ -64,7 +64,7 @@ export default function CalendarSettingsPage() {
       {loading && <Spinner />}
       {error && <ErrorBanner message={error} onRetry={load} />}
       {notice && (
-        <div className="mb-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-sm text-emerald-200">
+        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
           {notice}
         </div>
       )}
@@ -87,7 +87,7 @@ export default function CalendarSettingsPage() {
             </Badge>
           </div>
           {!status.migrated && (
-            <p className="text-sm text-amber-300 mb-4">
+            <p className="text-sm text-amber-700 mb-4">
               Calendar tables abhi database me nahi hain (migration pending).
             </p>
           )}
@@ -97,7 +97,7 @@ export default function CalendarSettingsPage() {
             use hota hai — aapka poora calendar parha nahi jata.
           </p>
           {status.connected ? (
-            <button onClick={disconnect} disabled={busy} className="btn-ghost text-red-300">
+            <button onClick={disconnect} disabled={busy} className="btn-ghost text-red-700">
               {busy ? 'Working…' : 'Disconnect'}
             </button>
           ) : (

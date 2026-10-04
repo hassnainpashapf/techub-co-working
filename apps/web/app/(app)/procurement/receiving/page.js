@@ -165,7 +165,7 @@ export default function ReceivingPage() {
       ) : (
         <div className="space-y-3">
           {grns.map((g) => (
-            <div key={g.id} className={`p-4 rounded-xl border ${g.status === 'partial' ? 'bg-amber-500/5 border-amber-500/30' : 'bg-gray-100 border-gray-200'}`}>
+            <div key={g.id} className={`p-4 rounded-xl border ${g.status === 'partial' ? 'bg-amber-500/5 border-amber-200' : 'bg-gray-100 border-gray-200'}`}>
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex-1 min-w-[200px]">
                   <div className="font-medium text-gray-900">
@@ -180,7 +180,7 @@ export default function ReceivingPage() {
                 </Badge>
               </div>
               {g.discrepancies && (
-                <div className="mt-2 p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm text-amber-200 whitespace-pre-line">
+                <div className="mt-2 p-2 rounded-lg bg-amber-50 border border-amber-500/20 text-sm text-amber-700 whitespace-pre-line">
                   ⚠ {g.discrepancies}
                 </div>
               )}
@@ -228,7 +228,7 @@ export default function ReceivingPage() {
             ))}
           </div>
           {problems.length > 0 && (
-            <div className="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm text-amber-200">
+            <div className="p-2 rounded-lg bg-amber-50 border border-amber-500/20 text-sm text-amber-700">
               ⚠ This will be saved as a <b>partial</b> receipt and the finance/manager team will be alerted:
               <ul className="list-disc ml-5 mt-1">{problems.map((p, i) => <li key={i}>{p}</li>)}</ul>
             </div>

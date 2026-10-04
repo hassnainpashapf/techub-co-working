@@ -46,7 +46,7 @@ function ComposeForm({ onSend, sending }) {
       <Field label="Channels">
         <div className="flex flex-wrap gap-2">
           {CHANNELS.map((c) => (
-            <label key={c.value} className={`px-3 py-1.5 rounded-lg text-xs border cursor-pointer ${f.channels.includes(c.value) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            <label key={c.value} className={`px-3 py-1.5 rounded-lg text-xs border cursor-pointer ${f.channels.includes(c.value) ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.channels.includes(c.value)} onChange={() => toggle(c.value)} />
               {c.label}
             </label>
@@ -105,7 +105,7 @@ export default function AnnouncementsPage() {
         actions={<button className="btn-primary" onClick={() => setShowForm(true)}>+ New Announcement</button>}
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {result && <div className="mb-4 rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">✅ {result}</div>}
+      {result && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">✅ {result}</div>}
 
       {loading ? <Spinner /> : list.length === 0 ? (
         <EmptyState title="No announcements yet" hint="Send your first broadcast to members and staff." />
@@ -130,7 +130,7 @@ export default function AnnouncementsPage() {
                     </span>
                   </div>
                 </div>
-                <button onClick={() => remove(a.id)} className="text-xs text-red-300/70 hover:text-red-300 shrink-0">Delete</button>
+                <button onClick={() => remove(a.id)} className="text-xs text-red-700/70 hover:text-red-700 shrink-0">Delete</button>
               </div>
             </div>
           ))}

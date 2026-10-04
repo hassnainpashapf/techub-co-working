@@ -140,7 +140,7 @@ export default function SalesPipelinePage() {
                       )}
                     </div>
                     <div className="mt-2 flex items-center justify-between text-xs">
-                      <span className="text-emerald-300">{fmtMoney(lead.budget)}</span>
+                      <span className="text-emerald-700">{fmtMoney(lead.budget)}</span>
                       <span className="text-slate-500">{daysIn(lead.createdAt)}d in pipeline</span>
                     </div>
                     <div className="mt-2 flex items-center justify-between">

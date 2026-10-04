@@ -133,7 +133,7 @@ export default function OnboardingPage() {
                   {t.isDefault && <Badge tone="blue">Default</Badge>}
                 </div>
                 <div className="text-sm text-gray-500 mb-3">{Array.isArray(t.tasks) ? t.tasks.length : 0} tasks</div>
-                <button onClick={() => deleteTemplate(t.id)} className="text-xs text-red-400 hover:text-red-300">Delete</button>
+                <button onClick={() => deleteTemplate(t.id)} className="text-xs text-red-400 hover:text-red-700">Delete</button>
               </div>
             ))}
           </div>
@@ -164,7 +164,7 @@ export default function OnboardingPage() {
                   <input value={t.title} onChange={(e) => setTask(i, { title: e.target.value })} placeholder="Task title" className="flex-1 px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" />
                   <input value={t.dept} onChange={(e) => setTask(i, { dept: e.target.value })} placeholder="Dept" className="w-24 px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" />
                   <input type="number" min="0" value={t.dayOffset} onChange={(e) => setTask(i, { dayOffset: e.target.value })} placeholder="Day" title="Day offset" className="w-20 px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" />
-                  <button type="button" onClick={() => removeTask(i)} className="text-red-400 hover:text-red-300 text-lg">×</button>
+                  <button type="button" onClick={() => removeTask(i)} className="text-red-400 hover:text-red-700 text-lg">×</button>
                 </div>
               ))}
               <button type="button" onClick={addTask} className="text-sm text-teal-700 hover:text-teal-700">+ Add task</button>

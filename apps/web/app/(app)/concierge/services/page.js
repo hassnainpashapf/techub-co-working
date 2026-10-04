@@ -92,12 +92,12 @@ export default function ConciergeServicesPage() {
                 <span className="text-slate-500 text-xs">{s.provider?.name || 'No provider'}</span>
               </div>
               <div className="flex gap-2 pt-1">
-                <button onClick={() => setSvcOpen(s)} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-white/15 text-gray-800">Edit</button>
+                <button onClick={() => setSvcOpen(s)} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-100 text-gray-800">Edit</button>
                 <button onClick={async () => {
                   if (!confirm(`${s.isActive ? 'Deactivate' : 'Activate'} karna hai?`)) return;
                   try { await api.patch(`/api/concierge-services/${s.id}`, { isActive: !s.isActive }); load(); }
                   catch (e) { setErr(e.message || 'Update nahi ho saka'); }
-                }} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-white/15 text-gray-800">
+                }} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-100 text-gray-800">
                   {s.isActive ? 'Deactivate' : 'Activate'}
                 </button>
               </div>

@@ -120,7 +120,7 @@ export default function VisitorsPage() {
       <div className="flex gap-2 mb-4 flex-wrap items-center">
         {[['walkin', 'Walk-in'], ['prereg', 'Pre-registered']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -135,7 +135,7 @@ export default function VisitorsPage() {
       <div className="flex gap-2 mb-4">
         {[['today', 'Today'], ['inside', 'Inside Now'], ['all', 'All']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${filter === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${filter === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -151,7 +151,7 @@ export default function VisitorsPage() {
               <div className="font-semibold text-gray-900">{i.visitorName}</div>
               <div className="text-xs text-gray-500">
                 Host: {i.member?.name || '—'} · {new Date(i.expectedAt).toLocaleString()} · {purposeLabel(i.purpose)} ·{' '}
-                Code <span className="font-mono font-bold text-teal-300 tracking-widest">{i.code}</span>
+                Code <span className="font-mono font-bold text-teal-700 tracking-widest">{i.code}</span>
               </div>
             </div>
             <button className="btn-primary text-xs px-4 py-1.5 shrink-0" onClick={() => fastCheckIn(i.code)}>Check In</button>

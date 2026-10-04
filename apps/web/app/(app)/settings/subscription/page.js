@@ -62,7 +62,7 @@ export default function SubscriptionPage() {
     <div>
       <PageHeader title="Subscription" sub="Your organization's plan and usage" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-200 text-sm">{notice}</div>}
+      {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{notice}</div>}
       {loading ? <Spinner /> : (
         <>
           <div className="card-premium p-6 mb-6">

@@ -8,9 +8,9 @@ import { useRequireRoles, AccessDenied } from '../../../../components/Protected'
 const WRITE_ROLES = ['ceo', 'admin', 'manager', 'operations_manager'];
 
 const STATUS_STYLE = {
-  vacant: 'bg-emerald-500/15 border-emerald-400/50 text-emerald-200',
-  occupied: 'bg-red-500/15 border-red-400/50 text-red-200',
-  reserved: 'bg-amber-500/15 border-amber-400/50 text-amber-200',
+  vacant: 'bg-emerald-500/15 border-emerald-400/50 text-emerald-700',
+  occupied: 'bg-red-500/15 border-red-400/50 text-red-700',
+  reserved: 'bg-amber-500/15 border-amber-400/50 text-amber-700',
   maintenance: 'bg-slate-500/15 border-slate-400/50 text-gray-800',
 };
 
@@ -159,7 +159,7 @@ export default function FloorPlanPage() {
 
       {loading ? <Spinner /> : (
         <>
-          {editMode && <div className="mb-3 text-sm text-teal-300">✏️ Edit mode: click a unit to select it, then click an empty cell to move it.</div>}
+          {editMode && <div className="mb-3 text-sm text-teal-700">✏️ Edit mode: click a unit to select it, then click an empty cell to move it.</div>}
           <div className="card-premium p-4 overflow-x-auto">
             <div className="grid gap-1.5 min-w-[600px]" style={{ gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))` }}>
               {cells.map(({ x, y, unit }) => (
@@ -170,7 +170,7 @@ export default function FloorPlanPage() {
                     unit
                       ? `${STATUS_STYLE[unit.status] || STATUS_STYLE.vacant} ${selected?.id === unit.id ? 'ring-2 ring-teal-500 scale-105' : 'hover:scale-105'}`
                       : editMode
-                        ? 'border-dashed border-white/15 bg-gray-50 hover:bg-teal-600/10 hover:border-teal-500/40'
+                        ? 'border-dashed border-gray-200 bg-gray-50 hover:bg-teal-600/10 hover:border-teal-500/40'
                         : 'border-gray-200 bg-gray-50'
                   }`}
                 >

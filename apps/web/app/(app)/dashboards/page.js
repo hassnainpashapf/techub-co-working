@@ -242,7 +242,7 @@ export default function KpiDashboardsPage() {
                       <button className="btn-secondary" onClick={() => { setRenaming(true); setName(selected.name); }}>
                         ✏ Rename
                       </button>
-                      <button className="btn-secondary text-red-300" onClick={deleteDashboard}>
+                      <button className="btn-secondary text-red-700" onClick={deleteDashboard}>
                         🗑 Delete
                       </button>
                     </>
@@ -284,7 +284,7 @@ export default function KpiDashboardsPage() {
                           title="Move right"
                         >→</button>
                         <button
-                          className="w-6 h-6 rounded bg-gray-100 text-xs text-red-300 hover:bg-white/20"
+                          className="w-6 h-6 rounded bg-gray-100 text-xs text-red-700 hover:bg-white/20"
                           onClick={() => removeWidget(w.id)}
                           title="Remove"
                         >✕</button>

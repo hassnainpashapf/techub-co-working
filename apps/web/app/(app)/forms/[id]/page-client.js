@@ -174,7 +174,7 @@ export default function FormBuilderPage() {
                   <button onClick={() => moveField(i, -1)} disabled={i === 0} className="btn-secondary text-xs px-1.5">↑</button>
                   <button onClick={() => moveField(i, 1)} disabled={i === fields.length - 1} className="btn-secondary text-xs px-1.5">↓</button>
                   <button onClick={() => setEditing(f.id)} className="btn-secondary text-xs">⚙️</button>
-                  <button onClick={() => removeField(f.id)} className="btn-secondary text-xs text-red-300">✕</button>
+                  <button onClick={() => removeField(f.id)} className="btn-secondary text-xs text-red-700">✕</button>
                 </div>
               ))}
             </div>

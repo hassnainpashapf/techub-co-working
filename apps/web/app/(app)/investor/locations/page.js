@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { useRequireRoles } from '../../../../components/Protected';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
+import { HDGroupedBarChart } from '../../../../components/charts';
 
 const fmt = (n) => `Rs ${Number(n || 0).toLocaleString('en-PK', { maximumFractionDigits: 0 })}`;
 
@@ -16,45 +17,6 @@ function monthRange() {
 }
 
 // Revenue vs expenses grouped SVG bar chart
-function CompareChart({ rows }) {
-  const max = Math.max(...rows.flatMap((r) => [r.revenue, r.expensesAllocated]), 1);
-  const h = 190;
-  const groupW = rows.length ? 100 / rows.length : 100;
-  return (
-    <div style={{ height: h }}>
-      <svg viewBox={`0 0 100 ${h}`} className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="locRev" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.25" />
-          </linearGradient>
-          <linearGradient id="locExp" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.25" />
-          </linearGradient>
-        </defs>
-        {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={h * f} x2="100" y2={h * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
-        ))}
-        {rows.map((r, i) => {
-          const rh = Math.max((r.revenue / max) * (h - 40), 2);
-          const eh = Math.max((r.expensesAllocated / max) * (h - 40), 2);
-          const gx = i * groupW;
-          return (
-            <g key={r.buildingId}>
-              <rect x={gx + groupW * 0.2} y={h - 20 - rh} width={groupW * 0.26} height={rh} rx="1.2" fill="url(#locRev)" />
-              <rect x={gx + groupW * 0.52} y={h - 20 - eh} width={groupW * 0.26} height={eh} rx="1.2" fill="url(#locExp)" />
-              <text x={gx + groupW / 2} y={h - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.4" fontWeight="600">
-                {(r.name || '').slice(0, 12)}
-              </text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
-
 export default function LocationsComparePage() {
   useRequireRoles('ceo', 'admin', 'super_admin');
   const [from, setFrom] = useState('');
@@ -130,7 +92,7 @@ export default function LocationsComparePage() {
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-rose-500 inline-block" /> Expenses</span>
               </div>
             </div>
-            <CompareChart rows={rows} />
+            <HDGroupedBarChart data={rows.map(r=>({label:r.name,values:[r.revenue,r.expensesAllocated]}))} height={190} colors={['#10b981','#f43f5e']} />
           </div>
 
           <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">

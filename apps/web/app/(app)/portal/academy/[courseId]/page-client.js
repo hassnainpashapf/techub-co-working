@@ -98,7 +98,7 @@ function QuizPlayer({ lessonId, onPass }) {
         </div>
       </div>
       {result ? (
-        <div className={`mt-4 rounded-xl border p-4 ${result.passed ? 'border-green-500/40 bg-green-500/10' : 'border-red-500/40 bg-red-500/10'}`}>
+        <div className={`mt-4 rounded-xl border p-4 ${result.passed ? 'border-green-500/40 bg-green-500/10' : 'border-red-500/40 bg-red-50'}`}>
           <div className="text-gray-900 font-bold">{result.passed ? '🎉 Quiz pass!' : 'Quiz pass nahi hua'}</div>
           <div className="text-sm text-gray-600 mt-1">Score: {result.score}%</div>
           {!result.passed && quiz.remainingAttempts > 0 ? (
@@ -369,14 +369,14 @@ export default function AcademyDetailPage() {
                   <button
                     onClick={() => activeIndex > 0 && setActiveId(lessons[activeIndex - 1].id)}
                     disabled={activeIndex <= 0}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
                   >
                     ← Previous
                   </button>
                   <button
                     onClick={() => activeIndex < lessons.length - 1 && setActiveId(lessons[activeIndex + 1].id)}
                     disabled={activeIndex >= lessons.length - 1}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
                   >
                     Next →
                   </button>
@@ -386,7 +386,7 @@ export default function AcademyDetailPage() {
                     <button
                       onClick={() => markDone(false)}
                       disabled={acting}
-                      className="px-4 py-2 rounded-xl text-sm font-semibold border border-amber-500/50 text-amber-300 hover:bg-amber-500/10 disabled:opacity-50"
+                      className="px-4 py-2 rounded-xl text-sm font-semibold border border-amber-500/50 text-amber-700 hover:bg-amber-50 disabled:opacity-50"
                     >
                       Mark not done
                     </button>

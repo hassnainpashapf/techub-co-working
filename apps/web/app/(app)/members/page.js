@@ -75,15 +75,15 @@ function DataPrivacySection({ member, onChanged }) {
         Export all member data as JSON (password hashes are never included). Anonymization replaces
         personal data with placeholders — financial records are kept for tax compliance.
       </p>
-      {msg && <p className="text-xs text-amber-300 mb-3">{msg}</p>}
+      {msg && <p className="text-xs text-amber-700 mb-3">{msg}</p>}
       <div className="flex flex-wrap gap-2">
         <button onClick={handleExport} disabled={busy}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-50">
+          className="px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-800 hover:bg-gray-100 disabled:opacity-50">
           {busy ? 'Working…' : 'Export Data (JSON)'}
         </button>
         {staff && (
           <button onClick={() => { setShowAnon(true); setMsg(''); }} disabled={busy}
-            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-red-500/40 bg-red-500/10 text-red-300 hover:bg-red-500/20 disabled:opacity-50">
+            className="px-3 py-1.5 rounded-lg text-xs font-medium border border-red-500/40 bg-red-50 text-red-700 hover:bg-red-500/20 disabled:opacity-50">
             Anonymize (GDPR)
           </button>
         )}
@@ -92,7 +92,7 @@ function DataPrivacySection({ member, onChanged }) {
         <Modal title="Anonymize member" onClose={() => { if (!busy) { setShowAnon(false); setConfirmName(''); } }}>
           <p className="text-sm text-gray-600 mb-2">
             This permanently replaces <span className="font-semibold text-gray-900">{member.name}</span>'s personal
-            data (name, email, phone, CNIC) with placeholders and <span className="text-red-300 font-medium">disables their login</span>.
+            data (name, email, phone, CNIC) with placeholders and <span className="text-red-700 font-medium">disables their login</span>.
             Invoices and payments are kept for tax compliance. This cannot be undone.
           </p>
           <Field label={`Type "${member.name}" to confirm`}>
@@ -101,15 +101,15 @@ function DataPrivacySection({ member, onChanged }) {
           </Field>
           <div className="flex justify-end gap-2 mt-4">
             <button onClick={() => { setShowAnon(false); setConfirmName(''); }} disabled={busy}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-gray-600 hover:bg-gray-100">
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-600 hover:bg-gray-100">
               Cancel
             </button>
             <button onClick={handleAnonymize} disabled={busy || !confirmName.trim()}
-              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-600 hover:bg-red-500 text-white disabled:opacity-50">
+              className="px-3 py-1.5 rounded-lg text-xs font-bold bg-red-50 border border-red-200 text-red-700 hover:bg-red-100 disabled:opacity-50">
               {busy ? 'Anonymizing…' : 'Anonymize permanently'}
             </button>
           </div>
-          {msg && <p className="text-xs text-amber-300 mt-3">{msg}</p>}
+          {msg && <p className="text-xs text-amber-700 mt-3">{msg}</p>}
         </Modal>
       )}
     </div>
@@ -222,7 +222,7 @@ function MemberTimeline({ memberId }) {
       <div className="absolute left-2 top-1 bottom-1 w-px bg-gray-100" />
       {events.map((e, i) => (
         <div key={i} className="relative pb-4">
-          <div className="absolute -left-6 top-0 w-5 h-5 rounded-full bg-white border border-white/15 flex items-center justify-center text-[10px]">{e.icon}</div>
+          <div className="absolute -left-6 top-0 w-5 h-5 rounded-full bg-white border border-gray-200 flex items-center justify-center text-[10px]">{e.icon}</div>
           <p className="text-sm text-gray-900 font-medium">{e.title}</p>
           {e.detail && <p className="text-xs text-gray-500">{e.detail}</p>}
           <p className="text-[11px] text-slate-500">{e.at ? new Date(e.at).toLocaleString() : ''}</p>
@@ -253,13 +253,13 @@ function MemberDetail({ member, onClose, onChanged }) {
     const exceeded = limit != null && balance > limit;
     const pct = limit ? Math.min(100, (balance / limit) * 100) : 0;
     return (
-      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-gray-200 bg-white'}`}>
+      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-50' : 'border-gray-200 bg-white'}`}>
         <div className="flex items-center justify-between text-sm mb-2">
           <span className="text-gray-600 font-medium">Credit</span>
-          {exceeded && <span className="text-[11px] font-bold text-red-300 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
+          {exceeded && <span className="text-[11px] font-bold text-red-700 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
         </div>
         <div className="flex items-baseline gap-2 text-sm mb-2">
-          <span className={exceeded ? 'text-red-300 font-bold' : 'text-gray-900 font-semibold'}>Rs {balance.toLocaleString()}</span>
+          <span className={exceeded ? 'text-red-700 font-bold' : 'text-gray-900 font-semibold'}>Rs {balance.toLocaleString()}</span>
           <span className="text-slate-500 text-xs">outstanding</span>
           <span className="text-slate-500 text-xs ml-auto">limit: {limit == null ? 'unlimited' : `Rs ${limit.toLocaleString()}`}</span>
         </div>
@@ -302,12 +302,12 @@ function MemberDetail({ member, onClose, onChanged }) {
       <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 mb-5">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-600 font-medium">Loyalty Points</span>
-          <span className="text-lg font-bold text-teal-300">{Number(data.balance || 0).toLocaleString()} pts</span>
+          <span className="text-lg font-bold text-teal-700">{Number(data.balance || 0).toLocaleString()} pts</span>
         </div>
         {(data.entries || []).slice(0, 3).map((e) => (
           <div key={e.id} className="flex justify-between text-xs text-gray-500 py-1 border-t border-gray-200">
             <span>{e.reason.replace(/_/g, ' ')}</span>
-            <span className={e.points > 0 ? 'text-emerald-300' : 'text-red-300'}>{e.points > 0 ? `+${e.points}` : e.points}</span>
+            <span className={e.points > 0 ? 'text-emerald-700' : 'text-red-700'}>{e.points > 0 ? `+${e.points}` : e.points}</span>
           </div>
         ))}
         <form onSubmit={adjust} className="flex gap-2 mt-3">
@@ -315,7 +315,7 @@ function MemberDetail({ member, onClose, onChanged }) {
           <input className="input !py-1.5 text-xs flex-1" placeholder="Reason" value={adj.reason} onChange={(e) => setAdj({ ...adj, reason: e.target.value })} />
           <button className="btn-secondary !py-1.5 text-xs" disabled={busy}>{busy ? '…' : 'Adjust'}</button>
         </form>
-        {msg && <p className="text-xs text-red-300 mt-2">{msg}</p>}
+        {msg && <p className="text-xs text-red-700 mt-2">{msg}</p>}
       </div>
     );
   }
@@ -352,7 +352,7 @@ function MemberDetail({ member, onClose, onChanged }) {
           <div className="flex gap-2 mb-5">
             {['overview', 'timeline', 'access', 'comms'].map((t) => (
               <button key={t} onClick={() => setTab(t)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
                 {t === 'access' ? '🔑 Access' : t === 'comms' ? '💬 Comms' : t}
               </button>
             ))}
@@ -387,7 +387,7 @@ function MemberDetail({ member, onClose, onChanged }) {
               { key: 'esign', label: 'E-Sign', render: (r) => (
                 <button
                   onClick={() => { setEsignTarget(r); setEsignName(m.name || ''); setEsignEmail(m.email || ''); setEsignMsg(''); }}
-                  className="text-[11px] px-2 py-1 rounded-lg border border-teal-500/40 text-violet-200 hover:bg-teal-600/15">
+                  className="text-[11px] px-2 py-1 rounded-lg border border-teal-500/40 text-violet-700 hover:bg-teal-600/15">
                   ✍️ Request
                 </button>
               ) },
@@ -658,7 +658,7 @@ export default function MembersPage() {
 
       {/* Phase 29 Track 4: contracts expiring soon */}
       {expiring.length > 0 && (
-        <div className="card mb-4 border-amber-400/30">
+        <div className="card mb-4 border-amber-200">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">⏳</span>
             <h3 className="font-semibold text-gray-900">Contracts expiring soon ({expiring.length})</h3>
@@ -733,10 +733,10 @@ export default function MembersPage() {
         )}
         {/* Phase 38 Track 5: bulk result summary */}
         {bulkResult && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-500/10 border border-emerald-400/30 text-sm">
-            <span className="text-emerald-200 font-medium">{bulkResult.done} done</span>
+          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm">
+            <span className="text-emerald-700 font-medium">{bulkResult.done} done</span>
             {bulkResult.failed.length > 0 && (
-              <span className="text-amber-200"> — {bulkResult.failed.length} failed ({bulkResult.failed.slice(0, 5).map((f) => f.reason || f.id).join(', ')}{bulkResult.failed.length > 5 ? '…' : ''})</span>
+              <span className="text-amber-700"> — {bulkResult.failed.length} failed ({bulkResult.failed.slice(0, 5).map((f) => f.reason || f.id).join(', ')}{bulkResult.failed.length > 5 ? '…' : ''})</span>
             )}
             <button className="ml-3 underline text-gray-600" onClick={() => setBulkResult(null)}>Dismiss</button>
           </div>

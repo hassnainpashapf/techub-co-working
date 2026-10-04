@@ -210,9 +210,9 @@ export default function AdvancesPage() {
                 </Field>
                 <div className="flex justify-end gap-2 mt-2">
                   <button disabled={saving} onClick={() => decide(modal.id, 'reject')}
-                    className="px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-300 text-sm">Reject</button>
+                    className="px-4 py-2 rounded-lg bg-red-50 border border-red-200 text-red-700 text-sm font-medium hover:bg-red-100">Reject</button>
                   <button disabled={saving} onClick={() => decide(modal.id, 'approve')}
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-600 text-gray-900 text-sm font-medium">Approve</button>
+                    className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-medium hover:bg-emerald-700">Approve</button>
                 </div>
               </div>
             )}

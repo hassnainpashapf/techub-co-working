@@ -99,7 +99,7 @@ export default function BrandingPage() {
               {uploading ? 'Uploading…' : 'Upload Logo'}
               <input type="file" className="hidden" accept=".png,.jpg,.jpeg,.webp,.svg" onChange={uploadLogo} disabled={uploading} />
             </label>
-            {hasLogo && <button onClick={removeLogo} className="ml-2 text-xs text-red-300 hover:text-red-200">Remove</button>}
+            {hasLogo && <button onClick={removeLogo} className="ml-2 text-xs text-red-700 hover:text-red-700">Remove</button>}
             <p className="text-[11px] text-slate-500 mt-2">PNG, JPG, WebP or SVG — max 5MB</p>
           </div>
           <div className="card-premium p-6 lg:col-span-2">

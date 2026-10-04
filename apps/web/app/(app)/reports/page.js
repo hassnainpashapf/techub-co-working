@@ -13,6 +13,7 @@ import {
 } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 import Link from 'next/link';
+import { HDBarChart } from '../../../components/charts';
 import { useCallback } from 'react';
 
 const money = (n) => `Rs ${Number(n || 0).toLocaleString()}`;
@@ -30,41 +31,6 @@ const defaultRange = () => {
   const from = new Date(Date.now() - 90 * 86400000).toISOString().slice(0, 10);
   return { from, to };
 };
-
-function BarChart({ data, labelKey, valueKey, height = 160 }) {
-  const max = Math.max(...data.map((d) => Number(d[valueKey] || 0)), 1);
-  return (
-    <svg viewBox={`0 0 100 ${height}`} className="w-full" style={{ height }} preserveAspectRatio="none">
-      <defs>
-        <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#60a5fa" />
-          <stop offset="100%" stopColor="#2563eb" stopOpacity="0.6" />
-        </linearGradient>
-      </defs>
-      {[0.25, 0.5, 0.75].map((f) => (
-        <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
-      ))}
-      {data.map((d, i) => {
-        const v = Number(d[valueKey] || 0);
-        const w = 100 / Math.max(data.length, 1);
-        const h = Math.max((v / max) * (height - 20), 2);
-        const x = i * w + w * 0.2;
-        return (
-          <g key={i}>
-            <rect x={x} y={height - 20 - h} width={w * 0.6} height={h} rx="1.5" fill="url(#barGrad)" className="hover:opacity-80 transition-opacity">
-              <title>{d[labelKey]}: {v.toLocaleString()}</title>
-            </rect>
-            {data.length <= 15 && (
-              <text x={x + w * 0.3} y={height - 6} fontSize="4" fill="#94a3b8" textAnchor="middle">
-                {String(d[labelKey]).slice(-5)}
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
-  );
-}
 
 function Donut({ pct, label }) {
   const r = 60;
@@ -244,7 +210,7 @@ export default function ReportsPage() {
               <div className="card mb-4">
                 <h2 className="font-semibold text-gray-900 mb-3">Revenue by {groupBy}</h2>
                 {data.series.length ? (
-                  <BarChart data={data.series} labelKey="period" valueKey="total" />
+                  <HDBarChart data={data.series.map(d=>({label:d.period,value:d.total}))} height={160} color="#2563eb" />
                 ) : (
                   <p className="text-sm text-gray-500">No payments in this range.</p>
                 )}
@@ -309,7 +275,7 @@ export default function ReportsPage() {
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">New members per month</h2>
                   {data.growth.length ? (
-                    <BarChart data={data.growth} labelKey="month" valueKey="newMembers" />
+                    <HDBarChart data={data.growth.map(d=>({label:d.month,value:d.newMembers}))} height={160} color="#2563eb" />
                   ) : (
                     <p className="text-sm text-gray-500">No growth data in range.</p>
                   )}
@@ -354,7 +320,7 @@ export default function ReportsPage() {
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">Bookings per day</h2>
                   {data.perDay.length ? (
-                    <BarChart data={data.perDay} labelKey="day" valueKey="count" />
+                    <HDBarChart data={data.perDay.map(d=>({label:d.day,value:d.count}))} height={160} color="#2563eb" />
                   ) : (
                     <p className="text-sm text-gray-500">No bookings in range.</p>
                   )}
@@ -362,7 +328,7 @@ export default function ReportsPage() {
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">Peak hours</h2>
                   {data.total ? (
-                    <BarChart data={data.peakHours.filter((h) => h.hour >= 6 && h.hour <= 22)} labelKey="hour" valueKey="count" />
+                    <HDBarChart data={data.peakHours.filter((h) => h.hour >= 6 && h.hour <= 22).map(d=>({label:String(d.hour),value:d.count}))} height={160} color="#2563eb" />
                   ) : (
                     <p className="text-sm text-gray-500">No bookings in range.</p>
                   )}

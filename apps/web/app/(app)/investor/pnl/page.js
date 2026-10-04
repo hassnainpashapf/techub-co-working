@@ -4,46 +4,8 @@ import { useEffect, useState } from 'react';
 import { api, API_BASE, getTokens } from '../../../../lib/api';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
+import { HDProfitBarChart } from '../../../../components/charts';
 
-// Monthly profit bar chart: green bars for profit, red for loss (dashboard pattern)
-function ProfitChart({ data, height = 220 }) {
-  const maxAbs = Math.max(...data.map((d) => Math.abs(d.profit)), 1);
-  const barW = 100 / data.length;
-  const midY = height - 20 - (height - 40) / 2;
-  const scale = (height - 40) / 2 / maxAbs;
-  return (
-    <div className="relative" style={{ height }}>
-      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <linearGradient id="pnlPosGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#10b981" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#10b981" stopOpacity="0.25" />
-          </linearGradient>
-          <linearGradient id="pnlNegGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#f43f5e" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#f43f5e" stopOpacity="0.25" />
-          </linearGradient>
-        </defs>
-        <line x1="0" y1={midY} x2="100" y2={midY} stroke="rgba(255,255,255,0.18)" strokeWidth="0.3" strokeDasharray="1.5 1" />
-        {data.map((d, i) => {
-          const h = Math.max(Math.abs(d.profit) * scale, d.profit === 0 ? 1 : 3);
-          const x = i * barW + barW * 0.22;
-          const w = barW * 0.56;
-          const y = d.profit >= 0 ? midY - h : midY;
-          return (
-            <g key={i}>
-              <rect x={x} y={y} width={w} height={h} rx="1.5" fill={d.profit >= 0 ? 'url(#pnlPosGrad)' : 'url(#pnlNegGrad)'}>
-                <animate attributeName="y" from={midY} to={y} dur="0.8s" fill="freeze" />
-                <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
-              </rect>
-              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.2" fontWeight="600">{d.month.slice(2)}</text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
 
 const fmt = (v) => `Rs ${Number(v || 0).toLocaleString()}`;
 
@@ -169,7 +131,7 @@ export default function PnlPage() {
               {data.monthly.length === 0 ? (
                 <EmptyState title="No data" hint="No activity in this period." />
               ) : (
-                <ProfitChart data={data.monthly} />
+                <HDProfitBarChart data={data.monthly.map(d=>({label:String(d.month).slice(2),profit:d.profit}))} height={220} />
               )}
             </div>
           </div>

@@ -11,9 +11,9 @@ export default function MailBanner() {
   }, []);
   if (!pending) return null;
   return (
-    <div className="mb-4 rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 flex items-center gap-3">
+    <div className="mb-4 rounded-xl border border-amber-200 bg-amber-50 p-4 flex items-center gap-3">
       <span className="text-2xl">📦</span>
-      <p className="text-sm text-amber-200">
+      <p className="text-sm text-amber-700">
         <b>You have {pending} uncollected {pending === 1 ? 'item' : 'items'}</b> waiting at reception. Please pick {pending === 1 ? 'it' : 'them'} up soon.
       </p>
     </div>

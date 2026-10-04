@@ -43,7 +43,7 @@ export default function MyQrPage() {
           />
         ) : (
           <div className="w-full">
-            <div className="text-xs text-amber-300 mb-2">QR image unavailable offline — reception can type this code:</div>
+            <div className="text-xs text-amber-700 mb-2">QR image unavailable offline — reception can type this code:</div>
             <div className="bg-white border border-gray-200 rounded-lg p-3 text-[11px] text-gray-600 break-all font-mono max-h-40 overflow-auto">
               {data.token}
             </div>

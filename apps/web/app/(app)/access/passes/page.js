@@ -148,8 +148,8 @@ export default function DayPassesPage() {
           </button>
         </form>
         {scanResult && (
-          <div className={`rounded-xl border p-4 ${scanResult.ok ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-red-500/40 bg-red-500/10'}`}>
-            <div className={`text-lg font-bold ${scanResult.ok ? 'text-emerald-300' : 'text-red-300'}`}>
+          <div className={`rounded-xl border p-4 ${scanResult.ok ? 'border-emerald-500/40 bg-emerald-50' : 'border-red-500/40 bg-red-50'}`}>
+            <div className={`text-lg font-bold ${scanResult.ok ? 'text-emerald-700' : 'text-red-700'}`}>
               {scanResult.ok ? '✅ Entry allowed' : `⛔ ${scanResult.message || 'Invalid'}`}
             </div>
             {scanResult.pass && (

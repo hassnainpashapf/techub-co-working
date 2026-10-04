@@ -9,8 +9,8 @@ const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 
 const DAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
 const STATUS_COLORS = {
-  confirmed: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-200',
-  cancelled: 'bg-red-500/20 border-red-400/40 text-red-200 line-through',
+  confirmed: 'bg-emerald-500/20 border-emerald-400/40 text-emerald-700',
+  cancelled: 'bg-red-500/20 border-red-400/40 text-red-700 line-through',
 };
 
 const WEEK_BAR = {
@@ -91,7 +91,7 @@ function MonthView({ cursor, bookings, onSelect }) {
               key={i}
               className={`min-h-[90px] rounded-lg p-1.5 border transition-colors ${isToday ? 'border-teal-500/50 bg-teal-600/10' : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
             >
-              <div className={`text-xs font-semibold mb-1 ${isToday ? 'text-teal-300' : 'text-gray-600'}`}>{date.getDate()}</div>
+              <div className={`text-xs font-semibold mb-1 ${isToday ? 'text-teal-700' : 'text-gray-600'}`}>{date.getDate()}</div>
               <div className="space-y-1">
                 {dayBookings.slice(0, 3).map((b) => (
                   <button
@@ -159,7 +159,7 @@ function WeekView({ weekStart, bookings, onSelect }) {
             return (
               <div key={key} className={`text-center py-2 rounded-lg ${isToday ? 'bg-teal-600/15' : ''}`}>
                 <div className="text-[11px] font-semibold text-gray-500">{DAYS[(d.getDay() + 6) % 7]}</div>
-                <div className={`text-lg font-bold ${isToday ? 'text-teal-300' : 'text-gray-900'}`}>{d.getDate()}</div>
+                <div className={`text-lg font-bold ${isToday ? 'text-teal-700' : 'text-gray-900'}`}>{d.getDate()}</div>
               </div>
             );
           })}
@@ -263,7 +263,7 @@ export default function BookingCalendarPage() {
             <div className="flex rounded-lg border border-gray-200 overflow-hidden mr-1">
               {['month', 'week'].map((v) => (
                 <button key={v} onClick={() => setView(v)}
-                  className={`px-3 py-1.5 text-xs font-medium capitalize ${view === v ? 'bg-teal-600/25 text-violet-200' : 'text-gray-500 hover:bg-gray-100'}`}>
+                  className={`px-3 py-1.5 text-xs font-medium capitalize ${view === v ? 'bg-teal-600/25 text-violet-700' : 'text-gray-500 hover:bg-gray-100'}`}>
                   {v}
                 </button>
               ))}

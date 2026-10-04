@@ -166,7 +166,7 @@ export default function LearningPathsPage() {
                 {isStaff && (
                   <div className="mt-3 flex gap-2">
                     <button onClick={() => openEdit(p)} className="rounded-lg bg-[#0f766e] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0f766e]">Edit</button>
-                    <button onClick={() => remove(p)} className="rounded-lg bg-red-600/80 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-600">Delete</button>
+                    <button onClick={() => remove(p)} className="rounded-lg bg-red-50 border border-red-200 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100">Delete</button>
                   </div>
                 )}
               </div>

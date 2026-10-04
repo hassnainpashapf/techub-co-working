@@ -76,14 +76,14 @@ export default function BookingRequestsPage() {
         <button
           onClick={() => act(r.id, 'approve')}
           disabled={!!acting}
-          className="rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-300 text-xs font-semibold px-3 py-1.5 hover:bg-emerald-600/30 disabled:opacity-50"
+          className="rounded-lg bg-emerald-600/20 border border-emerald-500/40 text-emerald-700 text-xs font-semibold px-3 py-1.5 hover:bg-emerald-600/30 disabled:opacity-50"
         >
           {acting === r.id + 'approve' ? '…' : 'Approve'}
         </button>
         <button
           onClick={() => act(r.id, 'reject')}
           disabled={!!acting}
-          className="rounded-lg bg-red-600/20 border border-red-500/40 text-red-300 text-xs font-semibold px-3 py-1.5 hover:bg-red-600/30 disabled:opacity-50"
+          className="rounded-lg bg-red-50 border border-red-200 text-red-700 text-xs font-semibold px-3 py-1.5 hover:bg-red-100 disabled:opacity-50"
         >
           {acting === r.id + 'reject' ? '…' : 'Reject'}
         </button>
@@ -104,7 +104,7 @@ export default function BookingRequestsPage() {
                 onClick={() => setFilter(s)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold capitalize border ${
                   filter === s
-                    ? 'bg-teal-700/30 border-teal-600/50 text-violet-200'
+                    ? 'bg-teal-700/30 border-teal-600/50 text-violet-700'
                     : 'border-gray-200 text-gray-500 hover:text-gray-900'
                 }`}
               >
@@ -114,7 +114,7 @@ export default function BookingRequestsPage() {
           </div>
         }
       />
-      {notice && <div className="mb-4 rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">{notice}</div>}
+      {notice && <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{notice}</div>}
       {error && <ErrorBanner message={error} />}
       {loading ? <Spinner /> : <DataTable columns={columns} rows={requests} rowKey="id" emptyText={`No ${filter} requests.`} />}
     </div>

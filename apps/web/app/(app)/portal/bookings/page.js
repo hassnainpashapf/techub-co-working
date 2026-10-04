@@ -48,7 +48,7 @@ function CancelModal({ booking, onClose, onDone }) {
   };
   return (
     <Modal title="Cancel booking?" onClose={onClose}>
-      {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+      {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
       <p className="text-gray-600 text-sm mb-2">
         <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> — {fmtRange(booking)}
       </p>
@@ -90,7 +90,7 @@ function RescheduleModal({ booking, onClose, onDone }) {
   return (
     <Modal title="Reschedule booking" onClose={onClose}>
       <form onSubmit={submit}>
-        {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
         <p className="text-gray-600 text-sm mb-4">
           <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> · {booking.unit?.type}
         </p>

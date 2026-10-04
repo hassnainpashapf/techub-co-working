@@ -165,7 +165,7 @@ export default function ConciergeRequestDetailPage() {
         <PageHeader
           title={req.title || 'Concierge Request'}
           sub={`${req.service?.name || 'Custom request'}${req.service?.category ? ` · ${req.service.category}` : ''} · ${fmtDate(req.createdAt)}`}
-          actions={req.status === 'new' ? <button className="btn-secondary text-sm px-3 py-1.5 text-red-300" onClick={cancelRequest}>Cancel Request</button> : null}
+          actions={req.status === 'new' ? <button className="btn-secondary text-sm px-3 py-1.5 text-red-700" onClick={cancelRequest}>Cancel Request</button> : null}
         />
       </div>
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
@@ -253,7 +253,7 @@ export default function ConciergeRequestDetailPage() {
           ) : myRating ? (
             <div>
               <Stars value={myRating.rating} />
-              <p className="text-sm text-amber-200 mt-2">Thanks for rating this service!</p>
+              <p className="text-sm text-amber-700 mt-2">Thanks for rating this service!</p>
               {myRating.comment && <p className="text-sm text-gray-500 mt-1">"{myRating.comment}"</p>}
             </div>
           ) : (

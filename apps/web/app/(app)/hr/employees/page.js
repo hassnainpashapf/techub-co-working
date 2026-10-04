@@ -76,7 +76,7 @@ function CafeRoleTab({ employeeId }) {
             <div className="font-semibold text-gray-800 capitalize">🧑‍🍳 {staff.role}</div>
             <div className="text-xs text-gray-500">Café staff — kitchen display access hai</div>
           </div>
-          <button onClick={remove} disabled={busy} className="btn-ghost text-red-300 text-sm">Remove</button>
+          <button onClick={remove} disabled={busy} className="btn-ghost text-red-700 text-sm">Remove</button>
         </div>
       ) : (
         <div className="flex items-center gap-2">

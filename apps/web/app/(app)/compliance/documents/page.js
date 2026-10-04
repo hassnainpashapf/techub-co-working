@@ -37,7 +37,7 @@ function DocForm({ members, onSave, saving }) {
     <form onSubmit={submit}>
       <Field label="Title *"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="e.g. Trade License 2026" required /></Field>
       <Field label="File *">
-        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-200 file:text-xs"
+        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-700 file:text-xs"
           onChange={(e) => setFile(e.target.files?.[0] || null)} required
           accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.txt" />
       </Field>
@@ -193,7 +193,7 @@ export default function ComplianceDocumentsPage() {
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Badge tone={STATUS_TONE[d.expiryStatus] || 'slate'}>{daysText(d.daysLeft, d.expiryStatus)}</Badge>
-                  <button onClick={() => remove(d.id)} className="text-xs text-red-300 hover:text-red-200 border border-red-500/30 rounded-lg px-2.5 py-1">Delete</button>
+                  <button onClick={() => remove(d.id)} className="text-xs text-red-700 hover:text-red-700 border border-red-200 rounded-lg px-2.5 py-1">Delete</button>
                 </div>
               </div>
             ))}

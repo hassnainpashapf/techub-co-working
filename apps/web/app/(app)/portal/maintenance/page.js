@@ -56,7 +56,7 @@ export default function PortalMaintenancePage() {
       <PageHeader title="Maintenance" sub="Report an issue in your space"
         actions={<button className="btn-primary" onClick={() => setShowForm(true)}>+ Report Issue</button>} />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      {msg && <p className="text-sm text-emerald-300 mb-3">{msg}</p>}
+      {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
       {rows.length === 0 ? (
         <EmptyState title="No requests yet" hint="Spot a leaking tap or a broken chair? Report it here and we'll fix it." />
       ) : (
@@ -99,7 +99,7 @@ export default function PortalMaintenancePage() {
                 </select>
               </Field>
             </div>
-            {form.priority === 'urgent' && <p className="text-xs text-red-300 mb-3">Urgent requests alert the ops team immediately.</p>}
+            {form.priority === 'urgent' && <p className="text-xs text-red-700 mb-3">Urgent requests alert the ops team immediately.</p>}
             <button type="submit" className="btn-primary w-full" disabled={busy}>{busy ? 'Sending…' : 'Submit Request'}</button>
           </form>
         </Modal>

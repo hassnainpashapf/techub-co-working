@@ -144,7 +144,7 @@ export default function CafeDashboardPage() {
             <p className="text-sm text-slate-500">Koi active order nahi — kitchen free hai ✅</p>
           )}
           <Link href="/cafe/kitchen"
-            className="mt-4 inline-block px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-400/30 text-amber-300 text-sm font-semibold hover:bg-amber-500/25 transition">
+            className="mt-4 inline-block px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-200 text-amber-700 text-sm font-semibold hover:bg-amber-500/25 transition">
             Kitchen display kholo →
           </Link>
         </div>

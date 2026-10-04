@@ -63,12 +63,12 @@ export default function MemberAccessTab({ memberId }) {
         </button>
       </div>
       {newPin && (
-        <div className="mb-3 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
-          <div className="text-[11px] text-amber-200/70">Naya PIN (ek dafa):</div>
-          <div className="text-2xl font-mono font-bold text-amber-200 tracking-widest">{newPin}</div>
+        <div className="mb-3 rounded-lg bg-amber-50 border border-amber-200 p-3">
+          <div className="text-[11px] text-amber-700/70">Naya PIN (ek dafa):</div>
+          <div className="text-2xl font-mono font-bold text-amber-700 tracking-widest">{newPin}</div>
         </div>
       )}
-      {msg && <p className="text-xs text-blue-300 mb-2">{msg}</p>}
+      {msg && <p className="text-xs text-blue-700 mb-2">{msg}</p>}
       <DataTable
         columns={[
           { key: 'type', label: 'Type', render: (c) => <Badge tone={TYPE_TONE[c.type] || 'slate'}>{c.type?.toUpperCase()}</Badge> },
@@ -78,7 +78,7 @@ export default function MemberAccessTab({ memberId }) {
           {
             key: 'actions', label: 'Actions',
             render: (c) => c.isActive
-              ? <button onClick={() => revoke(c.id)} className="text-xs font-semibold text-rose-300 hover:text-rose-200">Revoke</button>
+              ? <button onClick={() => revoke(c.id)} className="text-xs font-semibold text-rose-700 hover:text-rose-700">Revoke</button>
               : <span className="text-xs text-gray-900/30">—</span>,
           },
         ]}

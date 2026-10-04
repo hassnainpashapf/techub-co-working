@@ -34,7 +34,7 @@ function OfferRideModal({ onClose, onAdd }) {
   return (
     <Modal title="Offer a Ride" onClose={onClose}>
       <form onSubmit={submit}>
-        {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
         <div className="grid grid-cols-2 gap-3">
           <Field label="From *">
             <input className="input" value={form.from} onChange={set('from')} placeholder="e.g. DHA Phase 5" required />
@@ -118,7 +118,7 @@ function RideCard({ ride, onRequest, onCancelRequest, onCancelRide, busy }) {
 
       {ride.mine ? (
         <button onClick={() => onCancelRide(ride.id)} disabled={busy}
-          className="w-full py-2.5 rounded-xl text-[13.5px] font-semibold bg-red-500/10 border border-red-500/40 text-red-300 hover:bg-red-500/20 transition-all">
+          className="w-full py-2.5 rounded-xl text-[13.5px] font-semibold bg-red-50 border border-red-500/40 text-red-700 hover:bg-red-500/20 transition-all">
           Cancel Ride
         </button>
       ) : ride.requested ? (

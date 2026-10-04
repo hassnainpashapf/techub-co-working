@@ -190,7 +190,7 @@ export default function PollsPage() {
                   <button className="btn-ghost text-xs" onClick={() => loadResults(p.id)}>Results</button>
                   {p.status === 'draft' && <button className="btn-ghost text-xs" onClick={() => act(p.id, 'open')}>Open</button>}
                   {p.status === 'open' && <button className="btn-ghost text-xs" onClick={() => act(p.id, 'close')}>Close</button>}
-                  <button className="btn-ghost text-xs text-red-300" onClick={() => act(p.id, 'delete')}>Delete</button>
+                  <button className="btn-ghost text-xs text-red-700" onClick={() => act(p.id, 'delete')}>Delete</button>
                 </div>
               </div>
               {results[p.id] && <ResultsBars results={results[p.id]} />}

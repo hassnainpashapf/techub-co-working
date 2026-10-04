@@ -17,7 +17,7 @@ import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 const STATUS_COLORS = {
   vacant: 'border-green-400/40 bg-green-500/10',
   occupied: 'border-[#0f766e]/40 bg-[#0f766e]/10',
-  maintenance: 'border-amber-400/40 bg-amber-500/10',
+  maintenance: 'border-amber-400/40 bg-amber-50',
 };
 const STATUS_TONE = { vacant: 'green', occupied: 'violet', maintenance: 'amber' };
 

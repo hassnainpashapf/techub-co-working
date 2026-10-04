@@ -7,8 +7,8 @@ import { PageHeader, StatCard, ErrorBanner, Spinner, EmptyState, DataTable, Moda
 const TIER_META = {
   champion: { label: 'Champions', color: '#22c55e', bg: 'bg-green-500/15 text-green-300 border-green-500/30' },
   active: { label: 'Active', color: '#0f766e', bg: 'bg-[#0f766e]/15 text-teal-700 border-[#0f766e]/30' },
-  casual: { label: 'Casual', color: '#f59e0b', bg: 'bg-amber-500/15 text-amber-300 border-amber-500/30' },
-  'at-risk': { label: 'At-risk', color: '#ef4444', bg: 'bg-red-500/15 text-red-300 border-red-500/30' },
+  casual: { label: 'Casual', color: '#f59e0b', bg: 'bg-amber-500/15 text-amber-700 border-amber-200' },
+  'at-risk': { label: 'At-risk', color: '#ef4444', bg: 'bg-red-500/15 text-red-700 border-red-200' },
 };
 
 function TierPill({ tier }) {

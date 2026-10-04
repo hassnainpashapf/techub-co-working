@@ -127,7 +127,7 @@ export default function PortalFeedbackPage() {
             className={`text-sm rounded-full px-4 py-2 border transition ${
               tab === t.v
                 ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
-                : 'bg-gray-100 border-gray-200 text-gray-600 hover:border-white/25'
+                : 'bg-gray-100 border-gray-200 text-gray-600 hover:border-gray-300'
             }`}
           >
             {t.l}
@@ -140,7 +140,7 @@ export default function PortalFeedbackPage() {
       {tab === 'new' && (
         <div className="card-premium p-6 mb-6 max-w-2xl">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Naya feedback</h2>
-          {done && <div className="mb-4 text-sm text-emerald-300">✅ Shukriya! Aap ka feedback mil gaya.</div>}
+          {done && <div className="mb-4 text-sm text-emerald-700">✅ Shukriya! Aap ka feedback mil gaya.</div>}
           <form onSubmit={submit}>
             <div className="mb-4">
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Category</label>

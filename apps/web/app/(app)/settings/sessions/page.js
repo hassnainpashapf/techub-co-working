@@ -76,7 +76,7 @@ export default function SessionsPage() {
           <button
             onClick={revokeAll}
             disabled={revokingAll || sessions.length <= 1}
-            className="px-4 py-2 rounded-xl text-sm font-semibold bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 disabled:opacity-40 transition"
+            className="px-4 py-2 rounded-xl text-sm font-semibold bg-red-500/15 text-red-700 border border-red-200 hover:bg-red-500/25 disabled:opacity-40 transition"
           >
             {revokingAll ? 'Ho raha hai…' : '🚪 Log out all devices'}
           </button>
@@ -84,7 +84,7 @@ export default function SessionsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
       {notice && (
-        <div className="mb-4 px-4 py-3 rounded-xl bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">
+        <div className="mb-4 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
           {notice}
         </div>
       )}
@@ -95,7 +95,7 @@ export default function SessionsPage() {
           {sessions.map((s) => (
             <div
               key={s.id}
-              className={`rounded-2xl border p-5 bg-gradient-to-br from-[#151527] to-[#0e0e1c] ${
+              className={`rounded-2xl border p-5 bg-white ${
                 s.current ? 'border-[#0f766e]/50 shadow-[0_0_24px_rgba(15,118,110,0.25)]' : 'border-gray-200'
               }`}
             >
@@ -112,7 +112,7 @@ export default function SessionsPage() {
               <button
                 onClick={() => revokeOne(s.id, s.current)}
                 disabled={revoking === s.id}
-                className="mt-4 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-gray-100 text-red-300 border border-gray-200 hover:bg-red-500/15 hover:border-red-500/30 disabled:opacity-40 transition"
+                className="mt-4 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 hover:border-red-300 disabled:opacity-40 transition"
               >
                 {revoking === s.id ? 'Revoke ho raha…' : s.current ? 'Is device se logout' : 'Revoke session'}
               </button>

@@ -89,15 +89,15 @@ export default function OnboardingPage() {
             <div><span className="text-gray-500">Plan:</span> <Badge tone="blue">{result.subscription.plan} (trial)</Badge></div>
             <div><span className="text-gray-500">Trial ends:</span> <b className="text-gray-900">{new Date(result.subscription.trialEndsAt).toLocaleDateString()}</b></div>
           </div>
-          <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4 mb-4">
-            <p className="text-xs text-amber-200/80 mb-1">⚠️ Temporary password — sirf ek dafa dikhega. Copy kar ke admin ko de dein:</p>
+          <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-4">
+            <p className="text-xs text-amber-700/80 mb-1">⚠️ Temporary password — sirf ek dafa dikhega. Copy kar ke admin ko de dein:</p>
             <div className="flex items-center gap-3">
               <code className="text-2xl font-mono font-bold text-gray-900 tracking-wider">{result.tempPassword}</code>
               <button onClick={copyPw} className="btn-secondary btn-sm">{copied ? '✓ Copied' : 'Copy'}</button>
             </div>
           </div>
           {seeded && (
-            <div className={`text-sm rounded-xl p-3 mb-4 ${seeded.seeded ? 'bg-emerald-500/10 border border-emerald-400/30 text-emerald-200' : 'bg-red-500/10 border border-red-400/30 text-red-200'}`}>
+            <div className={`text-sm rounded-xl p-3 mb-4 ${seeded.seeded ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
               {seeded.seeded
                 ? `✓ Demo data seed ho gaya: ${seeded.units} units, ${seeded.members} members.`
                 : `Demo seed nahi ho saka: ${seeded.error || 'unknown error'}`}

@@ -95,7 +95,7 @@ function InvoiceDetailModal({ invoiceId, onClose }) {
             </div>
             <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
               <div className="text-gray-500 text-xs mb-1">Remaining</div>
-              <div className="text-amber-300 font-bold">{fmtMoney(remaining(inv))}</div>
+              <div className="text-amber-700 font-bold">{fmtMoney(remaining(inv))}</div>
             </div>
           </div>
           {inv.notes && (
@@ -239,16 +239,16 @@ function InvoiceCard({ inv, onView, onPay, onPdf }) {
         </div>
         <div className="text-right">
           <div className="text-gray-500 text-xs">Remaining</div>
-          <div className={`font-bold text-lg ${remaining(inv) > 0 ? 'text-amber-300' : 'text-emerald-300'}`}>{fmtMoney(remaining(inv))}</div>
+          <div className={`font-bold text-lg ${remaining(inv) > 0 ? 'text-amber-700' : 'text-emerald-700'}`}>{fmtMoney(remaining(inv))}</div>
         </div>
         <div className="text-right">
           <div className="text-gray-500 text-xs">Due</div>
-          <div className={`text-sm font-medium ${overdue ? 'text-red-300' : 'text-gray-800'}`}>{fmtDate(inv.dueDate)}</div>
+          <div className={`text-sm font-medium ${overdue ? 'text-red-700' : 'text-gray-800'}`}>{fmtDate(inv.dueDate)}</div>
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => onView(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">View</button>
-        <button onClick={() => onPdf(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">PDF</button>
+        <button onClick={() => onView(inv)} className="flex-1 min-w-[90px] rounded-xl border border-gray-200 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">View</button>
+        <button onClick={() => onPdf(inv)} className="flex-1 min-w-[90px] rounded-xl border border-gray-200 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">PDF</button>
         {remaining(inv) > 0 && inv.status !== 'cancelled' && (
           <button onClick={() => onPay(inv)} className="flex-1 min-w-[90px] rounded-xl bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-semibold py-2 transition">Pay now</button>
         )}
@@ -362,7 +362,7 @@ export default function PortalInvoicesPage() {
 
       {error && <ErrorBanner message={error} />}
       {claimSent && (
-        <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-xl px-4 py-3 mb-4">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl px-4 py-3 mb-4">
           ✓ Payment claim sent — finance will verify and record it shortly.
         </div>
       )}

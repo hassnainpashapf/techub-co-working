@@ -5,47 +5,7 @@ import { api } from '../../../../lib/api';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
-// Stacked SVG bar chart: contracts (blue) + recurring (green) + pipeline (amber)
-function StackedBarChart({ data, height = 220 }) {
-  const max = Math.max(...data.map((d) => d.total), 1);
-  const barW = 100 / data.length;
-  const segs = [
-    { key: 'contracts', color: '#0f766e', label: 'Contracts' },
-    { key: 'recurring', color: '#10b981', label: 'Recurring' },
-    { key: 'pipeline', color: '#f59e0b', label: 'Pipeline' },
-  ];
-  return (
-    <div className="relative" style={{ height }}>
-      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <filter id="projBarGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.2" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
-        {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
-        ))}
-        {data.map((d, i) => {
-          const h = Math.max((d.total / max) * (height - 34), 2);
-          const x = i * barW + barW * 0.24;
-          const w = barW * 0.52;
-          let y = height - 24;
-          return (
-            <g key={i} filter="url(#projBarGlow)">
-              {segs.map((s) => {
-                const sh = d.total > 0 ? (d[s.key] / d.total) * h : 0;
-                y -= sh;
-                return <rect key={s.key} x={x} y={y} width={w} height={sh} fill={s.color} fillOpacity="0.9" />;
-              })}
-              <text x={x + w / 2} y={height - 8} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3" fontWeight="600">{d.label}</text>
-            </g>
-          );
-        })}
-      </svg>
-    </div>
-  );
-}
+import { HDStackedBarChart } from '../../../../components/charts';
 
 const fmt = (v) => `Rs ${Number(v || 0).toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
 
@@ -122,7 +82,7 @@ export default function ProjectionsPage() {
             {data.byMonth.length === 0 ? (
               <EmptyState title="No data" hint="No contracts, recurring invoices or leads found." />
             ) : (
-              <StackedBarChart data={data.byMonth} />
+              <HDStackedBarChart data={data.byMonth} height={220} segments={[{key:'contracts',color:'#0f766e',label:'Contracts'},{key:'recurring',color:'#10b981',label:'Recurring'},{key:'pipeline',color:'#f59e0b',label:'Pipeline'}]} />
             )}
           </div>
 

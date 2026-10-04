@@ -76,7 +76,7 @@ function LeadCard({ lead, onMove, onEdit, onConvert, onDelete }) {
         {!lead.convertedMemberId && lead.stage !== 'lost' && (
           <button onClick={() => onConvert(lead)} className="btn-primary !py-1 !px-2 !text-xs" title="Convert to member">Convert to member</button>
         )}
-        <button onClick={() => onDelete(lead)} className="!py-1 !px-2 !text-xs text-red-400 hover:text-red-300">✕</button>
+        <button onClick={() => onDelete(lead)} className="!py-1 !px-2 !text-xs text-red-400 hover:text-red-700">✕</button>
       </div>
     </div>
   );

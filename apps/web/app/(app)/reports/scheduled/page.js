@@ -187,7 +187,7 @@ export default function ScheduledReportsPage() {
                   {sending === r.id ? 'Queuing…' : 'Send now'}
                 </button>
                 <button onClick={() => { setEditing(r); setShowForm(true); }} className="text-xs text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg px-3 py-1.5">Edit</button>
-                <button onClick={() => remove(r.id)} className="text-xs text-red-300 hover:text-red-200 border border-red-500/30 rounded-lg px-3 py-1.5">Delete</button>
+                <button onClick={() => remove(r.id)} className="text-xs text-red-700 hover:text-red-700 border border-red-200 rounded-lg px-3 py-1.5">Delete</button>
               </div>
             </div>
           ))}

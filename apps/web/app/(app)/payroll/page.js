@@ -161,7 +161,7 @@ export default function PayrollPage() {
               <span key="n" className="font-semibold text-gray-900">{p.user?.name}</span>,
               fmt(p.grossSalary),
               fmt(p.totalDeductions),
-              <span key="np" className="font-bold text-emerald-300">{fmt(p.netPay)}</span>,
+              <span key="np" className="font-bold text-emerald-700">{fmt(p.netPay)}</span>,
               <Badge key="s" tone={p.status === 'paid' ? 'green' : 'slate'}>{p.status}</Badge>,
             ]))}
             empty="No payslips."

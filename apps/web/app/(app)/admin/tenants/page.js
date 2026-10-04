@@ -120,10 +120,10 @@ export default function AdminTenantsPage() {
       <PageHeader title="Tenant Management" subtitle="All workspaces — suspend, impersonate or delete (super admin)" />
 
       {impersonating && (
-        <div className="mb-4 rounded-xl border border-amber-400/40 bg-amber-500/10 px-4 py-3 flex items-center justify-between">
-          <div className="text-sm text-amber-200">
+        <div className="mb-4 rounded-xl border border-amber-400/40 bg-amber-50 px-4 py-3 flex items-center justify-between">
+          <div className="text-sm text-amber-700">
             🕵️ <strong>Impersonating {impersonating.tenantName}</strong>
-            <span className="text-amber-200/70"> as {impersonating.userEmail} — token expires ~15 min after issue. Actions are audited.</span>
+            <span className="text-amber-700/70"> as {impersonating.userEmail} — token expires ~15 min after issue. Actions are audited.</span>
           </div>
           <button className="btn-sm" onClick={exitImpersonation}>Exit impersonation</button>
         </div>

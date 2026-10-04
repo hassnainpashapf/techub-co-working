@@ -43,7 +43,7 @@ export default function ChangePasswordPage() {
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Naya password (dobara)</label>
             <input type="password" className="input" value={next2} onChange={(e) => setNext2(e.target.value)} required autoComplete="new-password" />
           </div>
-          {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
+          {error && <p className="text-sm text-red-700 mb-3">{error}</p>}
           <button type="submit" className="btn-primary w-full" disabled={busy}>{busy ? 'Save ho raha hai…' : 'Password set karo'}</button>
         </form>
       </div>

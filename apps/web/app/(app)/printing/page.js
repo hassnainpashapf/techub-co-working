@@ -79,7 +79,7 @@ export default function PrintingPage() {
       <PageHeader title="Printing Credits" subtitle={`Quota overview — ${month}`} />
       {error && <ErrorBanner message={error} />}
       {msg && (
-        <div className={`rounded-xl border p-4 text-sm mb-4 ${msg.ok ? 'border-emerald-400/30 bg-emerald-500/10 text-emerald-200' : 'border-red-400/30 bg-red-500/10 text-red-200'}`}>
+        <div className={`rounded-xl border p-4 text-sm mb-4 ${msg.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700'}`}>
           {msg.text}
         </div>
       )}
@@ -108,7 +108,7 @@ export default function PrintingPage() {
                   ))}
                 </div>
               )}
-              {form.memberId && <div className="text-xs text-emerald-300 mt-1">✓ Member selected</div>}
+              {form.memberId && <div className="text-xs text-emerald-700 mt-1">✓ Member selected</div>}
             </Field>
             <div className="grid grid-cols-2 gap-3">
               <Field label="Pages">
@@ -146,7 +146,7 @@ export default function PrintingPage() {
                     <td className="p-3 text-gray-900">{r.memberName} <span className="text-slate-500 text-xs">{r.companyName || ''}</span></td>
                     <td className="p-3 text-gray-600">{r.included}</td>
                     <td className="p-3 text-gray-600">{r.used}</td>
-                    <td className="p-3">{r.remaining <= 0 ? <Badge tone="red">0</Badge> : <span className="text-emerald-300">{r.remaining}</span>}</td>
+                    <td className="p-3">{r.remaining <= 0 ? <Badge tone="red">0</Badge> : <span className="text-emerald-700">{r.remaining}</span>}</td>
                     <td className="p-3 w-40">
                       <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                         <div className={`h-full rounded-full ${pct >= 100 ? 'bg-red-500' : 'bg-sky-500'}`} style={{ width: `${pct}%` }} />

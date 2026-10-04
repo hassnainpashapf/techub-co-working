@@ -159,7 +159,7 @@ export default function PortalCafePage() {
       <div className="flex items-center justify-between">
         <h3 className="font-semibold">🍽️ Menu</h3>
         <div className="flex items-center gap-2">
-          <button onClick={() => setSortTop((s) => !s)} className={`btn-ghost text-sm ${sortTop ? 'text-amber-300' : ''}`}>
+          <button onClick={() => setSortTop((s) => !s)} className={`btn-ghost text-sm ${sortTop ? 'text-amber-700' : ''}`}>
             ⭐ Top rated
           </button>
           {cartItems.length > 0 && (
@@ -179,7 +179,7 @@ export default function PortalCafePage() {
               <div className="min-w-0">
                 <div className="font-medium truncate">{m.name}</div>
                 {m.description && <div className="text-xs text-gray-500 truncate">{m.description}</div>}
-                <div className="text-sm font-semibold text-amber-300 mt-1">Rs {Number(m.price).toFixed(2)}</div>
+                <div className="text-sm font-semibold text-amber-700 mt-1">Rs {Number(m.price).toFixed(2)}</div>
                 <div className="flex items-center gap-1 mt-1">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <button key={s} onClick={() => rateItem(m.id, s)} className={`text-sm ${(m.myRating || Math.round(m.avgRating || 0)) >= s ? 'text-amber-400' : 'text-gray-500'}`} title={`${s} star`}>

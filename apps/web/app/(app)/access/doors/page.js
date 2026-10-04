@@ -57,23 +57,23 @@ function HardwareCard() {
   };
 
   return (
-    <div className="mb-6 rounded-xl border border-gray-200 bg-gradient-to-br from-[#1a1a2e] to-[#12121f] p-5">
+    <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
       <h3 className="text-sm font-bold text-gray-900">🔌 Hardware Integration</h3>
-      <p className="mt-1 text-xs text-gray-900/50">Asal door controllers ke liye device API key aur unlock webhook.</p>
+      <p className="mt-1 text-xs text-gray-500">Asal door controllers ke liye device API key aur unlock webhook.</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div>
           <div className="text-xs font-semibold text-gray-600">Device API Key {dk.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
           {newKey && (
-            <div className="mt-2 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
-              <div className="text-xs text-amber-200 break-all font-mono">{newKey}</div>
+            <div className="mt-2 rounded-lg bg-amber-50 border border-amber-200 p-3">
+              <div className="text-xs text-amber-800 break-all font-mono">{newKey}</div>
             </div>
           )}
           <div className="mt-2 flex gap-2">
-            <button onClick={genKey} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-50">
+            <button onClick={genKey} disabled={busy} className="rounded-lg bg-[#0f766e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0d6b63] disabled:opacity-50">
               {busy ? '…' : 'Generate Key'}
             </button>
             {dk.configured && (
-              <button onClick={revokeKey} disabled={busy} className="rounded-lg border border-rose-500/30 px-3 py-1.5 text-xs font-semibold text-rose-300 disabled:opacity-50">
+              <button onClick={revokeKey} disabled={busy} className="rounded-lg border border-red-200 bg-red-50 px-3 py-1.5 text-xs font-semibold text-red-700 hover:bg-red-100 disabled:opacity-50">
                 Revoke
               </button>
             )}
@@ -88,11 +88,11 @@ function HardwareCard() {
               placeholder="https://device.local/unlock"
               className="flex-1 rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-xs text-gray-900"
             />
-            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-50">
+            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-[#0f766e] px-3 py-1.5 text-xs font-semibold text-white hover:bg-[#0d6b63] disabled:opacity-50">
               Save
             </button>
           </div>
-          <p className="mt-1 text-[11px] text-gray-900/40">Khali save karein to webhook remove ho jayega.</p>
+          <p className="mt-1 text-[11px] text-gray-500">Khali save karein to webhook remove ho jayega.</p>
         </div>
       </div>
       {msg && <p className="mt-3 text-xs text-teal-700">{msg}</p>}
@@ -172,8 +172,8 @@ export default function DoorsPage() {
       key: 'type', label: 'Type',
       render: (d) => <Badge tone="blue">{(TYPES.find((t) => t.value === d.type) || {}).label || d.type}</Badge>,
     },
-    { key: 'location', label: 'Location', render: (d) => d.location || <span className="text-gray-900/40">—</span> },
-    { key: 'deviceId', label: 'Device ID', render: (d) => d.deviceId || <span className="text-gray-900/40">—</span> },
+    { key: 'location', label: 'Location', render: (d) => d.location || <span className="text-gray-500">—</span> },
+    { key: 'deviceId', label: 'Device ID', render: (d) => d.deviceId || <span className="text-gray-500">—</span> },
     {
       key: 'isActive', label: 'Status',
       render: (d) => d.isActive
@@ -184,11 +184,11 @@ export default function DoorsPage() {
       key: 'actions', label: 'Actions',
       render: (d) => (
         <div className="flex items-center gap-2">
-          <button onClick={() => toggleActive(d)} className="text-xs font-semibold text-amber-300 hover:text-amber-200">
+          <button onClick={() => toggleActive(d)} className="text-xs font-semibold text-amber-700 hover:text-amber-700">
             {d.isActive ? 'Deactivate' : 'Activate'}
           </button>
           <button onClick={() => openEdit(d)} className="text-xs font-semibold text-teal-700 hover:text-teal-700">Edit</button>
-          <button onClick={() => remove(d)} className="text-xs font-semibold text-rose-300 hover:text-rose-200">Delete</button>
+          <button onClick={() => remove(d)} className="text-xs font-semibold text-red-600 hover:text-red-700">Delete</button>
         </div>
       ),
     },
@@ -202,7 +202,7 @@ export default function DoorsPage() {
         actions={(
           <button
             onClick={openAdd}
-            className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 shadow-[0_0_16px_rgba(15,118,110,0.4)] hover:opacity-90"
+            className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0d6b63]"
           >
             + Add Door
           </button>
@@ -263,7 +263,7 @@ export default function DoorsPage() {
               </button>
               <button
                 type="submit" disabled={saving}
-                className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 disabled:opacity-50"
+                className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0d6b63] disabled:opacity-50"
               >
                 {saving ? 'Saving…' : modal.mode === 'add' ? 'Add Door' : 'Save Changes'}
               </button>

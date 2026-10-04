@@ -48,7 +48,7 @@ export default function CacheSettingsPage() {
       />
 
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">{msg}</div>}
+      {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{msg}</div>}
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <StatCard label="Hit rate" value={`${hitPct}%`} sub={`${stats?.hits || 0} hits / ${stats?.misses || 0} misses`} accent="emerald" />

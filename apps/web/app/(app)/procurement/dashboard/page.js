@@ -95,11 +95,11 @@ export default function ProcurementDashboardPage() {
       )}
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">📈 Vendor Spend Trend (6 mahine)</h3>
           {trend.length ? <SpendChart data={trend} /> : <EmptyState title="Data nahi" hint="Paid vendor bills par trend banega" />}
         </div>
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">🏆 Top Vendors (spend-wise)</h3>
           {top.length ? (
             <div className="space-y-2">
@@ -118,7 +118,7 @@ export default function ProcurementDashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">✍️ Approval Inbox {stats && stats.inbox.length > 0 && <Badge tone="amber">{stats.inbox.length}</Badge>}</h3>
           {stats && stats.inbox.length ? (
             <div className="space-y-2">
@@ -135,12 +135,12 @@ export default function ProcurementDashboardPage() {
             </div>
           ) : <EmptyState title="Koi pending approval nahi" hint={modules.purchaseOrders === false ? 'Purchase Orders module abhi enable nahi' : 'Sab approvals clear hain 🎉'} />}
         </div>
-        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">⚠️ Alerts</h3>
           {stats && stats.alerts.length ? (
             <div className="space-y-2">
               {stats.alerts.map((a, i) => (
-                <div key={i} className={`rounded-xl px-4 py-3 text-sm ${a.severity === 'high' ? 'bg-red-500/10 border border-red-500/30 text-red-200' : 'bg-amber-500/10 border border-amber-500/30 text-amber-200'}`}>
+                <div key={i} className={`rounded-xl px-4 py-3 text-sm ${a.severity === 'high' ? 'bg-red-50 border border-red-200 text-red-700' : 'bg-amber-50 border border-amber-200 text-amber-700'}`}>
                   {a.text}
                 </div>
               ))}

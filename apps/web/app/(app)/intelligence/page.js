@@ -11,8 +11,8 @@ function fmtDate(s) {
 }
 
 const SEV_STYLE = {
-  critical: 'border-red-500/40 bg-red-500/10',
-  warning: 'border-amber-500/40 bg-amber-500/10',
+  critical: 'border-red-500/40 bg-red-50',
+  warning: 'border-amber-500/40 bg-amber-50',
   info: 'border-[#0f766e]/40 bg-[#0f766e]/10',
 };
 const SEV_DOT = { critical: 'bg-red-400', warning: 'bg-amber-400', info: 'bg-[#0f766e]' };
@@ -105,7 +105,7 @@ export default function IntelligencePage() {
       </div>
 
       {attn > 0 && (
-        <div className="rounded-xl border border-amber-500/40 bg-amber-500/10 px-4 py-3 text-amber-200 text-sm">
+        <div className="rounded-xl border border-amber-500/40 bg-amber-50 px-4 py-3 text-amber-700 text-sm">
           ⚡ {attn} cheezein tawajjo mangti hain — neeche details dekho.
         </div>
       )}
@@ -149,7 +149,7 @@ export default function IntelligencePage() {
           ) : (
             <div className="space-y-3">
               {anomalies.items.map((a) => (
-                <div key={a.id} className="rounded-xl border border-red-500/30 bg-red-500/5 p-4">
+                <div key={a.id} className="rounded-xl border border-red-200 bg-red-500/5 p-4">
                   <div className="font-medium text-gray-900">{SEV_ICON[a.severity] || '🚨'} {a.title || 'Anomaly'}</div>
                   <p className="text-sm text-gray-600 mt-1">{a.detail || a.message}</p>
                   <p className="text-xs text-slate-500 mt-2">{fmtDate(a.createdAt)}</p>
@@ -172,7 +172,7 @@ export default function IntelligencePage() {
               )}
               {(sentiment.recent || []).length > 0 && (
                 <div className="mt-4 space-y-2">
-                  <p className="text-sm font-medium text-red-300">Action needed — negative feedback:</p>
+                  <p className="text-sm font-medium text-red-700">Action needed — negative feedback:</p>
                   {sentiment.recent.map((f) => (
                     <div key={f.id} className="rounded-lg border border-gray-200 bg-gray-100 p-3 text-sm">
                       <div className="text-gray-900 font-medium">{f.title || 'Untitled'} <span className="text-gray-500">★{f.rating}</span></div>
@@ -195,13 +195,13 @@ export default function IntelligencePage() {
           ) : (
             <div className="space-y-3">
               {(pricing.hints || []).map((h, i) => (
-                <div key={i} className="rounded-xl border border-emerald-500/30 bg-emerald-500/5 p-4">
+                <div key={i} className="rounded-xl border border-emerald-200 bg-emerald-500/5 p-4">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-gray-900">
                       {h.action === 'raise' ? '📈 Barhao' : h.action === 'lower' ? '📉 Kam karo' : '🎁 Promo lagao'}
                     </span>
                     <Badge>{h.scope === 'type' ? 'Unit type' : 'Unit'}: {h.ref}</Badge>
-                    {h.pct ? <span className="text-emerald-300 text-sm">~{h.pct}%</span> : null}
+                    {h.pct ? <span className="text-emerald-700 text-sm">~{h.pct}%</span> : null}
                   </div>
                   <p className="text-sm text-gray-600 mt-1">{h.reason}</p>
                   <p className="text-xs text-slate-500 mt-1">Sirf mashwara — price auto change nahi hoti.</p>

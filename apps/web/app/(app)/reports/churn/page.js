@@ -10,6 +10,7 @@ import {
   ErrorBanner,
 } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
+import { HDBarChart } from '../../../../components/charts';
 
 function riskColor(score) {
   if (score >= 60) return '#f87171';
@@ -30,45 +31,6 @@ function RiskBar({ score }) {
         {score}
       </span>
     </div>
-  );
-}
-
-function TrendChart({ trend }) {
-  const height = 160;
-  const max = Math.max(...trend.map((t) => t.exited), 1);
-  return (
-    <svg viewBox={`0 0 100 ${height}`} className="w-full" style={{ height }} preserveAspectRatio="none">
-      {trend.map((t, i) => {
-        const w = 100 / trend.length;
-        const h = Math.max((t.exited / max) * (height - 30), t.exited > 0 ? 4 : 2);
-        const x = i * w + w * 0.25;
-        return (
-          <g key={t.month}>
-            <rect
-              x={x}
-              y={height - 24 - h}
-              width={w * 0.5}
-              height={h}
-              rx="2"
-              fill={t.exited > 0 ? '#f87171' : 'rgba(148,163,184,0.25)'}
-              opacity="0.85"
-            >
-              <title>
-                {t.label}: {t.exited} exited
-              </title>
-            </rect>
-            <text x={x + w * 0.25} y={height - 10} fontSize="3.2" fill="#94a3b8" textAnchor="middle">
-              {t.label}
-            </text>
-            {t.exited > 0 && (
-              <text x={x + w * 0.25} y={height - 30 - h} fontSize="3.2" fill="#f87171" textAnchor="middle" fontWeight="bold">
-                {t.exited}
-              </text>
-            )}
-          </g>
-        );
-      })}
-    </svg>
   );
 }
 
@@ -211,7 +173,7 @@ export default function ChurnPage() {
 
       <div className="card-premium p-5 mb-6">
         <h3 className="text-sm font-bold text-gray-900 mb-3">Monthly exits (last 6 months)</h3>
-        <TrendChart trend={data.trend || []} />
+        <HDBarChart data={(data.trend || []).map(t=>({label:t.label,value:t.exited}))} height={160} color="#f87171" />
       </div>
 
       <div className="card-premium p-5 mb-6">

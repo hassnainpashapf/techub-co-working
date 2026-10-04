@@ -168,19 +168,19 @@ export default function SignContractPage({ params }) {
         <p className="text-sm text-gray-500 mb-6">Review the contract summary below, then sign.</p>
 
         {loading && <p className="text-gray-500 text-sm">Loading…</p>}
-        {error && <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-4">{error}</p>}
+        {error && <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg p-3 mb-4">{error}</p>}
 
         {done === 'signed' && (
-          <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-5 text-center">
+          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-5 text-center">
             <p className="text-2xl mb-2">✅</p>
-            <p className="font-semibold text-emerald-200">Contract signed successfully.</p>
+            <p className="font-semibold text-emerald-700">Contract signed successfully.</p>
             <p className="text-sm text-gray-500 mt-1">A confirmation has been recorded with timestamp and IP address.</p>
           </div>
         )}
         {done === 'declined' && (
-          <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-5 text-center">
+          <div className="rounded-xl border border-amber-200 bg-amber-50 p-5 text-center">
             <p className="text-2xl mb-2">📝</p>
-            <p className="font-semibold text-amber-200">You declined to sign.</p>
+            <p className="font-semibold text-amber-700">You declined to sign.</p>
             <p className="text-sm text-gray-500 mt-1">The coworking team has been notified.</p>
           </div>
         )}
@@ -199,12 +199,12 @@ export default function SignContractPage({ params }) {
             </div>
 
             {data.status === 'signed' && (
-              <p className="text-sm text-emerald-300 bg-emerald-500/10 border border-emerald-500/30 rounded-lg p-3">
+              <p className="text-sm text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
                 Already signed on {data.signedAt ? new Date(data.signedAt).toLocaleString() : '—'}.
               </p>
             )}
             {data.status === 'declined' && (
-              <p className="text-sm text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">This request was declined.</p>
+              <p className="text-sm text-amber-700 bg-amber-50 border border-amber-200 rounded-lg p-3">This request was declined.</p>
             )}
             {data.status === 'expired' && (
               <p className="text-sm text-gray-600 bg-gray-100 border border-gray-200 rounded-lg p-3">This signing link has expired. Please ask the coworking team for a new one.</p>
@@ -215,12 +215,12 @@ export default function SignContractPage({ params }) {
                 <div className="flex gap-2 mb-3">
                   <button
                     onClick={() => setUseTyped(false)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${!useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${!useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500'}`}>
                     Draw signature
                   </button>
                   <button
                     onClick={() => setUseTyped(true)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500'}`}>
                     Type signature
                   </button>
                 </div>
@@ -255,7 +255,7 @@ export default function SignContractPage({ params }) {
                       value={declineReason}
                       onChange={(e) => setDeclineReason(e.target.value)}
                     />
-                    <button onClick={handleDecline} disabled={declining} className="text-xs px-3 py-2 rounded-lg border border-red-500/40 text-red-300 hover:bg-red-500/10">
+                    <button onClick={handleDecline} disabled={declining} className="text-xs px-3 py-2 rounded-lg border border-red-500/40 text-red-700 hover:bg-red-50">
                       {declining ? 'Sending…' : 'Decline to sign'}
                     </button>
                   </div>

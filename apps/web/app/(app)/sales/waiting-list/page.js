@@ -211,7 +211,7 @@ export default function WaitingListPage() {
                     {e.desiredDate && <div className="text-slate-500">from {fmtDate(e.desiredDate)}</div>}
                   </td>
                   <td className="px-4 py-3">
-                    <span className={`text-xs font-bold ${e.priority > 0 ? 'text-amber-300' : 'text-slate-500'}`}>{e.priority}</span>
+                    <span className={`text-xs font-bold ${e.priority > 0 ? 'text-amber-700' : 'text-slate-500'}`}>{e.priority}</span>
                   </td>
                   <td className="px-4 py-3">
                     <Badge tone={toneFor(e.status)}>{labelFor(e.status)}</Badge>
@@ -229,10 +229,10 @@ export default function WaitingListPage() {
                         <button onClick={() => { setConvertEntry(e); setConvertPhone(e.phone || ''); }} disabled={busy === e.id} className="text-xs text-white bg-emerald-600/80 hover:bg-emerald-600 rounded-lg px-2.5 py-1.5">Convert</button>
                       )}
                       {(e.status === 'waiting' || e.status === 'offered') && (
-                        <button onClick={() => doExpire(e)} disabled={busy === e.id} className="text-xs text-gray-600 border border-white/15 rounded-lg px-2.5 py-1.5 hover:bg-gray-100">Expire</button>
+                        <button onClick={() => doExpire(e)} disabled={busy === e.id} className="text-xs text-gray-600 border border-gray-200 rounded-lg px-2.5 py-1.5 hover:bg-gray-100">Expire</button>
                       )}
                       <button onClick={() => setEditing(e)} className="text-xs text-gray-600 hover:text-gray-900 underline">Edit</button>
-                      <button onClick={() => doDelete(e)} disabled={busy === e.id} className="text-xs text-red-300 hover:text-red-200 underline">Delete</button>
+                      <button onClick={() => doDelete(e)} disabled={busy === e.id} className="text-xs text-red-700 hover:text-red-700 underline">Delete</button>
                     </div>
                   </td>
                 </tr>

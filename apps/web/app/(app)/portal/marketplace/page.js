@@ -157,7 +157,7 @@ export default function PortalMarketplacePage() {
               {l.description && <p className="text-sm text-gray-600 mb-3 line-clamp-3">{l.description}</p>}
               <div className="mt-auto">
                 {fmtPrice(l.price) && (
-                  <div className="text-lg font-extrabold text-emerald-300 mb-2">{fmtPrice(l.price)}</div>
+                  <div className="text-lg font-extrabold text-emerald-700 mb-2">{fmtPrice(l.price)}</div>
                 )}
                 <div className="text-xs text-gray-500 mb-1">
                   👤 {l.member?.name || 'Member'}{l.member?.companyName ? ` • ${l.member.companyName}` : ''}
@@ -167,11 +167,11 @@ export default function PortalMarketplacePage() {
                 {tab === 'mine' && (
                   <div className="flex gap-2">
                     {l.status === 'active' && (
-                      <button onClick={() => markSold(l.id)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600/20 border border-amber-500/40 text-amber-200 hover:bg-amber-600/30">
+                      <button onClick={() => markSold(l.id)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-amber-600/20 border border-amber-500/40 text-amber-700 hover:bg-amber-600/30">
                         ✅ Sold mark karein
                       </button>
                     )}
-                    <button onClick={() => remove(l.id)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600/20 border border-red-500/40 text-red-200 hover:bg-red-600/30">
+                    <button onClick={() => remove(l.id)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 border border-red-200 text-red-700 hover:bg-red-100">
                       🗑️ Delete
                     </button>
                   </div>

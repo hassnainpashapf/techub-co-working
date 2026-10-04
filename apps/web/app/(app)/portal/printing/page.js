@@ -65,7 +65,7 @@ export default function PortalPrintingPage() {
             <StatCard label="Month" value={balance.month} />
           </div>
           {balance.overage > 0 && (
-            <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 text-sm text-amber-200 mb-6">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700 mb-6">
               You printed {balance.overage} pages over your quota this month — overage is billed automatically.
             </div>
           )}
@@ -88,7 +88,7 @@ export default function PortalPrintingPage() {
                     <tr key={j.id} className="border-b border-gray-200/50 hover:bg-gray-100/30">
                       <td className="p-3 text-gray-600">{fmtDate(j.createdAt)}</td>
                       <td className="p-3 text-gray-900 font-semibold">{j.pages}</td>
-                      <td className="p-3">{j.cost != null ? <span className="text-amber-300">Rs {Number(j.cost).toLocaleString()}</span> : <span className="text-slate-500">Included</span>}</td>
+                      <td className="p-3">{j.cost != null ? <span className="text-amber-700">Rs {Number(j.cost).toLocaleString()}</span> : <span className="text-slate-500">Included</span>}</td>
                       <td className="p-3 text-gray-500">{j.note || '—'}</td>
                     </tr>
                   ))}

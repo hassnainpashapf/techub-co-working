@@ -222,7 +222,7 @@ export default function OnboardingTour() {
       {/* Tooltip */}
       <div className="absolute card-premium p-5 transition-all duration-300" style={tooltipStyle}>
         <div className="flex items-center justify-between mb-2">
-          <span className="text-[11px] font-semibold text-blue-300 uppercase tracking-wider">
+          <span className="text-[11px] font-semibold text-blue-700 uppercase tracking-wider">
             Step {stepIdx + 1} of {STEPS.length}
           </span>
           <button onClick={finish} className="text-slate-500 hover:text-gray-900 text-lg leading-none" aria-label="Skip tour">×</button>

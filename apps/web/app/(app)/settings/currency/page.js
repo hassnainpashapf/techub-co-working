@@ -64,7 +64,7 @@ export default function CurrencySettingsPage() {
     <div className="p-6 max-w-3xl">
       <PageHeader title="Currency Settings" subtitle="Base currency, enabled currencies and FX source" />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-4 py-3 text-emerald-200">{msg}</div>}
+      {msg && <div className="mb-4 rounded-lg border border-emerald-500/40 bg-emerald-50 px-4 py-3 text-emerald-700">{msg}</div>}
       <form onSubmit={save} className="space-y-6 rounded-2xl border border-gray-200 bg-gray-50 p-6">
         <Field label="Base currency (reporting)">
           <select
@@ -88,7 +88,7 @@ export default function CurrencySettingsPage() {
                   type="button"
                   disabled={isBase}
                   onClick={() => toggle(c)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold border transition ${on ? 'border-[#0f766e]/50 bg-[#0f766e]/20 text-teal-700' : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-white/25'} ${isBase ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold border transition ${on ? 'border-[#0f766e]/50 bg-[#0f766e]/20 text-teal-700' : 'border-gray-200 bg-gray-50 text-gray-500 hover:border-gray-300'} ${isBase ? 'opacity-60 cursor-not-allowed' : ''}`}
                   title={isBase ? 'Base currency is always enabled' : currencies[c]}
                 >
                   {c}{isBase ? ' (base)' : ''}

@@ -41,7 +41,7 @@ export default function SurveyBanner() {
   const scoreColor = (s) => (s >= 9 ? '#34d399' : s >= 7 ? '#fbbf24' : '#f87171');
 
   return (
-    <div className="card-premium p-5 mb-6 border !border-teal-500/30" style={{ boxShadow: '0 0 24px rgba(15,118,110,0.15)' }}>
+    <div className="card-premium p-5 mb-6 border !border-teal-200" style={{ boxShadow: '0 0 24px rgba(15,118,110,0.15)' }}>
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
           <h2 className="text-gray-900 font-bold">📋 {survey.title}</h2>
@@ -77,7 +77,7 @@ export default function SurveyBanner() {
           placeholder="Anything you'd like to add? (optional)"
           maxLength={2000}
         />
-        {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
+        {error && <p className="text-sm text-red-700 mb-3">{error}</p>}
         <div className="flex justify-end">
           <button type="submit" disabled={busy} className="btn-primary">
             {busy ? 'Submitting…' : 'Submit Response'}

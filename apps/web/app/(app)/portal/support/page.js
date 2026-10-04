@@ -158,7 +158,7 @@ export default function PortalSupportPage() {
         actions={<button className="btn-primary" onClick={() => setShowForm(true)}>+ Raise Ticket</button>}
       />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      {msg && <p className="text-sm text-emerald-300 mb-3">{msg}</p>}
+      {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
@@ -166,11 +166,11 @@ export default function PortalSupportPage() {
           <p className="text-xs text-gray-500">Open</p>
         </div>
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-amber-300">{progCount}</p>
+          <p className="text-2xl font-bold text-amber-700">{progCount}</p>
           <p className="text-xs text-gray-500">In Progress</p>
         </div>
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-emerald-300">{resCount}</p>
+          <p className="text-2xl font-bold text-emerald-700">{resCount}</p>
           <p className="text-xs text-gray-500">Resolved</p>
         </div>
       </div>
@@ -230,7 +230,7 @@ export default function PortalSupportPage() {
             <Field label="Details">
               <textarea className="input" rows={4} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="Describe the issue in detail…" />
             </Field>
-            {form.priority === 'urgent' && <p className="text-xs text-red-300 mb-3">Urgent tickets alert the ops team immediately.</p>}
+            {form.priority === 'urgent' && <p className="text-xs text-red-700 mb-3">Urgent tickets alert the ops team immediately.</p>}
             <button type="submit" className="btn-primary w-full" disabled={busy}>{busy ? 'Sending…' : 'Raise Ticket'}</button>
           </form>
         </Modal>
@@ -256,9 +256,9 @@ export default function PortalSupportPage() {
                   const r = parseRating(c.body);
                   if (r) {
                     return (
-                      <div key={c.id} className="flex items-center gap-2 bg-amber-500/10 border border-amber-500/30 rounded-lg px-3 py-2">
+                      <div key={c.id} className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                         <Stars value={r} size="text-lg" />
-                        <span className="text-xs text-amber-200">{c.author?.name || 'Member'} rated this ticket</span>
+                        <span className="text-xs text-amber-700">{c.author?.name || 'Member'} rated this ticket</span>
                       </div>
                     );
                   }
@@ -282,18 +282,18 @@ export default function PortalSupportPage() {
                   <Field label="Add a reply">
                     <textarea className="input" rows={3} value={reply} onChange={(e) => setReply(e.target.value)} placeholder="Type your message…" required />
                   </Field>
-                  {detail.replyError && <p className="text-xs text-red-300 mb-2">{detail.replyError}</p>}
+                  {detail.replyError && <p className="text-xs text-red-700 mb-2">{detail.replyError}</p>}
                   <button type="submit" className="btn-primary w-full" disabled={replyBusy || !reply.trim()}>
                     {replyBusy ? 'Sending…' : 'Send Reply'}
                   </button>
                 </form>
               ) : (
-                <div className="bg-emerald-500/10 border border-emerald-500/30 rounded-xl p-4">
+                <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
                   {(detail.comments || []).some((c) => parseRating(c.body)) ? (
-                    <p className="text-sm text-emerald-200">This ticket is resolved. Thanks for your feedback!</p>
+                    <p className="text-sm text-emerald-700">This ticket is resolved. Thanks for your feedback!</p>
                   ) : (
                     <div>
-                      <p className="text-sm text-emerald-200 mb-2">This ticket is resolved. How was the support?</p>
+                      <p className="text-sm text-emerald-700 mb-2">This ticket is resolved. How was the support?</p>
                       <Stars value={rating} onPick={setRating} />
                       <button onClick={submitRating} disabled={!rating || ratingBusy} className="btn-primary w-full mt-3 disabled:opacity-50">
                         {ratingBusy ? 'Submitting…' : 'Submit Rating'}

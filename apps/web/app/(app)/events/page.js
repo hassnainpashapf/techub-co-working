@@ -139,7 +139,7 @@ export default function EventsPage() {
                 <button className="btn-secondary text-sm" onClick={() => setAttendEvent(ev)}>Attendees</button>
                 <button className="btn-secondary text-sm" onClick={() => setTicketEvent(ev)}>🎟️ Tickets</button>
                 <button className="btn-secondary text-sm" onClick={() => { setEditing(ev); setShowForm(true); }}>Edit</button>
-                <button className="text-sm text-red-300 hover:text-red-200 px-2" onClick={() => remove(ev.id)}>Delete</button>
+                <button className="text-sm text-red-700 hover:text-red-700 px-2" onClick={() => remove(ev.id)}>Delete</button>
               </div>
             </div>
           ))}

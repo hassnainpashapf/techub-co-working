@@ -70,7 +70,7 @@ export default function GatewaysPage() {
       <PageHeader title="Payment Gateways" subtitle="Online payments accept karne ke liye gateways configure karein" />
 
       {error && <ErrorBanner message={error} />}
-      {testMsg && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">{testMsg}</div>}
+      {testMsg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{testMsg}</div>}
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         {gateways.map((g) => {
@@ -84,8 +84,8 @@ export default function GatewaysPage() {
                   <div>
                     <h3 className="font-semibold text-gray-900">{g.displayName}</h3>
                     <span className={`text-xs px-2 py-0.5 rounded-full border ${g.configured
-                      ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
-                      : 'bg-amber-500/15 text-amber-300 border-amber-500/30'}`}>
+                      ? 'bg-emerald-500/15 text-emerald-700 border-emerald-200'
+                      : 'bg-amber-500/15 text-amber-700 border-amber-200'}`}>
                       {g.configured ? 'Configured' : 'Not configured'}
                     </span>
                   </div>

@@ -61,7 +61,7 @@ function ActionEditor({ action, onChange, onRemove }) {
         <select className="input flex-1" value={action.type} onChange={(e) => set('type', e.target.value)}>
           {ACTION_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
         </select>
-        <button onClick={onRemove} className="text-red-300 hover:text-red-200 text-sm">✕</button>
+        <button onClick={onRemove} className="text-red-700 hover:text-red-700 text-sm">✕</button>
       </div>
       {action.type === 'create_task' && (
         <>
@@ -248,7 +248,7 @@ export default function AutomationPage() {
                 {testing === r.id ? '…' : '🧪 Test'}
               </button>
               <button onClick={() => setModal(r)} className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-100">Edit</button>
-              <button onClick={() => del(r.id)} className="text-xs text-red-300 border border-red-500/30 rounded-lg px-3 py-1.5 hover:bg-red-500/10">Delete</button>
+              <button onClick={() => del(r.id)} className="text-xs text-red-700 border border-red-200 rounded-lg px-3 py-1.5 hover:bg-red-50">Delete</button>
             </div>
           ))}
         </div>
@@ -261,7 +261,7 @@ export default function AutomationPage() {
             Conditions matched: <Badge tone={testResult.conditionsMatched ? 'emerald' : 'red'}>{testResult.conditionsMatched ? 'Yes' : 'No'}</Badge>
           </p>
           {testResult.actions.map((a, i) => (
-            <p key={i} className="text-sm text-gray-600 mb-1">• {a.summary} {!a.supported && <span className="text-red-300">(unsupported)</span>}</p>
+            <p key={i} className="text-sm text-gray-600 mb-1">• {a.summary} {!a.supported && <span className="text-red-700">(unsupported)</span>}</p>
           ))}
           <p className="text-xs text-slate-500 mt-3">{testResult.note}</p>
           <button onClick={() => setTestResult(null)} className="text-xs text-gray-500 underline mt-2">Close</button>

@@ -86,7 +86,7 @@ export default function MyAccessPage() {
       />
 
       {pendingMig.length > 0 && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
           Access system ka kuch hissa abhi setup ho raha hai ({pendingMig.join(', ')}). Baqi sections neeche dikh rahe hain.
         </div>
       )}
@@ -167,7 +167,7 @@ export default function MyAccessPage() {
               {submitting ? 'Bhej rahe hain…' : 'Request bhejein'}
             </button>
             {formMsg && (
-              <p className={`mt-2 text-sm ${formMsg.ok ? 'text-green-300' : 'text-red-300'}`}>{formMsg.text}</p>
+              <p className={`mt-2 text-sm ${formMsg.ok ? 'text-green-300' : 'text-red-700'}`}>{formMsg.text}</p>
             )}
           </div>
         </form>

@@ -166,7 +166,7 @@ export default function ShiftsPage() {
         </div>
       } />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      {genMsg && <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200 mb-4">{genMsg}</div>}
+      {genMsg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-4">{genMsg}</div>}
 
       {tab === 'week' && (
         <>
@@ -215,7 +215,7 @@ export default function ShiftsPage() {
                                 <div className="font-bold text-teal-700 text-xs">{sh.startTime}–{sh.endTime}</div>
                                 {sh.role && <Badge tone="blue">{sh.role}</Badge>}
                                 {sh.notes && <div className="text-[11px] text-gray-500 mt-1 truncate" title={sh.notes}>{sh.notes}</div>}
-                                <button className="absolute top-1 right-1 text-red-300 opacity-0 group-hover:opacity-100 text-xs" onClick={() => remove(sh.id)} title="Delete">✕</button>
+                                <button className="absolute top-1 right-1 text-red-700 opacity-0 group-hover:opacity-100 text-xs" onClick={() => remove(sh.id)} title="Delete">✕</button>
                               </div>
                             ) : (
                               <button
@@ -252,7 +252,7 @@ export default function ShiftsPage() {
                     <td className="p-3 text-gray-600">{DOW_LONG[t.dayOfWeek]}</td>
                     <td className="p-3 text-gray-600">{t.startTime}–{t.endTime}</td>
                     <td className="p-3">{t.role ? <Badge tone="blue">{t.role}</Badge> : <span className="text-slate-500">—</span>}</td>
-                    <td className="p-3 text-right"><button className="text-red-300 text-xs" onClick={() => removeTpl(t.id)}>Delete</button></td>
+                    <td className="p-3 text-right"><button className="text-red-700 text-xs" onClick={() => removeTpl(t.id)}>Delete</button></td>
                   </tr>
                 ))}
               </tbody>

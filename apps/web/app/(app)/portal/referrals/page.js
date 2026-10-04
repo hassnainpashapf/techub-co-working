@@ -137,7 +137,7 @@ export default function MemberReferralsPage() {
             <Field label="Friend's email">
               <input className="input" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required placeholder="ali@example.com" />
             </Field>
-            {formError && <p className="text-sm text-red-300 mb-3">{formError}</p>}
+            {formError && <p className="text-sm text-red-700 mb-3">{formError}</p>}
             <button className="btn-primary w-full" disabled={busy}>{busy ? 'Sending…' : 'Send invite'}</button>
           </form>
         </Modal>

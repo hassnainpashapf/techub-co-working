@@ -6,10 +6,10 @@ import { PageHeader, Spinner, ErrorBanner } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
 const STATUS_STYLES = {
-  pending: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
+  pending: 'bg-amber-500/15 text-amber-700 border-amber-200',
   processing: 'bg-[#0f766e]/15 text-teal-700 border-[#0f766e]/30',
-  completed: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
-  failed: 'bg-red-500/15 text-red-300 border-red-500/30',
+  completed: 'bg-emerald-500/15 text-emerald-700 border-emerald-200',
+  failed: 'bg-red-500/15 text-red-700 border-red-200',
 };
 
 function StatusBadge({ status }) {
@@ -76,7 +76,7 @@ export default function JobsPage() {
             onClick={() => setFilter(f)}
             className={`text-xs px-3 py-1.5 rounded-full border transition ${
               filter === f
-                ? 'bg-teal-600/20 text-violet-200 border-teal-600/40'
+                ? 'bg-teal-600/20 text-violet-700 border-teal-600/40'
                 : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-100'
             }`}
           >
@@ -104,18 +104,18 @@ export default function JobsPage() {
               )}
               {jobs.map((j) => (
                 <tr key={j.id} className="border-b border-gray-200 hover:bg-gray-50">
-                  <td className="px-4 py-3 font-mono text-xs text-violet-200">{j.type}</td>
+                  <td className="px-4 py-3 font-mono text-xs text-violet-700">{j.type}</td>
                   <td className="px-4 py-3"><StatusBadge status={j.status} /></td>
                   <td className="px-4 py-3 text-gray-600">{j.attempts}/{j.maxAttempts}</td>
                   <td className="px-4 py-3 text-gray-500 text-xs">{j.runAt ? new Date(j.runAt).toLocaleString() : '—'}</td>
-                  <td className="px-4 py-3 text-xs text-red-300/80 max-w-[280px] truncate" title={j.lastError || ''}>{j.lastError || '—'}</td>
+                  <td className="px-4 py-3 text-xs text-red-700/80 max-w-[280px] truncate" title={j.lastError || ''}>{j.lastError || '—'}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     {j.status === 'failed' && (
-                      <button onClick={() => retry(j.id)} disabled={acting === j.id} className="text-xs px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-300 border border-amber-500/30 hover:bg-amber-500/25 mr-2 disabled:opacity-50">
+                      <button onClick={() => retry(j.id)} disabled={acting === j.id} className="text-xs px-2.5 py-1 rounded-md bg-amber-500/15 text-amber-700 border border-amber-200 hover:bg-amber-500/25 mr-2 disabled:opacity-50">
                         {acting === j.id ? '…' : 'Retry'}
                       </button>
                     )}
-                    <button onClick={() => remove(j.id)} disabled={acting === j.id} className="text-xs px-2.5 py-1 rounded-md bg-red-500/15 text-red-300 border border-red-500/30 hover:bg-red-500/25 disabled:opacity-50">
+                    <button onClick={() => remove(j.id)} disabled={acting === j.id} className="text-xs px-2.5 py-1 rounded-md bg-red-500/15 text-red-700 border border-red-200 hover:bg-red-500/25 disabled:opacity-50">
                       Delete
                     </button>
                   </td>

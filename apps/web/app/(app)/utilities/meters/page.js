@@ -120,10 +120,10 @@ export default function MetersPage() {
     {
       key: 'actions', label: 'Actions', render: (m) => (
         <div className="flex gap-2">
-          <button className="text-xs text-emerald-300 hover:text-emerald-200" onClick={() => openReadings(m)}>📊 Readings</button>
+          <button className="text-xs text-emerald-700 hover:text-emerald-700" onClick={() => openReadings(m)}>📊 Readings</button>
           <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => openEdit(m)}>Edit</button>
-          <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => toggle(m)}>{m.isActive ? 'Deactivate' : 'Activate'}</button>
-          <button className="text-xs text-red-400 hover:text-red-300" onClick={() => remove(m)}>Delete</button>
+          <button className="text-xs text-amber-700 hover:text-amber-700" onClick={() => toggle(m)}>{m.isActive ? 'Deactivate' : 'Activate'}</button>
+          <button className="text-xs text-red-400 hover:text-red-700" onClick={() => remove(m)}>Delete</button>
         </div>
       ),
     },

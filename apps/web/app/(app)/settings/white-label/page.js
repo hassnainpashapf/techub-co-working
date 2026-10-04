@@ -87,7 +87,7 @@ export default function WhiteLabelPage() {
     <div className="max-w-3xl">
       <PageHeader title="White Label" subtitle="Apne brand ke naam, logo aur rang me app ko dhalo" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200">{msg}</div>}
+      {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
         <div className="grid gap-6 lg:grid-cols-2">
           <form onSubmit={save} className="card-premium p-6 space-y-4">
@@ -122,7 +122,7 @@ export default function WhiteLabelPage() {
                   <div className="h-16 w-16 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden">
                     <img src={logoSrc} alt="Logo" className="max-w-full max-h-full object-contain" />
                   </div>
-                  <button type="button" onClick={removeLogo} className="btn-ghost btn-sm text-red-300">Remove</button>
+                  <button type="button" onClick={removeLogo} className="btn-ghost btn-sm text-red-700">Remove</button>
                 </div>
               ) : (
                 <label className="btn-ghost btn-sm cursor-pointer inline-block">

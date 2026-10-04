@@ -10,6 +10,7 @@ import {
   ErrorBanner,
 } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
+import { HDBarChart } from '../../../../components/charts';
 
 const money = (n) => `Rs ${Number(n || 0).toLocaleString()}`;
 
@@ -32,31 +33,6 @@ function amountCell(value, rowTotal) {
     >
       {money(v)}
     </span>
-  );
-}
-
-function BucketChart({ totals }) {
-  const height = 180;
-  const data = BUCKETS.map((b) => ({ ...b, value: Number(totals[b.key] || 0) }));
-  const max = Math.max(...data.map((d) => d.value), 1);
-  return (
-    <svg viewBox={`0 0 100 ${height}`} className="w-full" style={{ height }} preserveAspectRatio="none">
-      {data.map((d, i) => {
-        const w = 100 / data.length;
-        const h = Math.max((d.value / max) * (height - 28), 3);
-        const x = i * w + w * 0.25;
-        return (
-          <g key={d.key}>
-            <rect x={x} y={height - 24 - h} width={w * 0.5} height={h} rx="2" fill={d.color} opacity="0.85">
-              <title>{d.label}: {money(d.value)}</title>
-            </rect>
-            <text x={x + w * 0.25} y={height - 10} fontSize="3.4" fill="#94a3b8" textAnchor="middle">
-              {d.label}
-            </text>
-          </g>
-        );
-      })}
-    </svg>
   );
 }
 
@@ -143,7 +119,7 @@ export default function ARAgingPage() {
 
           <div className="card-premium p-5 mb-6">
             <h3 className="text-sm font-semibold text-gray-800 mb-3">Outstanding by aging bucket</h3>
-            <BucketChart totals={totals} />
+            <HDBarChart data={BUCKETS.map(b=>({label:b.label,value:Number(totals[b.key]||0)}))} barColors={BUCKETS.map(b=>b.color)} height={180} />
           </div>
 
           <div className="card-premium p-5">

@@ -105,14 +105,14 @@ export default function PortalLoyaltyPage() {
                 />
               </Field>
               <div className="text-sm text-gray-500 pb-3">
-                = <span className="text-emerald-300 font-semibold">Rs {(Math.floor(Number(points) || 0) * pointValue).toLocaleString()}</span>
+                = <span className="text-emerald-700 font-semibold">Rs {(Math.floor(Number(points) || 0) * pointValue).toLocaleString()}</span>
               </div>
               <button type="submit" className="btn-primary" disabled={redeeming || balance <= 0}>
                 {redeeming ? 'Redeeming…' : 'Redeem'}
               </button>
             </form>
             {redeemMsg && (
-              <div className={`mt-4 text-sm rounded-lg px-4 py-3 border ${redeemMsg.ok ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-200' : 'bg-red-500/10 border-red-500/30 text-red-300'}`}>
+              <div className={`mt-4 text-sm rounded-lg px-4 py-3 border ${redeemMsg.ok ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
                 {redeemMsg.text}
               </div>
             )}
@@ -139,7 +139,7 @@ export default function PortalLoyaltyPage() {
                         <td className="py-2.5 pr-4">
                           <Badge>{REASON_LABELS[e.reason] || e.reason}</Badge>
                         </td>
-                        <td className={`py-2.5 text-right font-semibold ${e.points > 0 ? 'text-emerald-300' : 'text-red-300'}`}>
+                        <td className={`py-2.5 text-right font-semibold ${e.points > 0 ? 'text-emerald-700' : 'text-red-700'}`}>
                           {e.points > 0 ? `+${e.points}` : e.points}
                         </td>
                       </tr>

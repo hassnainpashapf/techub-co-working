@@ -69,7 +69,7 @@ function TicketsTab({ eventId }) {
               </div>
               <div className="flex gap-2">
                 <button className="btn-secondary text-xs" onClick={() => toggle(t)}>{t.isActive ? 'Pause' : 'Activate'}</button>
-                <button className="text-xs text-red-300 hover:text-red-200" onClick={() => remove(t.id)}>Delete</button>
+                <button className="text-xs text-red-700 hover:text-red-700" onClick={() => remove(t.id)}>Delete</button>
               </div>
             </div>
           ))}
@@ -113,7 +113,7 @@ function AgendaTab({ eventId }) {
             {speakers.map((s) => (
               <div key={s.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
                 <div><p className="text-sm font-semibold text-gray-900">{s.name}</p><p className="text-xs text-gray-500">{[s.title, s.company].filter(Boolean).join(' @ ')}</p></div>
-                <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(`/event-agenda/speakers/${s.id}`)}>Delete</button>
+                <button className="text-xs text-red-700 hover:text-red-700" onClick={() => del(`/event-agenda/speakers/${s.id}`)}>Delete</button>
               </div>
             ))}
           </div>
@@ -138,7 +138,7 @@ function AgendaTab({ eventId }) {
                   <p className="text-sm font-semibold text-gray-900">{s.title}</p>
                   <p className="text-xs text-gray-500">{fmt(s.startTime)} → {fmt(s.endTime)}{s.speaker ? ` · 🎤 ${s.speaker.name}` : ''}{s.location ? ` · 📍 ${s.location}` : ''}</p>
                 </div>
-                <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(`/event-agenda/sessions/${s.id}`)}>Delete</button>
+                <button className="text-xs text-red-700 hover:text-red-700" onClick={() => del(`/event-agenda/sessions/${s.id}`)}>Delete</button>
               </div>
             ))}
           </div>
@@ -178,7 +178,7 @@ function SponsorsTab({ eventId }) {
               <div><p className="text-sm font-semibold text-gray-900">{s.name} <Badge tone={s.tier === 'platinum' ? 'amber' : s.tier === 'gold' ? 'blue' : 'slate'}>{s.tier}</Badge></p><p className="text-xs text-gray-500">{s.amount ? `Rs ${s.amount} · ` : ''}{s.isActive ? 'active' : 'inactive'}</p></div>
               <div className="flex gap-2">
                 <button className="btn-secondary text-xs" onClick={() => toggle(s)}>{s.isActive ? 'Hide' : 'Show'}</button>
-                <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(s.id)}>Delete</button>
+                <button className="text-xs text-red-700 hover:text-red-700" onClick={() => del(s.id)}>Delete</button>
               </div>
             </div>
           ))}

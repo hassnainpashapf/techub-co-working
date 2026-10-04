@@ -7,10 +7,10 @@ import { useRequireRoles, AccessDenied } from '../../../../components/Protected'
 
 function StatusBadge({ status }) {
   const cls = status === 'sent'
-    ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+    ? 'bg-emerald-500/15 text-emerald-700 border-emerald-200'
     : status === 'failed'
-      ? 'bg-red-500/15 text-red-300 border-red-500/30'
-      : 'bg-amber-500/15 text-amber-300 border-amber-500/30';
+      ? 'bg-red-500/15 text-red-700 border-red-200'
+      : 'bg-amber-500/15 text-amber-700 border-amber-200';
   return <span className={`text-xs px-2 py-0.5 rounded-full border ${cls}`}>{status}</span>;
 }
 
@@ -57,7 +57,7 @@ export default function SmsSettingsPage() {
       <PageHeader title="SMS Notifications" subtitle={configured ? 'Twilio connected' : 'Twilio not configured — messages are logged to console (dev mode)'} />
 
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">{msg}</div>}
+      {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{msg}</div>}
 
       <div className="card-premium p-6 mb-6">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Send SMS</h2>

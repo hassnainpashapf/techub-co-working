@@ -80,7 +80,7 @@ export default function FormsListPage() {
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-gray-900">{stats.totalForms ?? '—'}</div><div className="text-xs text-gray-500">Total Forms</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-green-300">{stats.publishedForms ?? '—'}</div><div className="text-xs text-gray-500">Published</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-teal-700">{stats.submissions30d ?? '—'}</div><div className="text-xs text-gray-500">Responses (30d)</div></div>
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-amber-300">{stats.newInbox ?? '—'}</div><div className="text-xs text-gray-500">New Inbox</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-amber-700">{stats.newInbox ?? '—'}</div><div className="text-xs text-gray-500">New Inbox</div></div>
         </div>
       )}
       {loading ? <Spinner /> : forms.length === 0 ? (
@@ -105,7 +105,7 @@ export default function FormsListPage() {
                 ) : (
                   <button onClick={() => handlePublish(f.id, 'draft')} className="btn-secondary text-xs">⏸ Unpublish</button>
                 )}
-                <button onClick={() => handleDelete(f.id)} className="btn-secondary text-xs text-red-300">🗑</button>
+                <button onClick={() => handleDelete(f.id)} className="btn-secondary text-xs text-red-700">🗑</button>
               </div>
             </div>
           ))}

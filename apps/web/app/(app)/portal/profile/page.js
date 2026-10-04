@@ -8,7 +8,7 @@ import { PageHeader, Field, Spinner, ErrorBanner } from '../../../../components/
 
 function Section({ title, desc, children }) {
   return (
-    <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-[#16162a] to-[#10101c] p-5 shadow-lg">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       {desc && <p className="text-xs text-gray-500 mt-1">{desc}</p>}
       <div className="mt-4 space-y-4">{children}</div>
@@ -23,7 +23,7 @@ function Toggle({ on, onChange, label }) {
       role="switch"
       aria-checked={on}
       onClick={() => onChange(!on)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-[#0f766e]' : 'bg-white/15'}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-[#0f766e]' : 'bg-gray-200'}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
       <span className="sr-only">{label}</span>
@@ -220,7 +220,7 @@ export default function PortalProfilePage() {
 
       {err && <ErrorBanner message={err} onClose={() => setErr('')} />}
       {msg && (
-        <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm px-4 py-3">{msg}</div>
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-700 text-sm px-4 py-3">{msg}</div>
       )}
 
       {/* Profile info */}
@@ -234,7 +234,7 @@ export default function PortalProfilePage() {
               className="h-20 w-20 rounded-full object-cover border-2 border-[#0f766e]/50 bg-gray-100"
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
-            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#0f766e] to-teal-700 flex items-center justify-center text-xl font-bold text-gray-900 absolute inset-0 -z-10">
+            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#0f766e] to-teal-700 flex items-center justify-center text-xl font-bold text-white absolute inset-0 -z-10">
               {initials}
             </div>
           </div>
@@ -339,10 +339,10 @@ export default function PortalProfilePage() {
       {/* Account */}
       <Section title="Account" desc="Logout ya data deletion request">
         <div className="flex flex-col sm:flex-row gap-3">
-          <button type="button" onClick={doLogout} className="rounded-xl border border-white/15 text-gray-800 text-sm font-semibold px-5 py-2.5 hover:bg-gray-100 transition">
+          <button type="button" onClick={doLogout} className="rounded-xl border border-gray-200 text-gray-800 text-sm font-semibold px-5 py-2.5 hover:bg-gray-100 transition">
             Logout
           </button>
-          <button type="button" onClick={requestDeletion} disabled={delBusy} className="rounded-xl border border-red-500/40 text-red-300 text-sm font-semibold px-5 py-2.5 hover:bg-red-500/10 disabled:opacity-50 transition">
+          <button type="button" onClick={requestDeletion} disabled={delBusy} className="rounded-xl border border-red-500/40 text-red-700 text-sm font-semibold px-5 py-2.5 hover:bg-red-50 disabled:opacity-50 transition">
             {delBusy ? 'Bhej rahe…' : 'Mera data delete karne ki request'}
           </button>
         </div>

@@ -23,8 +23,8 @@ function PoliciesBanner() {
     } catch {}
   };
   return (
-    <div className="card-premium p-5 mb-6 border-amber-500/30" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
-      <p className="text-amber-200 font-bold mb-2">📋 {pending.length} policy document{pending.length > 1 ? 's' : ''} pending — parh kar acknowledge karein</p>
+    <div className="card-premium p-5 mb-6 border-amber-200" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
+      <p className="text-amber-800 font-bold mb-2">📋 {pending.length} policy document{pending.length > 1 ? 's' : ''} pending — parh kar acknowledge karein</p>
       <div className="space-y-2">
         {pending.map((p) => (
           <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
@@ -90,7 +90,7 @@ function PortalBookingModal({ onClose, onDone }) {
     <Modal title="Book a Space" onClose={onClose}>
       <form onSubmit={submit}>
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
         )}
         <Field label="Space">
           <select className="input" value={unitId} onChange={(e) => setUnitId(e.target.value)} required>
@@ -157,7 +157,7 @@ function VisitorInviteModal({ onClose, onDone }) {
     <Modal title="Invite a Visitor" onClose={onClose}>
       {code ? (
         <div className="text-center py-4">
-          <p className="text-emerald-300 font-bold text-lg mb-2">✓ Invite created</p>
+          <p className="text-emerald-700 font-bold text-lg mb-2">✓ Invite created</p>
           <p className="text-gray-500 text-sm mb-3">Share this code with your visitor for fast check-in at reception:</p>
           <p className="text-3xl font-mono font-bold tracking-widest text-gray-900 bg-gray-100 border border-gray-200 rounded-xl py-4 mb-4">{code}</p>
           <button onClick={onDone} className="btn-primary">Done</button>
@@ -165,7 +165,7 @@ function VisitorInviteModal({ onClose, onDone }) {
       ) : (
         <form onSubmit={submit}>
           {error && (
-            <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
           )}
           <Field label="Visitor name">
             <input className="input" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} required placeholder="Guest name" />
@@ -247,7 +247,7 @@ function AnnouncementsFeed() {
                 className={`w-full text-left rounded-xl px-4 py-3 border transition ${
                   a.pinned
                     ? 'bg-teal-600/[0.08] border-teal-500/40 shadow-[0_0_20px_rgba(15,118,110,0.12)]'
-                    : 'bg-gray-50 border-gray-200 hover:border-white/15'
+                    : 'bg-gray-50 border-gray-200 hover:border-gray-200'
                 }`}
               >
                 <div className="flex items-center gap-2">
@@ -354,8 +354,8 @@ function DirectoryProfileSection() {
           </div>
         </>
       )}
-      {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
-      {saved && <p className="text-sm text-emerald-300 mb-3">Saved ✓</p>}
+      {error && <p className="text-sm text-red-700 mb-3">{error}</p>}
+      {saved && <p className="text-sm text-emerald-700 mb-3">Saved ✓</p>}
       <div className="flex items-center gap-3">
         <button onClick={save} disabled={saving} className="btn-primary text-sm">{saving ? 'Saving…' : 'Save'}</button>
         <a href="/portal/directory" className="text-sm text-teal-700 hover:text-teal-700 underline">View directory →</a>
@@ -425,7 +425,7 @@ function CalendarFeedSection() {
           </div>
           <div className="flex flex-wrap gap-2">
             <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-[#0f766e]/80 hover:bg-[#0f766e] rounded-lg px-3 py-1.5">Add to Google Calendar</a>
-            <a href={webcalUrl} className="text-xs text-gray-900 bg-gray-100 hover:bg-white/15 border border-gray-200 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
+            <a href={webcalUrl} className="text-xs text-gray-900 bg-gray-100 hover:bg-gray-100 border border-gray-200 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
             <button onClick={regenerate} disabled={regen} className="text-xs text-gray-500 hover:text-gray-800 underline">
               {regen ? '…' : 'Get new link'}
             </button>
@@ -457,7 +457,7 @@ function NextBookingCard({ booking, onCheckIn, checkingIn }) {
       <p className="text-gray-500 text-sm">🕙 {fmtDateTime(booking.startAt)} → {new Date(booking.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
       <div className="mt-4">
         {checkedIn ? (
-          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/40 rounded-lg px-4 py-2">
+          <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
             ✓ Checked in
           </span>
         ) : (
@@ -504,9 +504,9 @@ function InvoicesSection({ reloadKey }) {
               <div key={inv.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                 <div>
                   <p className="text-gray-900 font-medium text-sm">{inv.number || inv.id.slice(0, 8)}</p>
-                  <p className="text-gray-500 text-xs">Due {inv.dueDate ? fmtDate(inv.dueDate) : '—'} {overdue && <span className="text-red-300 font-bold">• overdue</span>}</p>
+                  <p className="text-gray-500 text-xs">Due {inv.dueDate ? fmtDate(inv.dueDate) : '—'} {overdue && <span className="text-red-700 font-bold">• overdue</span>}</p>
                 </div>
-                <p className={`font-bold ${overdue ? 'text-red-300' : 'text-amber-200'}`}>{fmtMoney(due)}</p>
+                <p className={`font-bold ${overdue ? 'text-red-700' : 'text-amber-700'}`}>{fmtMoney(due)}</p>
               </div>
             );
           })}
@@ -596,7 +596,7 @@ export default function PortalPage() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* HERO */}
-      <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-gradient-to-br from-[#1c1c30] via-[#151524] to-[#0e0e1a] border border-teal-500/20 shadow-[0_0_40px_rgba(15,118,110,0.15)]">
+      <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#0f766e]/20 blur-3xl" />
         <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-teal-600/20 blur-3xl" />
         <div className="relative">
@@ -622,10 +622,10 @@ export default function PortalPage() {
       {/* NEXT BOOKING + BALANCE */}
       <div className="grid md:grid-cols-2 gap-4 mb-6 mt-6">
         <NextBookingCard booking={nextBooking} onCheckIn={checkIn} checkingIn={checkingIn} />
-        <div className="card-premium p-5 flex flex-col justify-between">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <div>
-            <p className="text-xs font-semibold text-amber-200 uppercase tracking-wider mb-1">Balance due</p>
-            <p className={`text-3xl font-extrabold ${unpaidTotal > 0 ? 'text-amber-200' : 'text-emerald-300'}`}>
+            <p className="text-xs font-semibold text-amber-700 uppercase tracking-wider mb-1">Balance due</p>
+            <p className={`text-3xl font-extrabold ${unpaidTotal > 0 ? 'text-amber-700' : 'text-emerald-700'}`}>
               {fmtMoney(unpaidTotal)}
             </p>
             <p className="text-gray-500 text-xs mt-1">
@@ -669,7 +669,7 @@ export default function PortalPage() {
       {loyalty && Number(loyalty.balance || 0) > 0 && (
         <a href="/portal/loyalty" className="block card-premium p-4 mb-6 hover:border-teal-500/40 transition">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-gray-900">⭐ You have <span className="font-bold text-teal-300">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
+            <p className="text-sm text-gray-900">⭐ You have <span className="font-bold text-teal-700">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
             <span className="text-sm text-teal-700 underline shrink-0">View →</span>
           </div>
         </a>
@@ -690,14 +690,14 @@ export default function PortalPage() {
                 <div className="min-w-0">
                   <p className="text-gray-900 font-medium text-sm truncate">{b.title}</p>
                   <p className="text-gray-500 text-xs">{b.unit?.code} • {fmtDateTime(b.startAt)}</p>
-                  {b.status === 'checked_in' && <p className="text-emerald-300 text-xs font-bold mt-0.5">✓ Checked in</p>}
+                  {b.status === 'checked_in' && <p className="text-emerald-700 text-xs font-bold mt-0.5">✓ Checked in</p>}
                 </div>
                 <div className="flex gap-2 shrink-0">
                   {b.status !== 'checked_in' && (
                     <button
                       onClick={() => checkIn(b.id)}
                       disabled={checkingIn === b.id}
-                      className="text-xs text-emerald-200 hover:text-emerald-100 border border-emerald-500/30 rounded-lg px-3 py-1.5"
+                      className="text-xs text-emerald-700 hover:text-emerald-100 border border-emerald-200 rounded-lg px-3 py-1.5"
                     >
                       {checkingIn === b.id ? '…' : 'Check in'}
                     </button>
@@ -705,7 +705,7 @@ export default function PortalPage() {
                   <button
                     onClick={() => cancelBooking(b.id)}
                     disabled={cancelling === b.id}
-                    className="text-xs text-red-300 hover:text-red-200 border border-red-500/30 rounded-lg px-3 py-1.5"
+                    className="text-xs text-red-700 hover:text-red-800 border border-red-200 bg-red-50 rounded-lg px-3 py-1.5"
                   >
                     {cancelling === b.id ? '…' : 'Cancel'}
                   </button>

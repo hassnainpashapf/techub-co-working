@@ -84,8 +84,8 @@ export default function RoomDisplayPage({ params }) {
       <main className="flex-1 flex flex-col items-center justify-center px-8 py-10 text-center">
         <div className={`rounded-3xl px-12 py-4 text-2xl md:text-3xl font-extrabold tracking-widest uppercase border ${
           occupied
-            ? 'border-red-400/40 bg-red-500/15 text-red-300 shadow-[0_0_60px_-10px_rgba(248,113,113,0.5)]'
-            : 'border-emerald-400/40 bg-emerald-500/15 text-emerald-300 shadow-[0_0_60px_-10px_rgba(52,211,153,0.5)]'
+            ? 'border-red-400/40 bg-red-500/15 text-red-700 shadow-[0_0_60px_-10px_rgba(248,113,113,0.5)]'
+            : 'border-emerald-400/40 bg-emerald-500/15 text-emerald-700 shadow-[0_0_60px_-10px_rgba(52,211,153,0.5)]'
         }`}>
           {occupied ? '🔴 Occupied' : '🟢 Available'}
         </div>
@@ -134,7 +134,7 @@ export default function RoomDisplayPage({ params }) {
               const isPast = new Date(b.endAt) <= now;
               return (
                 <div key={b.id} className={`flex items-center gap-4 rounded-xl border px-4 py-3 ${
-                  isNow ? 'border-red-400/40 bg-red-500/10'
+                  isNow ? 'border-red-400/40 bg-red-50'
                   : isPast ? 'border-gray-200 bg-gray-50 opacity-50'
                   : 'border-gray-200 bg-gray-50'
                 }`}>
@@ -143,7 +143,7 @@ export default function RoomDisplayPage({ params }) {
                     <div className="font-semibold truncate">{b.title}</div>
                     {b.memberFirstName && <div className="text-xs text-gray-500">{b.memberFirstName}</div>}
                   </div>
-                  {isNow && <span className="text-xs font-bold text-red-300 uppercase tracking-wider">Now</span>}
+                  {isNow && <span className="text-xs font-bold text-red-700 uppercase tracking-wider">Now</span>}
                 </div>
               );
             })}

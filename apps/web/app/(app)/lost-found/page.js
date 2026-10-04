@@ -144,16 +144,16 @@ export default function LostFoundStaffPage() {
                 👤 {it.member?.name || 'Staff'}{it.member?.companyName ? ` • ${it.member.companyName}` : ''}
               </div>
               {it.status === 'claimed' && it.claimedBy && (
-                <div className="text-xs text-emerald-300 mb-1">✅ Claimed by: {it.claimedBy}</div>
+                <div className="text-xs text-emerald-700 mb-1">✅ Claimed by: {it.claimedBy}</div>
               )}
               <div className="text-[11px] text-slate-500 mb-3">{timeAgo(it.createdAt)}</div>
               <div className="mt-auto flex gap-2">
                 {it.status === 'open' && (
-                  <button onClick={() => openClaim(it)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/20 border border-emerald-500/40 text-emerald-200 hover:bg-emerald-600/30">
+                  <button onClick={() => openClaim(it)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-600/20 border border-emerald-500/40 text-emerald-700 hover:bg-emerald-600/30">
                     ✅ Claim karein
                   </button>
                 )}
-                <button onClick={() => remove(it)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-600/20 border border-red-500/40 text-red-200 hover:bg-red-600/30">
+                <button onClick={() => remove(it)} className="px-3 py-1.5 rounded-lg text-xs font-semibold bg-red-50 border border-red-200 text-red-700 hover:bg-red-100">
                   🗑️ Delete
                 </button>
               </div>

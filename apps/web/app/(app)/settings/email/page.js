@@ -53,7 +53,7 @@ export default function EmailSettingsPage() {
     <div className="max-w-2xl">
       <PageHeader title="Email Settings" subtitle="SMTP configuration for automatic notifications" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200">{msg}</div>}
+      {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
         <form onSubmit={save} className="card-premium p-6 space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">

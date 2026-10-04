@@ -63,7 +63,7 @@ export default function MemberBookings() {
               <div className="flex items-center gap-2">
                 <Badge tone={b.status === 'confirmed' ? 'green' : 'red'}>{b.status}</Badge>
                 {b.status === 'confirmed' && new Date(b.startAt) > new Date() && (
-                  <button className="text-xs text-red-300 hover:text-red-200" onClick={() => cancel(b.id)}>Cancel</button>
+                  <button className="text-xs text-red-700 hover:text-red-700" onClick={() => cancel(b.id)}>Cancel</button>
                 )}
               </div>
             </div>

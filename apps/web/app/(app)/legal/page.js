@@ -88,12 +88,12 @@ export default function LegalDashboardPage() {
         <AlertRow
           title="📁 Expiring Documents (30 din)"
           items={data?.expiringDocs}
-          renderItem={(d) => (<><span className="truncate">{d.title} <span className="text-xs text-slate-500">({d.category})</span></span><span className="text-xs text-amber-300 whitespace-nowrap">{fmtDate(d.expiresAt)}</span></>)}
+          renderItem={(d) => (<><span className="truncate">{d.title} <span className="text-xs text-slate-500">({d.category})</span></span><span className="text-xs text-amber-700 whitespace-nowrap">{fmtDate(d.expiresAt)}</span></>)}
         />
         <AlertRow
           title="🛡️ Expiring Insurance (60 din)"
           items={data?.expiringInsurance}
-          renderItem={(i) => (<><span className="truncate">{i.provider} <span className="text-xs text-slate-500">({i.policyNumber})</span></span><span className="text-xs text-amber-300 whitespace-nowrap">{fmtDate(i.endDate)}</span></>)}
+          renderItem={(i) => (<><span className="truncate">{i.provider} <span className="text-xs text-slate-500">({i.policyNumber})</span></span><span className="text-xs text-amber-700 whitespace-nowrap">{fmtDate(i.endDate)}</span></>)}
         />
       </div>
 
@@ -101,7 +101,7 @@ export default function LegalDashboardPage() {
         <h3 className="mb-3 text-sm font-semibold text-gray-600">Quick Links</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q) => (
-            <a key={q.path} href={q.path} className="block rounded-2xl border border-gray-200 bg-gray-50 p-4 transition hover:border-teal-500/30 hover:bg-gray-100">
+            <a key={q.path} href={q.path} className="block rounded-2xl border border-gray-200 bg-gray-50 p-4 transition hover:border-teal-200 hover:bg-gray-100">
               <div className="text-sm font-semibold">{q.label}</div>
               <div className="mt-1 text-xs text-gray-500">{q.desc}</div>
             </a>

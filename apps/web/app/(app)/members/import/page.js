@@ -130,7 +130,7 @@ export default function MemberImportPage() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
           onClick={() => fileRef.current?.click()}
           className={`card-premium p-10 text-center cursor-pointer border-2 border-dashed transition ${
-            dragOver ? 'border-[#0f766e] bg-[#0f766e]/10' : 'border-gray-200 hover:border-white/25'
+            dragOver ? 'border-[#0f766e] bg-[#0f766e]/10' : 'border-gray-200 hover:border-gray-300'
           }`}
         >
           <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden"
@@ -220,8 +220,8 @@ export default function MemberImportPage() {
                         {x.valid
                           ? <Badge tone="emerald">Valid</Badge>
                           : <Badge tone="red">Invalid</Badge>}
-                        {x.errors.map((e, i) => <p key={i} className="text-red-300 text-xs mt-1">⚠ {e}</p>)}
-                        {x.warnings.map((w, i) => <p key={i} className="text-amber-300 text-xs mt-1">⚠ {w}</p>)}
+                        {x.errors.map((e, i) => <p key={i} className="text-red-700 text-xs mt-1">⚠ {e}</p>)}
+                        {x.warnings.map((w, i) => <p key={i} className="text-amber-700 text-xs mt-1">⚠ {w}</p>)}
                       </td>
                     </tr>
                   ))}
@@ -262,9 +262,9 @@ export default function MemberImportPage() {
           </div>
           {result.errors?.length > 0 && (
             <div className="mb-4">
-              <p className="text-sm font-semibold text-red-300 mb-2">Errors</p>
+              <p className="text-sm font-semibold text-red-700 mb-2">Errors</p>
               {result.errors.slice(0, 50).map((e, i) => (
-                <p key={i} className="text-red-300 text-xs">Row {e.row}: {e.message}</p>
+                <p key={i} className="text-red-700 text-xs">Row {e.row}: {e.message}</p>
               ))}
             </div>
           )}

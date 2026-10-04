@@ -79,7 +79,7 @@ export default function CommsDashboardPage() {
       {error && <ErrorBanner message={error} />}
 
       {s.missing && s.missing.length > 0 && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           Kuch sections abhi pending hain: {s.missing.join(', ')}
         </div>
       )}
@@ -95,7 +95,7 @@ export default function CommsDashboardPage() {
           <h3 className="font-semibold mb-4">Channel Breakdown (30 din)</h3>
           <ChannelBars data={s.byChannel} />
           {s.failedCount > 0 && (
-            <div className="mt-4 text-sm text-red-300">⚠️ {s.failedCount} messages fail hue</div>
+            <div className="mt-4 text-sm text-red-700">⚠️ {s.failedCount} messages fail hue</div>
           )}
         </div>
 

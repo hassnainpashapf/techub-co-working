@@ -46,9 +46,9 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
   const paid = order.paymentStatus === 'paid' || order.paymentStatus === 'added_to_invoice';
   return (
     <div className={`rounded-2xl border p-5 shadow-lg transition ${
-      late ? 'border-red-500/60 bg-gradient-to-br from-red-950/60 to-[#15151f] shadow-red-900/30'
-           : order.status === 'preparing' ? 'border-amber-400/40 bg-gradient-to-br from-amber-950/40 to-[#15151f]'
-           : 'border-teal-500/30 bg-white'
+      late ? 'border-red-200 bg-red-50'
+           : order.status === 'preparing' ? 'border-amber-200 bg-amber-50'
+           : 'border-teal-200 bg-white'
     }`}>
       <div className="flex items-start justify-between gap-3">
         <div>
@@ -59,7 +59,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           )}
         </div>
         <div className="text-right">
-          <div className={`text-3xl font-extrabold tabular-nums ${late ? 'text-red-400' : 'text-gray-900'}`}>
+          <div className={`text-3xl font-extrabold tabular-nums ${late ? 'text-red-700' : 'text-gray-900'}`}>
             {fmtElapsed(order.elapsedMin)}
           </div>
           <div className="mt-1 flex gap-1 justify-end">
@@ -101,7 +101,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onPay(order)}
             disabled={busy}
-            className="rounded-xl border border-emerald-400/40 px-4 py-3 text-lg font-bold text-emerald-300 hover:bg-emerald-400/10 disabled:opacity-50"
+            className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-lg font-bold text-emerald-700 hover:bg-emerald-100 disabled:opacity-50"
           >
             💰 Pay
           </button>
@@ -110,7 +110,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onStart(order.id)}
             disabled={busy}
-            className="flex-1 rounded-xl bg-gradient-to-r from-[#0f766e] to-teal-700 px-4 py-3 text-lg font-bold text-gray-900 shadow-lg shadow-blue-900/40 hover:brightness-110 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-[#0f766e] px-4 py-3 text-lg font-bold text-white shadow-lg hover:bg-[#0d6b63] disabled:opacity-50"
           >
             {busy ? '…' : '▶ Start Cooking'}
           </button>
@@ -119,7 +119,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onReady(order.id)}
             disabled={busy}
-            className="flex-1 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 text-lg font-bold text-gray-900 shadow-lg shadow-emerald-900/40 hover:brightness-110 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-emerald-600 px-4 py-3 text-lg font-bold text-white shadow-lg hover:bg-emerald-700 disabled:opacity-50"
           >
             {busy ? '…' : '✅ Mark Ready'}
           </button>
@@ -222,14 +222,14 @@ export default function KitchenPage() {
           <div className="flex gap-2">
             <button
               onClick={() => setShowWaste(true)}
-              className="rounded-xl border border-amber-400/40 px-4 py-2 text-sm font-semibold text-amber-300 hover:bg-amber-400/10"
+              className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700 hover:bg-amber-100"
             >
               🗑 Log waste
             </button>
             <button
               onClick={() => setSoundOn((s) => !s)}
               className={`rounded-xl border px-4 py-2 text-sm font-semibold ${
-                soundOn ? 'border-emerald-400/40 text-emerald-300' : 'border-gray-300 text-gray-500'
+                soundOn ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-gray-300 text-gray-500'
               }`}
             >
               {soundOn ? '🔔 Sound ON' : '🔕 Sound OFF'}
@@ -288,7 +288,7 @@ export default function KitchenPage() {
             </div>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setPayOrder(null)} className="btn-ghost px-4 py-2 rounded-xl">Cancel</button>
-              <button onClick={doPay} disabled={busyId === payOrder.id} className="rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-6 py-2 font-bold text-gray-900 disabled:opacity-50">
+              <button onClick={doPay} disabled={busyId === payOrder.id} className="rounded-xl bg-emerald-600 px-6 py-2 font-bold text-white hover:bg-emerald-700 disabled:opacity-50">
                 {busyId === payOrder.id ? '…' : 'Confirm payment'}
               </button>
             </div>

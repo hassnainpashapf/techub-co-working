@@ -71,7 +71,7 @@ export default function MemberVisitors() {
                 <div className="font-semibold text-gray-900">{i.visitorName}</div>
                 <div className="text-xs text-gray-500">
                   {new Date(i.expectedAt).toLocaleString()} · {purposeLabel(i.purpose)} · Code{' '}
-                  <span className="font-mono font-bold text-teal-300 tracking-widest">{i.code}</span>
+                  <span className="font-mono font-bold text-teal-700 tracking-widest">{i.code}</span>
                 </div>
                 {i.notes && <div className="text-xs text-slate-500 mt-1">{i.notes}</div>}
               </div>

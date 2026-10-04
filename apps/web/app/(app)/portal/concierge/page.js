@@ -170,7 +170,7 @@ export default function PortalConciergePage() {
         actions={<button className="btn-primary" onClick={() => openForm(null)}>+ New Request</button>}
       />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      {msg && <p className="text-sm text-emerald-300 mb-3">{msg}</p>}
+      {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
@@ -178,11 +178,11 @@ export default function PortalConciergePage() {
           <p className="text-xs text-gray-500">Services</p>
         </div>
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-amber-300">{activeCount}</p>
+          <p className="text-2xl font-bold text-amber-700">{activeCount}</p>
           <p className="text-xs text-gray-500">Active Requests</p>
         </div>
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-emerald-300">{doneCount}</p>
+          <p className="text-2xl font-bold text-emerald-700">{doneCount}</p>
           <p className="text-xs text-gray-500">Completed</p>
         </div>
       </div>
@@ -265,13 +265,13 @@ export default function PortalConciergePage() {
                     <div className="flex flex-wrap gap-2">
                       <Link href={`/portal/concierge/${r.id}`} className="btn-secondary text-xs px-3 py-1.5">View & Chat</Link>
                       {r.status === 'new' && (
-                        <button className="btn-secondary text-xs px-3 py-1.5 text-red-300" onClick={() => cancelRequest(r)}>Cancel</button>
+                        <button className="btn-secondary text-xs px-3 py-1.5 text-red-700" onClick={() => cancelRequest(r)}>Cancel</button>
                       )}
                       {r.status === 'done' && !myRating && (
                         <button className="btn-secondary text-xs px-3 py-1.5" onClick={() => setRateId(r.id)}>★ Rate</button>
                       )}
                       {myRating && (
-                        <span className="text-xs text-amber-300 self-center">★ {myRating.rating}/5 rated</span>
+                        <span className="text-xs text-amber-700 self-center">★ {myRating.rating}/5 rated</span>
                       )}
                     </div>
                   </div>

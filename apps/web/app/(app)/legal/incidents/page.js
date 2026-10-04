@@ -185,7 +185,7 @@ export default function IncidentsPage() {
 
       {modal?.mode === 'add' && (
         <Modal title="Report Incident" onClose={() => setModal(null)}>
-          {msg && <p className="mb-3 text-xs text-rose-300">{msg}</p>}
+          {msg && <p className="mb-3 text-xs text-rose-700">{msg}</p>}
           <div className="grid gap-3">
             <Field label="Title"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Meeting room AC leak" className="w-full rounded-lg bg-white border border-gray-200 px-3 py-2 text-gray-900" /></Field>
             <div className="grid grid-cols-2 gap-3">
@@ -206,9 +206,9 @@ export default function IncidentsPage() {
                   ))}
                 </div>
               )}
-              {form.involvedMemberId && <p className="mt-1 text-xs text-emerald-300">✓ Member linked {memberQ && <button onClick={() => { setForm({ ...form, involvedMemberId: '' }); setMemberQ(''); }} className="underline">remove</button>}</p>}
+              {form.involvedMemberId && <p className="mt-1 text-xs text-emerald-700">✓ Member linked {memberQ && <button onClick={() => { setForm({ ...form, involvedMemberId: '' }); setMemberQ(''); }} className="underline">remove</button>}</p>}
             </Field>
-            {form.severity === 'critical' && <p className="text-xs text-amber-300">⚠️ Critical incident par CEO/Admin ko foran notification jayegi.</p>}
+            {form.severity === 'critical' && <p className="text-xs text-amber-700">⚠️ Critical incident par CEO/Admin ko foran notification jayegi.</p>}
             <button onClick={submitReport} disabled={saving || !form.title.trim() || form.description.trim().length < 10} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 disabled:opacity-50">{saving ? '…' : 'Submit Report'}</button>
           </div>
         </Modal>
@@ -216,7 +216,7 @@ export default function IncidentsPage() {
 
       {modal?.mode === 'detail' && modal.incident && (
         <Modal title={modal.incident.title} onClose={() => setModal(null)}>
-          {msg && <p className="mb-3 text-xs text-rose-300">{msg}</p>}
+          {msg && <p className="mb-3 text-xs text-rose-700">{msg}</p>}
           <div className="mb-4 flex flex-wrap gap-2">
             <Badge tone={toneOf(SEVERITIES, modal.incident.severity)}>{labelOf(SEVERITIES, modal.incident.severity)}</Badge>
             <Badge tone={toneOf(STATUSES, modal.incident.status)}>{labelOf(STATUSES, modal.incident.status)}</Badge>
@@ -230,7 +230,7 @@ export default function IncidentsPage() {
           </div>
           <p className="mt-4 whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-900">{modal.incident.description}</p>
           {modal.incident.resolution && (
-            <div className="mt-3"><div className="text-xs font-semibold text-emerald-300">Resolution</div><p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">{modal.incident.resolution}</p></div>
+            <div className="mt-3"><div className="text-xs font-semibold text-emerald-700">Resolution</div><p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">{modal.incident.resolution}</p></div>
           )}
           <div className="mt-4">
             <div className="text-xs font-semibold text-gray-500">Status workflow</div>
@@ -239,7 +239,7 @@ export default function IncidentsPage() {
                 <button key={s} onClick={() => changeStatus(s)} disabled={saving} className="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-semibold text-gray-900 hover:bg-gray-100 disabled:opacity-50">→ {labelOf(STATUSES, s)}</button>
               ))}
               {modal.incident.status === 'open' && (
-                <button onClick={remove} disabled={saving} className="rounded-lg border border-rose-500/30 px-3 py-1.5 text-xs font-semibold text-rose-300 disabled:opacity-50">Delete</button>
+                <button onClick={remove} disabled={saving} className="rounded-lg border border-rose-200 px-3 py-1.5 text-xs font-semibold text-rose-700 disabled:opacity-50">Delete</button>
               )}
             </div>
             {NEXT[modal.incident.status].includes('resolved') && (

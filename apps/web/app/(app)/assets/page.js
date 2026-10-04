@@ -189,7 +189,7 @@ export default function AssetsPage() {
               holder: oc ? (
                 <div className="text-sm">
                   <div className="text-gray-900">{oc.member?.name || oc.user?.name || '—'}</div>
-                  {oc.dueAt && <div className={od > 0 ? 'text-red-300 text-xs' : 'text-xs text-gray-500'}>Due {new Date(oc.dueAt).toLocaleDateString()}</div>}
+                  {oc.dueAt && <div className={od > 0 ? 'text-red-700 text-xs' : 'text-xs text-gray-500'}>Due {new Date(oc.dueAt).toLocaleDateString()}</div>}
                 </div>
               ) : <span className="text-slate-500">—</span>,
               location: a.location || '—',

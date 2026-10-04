@@ -215,12 +215,12 @@ export default function FormResponsesPage() {
                 </div>
               )}
               {fs.avg !== undefined && (
-                <p className="text-sm text-gray-600">Avg: <span className="font-bold text-amber-300">{fs.avg}</span>{fs.min !== undefined && fs.min !== null && <span className="text-slate-500"> (min {fs.min}, max {fs.max})</span>}</p>
+                <p className="text-sm text-gray-600">Avg: <span className="font-bold text-amber-700">{fs.avg}</span>{fs.min !== undefined && fs.min !== null && <span className="text-slate-500"> (min {fs.min}, max {fs.max})</span>}</p>
               )}
               {fs.distribution && (
                 <div className="flex gap-2 mt-1">
                   {Object.entries(fs.distribution).sort().map(([star, c]) => (
-                    <span key={star} className="text-xs bg-gray-100 px-2 py-1 rounded text-amber-300">★{star}: {c}</span>
+                    <span key={star} className="text-xs bg-gray-100 px-2 py-1 rounded text-amber-700">★{star}: {c}</span>
                   ))}
                 </div>
               )}
@@ -267,7 +267,7 @@ export default function FormResponsesPage() {
               <textarea value={dNotes} onChange={(e) => setDNotes(e.target.value)} rows={2} className="input-premium w-full" />
             </Field>
             <div className="flex justify-between gap-2">
-              <button onClick={() => deleteSub(detail.id)} className="btn-secondary text-red-300">🗑 Delete</button>
+              <button onClick={() => deleteSub(detail.id)} className="btn-secondary text-red-700">🗑 Delete</button>
               <div className="flex gap-2">
                 <button onClick={() => setDetail(null)} className="btn-secondary">Cancel</button>
                 <button onClick={saveDetail} className="btn-primary">💾 Save</button>

@@ -91,11 +91,11 @@ export default function EventAttendeesTab({ eventId, api }) {
 
       {/* No-shows */}
       {data.noShows.length > 0 && (
-        <div className="rounded-xl bg-red-900/20 border border-red-500/30 p-4">
-          <h3 className="text-red-300 font-semibold mb-3">No-show ({data.noShows.length})</h3>
+        <div className="rounded-xl bg-red-900/20 border border-red-200 p-4">
+          <h3 className="text-red-700 font-semibold mb-3">No-show ({data.noShows.length})</h3>
           <div className="max-h-48 overflow-y-auto space-y-1">
             {data.noShows.map((m) => (
-              <div key={m.id} className="text-sm text-red-200/80">{m.name}</div>
+              <div key={m.id} className="text-sm text-red-700/80">{m.name}</div>
             ))}
           </div>
         </div>

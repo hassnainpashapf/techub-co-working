@@ -22,7 +22,7 @@ function WebhookForm({ initial, events, onSave, saving }) {
       <Field label="Events">
         <div className="flex flex-wrap gap-2">
           {events.map((e) => (
-            <label key={e} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.events.includes(e) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            <label key={e} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.events.includes(e) ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.events.includes(e)} onChange={() => toggle(e)} />
               {e}
             </label>
@@ -66,7 +66,7 @@ function Deliveries({ webhookId }) {
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'success' ? 'green' : r.status === 'failed' ? 'red' : 'amber'}>{r.status}</Badge> },
     { key: 'code', label: 'HTTP', render: (r) => <span className="text-xs text-gray-500">{r.responseCode || '—'}</span> },
     { key: 'attempts', label: 'Attempts', render: (r) => <span className="text-xs text-gray-500">{r.attempts ?? 1}{r.status === 'failed' && (r.attempts ?? 1) > 1 ? ' (retrying)' : ''}</span> },
-    { key: 'error', label: 'Error', render: (r) => <span className="text-xs text-red-300 truncate max-w-[200px] block">{r.error || '—'}</span> },
+    { key: 'error', label: 'Error', render: (r) => <span className="text-xs text-red-700 truncate max-w-[200px] block">{r.error || '—'}</span> },
     { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-gray-500">{new Date(r.createdAt).toLocaleString()}</span> },
     {
       key: 'resend', label: '', render: (r) => r.status === 'failed' ? (
@@ -175,9 +175,9 @@ export default function WebhooksPage() {
         <div className="flex gap-2 flex-wrap">
           <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => setViewDeliveries(h)}>Logs</button>
           <button className="text-xs text-gray-600 hover:text-gray-900" onClick={() => sendTest(h)}>Test</button>
-          <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => regenSecret(h)}>Secret</button>
+          <button className="text-xs text-amber-700 hover:text-amber-700" onClick={() => regenSecret(h)}>Secret</button>
           <button className="text-xs text-gray-600 hover:text-gray-900" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>
-          <button className="text-xs text-red-300 hover:text-red-200" onClick={() => remove(h.id)}>Delete</button>
+          <button className="text-xs text-red-700 hover:text-red-700" onClick={() => remove(h.id)}>Delete</button>
         </div>
       ),
     },
@@ -211,7 +211,7 @@ export default function WebhooksPage() {
         <Modal title={secretModal.title} onClose={() => setSecretModal(null)}>
           <p className="text-sm text-gray-600 mb-3">
             Copy this secret now — it will never be shown again. Receivers verify the{' '}
-            <span className="font-mono text-xs text-teal-300">X-CoworkOS-Signature</span> header with it.
+            <span className="font-mono text-xs text-teal-700">X-CoworkOS-Signature</span> header with it.
           </p>
           <div className="flex gap-2">
             <input className="input font-mono text-xs" readOnly value={secretModal.secret} onFocus={(e) => e.target.select()} />

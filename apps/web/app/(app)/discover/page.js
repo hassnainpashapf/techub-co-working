@@ -141,7 +141,7 @@ function BookingModal({ unit, onClose, onDone }) {
     <Modal title={`Book ${unit.code}`} onClose={onClose}>
       <form onSubmit={submit}>
         {error && (
-          <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
         )}
         <Field label="Title">
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={`Booking — ${unit.code}`} />
@@ -264,10 +264,10 @@ function MapView({ units, onBook }) {
         }}
       />
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-0 right-0 h-[3px] bg-blue-500/10 rotate-[8deg]" />
-        <div className="absolute top-2/3 left-0 right-0 h-[2px] bg-blue-500/10 -rotate-[12deg]" />
-        <div className="absolute left-1/3 top-0 bottom-0 w-[3px] bg-blue-500/10 rotate-[4deg]" />
-        <div className="absolute left-2/3 top-0 bottom-0 w-[2px] bg-blue-500/10 -rotate-[6deg]" />
+        <div className="absolute top-1/4 left-0 right-0 h-[3px] bg-blue-50 rotate-[8deg]" />
+        <div className="absolute top-2/3 left-0 right-0 h-[2px] bg-blue-50 -rotate-[12deg]" />
+        <div className="absolute left-1/3 top-0 bottom-0 w-[3px] bg-blue-50 rotate-[4deg]" />
+        <div className="absolute left-2/3 top-0 bottom-0 w-[2px] bg-blue-50 -rotate-[6deg]" />
       </div>
 
       {units.map((u, i) => {
@@ -283,7 +283,7 @@ function MapView({ units, onBook }) {
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
             </span>
             {isSel && (
-              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white border border-blue-500/30 rounded-xl px-4 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 animate-fadeUp">
+              <span className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 whitespace-nowrap bg-white border border-blue-200 rounded-xl px-4 py-2.5 shadow-[0_8px_32px_rgba(0,0,0,0.5)] z-10 animate-fadeUp">
                 <span className="block text-gray-900 text-[13px] font-semibold">{u.code}</span>
                 <span className="block text-gray-900 text-[12px] mt-0.5">{money(u.monthlyPrice)}/mo · {u.isAvailable ? 'Available' : 'Booked'}</span>
                 {u.isAvailable && (
@@ -424,7 +424,7 @@ export default function DiscoverPage() {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search workspace"
-              className="w-full bg-gray-50 border border-white/[0.1] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-gray-900 placeholder-gray-400 outline-none focus:border-[#0f766e]/60 focus:shadow-[0_0_16px_rgba(15,118,110,0.2)] transition-all"
+              className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-gray-900 placeholder-gray-400 outline-none focus:border-[#0f766e]/60 focus:shadow-[0_0_16px_rgba(15,118,110,0.2)] transition-all"
             />
           </div>
 

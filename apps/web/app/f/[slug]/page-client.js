@@ -164,7 +164,7 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
               {files.map((f, i) => (
                 <li key={i} className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-600">
                   <span>📄 {f.name}</span>
-                  <button type="button" className="text-red-400 hover:text-red-300" onClick={() => onChange(files.filter((_, j) => j !== i))}>✕</button>
+                  <button type="button" className="text-red-400 hover:text-red-700" onClick={() => onChange(files.filter((_, j) => j !== i))}>✕</button>
                 </li>
               ))}
             </ul>
@@ -308,7 +308,7 @@ export default function PublicFormPage() {
                 </div>
               );
             })}
-            {submitError && <p className="rounded-xl bg-red-500/10 border border-red-400/30 px-4 py-3 text-sm text-red-300">{submitError}</p>}
+            {submitError && <p className="rounded-xl bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">{submitError}</p>}
             <button type="submit" disabled={submitting}
               className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-[#0f766e] px-6 py-3.5 font-semibold text-gray-900 shadow-lg shadow-indigo-500/25 hover:from-indigo-500 hover:to-[#0f766e] disabled:opacity-50 transition">
               {submitting ? '⏳ Bhej rahe hain…' : (form.submitButtonText || 'Submit')}

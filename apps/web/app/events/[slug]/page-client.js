@@ -74,12 +74,12 @@ export default function PublicEventPage() {
         {event.imageUrl ? (
           <img src={event.imageUrl} alt={event.title} className="w-full h-full object-cover" />
         ) : (
-          <div className="w-full h-full bg-gradient-to-br from-violet-900 via-[#12121f] to-indigo-900" />
+          <div className="w-full h-full bg-gradient-to-br from-teal-100 via-teal-50 to-white" />
         )}
         <div className="absolute inset-0 bg-gradient-to-t from-[#0b0b14] via-[#0b0b14]/40 to-transparent" />
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-6 max-w-3xl mx-auto">
-          <p className="text-teal-300 text-sm font-medium mb-1">{tenantName}</p>
-          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight">{event.title}</h1>
+          <p className="text-teal-700 text-sm font-medium mb-1 drop-shadow-[0_1px_2px_rgba(255,255,255,0.8)]">{tenantName}</p>
+          <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">{event.title}</h1>
         </div>
       </div>
 
@@ -142,7 +142,7 @@ export default function PublicEventPage() {
                       <p className="font-semibold text-sm">{s.title}</p>
                       <p className="text-xs text-gray-500 whitespace-nowrap">{fmt(s.startTime)} – {fmt(s.endTime)}</p>
                     </div>
-                    {s.speaker && <p className="text-xs text-teal-300 mt-1">🎤 {s.speaker.name}{s.speaker.title ? ` — ${s.speaker.title}` : ''}</p>}
+                    {s.speaker && <p className="text-xs text-teal-700 mt-1">🎤 {s.speaker.name}{s.speaker.title ? ` — ${s.speaker.title}` : ''}</p>}
                     {s.location && <p className="text-xs text-gray-500 mt-1">📍 {s.location}</p>}
                   </div>
                 ))}
@@ -175,7 +175,7 @@ export default function PublicEventPage() {
                   {sp.logoUrl && <img src={sp.logoUrl} alt={sp.name} className="h-8 object-contain" />}
                   <div>
                     <p className="text-sm font-semibold">{sp.name}</p>
-                    <p className="text-xs text-amber-300 capitalize">{sp.tier}</p>
+                    <p className="text-xs text-amber-700 capitalize">{sp.tier}</p>
                   </div>
                 </div>
               ))}
@@ -192,7 +192,7 @@ export default function PublicEventPage() {
               window.open(event.externalUrl, '_blank');
             }
           }}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-teal-700 to-indigo-600 font-bold text-lg hover:from-teal-600 hover:to-indigo-500 transition shadow-lg shadow-violet-900/40"
+          className="w-full py-4 rounded-2xl bg-[#0f766e] font-bold text-lg text-white hover:bg-[#0d6b63] transition shadow-lg"
         >
           🎟️ Get tickets
         </button>

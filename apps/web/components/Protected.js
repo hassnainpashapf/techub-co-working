@@ -32,8 +32,10 @@ export function useRequireRoles(...roles) {
     if (typeof window !== 'undefined') window.location = '/login';
     return { allowed: null, user: null };
   }
+  // Accept both spread args and a single array: useRequireRoles('a','b') or useRequireRoles(['a','b'])
+  const flat = roles.flat();
   // super_admin bypasses all role checks — full access to everything
-  const allowed = user.role === 'super_admin' || roles.length === 0 || roles.includes(user.role);
+  const allowed = user.role === 'super_admin' || flat.length === 0 || flat.includes(user.role);
   return { allowed, user };
 }
 

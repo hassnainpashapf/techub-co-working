@@ -57,7 +57,7 @@ export default function PortalBadgesPage() {
         ) : (
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
             {mine.map((b) => (
-              <div key={b.id} className="rounded-xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 to-transparent p-4 text-center">
+              <div key={b.id} className="rounded-xl border border-amber-200 bg-gradient-to-br from-amber-500/10 to-transparent p-4 text-center">
                 <div className="text-4xl mb-2">{b.icon || '🏅'}</div>
                 <div className="text-gray-900 font-medium text-sm">{b.name}</div>
                 <div className="text-xs text-gray-500 mt-1">{fmtDate(b.awardedAt)}</div>
@@ -74,7 +74,7 @@ export default function PortalBadgesPage() {
           {catalog.map((b) => (
             <div
               key={b.id}
-              className={`rounded-xl border p-4 ${b.earned ? 'border-amber-400/30 bg-amber-500/5' : 'border-gray-200/50 bg-gray-100/40 opacity-70'}`}
+              className={`rounded-xl border p-4 ${b.earned ? 'border-amber-200 bg-amber-500/5' : 'border-gray-200/50 bg-gray-100/40 opacity-70'}`}
             >
               <div className="flex items-start gap-3">
                 <div className={`text-3xl ${b.earned ? '' : 'grayscale'}`}>{b.icon || '🏅'}</div>
@@ -83,7 +83,7 @@ export default function PortalBadgesPage() {
                   <div className="text-xs text-gray-500 mt-0.5">{b.description}</div>
                   <div className="text-xs mt-2">
                     {b.earned
-                      ? <span className="text-amber-300">✅ Mil gaya</span>
+                      ? <span className="text-amber-700">✅ Mil gaya</span>
                       : <span className="text-slate-500">{b.earnedCount} members ne liya</span>}
                   </div>
                 </div>
@@ -110,7 +110,7 @@ export default function PortalBadgesPage() {
                   {r.companyName && <div className="text-xs text-slate-500">{r.companyName}</div>}
                 </div>
                 <div className="text-lg">{r.latest.map((b) => b.icon).join(' ')}</div>
-                <div className="text-amber-300 text-sm font-semibold">{r.badgeCount} badges</div>
+                <div className="text-amber-700 text-sm font-semibold">{r.badgeCount} badges</div>
               </div>
             ))}
           </div>

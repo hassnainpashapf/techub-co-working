@@ -124,9 +124,9 @@ export default function PettyCashPage() {
             type: <Badge tone={it.type === 'in' ? 'green' : 'red'}>{it.type === 'in' ? '+ In' : '− Out'}</Badge>,
             reason: it.reason,
             category: it.category || '—',
-            amount: <span className={it.type === 'in' ? 'text-emerald-300' : 'text-red-300'}>Rs {Number(it.amount).toLocaleString()}</span>,
+            amount: <span className={it.type === 'in' ? 'text-emerald-700' : 'text-red-700'}>Rs {Number(it.amount).toLocaleString()}</span>,
             performer: it.performer?.name || '—',
-            actions: <button className="text-xs text-red-400 hover:text-red-300" onClick={() => remove(it.id)}>Delete</button>,
+            actions: <button className="text-xs text-red-400 hover:text-red-700" onClick={() => remove(it.id)}>Delete</button>,
           }))}
         />
       )}

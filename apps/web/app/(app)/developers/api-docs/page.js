@@ -29,9 +29,9 @@ function CodeBlock({ title, code }) {
     <div className="rounded-xl border border-gray-200 bg-black/40 overflow-hidden">
       <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">
         <span className="text-xs font-semibold text-gray-600">{title}</span>
-        <button onClick={copy} className="text-xs text-teal-300 hover:text-violet-200">{copied ? '✓ Copied' : 'Copy'}</button>
+        <button onClick={copy} className="text-xs text-teal-700 hover:text-violet-700">{copied ? '✓ Copied' : 'Copy'}</button>
       </div>
-      <pre className="p-4 text-xs font-mono text-emerald-200/90 overflow-x-auto whitespace-pre">{code}</pre>
+      <pre className="p-4 text-xs font-mono text-emerald-700/90 overflow-x-auto whitespace-pre">{code}</pre>
     </div>
   );
 }
@@ -39,7 +39,7 @@ function CodeBlock({ title, code }) {
 function Step({ n, title, children }) {
   return (
     <div className="flex gap-4">
-      <div className="shrink-0 w-8 h-8 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-sm font-bold text-violet-200">{n}</div>
+      <div className="shrink-0 w-8 h-8 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-sm font-bold text-violet-700">{n}</div>
       <div className="flex-1">
         <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
         <div className="text-sm text-gray-600 space-y-3">{children}</div>
@@ -84,7 +84,7 @@ export default function ApiDocsPage() {
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 flex flex-wrap items-center gap-3">
             <span className="text-sm text-gray-600">Swagger UI isi page me embedded hai. Nayi tab me kholna ho to:</span>
             <a href={docsUrl} target="_blank" rel="noreferrer" className="btn-primary text-sm">Open in new tab ↗</a>
-            <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-sm text-teal-300 hover:text-violet-200 underline">openapi.json</a>
+            <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-sm text-teal-700 hover:text-violet-700 underline">openapi.json</a>
           </div>
           <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
             <iframe src={docsUrl} title="CoworkOS API Docs" className="w-full bg-white" style={{ height: '75vh' }} />
@@ -97,7 +97,7 @@ export default function ApiDocsPage() {
         <div className="space-y-8 card-premium p-6">
           <div className="space-y-6">
             <Step n="1" title="API key banao">
-              <p><span className="text-gray-900 font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-300 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-200">cwk_...</code> hota hai.</p>
+              <p><span className="text-gray-900 font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-700 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-700">cwk_...</code> hota hai.</p>
               <p className="text-gray-500">Har request me ye header bhejo:</p>
               <CodeBlock title="Auth header" code={`X-API-Key: cwk_YOUR_KEY`} />
             </Step>
@@ -107,7 +107,7 @@ export default function ApiDocsPage() {
             </Step>
 
             <Step n="3" title="Booking banao">
-              <p>Credit limit cross ho to <code className="font-mono text-red-300">402</code>, slot overlap par <code className="font-mono text-red-300">409</code>, rule violation par <code className="font-mono text-red-300">422</code> milta hai.</p>
+              <p>Credit limit cross ho to <code className="font-mono text-red-700">402</code>, slot overlap par <code className="font-mono text-red-700">409</code>, rule violation par <code className="font-mono text-red-700">422</code> milta hai.</p>
               <CodeBlock title="bash" code={CURL_BOOKING} />
             </Step>
 
@@ -122,8 +122,8 @@ export default function ApiDocsPage() {
             <ul className="text-sm text-gray-600 space-y-2 list-disc pl-5">
               <li>Sab tenant-scoped endpoints JWT/API key ke tenant par auto-filter hote hain.</li>
               <li>Rate limits: auth endpoints par strict limits hain (login 5/min, password reset 5/hour).</li>
-              <li>Webhook receivers ke liye <code className="font-mono text-violet-200">X-CoworkOS-Signature</code> HMAC header verify karo (docs me Webhooks section).</li>
-              <li>Poori endpoint list: <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-teal-300 underline">openapi.json</a> ya <a href={`${docsUrl}/index`} target="_blank" rel="noreferrer" className="text-teal-300 underline">/api/docs/index</a>.</li>
+              <li>Webhook receivers ke liye <code className="font-mono text-violet-700">X-CoworkOS-Signature</code> HMAC header verify karo (docs me Webhooks section).</li>
+              <li>Poori endpoint list: <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-teal-700 underline">openapi.json</a> ya <a href={`${docsUrl}/index`} target="_blank" rel="noreferrer" className="text-teal-700 underline">/api/docs/index</a>.</li>
             </ul>
           </div>
         </div>

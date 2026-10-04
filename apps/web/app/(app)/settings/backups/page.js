@@ -82,7 +82,7 @@ export default function BackupsPage() {
         actions={<button onClick={runNow} disabled={running} className="btn-primary">{running ? 'Ban raha hai…' : '⬇ Run Backup Now'}</button>}
       />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 px-4 py-3 text-sm text-emerald-200">{msg}</div>}
+      {msg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">{msg}</div>}
 
       <div className="grid gap-4 sm:grid-cols-3">
         <StatCard label="Total Backups" value={backups.length} />
@@ -104,14 +104,14 @@ export default function BackupsPage() {
                 {backups.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">Koi backup nahi — "Run Backup Now" dabayein.</td></tr>}
                 {backups.map((b) => (
                   <tr key={b.id} className="border-b border-gray-200 hover:bg-gray-100">
-                    <td className="px-4 py-3 font-mono text-xs">{b.fileName}{!b.exists && <span className="ml-2 text-amber-300">(file missing)</span>}</td>
+                    <td className="px-4 py-3 font-mono text-xs">{b.fileName}{!b.exists && <span className="ml-2 text-amber-700">(file missing)</span>}</td>
                     <td className="px-4 py-3">{fmtSize(b.sizeBytes)}</td>
                     <td className="px-4 py-3 text-gray-600">{new Date(b.createdAt).toLocaleString()}</td>
                     <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate">{b.note || '—'}</td>
                     <td className="px-4 py-3 text-right space-x-2 whitespace-nowrap">
                       <button onClick={() => download(b)} className="btn-ghost btn-sm">⬇</button>
                       <button onClick={() => dryRun(b)} className="btn-ghost btn-sm" title="Restore (dry-run check)">♻</button>
-                      <button onClick={() => del(b)} className="btn-ghost btn-sm text-red-300">🗑</button>
+                      <button onClick={() => del(b)} className="btn-ghost btn-sm text-red-700">🗑</button>
                     </td>
                   </tr>
                 ))}
@@ -124,7 +124,7 @@ export default function BackupsPage() {
       {restoreId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 p-4">
           <div className="card max-w-md w-full p-6 space-y-4">
-            <h3 className="font-semibold text-lg text-amber-200">⚠ Database Restore</h3>
+            <h3 className="font-semibold text-lg text-amber-700">⚠ Database Restore</h3>
             {!restoreDry && <div className="flex justify-center py-4"><Spinner /></div>}
             {restoreDry && (
               <>

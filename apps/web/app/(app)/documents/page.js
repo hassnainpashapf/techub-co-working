@@ -16,7 +16,7 @@ function DocForm({ members, onSave, saving }) {
     <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, memberId: f.memberId || null, file }); }}>
       <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="e.g. Membership Agreement (optional if file chosen)" /></Field>
       <Field label="File *">
-        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-200 file:text-xs"
+        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-700 file:text-xs"
           onChange={(e) => setFile(e.target.files?.[0] || null)} required
           accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.csv" />
         <p className="text-[11px] text-slate-500 mt-1">PDF, images, Word/Excel, TXT, CSV — max 25MB</p>
@@ -114,7 +114,7 @@ export default function DocumentsPage() {
       key: 'action', label: '', render: (d) => (
         <div className="flex gap-2">
           {d.fileName && <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => downloadDoc(d)}>Download</button>}
-          <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button>
+          <button className="text-xs text-red-700 hover:text-red-700" onClick={() => delDoc(d.id)}>Delete</button>
         </div>
       ),
     },
@@ -145,7 +145,7 @@ export default function DocumentsPage() {
       <div className="flex gap-2 mb-4">
         {[['docs', `Documents (${docs.length})`], ['credits', `Credit Notes (${cns.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}

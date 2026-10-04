@@ -139,7 +139,7 @@ export default function HousekeepingPage() {
                 disabled={t.status !== 'pending' || completing === t.id}
                 className={`shrink-0 w-9 h-9 rounded-full border-2 flex items-center justify-center text-lg transition
                   ${t.status === 'done' ? 'bg-emerald-500 border-emerald-500 text-gray-900'
-                    : isOverdue(t) ? 'border-red-500 text-red-400 hover:bg-red-500/10'
+                    : isOverdue(t) ? 'border-red-500 text-red-400 hover:bg-red-50'
                     : 'border-gray-300 text-transparent hover:border-emerald-400'}`}>
                 ✓
               </button>

@@ -357,7 +357,7 @@ export default function BillingPage() {
     const c = memberCredit[memberId];
     if (!c || c.limit == null || c.balance <= c.limit) return null;
     return (
-      <span className="ml-1.5 text-[10px] font-bold text-red-200 bg-red-500/25 border border-red-500/40 px-1.5 py-0.5 rounded-full align-middle">
+      <span className="ml-1.5 text-[10px] font-bold text-red-700 bg-red-500/25 border border-red-500/40 px-1.5 py-0.5 rounded-full align-middle">
         LIMIT
       </span>
     );

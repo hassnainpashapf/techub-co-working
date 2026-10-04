@@ -174,7 +174,7 @@ export default function CafeMenuPage() {
                     <button
                       onClick={() => toggleAvail(it)}
                       title={it.isAvailable ? 'Unavailable karein' : 'Available karein'}
-                      className={`text-xs px-2.5 py-1 rounded-full ${it.isAvailable ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-500/20 text-gray-500'}`}
+                      className={`text-xs px-2.5 py-1 rounded-full ${it.isAvailable ? 'bg-emerald-500/20 text-emerald-700' : 'bg-slate-500/20 text-gray-500'}`}
                     >{it.isAvailable ? '● Available' : '○ Off'}</button>
                   </div>
                   {it.description && <p className="text-sm text-gray-500 line-clamp-2">{it.description}</p>}

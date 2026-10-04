@@ -108,8 +108,8 @@ export default function TicketScanPage() {
         </label>
 
         {res && (
-          <div className={`rounded-xl border p-4 ${tone === 'green' ? 'border-emerald-500/40 bg-emerald-500/10' : 'border-red-500/40 bg-red-500/10'}`}>
-            <div className={`text-lg font-bold ${tone === 'green' ? 'text-emerald-300' : 'text-red-300'}`}>
+          <div className={`rounded-xl border p-4 ${tone === 'green' ? 'border-emerald-500/40 bg-emerald-50' : 'border-red-500/40 bg-red-50'}`}>
+            <div className={`text-lg font-bold ${tone === 'green' ? 'text-emerald-700' : 'text-red-700'}`}>
               {res.valid ? '✅ Entry allowed' : '⛔ ' + (res.message || 'Invalid')}
             </div>
             {res.ticket && (

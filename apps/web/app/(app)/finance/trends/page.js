@@ -4,51 +4,10 @@ import { useEffect, useMemo, useState } from 'react';
 import { api } from '../../../../lib/api';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
 import { useRequireRoles } from '../../../../components/Protected';
+import { HDMultiLineChart } from '../../../../components/charts';
 
 const COLORS = ['#0f766e', '#10b981', '#f59e0b', '#ef4444', '#2dd4bf'];
 const fmt = (v) => `Rs ${Number(v || 0).toLocaleString()}`;
-
-// Multi-line SVG chart (top categories)
-function TrendChart({ data }) {
-  const H = 220;
-  const { months, monthLabels, matrix, top } = data;
-  const max = Math.max(1, ...top.flatMap((c) => matrix[c]));
-  const n = months.length;
-  const px = (i) => (n === 1 ? 50 : 8 + (i / (n - 1)) * 84);
-  const py = (v) => H - 30 - (v / max) * (H - 55);
-  return (
-    <div className="relative" style={{ height: H }}>
-      <svg viewBox={`0 0 100 ${H}`} className="w-full h-full" preserveAspectRatio="none">
-        <defs>
-          <filter id="trendGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="0.8" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
-        </defs>
-        {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={H * f} x2="100" y2={H * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.25" />
-        ))}
-        {top.map((cat, ci) => (
-          <g key={cat}>
-            <polyline
-              points={months.map((_, i) => `${px(i)},${py(matrix[cat][i])}`).join(' ')}
-              fill="none" stroke={COLORS[ci % COLORS.length]} strokeWidth="0.9"
-              filter="url(#trendGlow)" vectorEffect="non-scaling-stroke"
-            />
-            {months.map((_, i) => (
-              <circle key={i} cx={px(i)} cy={py(matrix[cat][i])} r="1.1" fill={COLORS[ci % COLORS.length]} />
-            ))}
-          </g>
-        ))}
-        {months.map((_, i) => (
-          <text key={i} x={px(i)} y={H - 8} textAnchor="middle" fill="rgba(0,0,0,0.5)" fontSize="3" fontWeight="600">
-            {monthLabels[i]}
-          </text>
-        ))}
-      </svg>
-    </div>
-  );
-}
 
 function TrendArrow({ pct }) {
   if (pct === null || pct === undefined) return <span className="text-gray-500 text-xs">—</span>;
@@ -124,7 +83,7 @@ export default function ExpenseTrendsPage() {
                 ))}
               </div>
             </div>
-            <TrendChart data={{ ...data, top: top5 }} />
+            <HDMultiLineChart labels={data.monthLabels} series={top5.map((cat, ci) => ({ name: cat, values: data.matrix[cat], color: COLORS[ci % COLORS.length] }))} height={220} />
           </div>
 
           {data.anomalies.length > 0 && (

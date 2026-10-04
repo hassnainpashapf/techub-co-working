@@ -208,7 +208,7 @@ export default function RemindersPage() {
       />
 
       {error && <ErrorBanner message={error} />}
-      {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">{notice}</div>}
+      {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{notice}</div>}
 
       {rules.length === 0 ? (
         <EmptyState title="No reminder rules yet" hint="Create your first rule — e.g. remind members 3 days before an invoice is due." />
@@ -236,7 +236,7 @@ export default function RemindersPage() {
                   {testing === r.id ? '…' : 'Test'}
                 </button>
                 <button onClick={() => setModal(r)} className="text-xs text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg px-3 py-1.5">Edit</button>
-                <button onClick={() => del(r)} className="text-xs text-red-300 hover:text-red-200 border border-red-500/30 rounded-lg px-3 py-1.5">Delete</button>
+                <button onClick={() => del(r)} className="text-xs text-red-700 hover:text-red-700 border border-red-200 rounded-lg px-3 py-1.5">Delete</button>
               </div>
             </div>
           ))}

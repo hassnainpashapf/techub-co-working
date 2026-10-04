@@ -365,7 +365,7 @@ function StaffDashboard() {
             <button
               key={v}
               onClick={() => setRange(v)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium border ${range === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}
+              className={`px-3 py-1 rounded-lg text-xs font-medium border ${range === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}
             >{l}</button>
           ))}
         </div>

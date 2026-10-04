@@ -52,7 +52,7 @@ export default function MemberInvoices() {
                 <div className="flex items-center justify-between">
                   <div>
                     <span className="text-lg font-bold text-gray-900">{money(inv.amount)}</span>
-                    {balance > 0 && <span className="text-sm text-red-300 ml-2">({money(balance)} due)</span>}
+                    {balance > 0 && <span className="text-sm text-red-700 ml-2">({money(balance)} due)</span>}
                   </div>
                   <button className="btn-secondary text-xs px-3 py-1.5" onClick={() => downloadPdf(inv)}>⬇ PDF</button>
                 </div>

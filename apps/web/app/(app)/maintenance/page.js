@@ -114,14 +114,14 @@ export default function MaintenancePage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       <div className="grid grid-cols-3 gap-4 mb-5">
-        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-300">{stats.pending}</div><div className="text-xs text-gray-500">Pending</div></div>
+        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-700">{stats.pending}</div><div className="text-xs text-gray-500">Pending</div></div>
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-teal-700">{stats.inProgress}</div><div className="text-xs text-gray-500">In Progress</div></div>
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-gray-900">{money(stats.totalCost)}</div><div className="text-xs text-gray-500">Completed cost</div></div>
       </div>
       <div className="flex gap-2 mb-4">
         {[{ v: '', l: 'All' }, ...STATUSES].map((s) => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {s.l}
           </button>
         ))}

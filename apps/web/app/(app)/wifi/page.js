@@ -6,10 +6,10 @@ import { PageHeader, Spinner, ErrorBanner, StatCard, DataTable } from '../../../
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 
 const STATUS_COLORS = {
-  active: 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30',
+  active: 'bg-emerald-500/15 text-emerald-700 border-emerald-200',
   used: 'bg-slate-500/15 text-gray-600 border-slate-400/30',
-  expired: 'bg-amber-500/15 text-amber-300 border-amber-400/30',
-  revoked: 'bg-red-500/15 text-red-300 border-red-400/30',
+  expired: 'bg-amber-500/15 text-amber-700 border-amber-200',
+  revoked: 'bg-red-500/15 text-red-700 border-red-200',
 };
 
 function copy(text) {
@@ -107,7 +107,7 @@ export default function WifiPage() {
             onClick={() => setStatusFilter(s)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
               statusFilter === s
-                ? 'bg-teal-600/20 border-teal-500/40 text-violet-200'
+                ? 'bg-teal-600/20 border-teal-500/40 text-violet-700'
                 : 'bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-900'
             }`}
           >
@@ -125,7 +125,7 @@ export default function WifiPage() {
       </div>
 
       {copied === 'codes' && (
-        <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200 mb-4">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-4">
           ✅ New codes generated and copied to clipboard!
         </div>
       )}
@@ -138,7 +138,7 @@ export default function WifiPage() {
             <span key="c" className="flex items-center gap-2">
               <code className="font-mono font-bold text-lg tracking-[0.2em] text-gray-900 bg-gray-100 px-3 py-1 rounded-lg border border-gray-200">{v.code}</code>
               <button
-                className="text-xs text-teal-300 hover:text-violet-100"
+                className="text-xs text-teal-700 hover:text-violet-100"
                 onClick={() => { copy(v.code); setCopied(v.id); setTimeout(() => setCopied(''), 1500); }}
               >{copied === v.id ? '✅ Copied' : '📋 Copy'}</button>
             </span>,
@@ -150,7 +150,7 @@ export default function WifiPage() {
               {v.status.toUpperCase()}
             </span>,
             v.status === 'active' ? (
-              <button key="r" className="text-xs text-red-300 hover:text-red-100" onClick={() => revoke(v.id)}>Revoke</button>
+              <button key="r" className="text-xs text-red-700 hover:text-red-100" onClick={() => revoke(v.id)}>Revoke</button>
             ) : <span key="r" className="text-gray-500 text-xs">—</span>,
           ])}
         />

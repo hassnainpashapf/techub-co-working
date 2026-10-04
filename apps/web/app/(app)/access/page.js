@@ -24,7 +24,7 @@ function LiveFeed({ events }) {
     <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
       {events.map((e) => (
         <div key={e.id} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
-          <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-sm ${e.result === 'granted' ? 'bg-green-500/15 text-green-300' : 'bg-red-500/15 text-red-300'}`}>
+          <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-sm ${e.result === 'granted' ? 'bg-green-500/15 text-green-300' : 'bg-red-500/15 text-red-700'}`}>
             {e.direction === 'in' ? '→' : '←'}
           </span>
           <div className="flex-1 min-w-0">
@@ -82,7 +82,7 @@ export default function AccessDashboardPage() {
       {error && <ErrorBanner message={error} />}
 
       {s.missing && s.missing.length > 0 && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           Access module ke kuch models abhi merge nahi hue ({s.missing.join(', ')}). Wo sections khali dikhen ge.
         </div>
       )}

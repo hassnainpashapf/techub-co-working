@@ -117,13 +117,13 @@ export default function EmailTemplatesPage() {
   return (
     <div>
       <PageHeader title="Email Templates" sub="Customize the emails your workspace sends. Use {{variables}} — they are filled in automatically." />
-      <div className="mb-4 rounded-xl bg-teal-600/10 border border-teal-500/30 px-4 py-3 text-sm text-violet-200">
+      <div className="mb-4 rounded-xl bg-teal-600/10 border border-teal-200 px-4 py-3 text-sm text-violet-700">
         ⚙️ Want these emails sent automatically? Set up{' '}
         <Link href="/settings/lifecycle" className="underline font-semibold">Lifecycle Automation</Link>
         {' '}— trial ending, contract expiring, inactivity & overdue reminders.
       </div>
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm px-4 py-2.5">{msg}</div>}
+      {msg && <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-2.5">{msg}</div>}
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="card-premium p-4">
@@ -168,7 +168,7 @@ export default function EmailTemplatesPage() {
                 <label className="text-xs font-semibold text-gray-600">HTML body</label>
                 <div className="flex flex-wrap gap-1">
                   {(tpl.variables || []).map((v) => (
-                    <button key={v} type="button" onClick={() => insertVar(v)} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/15 text-teal-300 hover:bg-teal-600/30 font-mono">{`{{${v}}}`}</button>
+                    <button key={v} type="button" onClick={() => insertVar(v)} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/15 text-teal-700 hover:bg-teal-600/30 font-mono">{`{{${v}}}`}</button>
                   ))}
                 </div>
               </div>

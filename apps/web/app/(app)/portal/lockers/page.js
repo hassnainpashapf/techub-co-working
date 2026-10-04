@@ -312,7 +312,7 @@ export default function PortalLockersPage() {
                       <button
                         onClick={() => leaveWaitlist(w.id)}
                         disabled={busy === `wl-${w.id}`}
-                        className="text-sm text-red-400 hover:text-red-300"
+                        className="text-sm text-red-400 hover:text-red-700"
                       >
                         ❌ Niklein
                       </button>

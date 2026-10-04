@@ -123,13 +123,13 @@ export default function PerksManagePage() {
             <span key="t" className="text-gray-800">{p.title}</span>,
             <Badge key="d" tone="blue">{p.discountText}</Badge>,
             <span key="c" className="text-gray-600">{catLabel(p.category)}</span>,
-            <code key="cd" className="text-xs text-amber-300">{p.code || '—'}</code>,
+            <code key="cd" className="text-xs text-amber-700">{p.code || '—'}</code>,
             <span key="e" className="text-gray-500">{fmtDate(p.expiryDate)}</span>,
             <span key="cl" className="text-gray-800">{p.claimsCount || 0}</span>,
             p.isActive ? <Badge key="s" tone="green">Active</Badge> : <Badge key="s" tone="slate">Inactive</Badge>,
             <div key="a" className="flex gap-2">
               <button onClick={() => openEdit(p)} className="text-sm text-teal-700 hover:text-teal-700">Edit</button>
-              <button onClick={() => remove(p)} className="text-sm text-red-400 hover:text-red-300">Delete</button>
+              <button onClick={() => remove(p)} className="text-sm text-red-400 hover:text-red-700">Delete</button>
             </div>,
           ]))}
         />

@@ -97,7 +97,7 @@ function CreateSurveyModal({ onClose, onDone }) {
   return (
     <Modal title="New NPS Survey" onClose={onClose}>
       <form onSubmit={submit}>
-        {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
         <Field label="Title">
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Monthly NPS — October" maxLength={200} />
         </Field>
@@ -248,10 +248,10 @@ export default function SurveysPage() {
                 <div className="flex gap-2 flex-wrap">
                   <button onClick={() => setViewing(s)} className="text-xs text-teal-700 hover:text-teal-700 underline">Results</button>
                   {s.status === 'draft' && (
-                    <button onClick={() => setStatus(s, 'active')} disabled={busy === s.id} className="text-xs text-emerald-300 hover:text-emerald-200 underline">Activate</button>
+                    <button onClick={() => setStatus(s, 'active')} disabled={busy === s.id} className="text-xs text-emerald-700 hover:text-emerald-700 underline">Activate</button>
                   )}
                   {s.status === 'active' && (
-                    <button onClick={() => setStatus(s, 'closed')} disabled={busy === s.id} className="text-xs text-amber-300 hover:text-amber-200 underline">Close</button>
+                    <button onClick={() => setStatus(s, 'closed')} disabled={busy === s.id} className="text-xs text-amber-700 hover:text-amber-700 underline">Close</button>
                   )}
                 </div>
               ),

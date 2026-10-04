@@ -103,14 +103,14 @@ export default function SalesDashboardPage() {
               <h3 className="font-semibold text-gray-900 mb-1">Deal Cycle</h3>
               <p className="text-xs text-gray-500 mb-4">Won leads ka avg close time (created → closed)</p>
               <div className="flex items-baseline gap-2">
-                <span className="text-5xl font-bold text-emerald-300">
+                <span className="text-5xl font-bold text-emerald-700">
                   {funnel.avgDays?.booked != null ? funnel.avgDays.booked : '—'}
                 </span>
                 <span className="text-gray-500">days average</span>
               </div>
               <p className="mt-3 text-sm text-gray-500">
-                Is mahinay: <span className="text-emerald-300 font-semibold">{funnel.won ?? 0} won</span> ·{' '}
-                <span className="text-red-300 font-semibold">{funnel.lost ?? 0} lost</span> ·{' '}
+                Is mahinay: <span className="text-emerald-700 font-semibold">{funnel.won ?? 0} won</span> ·{' '}
+                <span className="text-red-700 font-semibold">{funnel.lost ?? 0} lost</span> ·{' '}
                 {funnel.total ?? 0} total leads
               </p>
               <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
@@ -131,7 +131,7 @@ export default function SalesDashboardPage() {
               <div className="space-y-2">
                 {board.map((row, i) => (
                   <div key={row.userId || `row-${i}`} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-400/20 text-amber-300' : 'bg-gray-100 text-gray-600'}`}>
+                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-400/20 text-amber-700' : 'bg-gray-100 text-gray-600'}`}>
                       {i + 1}
                     </span>
                     <span className="flex-1 font-medium text-gray-800">{row.name}</span>

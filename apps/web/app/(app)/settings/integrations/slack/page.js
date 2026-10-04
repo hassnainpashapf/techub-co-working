@@ -75,13 +75,13 @@ export default function SlackPage() {
     <div>
       <PageHeader title="Slack Integration" subtitle="Bookings, payments, urgent tickets aur visitor check-ins ki notifications Slack me bhejein." />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-4 text-sm text-emerald-200 mb-4">{msg}</div>}
+      {msg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 mb-4">{msg}</div>}
 
       <div className="card-premium p-6 max-w-2xl">
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-bold text-gray-900">💬 Slack Webhook</h2>
           {config?.configured && (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${config.isActive ? 'bg-emerald-500/15 text-emerald-300' : 'bg-slate-500/15 text-gray-600'}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${config.isActive ? 'bg-emerald-500/15 text-emerald-700' : 'bg-slate-500/15 text-gray-600'}`}>
               {config.isActive ? 'ACTIVE' : 'PAUSED'}
             </span>
           )}

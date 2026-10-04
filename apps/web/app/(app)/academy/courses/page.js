@@ -190,7 +190,7 @@ export default function CoursesPage() {
                   ) : (
                     <button onClick={() => handlePublish(selected.id, true)} className="btn-secondary text-xs text-green-300">🚀 Publish</button>
                   )}
-                  <button onClick={() => handleDelete(selected.id)} className="btn-secondary text-xs text-red-300">🗑 Delete</button>
+                  <button onClick={() => handleDelete(selected.id)} className="btn-secondary text-xs text-red-700">🗑 Delete</button>
                 </div>
               </div>
               <div className="lg:col-span-2 card p-5">
@@ -214,7 +214,7 @@ export default function CoursesPage() {
                           <div className="text-xs text-gray-500">{TYPE_LABELS[l.type] || l.type}{l.durationMin ? ` • ${l.durationMin} min` : ''}{l.isFree ? ' • 🆓 Free preview' : ''}</div>
                         </div>
                         <button onClick={() => openLessonModal(l)} className="btn-secondary text-xs">✏️</button>
-                        <button onClick={() => handleDeleteLesson(l.id)} className="btn-secondary text-xs text-red-300">🗑</button>
+                        <button onClick={() => handleDeleteLesson(l.id)} className="btn-secondary text-xs text-red-700">🗑</button>
                       </div>
                     ))}
                   </div>
@@ -248,7 +248,7 @@ export default function CoursesPage() {
                 ) : (
                   <button onClick={() => handlePublish(c.id, true)} className="btn-secondary text-xs text-green-300">🚀 Publish</button>
                 )}
-                <button onClick={() => handleDelete(c.id)} className="btn-secondary text-xs text-red-300">🗑</button>
+                <button onClick={() => handleDelete(c.id)} className="btn-secondary text-xs text-red-700">🗑</button>
               </div>
             </div>
           ))}

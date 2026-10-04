@@ -72,7 +72,7 @@ export default function SavedViews({ page, currentFilters, onApply }) {
       </select>
       {selected && (
         <button
-          className="text-xs text-gray-500 hover:text-red-300"
+          className="text-xs text-gray-500 hover:text-red-700"
           onClick={() => remove(selected)}
           title="Delete this view"
         >

@@ -194,7 +194,7 @@ export default function ReviewsPage() {
           rows={filtered.map((r) => [
             empName(r.employeeId),
             r.period,
-            <span key="o" className="font-semibold text-amber-300">{overall(r)} / 5</span>,
+            <span key="o" className="font-semibold text-amber-700">{overall(r)} / 5</span>,
             <Badge key="s" tone={STATUS_TONE[r.status] || 'slate'}>{r.status}</Badge>,
             r.reviewer?.name || '—',
             <div key="a" className="flex gap-2">
@@ -202,7 +202,7 @@ export default function ReviewsPage() {
                 <>
                   <button onClick={() => openEdit(r)} className="text-xs px-2 py-1 rounded bg-slate-700 hover:bg-slate-600">Edit</button>
                   <button onClick={() => doAction(r.id, 'submit')} className="text-xs px-2 py-1 rounded bg-[#0f766e] hover:bg-[#0f766e] text-white">Submit</button>
-                  <button onClick={() => remove(r.id)} className="text-xs px-2 py-1 rounded bg-red-900/60 hover:bg-red-800 text-red-200">Delete</button>
+                  <button onClick={() => remove(r.id)} className="text-xs px-2 py-1 rounded bg-red-900/60 hover:bg-red-800 text-red-700">Delete</button>
                 </>
               )}
               {r.status === 'submitted' && (

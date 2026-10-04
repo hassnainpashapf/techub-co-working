@@ -105,15 +105,15 @@ export default function DunningPage() {
             </div>
             <div className="card p-4">
               <div className="text-xs text-gray-500 mb-1">Total overdue</div>
-              <div className="text-2xl font-bold text-red-300">{money(totalBalance)}</div>
+              <div className="text-2xl font-bold text-red-700">{money(totalBalance)}</div>
             </div>
             <div className="card p-4">
               <div className="text-xs text-gray-500 mb-1">🔔 Level 1 (1–7d)</div>
-              <div className="text-2xl font-bold text-amber-300">{byLevel[1] || 0}</div>
+              <div className="text-2xl font-bold text-amber-700">{byLevel[1] || 0}</div>
             </div>
             <div className="card p-4">
               <div className="text-xs text-gray-500 mb-1">🚨 Level 2–3 (8d+)</div>
-              <div className="text-2xl font-bold text-red-300">{(byLevel[2] || 0) + (byLevel[3] || 0)}</div>
+              <div className="text-2xl font-bold text-red-700">{(byLevel[2] || 0) + (byLevel[3] || 0)}</div>
             </div>
           </div>
 
@@ -123,7 +123,7 @@ export default function DunningPage() {
             rows={overdue.map((i) => [
               <span key="n" className="font-medium text-gray-900">{i.number}</span>,
               <span key="m">{i.memberName || '—'}</span>,
-              <span key="b" className="font-medium text-red-300">{money(i.balance)}</span>,
+              <span key="b" className="font-medium text-red-700">{money(i.balance)}</span>,
               <span key="d">{fmtDate(i.dueDate)}</span>,
               <span key="do">{i.daysOverdue}d</span>,
               <span key="l">

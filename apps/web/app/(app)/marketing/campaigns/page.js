@@ -135,7 +135,7 @@ export default function CampaignsPage() {
         <button className="btn-primary" onClick={() => { setEditing(null); setShowForm(true); }}>+ New campaign</button>
       } />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {notice && <div className="mb-4 rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200">{notice}</div>}
+      {notice && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{notice}</div>}
       {loading ? <Spinner /> : rows.length === 0 ? (
         <EmptyState title="No campaigns yet" hint="Create your first campaign to email members in bulk." />
       ) : (
@@ -161,7 +161,7 @@ export default function CampaignsPage() {
                     <button className="btn-ghost btn-sm" onClick={() => { setEditing(c); setShowForm(true); }}>Edit</button>
                     <button className="btn-ghost btn-sm" onClick={() => schedule(c)}>Schedule</button>
                     <button className="btn-primary btn-sm" onClick={() => sendNow(c)}>Send now</button>
-                    <button className="btn-ghost btn-sm text-red-300" onClick={() => remove(c)}>Delete</button>
+                    <button className="btn-ghost btn-sm text-red-700" onClick={() => remove(c)}>Delete</button>
                   </>}
                 </div>
               </div>

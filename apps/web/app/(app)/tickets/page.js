@@ -134,7 +134,7 @@ function TicketDetail({ ticket, onClose, onUpdate, canWrite }) {
             <h4 className="font-semibold text-gray-900 mb-2">Comments ({detail.comments?.length || 0})</h4>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {(detail.comments || []).map((c) => (
-                <div key={c.id} className={`p-3 rounded-lg border ${c.isInternal ? 'border-amber-400/30 bg-amber-500/5' : 'border-gray-200 bg-gray-50'}`}>
+                <div key={c.id} className={`p-3 rounded-lg border ${c.isInternal ? 'border-amber-200 bg-amber-500/5' : 'border-gray-200 bg-gray-50'}`}>
                   <div className="flex items-center justify-between mb-1">
                     <span className="text-xs font-semibold text-gray-800">{c.author?.name || 'System'}</span>
                     <span className="text-[11px] text-slate-500">{new Date(c.createdAt).toLocaleString()}</span>
@@ -193,7 +193,7 @@ export default function TicketsPage() {
 
   const columns = [
     { key: 'ticketNumber', label: '#', render: (t) => <span className="font-mono text-gray-600">#{t.ticketNumber}</span> },
-    { key: 'title', label: 'Title', render: (t) => <button className="text-left text-gray-900 hover:text-teal-300 font-medium" onClick={() => setSelected(t)}>{t.title}</button> },
+    { key: 'title', label: 'Title', render: (t) => <button className="text-left text-gray-900 hover:text-teal-700 font-medium" onClick={() => setSelected(t)}>{t.title}</button> },
     { key: 'category', label: 'Category', render: (t) => <span className="text-gray-600 text-sm">{labelOf(CATEGORIES, t.category)}</span> },
     { key: 'priority', label: 'Priority', render: (t) => <Badge tone={toneOf(PRIORITIES, t.priority)}>{labelOf(PRIORITIES, t.priority)}</Badge> },
     { key: 'status', label: 'Status', render: (t) => <Badge tone={toneOf(STATUSES, t.status)}>{labelOf(STATUSES, t.status)}</Badge> },
@@ -228,7 +228,7 @@ export default function TicketsPage() {
           <button
             key={s.v}
             onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
           >
             {s.l}
           </button>

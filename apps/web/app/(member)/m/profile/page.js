@@ -25,7 +25,7 @@ export default function MemberProfile() {
       {loading ? <Spinner /> : (
         <div className="card-premium p-5 space-y-3">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-2xl font-bold text-violet-200">
+            <div className="w-16 h-16 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-2xl font-bold text-violet-700">
               {(member?.name || user?.name || '?')[0].toUpperCase()}
             </div>
             <div>

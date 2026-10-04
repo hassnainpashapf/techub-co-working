@@ -159,7 +159,7 @@ export default function TeamInboxPage() {
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <Badge tone={CHANNEL_TONES[c.lastMessage.channel] || 'slate'}>{CHANNEL_LABELS[c.lastMessage.channel] || c.lastMessage.channel}</Badge>
-                {c.assignedTo && <span className="text-xs text-amber-300">👤 {c.assignedTo.name}</span>}
+                {c.assignedTo && <span className="text-xs text-amber-700">👤 {c.assignedTo.name}</span>}
                 {c.isResolved && <Badge tone="green">Resolved</Badge>}
                 <span className="text-xs text-slate-500 ml-auto">{timeAgo(c.lastAt)}</span>
               </div>
@@ -184,7 +184,7 @@ export default function TeamInboxPage() {
                   </select>
                   <button onClick={doAssign} className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm">Assign</button>
                   {sel.isResolved
-                    ? <button onClick={() => doResolve(false)} className="px-3 py-1.5 rounded-lg bg-amber-600/20 text-amber-300 text-sm">Reopen</button>
+                    ? <button onClick={() => doResolve(false)} className="px-3 py-1.5 rounded-lg bg-amber-600/20 text-amber-700 text-sm">Reopen</button>
                     : <button onClick={() => doResolve(true)} className="px-3 py-1.5 rounded-lg bg-green-600/20 text-green-300 text-sm">✓ Resolve</button>}
                 </div>
               </div>

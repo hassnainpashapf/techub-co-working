@@ -6,9 +6,9 @@ import { PageHeader, Badge, Modal, Field, Spinner, ErrorBanner, EmptyState, Stat
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
 const STATUS_STYLE = {
-  available: 'border-emerald-400/40 bg-emerald-500/10 hover:bg-emerald-500/20',
-  occupied: 'border-red-400/40 bg-red-500/10 hover:bg-red-500/20',
-  reserved: 'border-amber-400/40 bg-amber-500/10 hover:bg-amber-500/20',
+  available: 'border-emerald-400/40 bg-emerald-50 hover:bg-emerald-500/20',
+  occupied: 'border-red-400/40 bg-red-50 hover:bg-red-500/20',
+  reserved: 'border-amber-400/40 bg-amber-50 hover:bg-amber-500/20',
   maintenance: 'border-slate-400/40 bg-slate-500/10 hover:bg-slate-500/20',
 };
 const STATUS_DOT = {
@@ -92,7 +92,7 @@ export default function LockerMapPage() {
     <div className="p-6">
       <PageHeader title="Locker Availability Map" subtitle="Location-wise lockers — status color-coded" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {notice && <div className="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-500/10 px-4 py-2.5 text-sm text-emerald-200">{notice}</div>}
+      {notice && <div className="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-700">{notice}</div>}
       <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
         <StatCard label="Total" value={lockers.length} accent="blue" />
         <StatCard label="Available" value={counts.available} accent="green" />

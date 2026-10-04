@@ -31,7 +31,7 @@ function VarChips({ vars }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {vars.map((v) => (
-        <code key={v} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/10 text-teal-300 border border-teal-600/30">
+        <code key={v} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/10 text-teal-700 border border-teal-600/30">
           {`{{${v}}}`}
         </code>
       ))}
@@ -204,7 +204,7 @@ export default function LegalTemplatesPage() {
             <div key="a" className="flex gap-2">
               <button onClick={() => openEdit(t.id)} className="btn-ghost text-xs">✏️ Edit</button>
               <button onClick={() => openSign(t)} className="btn-ghost text-xs">📝 Send for signing</button>
-              <button onClick={() => remove(t.id, t.name)} className="btn-ghost text-xs text-rose-300">🗑️</button>
+              <button onClick={() => remove(t.id, t.name)} className="btn-ghost text-xs text-rose-700">🗑️</button>
             </div>,
           ])}
           empty="Koi template nahi"
@@ -272,8 +272,8 @@ export default function LegalTemplatesPage() {
         <Modal title={`📝 Send for signing — ${signT.name}`} onClose={() => setSignT(null)}>
           <div className="space-y-4">
             {signResult ? (
-              <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
-                <div className="text-emerald-300 font-medium mb-2">✅ Signing request bhej di gayi</div>
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                <div className="text-emerald-700 font-medium mb-2">✅ Signing request bhej di gayi</div>
                 <div className="text-xs text-gray-600 break-all">Sign link: <span className="text-gray-900">{signResult.signUrl}</span></div>
                 <div className="text-xs text-gray-500 mt-1">Signer ko ye link bhej dein. Sign hone par document Legal Vault me auto-save hoga.</div>
                 <button onClick={() => setSignT(null)} className="btn-primary mt-3">Band karein</button>

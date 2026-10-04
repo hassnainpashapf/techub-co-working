@@ -14,7 +14,7 @@ function KeyForm({ scopes, onSave, saving }) {
       <Field label="Scopes">
         <div className="flex flex-wrap gap-2">
           {scopes.map((s) => (
-            <label key={s} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.scopes.includes(s) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
+            <label key={s} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.scopes.includes(s) ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.scopes.includes(s)} onChange={() => toggle(s)} />
               {s}
             </label>
@@ -96,7 +96,7 @@ export default function ApiKeysPage() {
     { key: 'actions', label: '', render: (r) => r.status === 'active' ? (
       <span className="flex gap-3">
         <button onClick={() => setLimit(r)} className="text-xs text-indigo-300 hover:text-indigo-200 underline">Set limit</button>
-        <button onClick={() => revoke(r.id)} className="text-xs text-red-300 hover:text-red-200 underline">Revoke</button>
+        <button onClick={() => revoke(r.id)} className="text-xs text-red-700 hover:text-red-700 underline">Revoke</button>
       </span>
     ) : null },
   ];
@@ -119,9 +119,9 @@ export default function ApiKeysPage() {
 
       {newKey && (
         <Modal title="API Key Created" onClose={() => setNewKey(null)}>
-          <p className="text-sm text-amber-200 mb-3">⚠️ Copy this key now — it will never be shown again.</p>
+          <p className="text-sm text-amber-700 mb-3">⚠️ Copy this key now — it will never be shown again.</p>
           <div className="flex items-center gap-2 mb-4">
-            <code className="flex-1 font-mono text-xs bg-black/40 border border-gray-200 rounded-lg px-3 py-2.5 text-emerald-300 break-all">{newKey}</code>
+            <code className="flex-1 font-mono text-xs bg-black/40 border border-gray-200 rounded-lg px-3 py-2.5 text-emerald-700 break-all">{newKey}</code>
             <button onClick={copy} className="btn-secondary text-xs whitespace-nowrap">{copied ? 'Copied ✓' : 'Copy'}</button>
           </div>
           <p className="text-xs text-gray-500 mb-4">Use as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">Authorization: Bearer</code> token.</p>

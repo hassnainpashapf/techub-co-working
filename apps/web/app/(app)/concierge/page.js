@@ -63,7 +63,7 @@ export default function ConciergeDashboardPage() {
       <PageHeader title="🛎️ Concierge Dashboard" subtitle="Service requests, SLA, ratings aur revenue" />
 
       {pendingModules.length > 0 && (
-        <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-4 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700">
           ⚠️ Kuch modules abhi live nahi: {pendingModules.join(', ')} — schema merge ke baad auto-live.
         </div>
       )}

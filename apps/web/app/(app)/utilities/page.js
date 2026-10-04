@@ -68,7 +68,7 @@ export default function UtilitiesDashboardPage() {
       {error && <ErrorBanner message={error} />}
 
       {s.missing && s.missing.length > 0 && (
-        <div className="rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
           Utility module ke kuch models abhi merge nahi hue ({s.missing.join(', ')}). Wo sections khali dikhen ge.
         </div>
       )}
@@ -130,7 +130,7 @@ export default function UtilitiesDashboardPage() {
             <Link href="/portal/usage" className="block rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100">👤 Member usage (portal)</Link>
           </div>
           {s.unbilled && s.unbilled.meters > 0 && (
-            <div className="mt-4 rounded-xl border border-amber-500/30 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
+            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
               {s.unbilled.meters} meters ka pichhle 30 din ka bill nahi bana — ~{s.unbilled.totalConsumption.toLocaleString()} units unbilled.
             </div>
           )}
