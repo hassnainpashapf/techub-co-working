@@ -5,42 +5,7 @@ import { api } from '../../../lib/api';
 import { Badge, Spinner, ErrorBanner } from '../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 import { useChartWidth } from '../../../components/charts';
-
-// ---------- Premium gradient hero banner ----------
-function HeroBanner({ presentToday, totalStaff, avgAttendance, onLeave }) {
-  const todayStr = new Date().toLocaleDateString('en-GB', {
-    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric',
-  });
-  const chips = [
-    { label: 'Present today', value: `${presentToday} / ${totalStaff}`, dot: '#34d399' },
-    { label: 'Avg attendance', value: `${avgAttendance}%`, dot: '#fbbf24' },
-    { label: 'On leave', value: String(onLeave), dot: '#93c5fd' },
-  ];
-  return (
-    <div className="relative overflow-hidden rounded-3xl mb-6 4xl:mb-8 shadow-[0_12px_40px_-12px_rgba(13,92,86,0.55)]">
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0f766e] via-[#0c5a54] to-[#08312d]" />
-      {/* decorative glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 rounded-full bg-teal-300/20 blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-32 -left-16 w-80 h-80 rounded-full bg-emerald-400/15 blur-3xl pointer-events-none" />
-      <div className="absolute inset-0 opacity-[0.07] pointer-events-none"
-        style={{ backgroundImage: 'radial-gradient(circle at 1px 1px, white 1px, transparent 0)', backgroundSize: '22px 22px' }} />
-      <div className="relative px-7 py-8 4xl:px-10 4xl:py-10">
-        <p className="text-[12px] 4xl:text-[13px] font-semibold uppercase tracking-[0.2em] text-teal-200/80 mb-2">{todayStr}</p>
-        <h1 className="text-[30px] 4xl:text-[40px] font-bold text-white tracking-tight leading-tight">Team Overview</h1>
-        <p className="text-[14px] 4xl:text-[16px] text-teal-100/85 mt-1.5 font-medium">Team performance at a glance</p>
-        <div className="flex flex-wrap gap-3 mt-6">
-          {chips.map((c) => (
-            <div key={c.label} className="flex items-center gap-2.5 pl-4 pr-5 py-2.5 rounded-full bg-white/10 border border-white/15 backdrop-blur-sm">
-              <span className="w-2.5 h-2.5 rounded-full shadow-[0_0_8px_currentColor]" style={{ background: c.dot, color: c.dot }} />
-              <span className="text-[12.5px] 4xl:text-[13.5px] text-teal-100/80 font-medium">{c.label}</span>
-              <span className="text-[15px] 4xl:text-[17px] font-bold text-white">{c.value}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+import OverviewHero from '../../../components/OverviewHero';
 
 // ---------- Rich stat card ----------
 function RichStatCard({ label, value, sub, icon, grad, topBorder }) {
@@ -318,11 +283,14 @@ export default function TeamOverviewPage() {
 
   return (
     <div className="pb-4">
-      <HeroBanner
-        presentToday={presentToday}
-        totalStaff={users.length}
-        avgAttendance={avgAttendance}
-        onLeave={onLeaveToday}
+      <OverviewHero
+        title="Team Overview"
+        sub="Team performance at a glance"
+        chips={[
+            { label: 'Present today', value: `${presentToday} / ${users.length}`, dot: '#34d399' },
+            { label: 'Avg attendance', value: `${avgAttendance}%`, dot: '#fbbf24' },
+            { label: 'On leave', value: String(onLeaveToday), dot: '#93c5fd' },
+          ]}
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
