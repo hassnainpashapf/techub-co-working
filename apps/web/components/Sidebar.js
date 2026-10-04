@@ -437,7 +437,7 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-[248px] shrink-0 bg-white flex flex-col min-h-screen border-r border-gray-200 relative">
+    <aside className="w-[288px] shrink-0 bg-white flex flex-col min-h-screen border-r border-gray-200 relative">
       {/* Brand */}
       <div className="px-5 pt-5 pb-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
