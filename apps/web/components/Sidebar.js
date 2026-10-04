@@ -204,6 +204,14 @@ const NAV_MAIN = [
       { label: '📋 Staff Board', path: '/concierge/board' },
     ],
   },
+  { key: 'lockers', label: '🔐 Lockers', path: '/lockers/dashboard', icon: 'workspaces',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Locker Dashboard', path: '/lockers/dashboard' },
+      { label: '📦 Inventory', path: '/lockers' },
+      { label: '🗺️ Map', path: '/lockers/map' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only
@@ -232,6 +240,7 @@ const NAV_MEMBER = [
   { key: 'lostfound', label: 'Lost & Found', path: '/portal/lost-found', icon: 'launchpad' },
   { key: 'myacademy', label: '🎓 Academy', path: '/portal/academy', icon: 'school' },
   { key: 'myconcierge', label: '🛎️ Concierge', path: '/portal/concierge', icon: 'message' },
+  { key: 'mylockers', label: '🔐 Lockers', path: '/portal/lockers', icon: 'workspaces' },
 ];
 
 const NAV_OTHERS = [

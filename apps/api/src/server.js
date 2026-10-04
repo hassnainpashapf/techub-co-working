@@ -416,6 +416,29 @@ app.use('/api/concierge-billing', require('./routes/concierge-billing'));
 app.use('/api/service-ratings', require('./routes/service-ratings'));
 app.use('/api/concierge-sla', require('./routes/concierge-sla'));
 app.use('/api/concierge-dashboard', require('./routes/concierge-dashboard'));
+// Phase 56: Storage & Locker Management Pack
+app.use('/api/lockers', require('./routes/lockers'));
+app.use('/api/locker-rentals', require('./routes/locker-rentals'));
+app.use('/api/locker-billing', require('./routes/locker-billing'));
+app.use('/api/locker-codes', require('./routes/locker-codes'));
+app.use('/api/locker-expiry', require('./routes/locker-expiry'));
+app.use('/api/locker-waitlist', require('./routes/locker-waitlist'));
+app.use('/api/locker-maintenance', require('./routes/locker-maintenance'));
+app.use('/api/locker-dashboard', require('./routes/locker-dashboard'));
+// Phase 56: locker jobs (additive)
+try { require('./lib/lockerExpiry').ensureLockerExpiryScheduled(); } catch (e) { console.warn('locker expiry job not wired:', e.message); }
+try {
+  const { runLockerBilling } = require('./lib/lockerBilling');
+  const prismaLib = require('./lib/prisma');
+  setInterval(() => {
+    (async () => {
+      try {
+        const tenants = await prismaLib.tenant.findMany({ where: { status: 'active' }, select: { id: true } });
+        for (const t of tenants) { await runLockerBilling(t.id).catch(() => {}); }
+      } catch (e) { console.error('[locker-billing] daily run failed:', e.message); }
+    })();
+  }, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[locker-billing] schedule failed:', e.message); }
 // Phase 55: concierge jobs (additive)
 try { require('./lib/conciergeSla').ensureSlaScheduled(); } catch (e) { console.warn('concierge SLA job not wired:', e.message); }
 // Phase 54: member success jobs (additive)

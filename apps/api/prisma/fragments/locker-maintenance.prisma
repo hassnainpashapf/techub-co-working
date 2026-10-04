@@ -1,0 +1,42 @@
+// Phase 56 Track 7: Locker Maintenance
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { lockerMaintenance LockerMaintenance[] }
+//   Locker { maintenanceRecords LockerMaintenance[] }
+//   User   { reportedLockerMaintenance LockerMaintenance[] }
+// schema.prisma untouched by this track.
+
+model LockerMaintenance {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  lockerId   String    @map("locker_id")
+  issue      String // masla ki tafseel (e.g. "talla jam hai")
+  status     String    @default("open") // open | fixed
+  reportedBy String?   @map("reported_by")
+  reportedAt DateTime  @default(now()) @map("reported_at")
+  fixedAt    DateTime? @map("fixed_at")
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locker   Locker @relation(fields: [lockerId], references: [id], onDelete: Cascade)
+  reporter User?  @relation(fields: [reportedBy], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, lockerId])
+  @@map("locker_maintenance")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase56_facility) ---
+// CREATE TABLE "locker_maintenance" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "locker_id" TEXT NOT NULL,
+//   "issue" TEXT NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'open',
+//   "reported_by" TEXT,
+//   "reported_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "fixed_at" TIMESTAMP(3),
+//   CONSTRAINT "locker_maintenance_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "locker_maintenance_locker_id_fkey" FOREIGN KEY ("locker_id") REFERENCES "lockers"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "locker_maintenance_reported_by_fkey" FOREIGN KEY ("reported_by") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "locker_maintenance_tenant_id_status_idx" ON "locker_maintenance"("tenant_id", "status");
+// CREATE INDEX "locker_maintenance_tenant_id_locker_id_idx" ON "locker_maintenance"("tenant_id", "locker_id");

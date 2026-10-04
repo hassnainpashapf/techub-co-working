@@ -261,6 +261,12 @@ model Tenant {
   serviceRequests      ServiceRequest[]
   requestMessages      RequestMessage[]
   serviceRatings       ServiceRating[]
+  // Phase 56: Storage & Locker Management Pack
+  lockers              Locker[]
+  lockerRentals        LockerRental[]
+  lockerCodes          LockerCode[]
+  lockerWaitlist       LockerWaitlist[]
+  lockerMaintenance    LockerMaintenance[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -369,6 +375,8 @@ model User {
   // Phase 55: Concierge & Lifestyle Services Pack
   assignedServiceRequests  ServiceRequest[]      @relation("ServiceRequestAssignee")
   sentRequestMessages      RequestMessage[]      @relation("RequestMessageSender")
+  // Phase 56: Storage & Locker Management Pack
+  reportedLockerMaintenance LockerMaintenance[] @relation("LockerMaintenanceReporter")
 }
 
 // ---------------------------------------------------------------- space ---
@@ -585,6 +593,9 @@ model Member {
   // Phase 55: Concierge & Lifestyle Services Pack
   serviceRequests            ServiceRequest[]
   serviceRatings             ServiceRating[]
+  // Phase 56: Storage & Locker Management Pack
+  lockerRentals              LockerRental[]
+  lockerWaitlist             LockerWaitlist[]
 }
 
 // ------------------------------------------------------------ company ------
@@ -5018,4 +5029,108 @@ model ServiceRating {
 
   @@index([tenantId, memberId])
   @@map("service_ratings")
+}
+
+// -------------------------------------------------- Phase 56: Storage & Locker Management Pack ---
+
+model Locker {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  code        String // unique per tenant (e.g. "L-101")
+  location    String? // floor/zone description
+  size        String   @default("M") // S | M | L | XL
+  status      String   @default("available") // available | occupied | reserved | maintenance
+  monthlyRate Decimal? @map("monthly_rate") @db.Decimal(14, 2)
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant             Tenant              @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  rentals            LockerRental[]
+  codes              LockerCode[]
+  maintenanceRecords LockerMaintenance[]
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@index([tenantId, size])
+  @@map("lockers")
+}
+
+model LockerRental {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  lockerId    String    @map("locker_id")
+  memberId    String    @map("member_id")
+  startDate   DateTime  @default(now()) @map("start_date")
+  endDate     DateTime? @map("end_date")
+  status      String    @default("active") // active | expired | cancelled
+  monthlyRate Decimal   @map("monthly_rate") @db.Decimal(12, 2)
+  autoRenew   Boolean   @default(true) @map("auto_renew")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locker Locker @relation(fields: [lockerId], references: [id], onDelete: Restrict)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([tenantId, lockerId])
+  @@index([tenantId, memberId])
+  @@map("locker_rentals")
+}
+
+model LockerCode {
+  id        String    @id @default(cuid())
+  tenantId  String    @map("tenant_id")
+  lockerId  String    @map("locker_id")
+  codeHash  String    @map("code_hash") // bcrypt hash — plain PIN kabhi store nahi (Phase 48 pattern)
+  isActive  Boolean   @default(true) @map("is_active")
+  issuedAt  DateTime  @default(now()) @map("issued_at")
+  expiresAt DateTime? @map("expires_at")
+  issuedBy  String?   @map("issued_by") // User id jis ne issue kiya
+  createdAt DateTime  @default(now()) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locker Locker @relation(fields: [lockerId], references: [id], onDelete: Cascade)
+
+  @@unique([lockerId]) // ek locker par ek record (rotate = purani deactivate + replace)
+  @@index([tenantId])
+  @@map("locker_codes")
+}
+
+model LockerWaitlist {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  memberId  String   @map("member_id")
+  size      String   @default("M") // S | M | L | XL (preferred size)
+  status    String   @default("waiting") // waiting | offered | declined
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([tenantId, memberId])
+  @@map("locker_waitlist")
+}
+
+model LockerMaintenance {
+  id         String    @id @default(cuid())
+  tenantId   String    @map("tenant_id")
+  lockerId   String    @map("locker_id")
+  issue      String // masla ki tafseel (e.g. "talla jam hai")
+  status     String    @default("open") // open | fixed
+  reportedBy String?   @map("reported_by")
+  reportedAt DateTime  @default(now()) @map("reported_at")
+  fixedAt    DateTime? @map("fixed_at")
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locker   Locker @relation(fields: [lockerId], references: [id], onDelete: Cascade)
+  reporter User?  @relation("LockerMaintenanceReporter", fields: [reportedBy], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, lockerId])
+  @@map("locker_maintenance")
 }

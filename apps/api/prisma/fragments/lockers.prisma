@@ -1,0 +1,42 @@
+// Phase 56 Track 1: Locker Inventory
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { lockers Locker[] }
+// schema.prisma untouched by this track.
+
+model Locker {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  code        String // unique per tenant (e.g. "L-101")
+  location    String? // floor/zone description
+  size        String   @default("M") // S | M | L | XL
+  status      String   @default("available") // available | occupied | reserved | maintenance
+  monthlyRate Decimal? @map("monthly_rate") @db.Decimal(14, 2)
+  notes       String?
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, code])
+  @@index([tenantId, status])
+  @@index([tenantId, size])
+  @@map("lockers")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase56_facility) ---
+// CREATE TABLE "lockers" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "code" TEXT NOT NULL,
+//   "location" TEXT,
+//   "size" TEXT NOT NULL DEFAULT 'M',
+//   "status" TEXT NOT NULL DEFAULT 'available',
+//   "monthly_rate" DECIMAL(14,2),
+//   "notes" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "lockers_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "lockers_tenant_id_code_key" ON "lockers"("tenant_id", "code");
+// CREATE INDEX "lockers_tenant_id_status_idx" ON "lockers"("tenant_id", "status");
+// CREATE INDEX "lockers_tenant_id_size_idx" ON "lockers"("tenant_id", "size");

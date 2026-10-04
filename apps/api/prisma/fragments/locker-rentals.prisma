@@ -1,0 +1,51 @@
+// Phase 56 Track 2: Locker Rentals
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { lockerRentals LockerRental[] }
+//   Locker { rentals LockerRental[] }
+//   Member { lockerRentals LockerRental[] }
+// NOTE: Locker model Track 1 (lockers.prisma) se aata hai — usay PEHLE merge karein.
+// schema.prisma untouched by this track.
+
+model LockerRental {
+  id          String    @id @default(cuid())
+  tenantId    String    @map("tenant_id")
+  lockerId    String    @map("locker_id")
+  memberId    String    @map("member_id")
+  startDate   DateTime  @default(now()) @map("start_date")
+  endDate     DateTime? @map("end_date")
+  status      String    @default("active") // active | expired | cancelled
+  monthlyRate Decimal   @map("monthly_rate") @db.Decimal(12, 2)
+  autoRenew   Boolean   @default(true) @map("auto_renew")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  locker Locker @relation(fields: [lockerId], references: [id], onDelete: Restrict)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([tenantId, lockerId])
+  @@index([tenantId, memberId])
+  @@map("locker_rentals")
+}
+
+// --- migration SQL (coordinator: 20261003650000_phase56_storage) ---
+// CREATE TABLE "locker_rentals" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "locker_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "start_date" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "end_date" TIMESTAMP(3),
+//   "status" TEXT NOT NULL DEFAULT 'active',
+//   "monthly_rate" DECIMAL(12,2) NOT NULL,
+//   "auto_renew" BOOLEAN NOT NULL DEFAULT true,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "locker_rentals_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "locker_rentals_locker_id_fkey" FOREIGN KEY ("locker_id") REFERENCES "lockers"("id") ON DELETE RESTRICT ON UPDATE CASCADE,
+//   CONSTRAINT "locker_rentals_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "locker_rentals_tenant_id_status_idx" ON "locker_rentals"("tenant_id", "status");
+// CREATE INDEX "locker_rentals_tenant_id_locker_id_idx" ON "locker_rentals"("tenant_id", "locker_id");
+// CREATE INDEX "locker_rentals_tenant_id_member_id_idx" ON "locker_rentals"("tenant_id", "member_id");

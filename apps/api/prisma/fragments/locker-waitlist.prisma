@@ -1,0 +1,39 @@
+// Phase 56 Track 6: Locker Waitlist
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { lockerWaitlist LockerWaitlist[] }
+//   Member { lockerWaitlist LockerWaitlist[] }
+// schema.prisma untouched by this track.
+
+model LockerWaitlist {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  memberId  String   @map("member_id")
+  size      String   @default("M") // S | M | L | XL (preferred size)
+  status    String   @default("waiting") // waiting | offered | declined
+  notes     String?
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, status])
+  @@index([tenantId, memberId])
+  @@map("locker_waitlist")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase56_lockers) ---
+// CREATE TABLE "locker_waitlist" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "size" TEXT NOT NULL DEFAULT 'M',
+//   "status" TEXT NOT NULL DEFAULT 'waiting',
+//   "notes" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "locker_waitlist_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "locker_waitlist_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "locker_waitlist_tenant_id_status_idx" ON "locker_waitlist"("tenant_id", "status");
+// CREATE INDEX "locker_waitlist_tenant_id_member_id_idx" ON "locker_waitlist"("tenant_id", "member_id");
