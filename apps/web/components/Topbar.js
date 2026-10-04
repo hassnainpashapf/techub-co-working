@@ -137,22 +137,22 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
   const parent = path.startsWith('/discover') || path.startsWith('/bookings') || path.startsWith('/spaces') ? 'Workspace' : 'Main';
 
   return (
-    <header className="bg-white border-b border-gray-200 px-7 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+    <header className="bg-white border-b border-gray-200 px-5 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <div className="flex items-center gap-3 text-[14px] whitespace-nowrap">
         <button
           onClick={onMenuClick}
           title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
-        <span className="text-gray-900 font-bold text-[20px] tracking-tight">{title}</span>
+        <span className="text-gray-900 font-bold text-[17px] tracking-tight">{title}</span>
         
         
       </div>
       <div className="flex items-center gap-2.5">
         <div ref={boxRef} className="relative">
-          <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3.5 py-2 w-[240px] text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
+          <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3 py-1.5 w-[200px] text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               id="topbar-search"
@@ -193,17 +193,17 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
             </div>
           )}
         </div>
-        <button className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
+        <button className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><polyline points="12 7 12 12 15 15"/></svg>
         </button>
         <button
           onClick={startTour}
           title="Take a tour"
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <a href="/notifications" className="relative w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
+        <a href="/notifications" className="relative w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           {unread > 0 && (
             <span className="absolute top-0.5 right-0.5 bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white text-[9px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center ring-2 ring-white">

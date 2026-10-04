@@ -100,7 +100,7 @@ export default function PushToggle() {
 
   if (!supported) {
     return (
-      <div className="card-premium p-5 mb-6">
+      <div className="card-premium p-5 mb-3">
         <h3 className="text-gray-900 font-semibold mb-1">🔔 Push Notifications</h3>
         <p className="text-sm text-gray-500">Is browser/device me web push supported nahi hai.</p>
       </div>
@@ -108,7 +108,7 @@ export default function PushToggle() {
   }
 
   return (
-    <div className="card-premium p-5 mb-6">
+    <div className="card-premium p-5 mb-3">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
           <h3 className="text-gray-900 font-semibold">🔔 Push Notifications</h3>

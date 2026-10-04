@@ -114,7 +114,7 @@ function PieSvg({ points }) {
     return { p, i, d: `M${cx},${cy} L${x0},${y0} A${r},${r} 0 ${large} 1 ${x1},${y1} Z`, color: colors[i % colors.length] };
   });
   return (
-    <div className="flex flex-wrap gap-6 items-center">
+    <div className="flex flex-wrap gap-3 items-center">
       <svg viewBox="0 0 260 260" className="w-64 h-64">
         {slices.map((s) => <path key={s.i} d={s.d} fill={s.color} opacity={0.85} />)}
       </svg>

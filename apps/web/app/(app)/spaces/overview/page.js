@@ -92,8 +92,7 @@ function SegmentDonut({ data, size = 190, centerLabel = 'Units' }) {
   return (
     <div className="flex flex-col sm:flex-row items-center gap-3">
       <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
-        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-50 to-emerald-50 blur-sm" />
-        <svg viewBox="0 0 160 160" className="relative w-full h-full -rotate-90 drop-shadow-sm">
+        <svg viewBox="0 0 160 160" className="relative w-full h-full">
           <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="20" />
           {data.map((d, i) => {
             const frac = d.value / total;

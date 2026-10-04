@@ -404,7 +404,7 @@ export default function Sidebar() {
         <a
           href={item.path}
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : undefined}
-          className={`flex items-center gap-3 pl-5 pr-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 group ${
+          className={`flex items-center gap-2.5 pl-4 pr-3 py-2 rounded-lg text-[13px] transition-all duration-200 group ${
             active
               ? 'text-[#0f766e] font-bold bg-teal-50'
               : 'text-gray-800 hover:text-gray-900 hover:bg-gray-100 font-bold'
@@ -421,14 +421,14 @@ export default function Sidebar() {
           )}
         </a>
         {item.children && expanded && (
-          <div className="mt-1 ml-3 rounded-xl bg-gray-50 border border-gray-100 p-1.5 space-y-0.5 animate-[fadeSlideIn_0.25s_ease-out]">
+          <div className="mt-1 ml-2 rounded-lg bg-gray-50 border border-gray-100 p-1 space-y-0.5 animate-[fadeSlideIn_0.25s_ease-out]">
             {item.children.map((child) => {
               const childActive = isActive(child.path);
               return (
                 <a
                   key={child.path}
                   href={child.path}
-                  className={`block px-3.5 py-2 rounded-lg text-[13.5px] transition-all duration-200 ${
+                  className={`block px-3 py-1.5 rounded-md text-[12.5px] transition-all duration-200 ${
                     childActive
                       ? 'text-teal-800 font-bold bg-teal-50'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-semibold'
@@ -445,30 +445,30 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-[288px] shrink-0 bg-white flex flex-col h-screen sticky top-0 border-r border-gray-200 relative">
+    <aside className="w-[232px] shrink-0 bg-white flex flex-col h-screen sticky top-0 border-r border-gray-200 relative">
       {/* Brand */}
-      <div className="px-4 pt-3 pb-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
+      <div className="px-4 pt-4 pb-3 flex items-center gap-2.5">
+        <div className="w-9 h-9 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
           T
         </div>
         <div>
-          <p className="text-gray-900 text-[15px] font-bold tracking-tight leading-tight">Techub</p>
-          <p className="text-gray-400 text-[11px] font-medium tracking-wide">CO-WORKING</p>
+          <p className="text-gray-900 text-[14px] font-bold tracking-tight leading-tight">Techub</p>
+          <p className="text-gray-400 text-[10px] font-medium tracking-wide">CO-WORKING</p>
         </div>
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3.5 space-y-1 overflow-y-auto pb-4">
+      <nav className="flex-1 px-3 space-y-1 overflow-y-auto pb-4">
         {user.role === 'member' ? (
           <>
-            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
+            <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
             {NAV_MEMBER.map(renderItem)}
           </>
         ) : (
           <>
-            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
+            <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
             {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
-            <p className="px-3.5 pt-3 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
+            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}

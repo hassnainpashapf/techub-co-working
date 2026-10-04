@@ -7,3 +7,6 @@ dist/
 .DS_Store
 coverage/
 out/
+
+# Capacitor Android native project (generated)
+apps/web/android/

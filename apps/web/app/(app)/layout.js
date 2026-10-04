@@ -16,9 +16,10 @@ export default function AppLayout({ children }) {
     try {
       const v = window.localStorage.getItem(KEY);
       if (v === '0') setSidebarOpen(false);
-      // Permanent 80% page zoom (zoom control removed) — matches the compact look
+      // No page zoom — native 100% rendering for ultra-crisp HD look.
+      // Compactness is achieved via tighter spacing/sizing instead.
       window.localStorage.removeItem('cw_zoom');
-      document.body.style.zoom = '0.8';
+      document.body.style.zoom = '';
     } catch (_e) { /* ignore */ }
   }, []);
 
