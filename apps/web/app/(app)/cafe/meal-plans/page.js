@@ -179,7 +179,7 @@ export default function MealPlansPage() {
           <div className="space-y-3">
             <Field label="Plan name" value={form.name} onChange={(e) => setF('name', e.target.value)} placeholder="Monthly Lunch" />
             <Field label="Description" value={form.description} onChange={(e) => setF('description', e.target.value)} placeholder="Weekday lunch, 1 meal/day" />
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Field label="Price (Rs)" type="number" value={form.price} onChange={(e) => setF('price', e.target.value)} />
               <Field label="Meals/day" type="number" value={form.mealsPerDay} onChange={(e) => setF('mealsPerDay', e.target.value)} />
               <Field label="Valid days" type="number" value={form.validDays} onChange={(e) => setF('validDays', e.target.value)} />

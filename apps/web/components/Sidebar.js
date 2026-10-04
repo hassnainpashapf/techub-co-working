@@ -365,10 +365,21 @@ const NAV_OTHERS = [
   { key: 'support', label: 'Support', path: '/reports', icon: 'support' },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ mobileOpen = false, onClose } = {}) {
   const { user } = useAuth();
   const [current, setCurrent] = useState('');
   const [openMenu, setOpenMenu] = useState('workspaces');
+
+  // Close the mobile drawer (no-op on desktop where onClose is undefined)
+  const closeMobile = () => { if (onClose) onClose(); };
+
+  // Escape key closes the mobile drawer
+  useEffect(() => {
+    if (!mobileOpen || !onClose) return;
+    const onKey = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [mobileOpen, onClose]);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -403,7 +414,7 @@ export default function Sidebar() {
         )}
         <a
           href={item.path}
-          onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : undefined}
+          onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : closeMobile}
           className={`flex items-center gap-2.5 pl-4 pr-3 py-2 rounded-lg text-[13px] transition-all duration-200 group ${
             active
               ? 'text-[#0f766e] font-bold bg-teal-50'
@@ -428,6 +439,7 @@ export default function Sidebar() {
                 <a
                   key={child.path}
                   href={child.path}
+                  onClick={closeMobile}
                   className={`block px-3 py-1.5 rounded-md text-[12.5px] transition-all duration-200 ${
                     childActive
                       ? 'text-teal-800 font-bold bg-teal-50'
@@ -445,7 +457,21 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-[232px] shrink-0 bg-white flex flex-col h-screen sticky top-0 border-r border-gray-200 relative">
+    <>
+      {/* Mobile backdrop */}
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          onClick={closeMobile}
+          aria-hidden="true"
+        />
+      )}
+      <aside
+        className={`w-[232px] shrink-0 bg-white flex flex-col h-screen border-r border-gray-200 relative
+          fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-out
+          ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
+          lg:static lg:z-auto lg:translate-x-0 lg:sticky lg:top-0`}
+      >
       {/* Brand */}
       <div className="px-4 pt-4 pb-3 flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
@@ -474,5 +500,6 @@ export default function Sidebar() {
         )}
       </nav>
     </aside>
+    </>
   );
 }

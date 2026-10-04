@@ -94,7 +94,7 @@ function RescheduleModal({ booking, onClose, onDone }) {
         <p className="text-gray-600 text-sm mb-3">
           <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> · {booking.unit?.type}
         </p>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field label="Date">
             <input type="date" className="input [color-scheme:dark]" value={date} onChange={(ev) => setDate(ev.target.value)} required />
           </Field>

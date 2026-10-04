@@ -423,7 +423,7 @@ function StaffDashboard() {
       {/* 3 equal cards */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 4xl:gap-3">
         {/* Recent Activity */}
-        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[240px]">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Recent Activity</h2>
             <button
@@ -451,7 +451,7 @@ function StaffDashboard() {
         </div>
 
         {/* Top pending dues */}
-        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[240px]">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Top pending dues</h2>
             <button
@@ -485,7 +485,7 @@ function StaffDashboard() {
         </div>
 
         {/* Recent invoices */}
-        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[240px]">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Recent invoices</h2>
             <button

@@ -241,7 +241,7 @@ export default function FormResponsesPage() {
             </div>
             <div className="border-t border-gray-200 pt-3 space-y-2">
               {fields.map((f) => (
-                <div key={f.id} className="grid grid-cols-3 gap-2 text-sm">
+                <div key={f.id} className="grid grid-cols-1 sm:grid-cols-3 gap-2 text-sm">
                   <div className="text-gray-500">{f.label}</div>
                   <div className="text-gray-900 col-span-2 break-words">{formatAnswer(detail.answers?.[f.id])}</div>
                 </div>

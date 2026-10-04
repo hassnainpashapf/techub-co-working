@@ -237,7 +237,7 @@ export default function GreenInitiativesPage() {
                 </Field>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Field label="Target value">
                 <input type="number" min="0" className="input-premium" value={form.targetValue} onChange={(e) => setForm({ ...form, targetValue: e.target.value })} placeholder="e.g. 100" />
               </Field>

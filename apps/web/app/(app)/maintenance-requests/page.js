@@ -99,7 +99,7 @@ export default function MaintenanceRequestsPage() {
       {loading ? <Spinner /> : rows.length === 0 ? (
         <EmptyState title="No requests" hint="No maintenance requests match the current filters." />
       ) : (
-        <div className="card-premium p-0 overflow-hidden">
+        <div className="overflow-x-auto card-premium p-0 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-gray-500 border-b border-gray-200">

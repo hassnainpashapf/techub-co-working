@@ -73,7 +73,7 @@ function RecurringInvoiceForm({ members, onSave, saving, error }) {
           </select>
         </Field>
       </div>
-      <div className="grid grid-cols-3 gap-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         <Field label="Day of month">
           <input type="number" min="1" max="28" className="input" value={form.dayOfMonth} onChange={set('dayOfMonth')} required />
         </Field>

@@ -227,7 +227,7 @@ export default function LifecyclePage() {
       {runs.length === 0 ? (
         <p className="text-slate-500 text-sm">No automated messages sent yet.</p>
       ) : (
-        <div className="card-premium overflow-hidden">
+        <div className="overflow-x-auto card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-gray-500 text-xs border-b border-gray-200">

@@ -247,7 +247,7 @@ export default function RemindersPage() {
       {logs.length === 0 ? (
         <p className="text-slate-500 text-sm">No reminders sent yet.</p>
       ) : (
-        <div className="card-premium overflow-hidden">
+        <div className="overflow-x-auto card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-slate-500 border-b border-gray-200">

@@ -176,7 +176,7 @@ export default function CampaignsPage() {
       )}
       {stats && (
         <Modal title="Campaign stats" onClose={() => { setStats(null); setStatsId(null); }}>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard label="Recipients" value={stats.recipients} />
             <StatCard label="Sent" value={stats.sent} accent="green" />
             <StatCard label="Unsubscribed" value={stats.unsubscribed} accent="red" />

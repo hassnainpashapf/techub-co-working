@@ -210,7 +210,7 @@ export default function TicketsPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         {[
           { l: 'Open', v: stats.open, tone: 'blue' },
           { l: 'In Progress', v: stats.inProgress, tone: 'amber' },

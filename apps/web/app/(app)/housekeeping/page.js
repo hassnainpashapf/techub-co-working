@@ -110,7 +110,7 @@ export default function HousekeepingPage() {
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ New task</button>
       </PageHeader>
 
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <StatCard label="Pending" value={pending.length} accent="amber" />
         <StatCard label="Overdue" value={overdue.length} accent="red" />
         <StatCard label="Done today" value={doneToday.length} accent="green" />

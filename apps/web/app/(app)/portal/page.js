@@ -103,7 +103,7 @@ function PortalBookingModal({ onClose, onDone }) {
         <Field label="Title">
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Team meeting" />
         </Field>
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <Field label="Date">
             <input type="date" className="input [color-scheme:dark]" value={date} onChange={(e) => setDate(e.target.value)} required />
           </Field>
@@ -173,7 +173,7 @@ function VisitorInviteModal({ onClose, onDone }) {
           <Field label="Visitor phone (optional)">
             <input className="input" value={visitorPhone} onChange={(e) => setVisitorPhone(e.target.value)} placeholder="03xx-xxxxxxx" />
           </Field>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <Field label="Date">
               <input type="date" className="input [color-scheme:dark]" value={date} onChange={(e) => setDate(e.target.value)} required />
             </Field>
@@ -645,7 +645,7 @@ export default function PortalPage() {
 
       {/* QUICK ACTIONS */}
       <h2 className="text-gray-900 font-bold mb-3">⚡ Quick Actions</h2>
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-6 gap-3 mb-3">
         {QUICK_ACTIONS.map((a) => (
           <button
             key={a.key}

@@ -11,6 +11,7 @@ const KEY = 'cw_sidebar_open';
 
 export default function AppLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   useEffect(() => {
     try {
@@ -24,6 +25,15 @@ export default function AppLayout({ children }) {
   }, []);
 
   const toggle = () => {
+    // On mobile (<lg) the hamburger opens/closes the slide-over drawer;
+    // on desktop it toggles the fixed sidebar (persisted).
+    const isDesktop =
+      typeof window !== 'undefined' &&
+      window.matchMedia('(min-width: 1024px)').matches;
+    if (!isDesktop) {
+      setMobileOpen((v) => !v);
+      return;
+    }
     setSidebarOpen((prev) => {
       const next = !prev;
       try { window.localStorage.setItem(KEY, next ? '1' : '0'); } catch (_e) { /* ignore */ }
@@ -35,7 +45,14 @@ export default function AppLayout({ children }) {
     <Protected>
       <div className="flex min-h-screen relative bg-[#f4f5f7]">
         <div className="relative z-10 flex min-h-screen w-full">
-          {sidebarOpen && <Sidebar />}
+          {/* Desktop sidebar (lg+) */}
+          <div className="hidden lg:block">
+            {sidebarOpen && <Sidebar />}
+          </div>
+          {/* Mobile slide-over drawer (<lg) */}
+          <div className="lg:hidden">
+            <Sidebar mobileOpen={mobileOpen} onClose={() => setMobileOpen(false)} />
+          </div>
           <div className="flex-1 min-w-0 flex flex-col">
             <Topbar onMenuClick={toggle} sidebarOpen={sidebarOpen} />
             <Shortcuts />

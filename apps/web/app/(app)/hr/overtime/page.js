@@ -65,7 +65,7 @@ export default function OvertimePage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-3 gap-3 mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
             {stats.map((s) => <StatCard key={s.label} label={s.label} value={s.value} />)}
           </div>
 

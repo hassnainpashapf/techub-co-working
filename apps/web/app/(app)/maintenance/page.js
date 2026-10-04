@@ -113,7 +113,7 @@ export default function MaintenancePage() {
         action={<button className="btn-primary" onClick={() => setShowForm(true)}>+ New Work Order</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-700">{stats.pending}</div><div className="text-xs text-gray-500">Pending</div></div>
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-teal-700">{stats.inProgress}</div><div className="text-xs text-gray-500">In Progress</div></div>
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-gray-900">{money(stats.totalCost)}</div><div className="text-xs text-gray-500">Completed cost</div></div>

@@ -239,7 +239,7 @@ export default function ShiftsPage() {
         loading ? <Spinner /> : templates.length === 0 ? (
           <EmptyState title="No templates yet" hint="Create weekly templates to auto-generate shifts every week." />
         ) : (
-          <div className="rounded-2xl border border-gray-200 overflow-hidden">
+          <div className="overflow-x-auto rounded-2xl border border-gray-200 overflow-hidden">
             <table className="w-full text-sm">
               <thead><tr className="bg-gray-100 text-left">
                 <th className="p-3 text-gray-600">Staff</th><th className="p-3 text-gray-600">Day</th>

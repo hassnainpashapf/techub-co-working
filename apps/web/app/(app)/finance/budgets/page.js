@@ -89,7 +89,7 @@ export default function BudgetsPage() {
       {error && <div className="mb-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{error}</div>}
 
       {totals && (
-        <div className="grid grid-cols-3 gap-3 mb-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
           {[
             { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-teal-700' },
             { label: 'Total Actual', value: money(totals.actual), tone: 'text-amber-700' },
@@ -103,7 +103,7 @@ export default function BudgetsPage() {
         </div>
       )}
 
-      <div className="card-premium overflow-hidden">
+      <div className="overflow-x-auto card-premium overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="text-left text-xs text-gray-500 border-b border-gray-200">

@@ -134,7 +134,7 @@ export default function OnboardingJourneysPage() {
 
       {tab === 'journeys' && (
         <>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard label="Active" value={counts.active} icon="🚀" accent="blue" />
             <StatCard label="Completed" value={counts.completed} icon="✅" accent="green" />
             <StatCard label="Stalled" value={counts.stalled} icon="⏸️" accent="red" />
@@ -150,7 +150,7 @@ export default function OnboardingJourneysPage() {
           </div>
 
           {!journeys.length ? <EmptyState title="Koi journey nahi" hint="Pehle template banayein, phir member ko assign karein" /> : (
-            <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden">
+            <div className="overflow-x-auto rounded-2xl border border-gray-200 bg-white overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-gray-500 border-b border-gray-200">

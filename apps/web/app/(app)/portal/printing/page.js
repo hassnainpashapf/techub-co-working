@@ -73,7 +73,7 @@ export default function PortalPrintingPage() {
           {history.length === 0 ? (
             <EmptyState title="No print jobs yet" />
           ) : (
-            <div className="card-premium overflow-hidden">
+            <div className="overflow-x-auto card-premium overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="text-left text-gray-500 border-b border-gray-200">

@@ -154,7 +154,7 @@ export default function ComplianceDocumentsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <StatCard label="Expiring soon" value={counts.expiring} accent="amber" />
         <StatCard label="Expired" value={counts.expired} accent="red" />
         <StatCard label="Valid" value={counts.valid} accent="emerald" />

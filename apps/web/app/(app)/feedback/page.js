@@ -147,7 +147,7 @@ export default function AdminFeedbackPage() {
           ))}
         </div>
       ) : (
-        <div className="card-premium overflow-hidden">
+        <div className="overflow-x-auto card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-gray-500 border-b border-gray-200">

@@ -172,7 +172,7 @@ export default function PortalConciergePage() {
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
       {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
 
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-teal-700">{services.length}</p>
           <p className="text-xs text-gray-500">Services</p>

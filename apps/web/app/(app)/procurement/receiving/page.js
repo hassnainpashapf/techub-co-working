@@ -198,7 +198,7 @@ export default function ReceivingPage() {
             {rows.map((r, i) => (
               <div key={i} className={`p-3 rounded-lg border ${r.receivedQty < r.orderedQty || r.condition !== 'good' ? 'border-amber-500/40 bg-amber-500/5' : 'border-gray-200 bg-gray-100'}`}>
                 <div className="font-medium text-gray-900 text-sm mb-2">{r.desc}</div>
-                <div className="grid grid-cols-3 gap-2 items-end">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 items-end">
                   <Field label="Ordered">
                     <input type="number" value={r.orderedQty} disabled className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-gray-200 text-gray-500 text-sm" />
                   </Field>

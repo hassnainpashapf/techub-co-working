@@ -161,7 +161,7 @@ export default function LeadImportPage() {
       {/* Step 2 — validation report */}
       {report && !result && (
         <>
-          <div className="grid grid-cols-3 gap-3 mb-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
             <StatCard label="Total rows" value={report.total} accent="blue" />
             <StatCard label="Valid" value={report.valid} accent="emerald" />
             <StatCard label="Invalid" value={report.invalid} accent={report.invalid > 0 ? 'red' : 'slate'} />

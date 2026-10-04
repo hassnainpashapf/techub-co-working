@@ -22,7 +22,7 @@ export function PageHeader({ title, sub, actions }) {
         <h1 className="text-[24px] 4xl:text-[32px] font-bold text-gray-900 tracking-tight">{title}</h1>
         {sub && <p className="text-[13.5px] 4xl:text-[15px] text-gray-500 mt-1">{sub}</p>}
       </div>
-      {actions && <div className="flex items-center gap-2">{actions}</div>}
+      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
     </div>
   );
 }
@@ -145,7 +145,7 @@ export function DataTable({ columns, rows, empty }) {
             {columns.map((c) => (
               <th
                 key={c.key}
-                className="text-left text-[11.5px] font-semibold uppercase tracking-wider text-gray-500 py-3.5 px-4 whitespace-nowrap"
+                className="text-left text-[11.5px] font-semibold uppercase tracking-wider text-gray-500 py-2.5 px-4 whitespace-nowrap"
               >
                 {c.label}
               </th>
@@ -156,7 +156,7 @@ export function DataTable({ columns, rows, empty }) {
           {rows.map((row, i) => (
             <tr key={row.id || i} className="border-b border-gray-100 hover:bg-teal-50/40 last:border-0 transition-colors">
               {columns.map((c) => (
-                <td key={c.key} className="py-3.5 px-4 align-middle text-gray-900">
+                <td key={c.key} className="py-2.5 px-4 align-middle text-gray-900">
                   {c.render ? c.render(row) : row[c.key]}
                 </td>
               ))}
@@ -193,7 +193,7 @@ export function Modal({ title, onClose, children, open }) {
 
 export function EmptyState({ title, hint, icon }) {
   return (
-    <div className="text-center py-14 px-6">
+    <div className="text-center py-8 px-6">
       <div className="mx-auto w-14 h-14 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-2xl mb-3 text-gray-400">
         {icon || '📭'}
       </div>

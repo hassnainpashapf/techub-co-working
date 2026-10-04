@@ -128,7 +128,7 @@ export default function StaffReferralsPage() {
       ) : !data?.referrals?.length ? (
         <EmptyState title="No referrals" hint="No referrals match this filter." />
       ) : (
-        <div className="card-premium overflow-hidden">
+        <div className="overflow-x-auto card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
               <tr className="text-left text-xs text-gray-500 border-b border-gray-200">

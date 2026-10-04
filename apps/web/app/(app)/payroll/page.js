@@ -107,7 +107,7 @@ export default function PayrollPage() {
         </>
       } />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      <div className="grid grid-cols-3 gap-3 mb-3">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <StatCard label="Payroll runs" value={runs.length} accent="blue" />
         <StatCard label="Total paid out" value={fmt(totalPaid)} accent="green" />
         <StatCard label="Staff with salary" value={new Set(structures.map((s) => s.userId)).size} accent="violet" />

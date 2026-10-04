@@ -27,6 +27,59 @@ const TITLES = {
   '/attendance': 'Attendance',
 };
 
+// Search input + results dropdown, shared by desktop and mobile.
+// Defined at module level so the input keeps focus across re-renders.
+function SearchBox({
+  query, setQuery, searching, dropOpen, setDropOpen, results, totalHits, groups, go,
+  boxClass, dropClass, containerRef, idSuffix, autoFocus, onCloseMobile,
+}) {
+  return (
+    <div ref={containerRef} className={`relative ${boxClass}`}>
+      <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3 py-1.5 text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input
+          id={`topbar-search${idSuffix}`}
+          placeholder="Search members, invoices…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => { if (totalHits > 0) setDropOpen(true); }}
+          onKeyDown={(e) => { if (e.key === 'Escape') { setDropOpen(false); setQuery(''); if (onCloseMobile) onCloseMobile(); } }}
+          autoFocus={autoFocus}
+          className="bg-transparent outline-none text-[13.5px] text-gray-900 placeholder-gray-400 flex-1 w-full min-w-0"
+        />
+        {searching ? (
+          <span className="animate-spin w-3.5 h-3.5 border-2 border-teal-600 border-t-transparent rounded-full" />
+        ) : (
+          <kbd className="hidden sm:inline-block text-[11px] text-gray-400 font-medium px-1.5 py-0.5 rounded bg-white border border-gray-200">⌘/</kbd>
+        )}
+      </div>
+      {dropOpen && results && (
+        <div className={dropClass}>
+          {totalHits === 0 ? (
+            <div className="px-4 py-4 text-center text-[13px] text-gray-500">No results for “{query.trim()}”</div>
+          ) : (
+            groups.map((g) => (
+              <div key={g.key} className="py-1.5">
+                <div className="px-4 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-400">{g.label}</div>
+                {g.items.map((item) => (
+                  <button
+                    key={`${g.key}-${item.id}`}
+                    onClick={() => go(item.path)}
+                    className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
+                  >
+                    <div className="text-[13px] font-medium text-gray-900 truncate">{item.title}</div>
+                    {item.subtitle && <div className="text-[11.5px] text-gray-500 truncate">{item.subtitle}</div>}
+                  </button>
+                ))}
+              </div>
+            ))
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
+
 export default function Topbar({ onMenuClick, sidebarOpen }) {
   const { user, logout } = useAuth();
   const [unread, setUnread] = useState(0);
@@ -36,8 +89,10 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
   const [searching, setSearching] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
   const [userDropOpen, setUserDropOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
   const debounceRef = useRef(null);
   const boxRef = useRef(null);
+  const mobileBoxRef = useRef(null);
 
   useEffect(() => {
     if (typeof window !== 'undefined') setPath(window.location.pathname);
@@ -102,7 +157,9 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
   // Close dropdown on outside click
   useEffect(() => {
     function onClick(e) {
-      if (boxRef.current && !boxRef.current.contains(e.target)) setDropOpen(false);
+      const inDesktop = boxRef.current && boxRef.current.contains(e.target);
+      const inMobile = mobileBoxRef.current && mobileBoxRef.current.contains(e.target);
+      if (!inDesktop && !inMobile) setDropOpen(false);
     }
     document.addEventListener('mousedown', onClick);
     return () => document.removeEventListener('mousedown', onClick);
@@ -112,6 +169,7 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
     setDropOpen(false);
     setQuery('');
     setResults(null);
+    setMobileSearchOpen(false);
     window.location.href = p;
   };
 
@@ -137,69 +195,44 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
   const parent = path.startsWith('/discover') || path.startsWith('/bookings') || path.startsWith('/spaces') ? 'Workspace' : 'Main';
 
   return (
-    <header className="bg-white border-b border-gray-200 px-5 py-2.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
-      <div className="flex items-center gap-3 text-[14px] whitespace-nowrap">
+    <header className="bg-white border-b border-gray-200 px-3 sm:px-5 py-2.5 flex flex-wrap items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
+      <div className="flex items-center gap-2 sm:gap-3 text-[14px] whitespace-nowrap min-w-0">
         <button
           onClick={onMenuClick}
           title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+          className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95 shrink-0"
         >
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
-        <span className="text-gray-900 font-bold text-[17px] tracking-tight">{title}</span>
+        <span className="text-gray-900 font-bold text-[16px] sm:text-[17px] tracking-tight truncate max-w-[34vw] sm:max-w-none">{title}</span>
         
         
       </div>
-      <div className="flex items-center gap-2.5">
-        <div ref={boxRef} className="relative">
-          <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3 py-1.5 w-[200px] text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-            <input
-              id="topbar-search"
-              placeholder="Search members, invoices…"
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              onFocus={() => { if (totalHits > 0) setDropOpen(true); }}
-              onKeyDown={(e) => { if (e.key === 'Escape') { setDropOpen(false); setQuery(''); } }}
-              className="bg-transparent outline-none text-[13.5px] text-gray-900 placeholder-gray-400 flex-1 w-full"
-            />
-            {searching ? (
-              <span className="animate-spin w-3.5 h-3.5 border-2 border-teal-600 border-t-transparent rounded-full" />
-            ) : (
-              <kbd className="text-[11px] text-gray-400 font-medium px-1.5 py-0.5 rounded bg-white border border-gray-200">⌘/</kbd>
-            )}
-          </div>
-          {dropOpen && results && (
-            <div className="absolute right-0 top-full mt-2 w-[340px] max-h-[420px] overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60 z-50">
-              {totalHits === 0 ? (
-                <div className="px-4 py-4 text-center text-[13px] text-gray-500">No results for “{query.trim()}”</div>
-              ) : (
-                groups.map((g) => (
-                  <div key={g.key} className="py-1.5">
-                    <div className="px-4 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-400">{g.label}</div>
-                    {g.items.map((item) => (
-                      <button
-                        key={`${g.key}-${item.id}`}
-                        onClick={() => go(item.path)}
-                        className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
-                      >
-                        <div className="text-[13px] font-medium text-gray-900 truncate">{item.title}</div>
-                        {item.subtitle && <div className="text-[11.5px] text-gray-500 truncate">{item.subtitle}</div>}
-                      </button>
-                    ))}
-                  </div>
-                ))
-              )}
-            </div>
-          )}
-        </div>
-        <button className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
+      <div className="flex items-center gap-1.5 sm:gap-2.5">
+        <SearchBox
+          query={query} setQuery={setQuery} searching={searching}
+          dropOpen={dropOpen} setDropOpen={setDropOpen} results={results}
+          totalHits={totalHits} groups={groups} go={go}
+          boxClass="hidden md:block"
+          dropClass="absolute right-0 top-full mt-2 w-[340px] max-h-[420px] overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60 z-50"
+          containerRef={boxRef}
+          idSuffix=""
+        />
+        <button
+          onClick={() => { setMobileSearchOpen((v) => { if (v) setQuery(''); return !v; }); }}
+          title="Search"
+          aria-label="Search"
+          className="md:hidden w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+        <button className="hidden sm:flex w-8 h-8 rounded-xl items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><polyline points="12 7 12 12 15 15"/></svg>
         </button>
         <button
           onClick={startTour}
           title="Take a tour"
-          className="w-8 h-8 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+          className="hidden sm:flex w-8 h-8 rounded-xl items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
@@ -239,6 +272,21 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
           )}
         </div>
       </div>
+      {mobileSearchOpen && (
+        <div className="basis-full md:hidden pt-2">
+          <SearchBox
+            query={query} setQuery={setQuery} searching={searching}
+            dropOpen={dropOpen} setDropOpen={setDropOpen} results={results}
+            totalHits={totalHits} groups={groups} go={go}
+            boxClass="block"
+            dropClass="absolute left-0 right-0 top-full mt-1.5 max-h-[55vh] overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60 z-50"
+            containerRef={mobileBoxRef}
+            idSuffix="-mobile"
+            autoFocus
+            onCloseMobile={() => setMobileSearchOpen(false)}
+          />
+        </div>
+      )}
     </header>
   );
 }

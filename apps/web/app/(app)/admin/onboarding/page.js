@@ -142,7 +142,7 @@ export default function OnboardingPage() {
               <input className="input font-mono" value={form.slug} onChange={(e) => { set('slug', slugify(e.target.value)); set('slugTouched', true); }} placeholder="techub-gulberg" />
             </Field>
             <Field label="Plan (14-din trial)">
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
                 {PLANS.map((p) => (
                   <button key={p.slug} type="button" onClick={() => set('plan', p.slug)}
                     className={`rounded-xl border p-3 text-sm font-semibold ${form.plan === p.slug ? 'border-[#0f766e] bg-[#0f766e]/15 text-white' : 'border-gray-200 text-gray-500 hover:border-slate-500'}`}>
