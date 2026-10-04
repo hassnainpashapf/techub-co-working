@@ -1,0 +1,48 @@
+// Phase 55 Track 3: Concierge Service Providers
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { serviceProviders ServiceProvider[] }
+// schema.prisma untouched by this track.
+
+model ServiceProvider {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  name        String
+  category    String   // errand | food | transport | wellness | business | home | other
+  contactName String?  @map("contact_name")
+  phone       String?
+  email       String?
+  address     String?
+  ratingAvg   Float?   @map("rating_avg") // 0..5, computed from provider ratings
+  ratingCount Int      @default(0) @map("rating_count")
+  isActive    Boolean  @default(true) @map("is_active")
+  createdBy   String?  @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, category])
+  @@index([tenantId, isActive])
+  @@map("service_providers")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase55_concierge) ---
+// CREATE TABLE "service_providers" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "category" TEXT NOT NULL,
+//   "contact_name" TEXT,
+//   "phone" TEXT,
+//   "email" TEXT,
+//   "address" TEXT,
+//   "rating_avg" DOUBLE PRECISION,
+//   "rating_count" INT NOT NULL DEFAULT 0,
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "created_by" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "service_providers_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "service_providers_tenant_id_category_idx" ON "service_providers"("tenant_id", "category");
+// CREATE INDEX "service_providers_tenant_id_is_active_idx" ON "service_providers"("tenant_id", "is_active");

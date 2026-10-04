@@ -407,6 +407,17 @@ app.use('/api/success-tasks', require('./routes/success-tasks'));
 app.use('/api/winback', require('./routes/winback'));
 app.use('/api/member-success', require('./routes/member-success'));
 app.use('/api/success-dashboard', require('./routes/success-dashboard'));
+// Phase 55: Concierge & Lifestyle Services Pack
+app.use('/api/concierge-services', require('./routes/concierge-services'));
+app.use('/api/service-requests', require('./routes/service-requests'));
+app.use('/api/service-providers', require('./routes/service-providers'));
+app.use('/api/request-messages', require('./routes/request-messages'));
+app.use('/api/concierge-billing', require('./routes/concierge-billing'));
+app.use('/api/service-ratings', require('./routes/service-ratings'));
+app.use('/api/concierge-sla', require('./routes/concierge-sla'));
+app.use('/api/concierge-dashboard', require('./routes/concierge-dashboard'));
+// Phase 55: concierge jobs (additive)
+try { require('./lib/conciergeSla').ensureSlaScheduled(); } catch (e) { console.warn('concierge SLA job not wired:', e.message); }
 // Phase 54: member success jobs (additive)
 try {
   require('./lib/healthScore').ensureHealthScheduled();

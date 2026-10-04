@@ -1,0 +1,46 @@
+// Phase 55 Track 1: Concierge Service Catalog
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { conciergeServices ConciergeService[] }
+//   ServiceProvider { services ConciergeService[] }   <-- Track 3 ke model par back-relation jorna
+// NOTE: ServiceProvider model Track 3 (service-providers.prisma) me canonical hai —
+// yahan dobara define nahi kiya taake duplicate model na ho. ConciergeService
+// Track 3 ke ServiceProvider ko reference karta hai.
+// schema.prisma untouched by this track.
+
+model ConciergeService {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  name        String
+  category    String // errand | food | transport | wellness | business
+  description String?
+  basePrice   Decimal? @map("base_price") @db.Decimal(14, 2)
+  isActive    Boolean  @default(true) @map("is_active")
+  providerId  String?  @map("provider_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  provider ServiceProvider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, category])
+  @@index([tenantId, isActive])
+  @@map("concierge_services")
+}
+
+// --- migration SQL (coordinator: phase55 migration) ---
+// CREATE TABLE "concierge_services" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "category" TEXT NOT NULL,
+//   "description" TEXT,
+//   "base_price" DECIMAL(14,2),
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "provider_id" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "concierge_services_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "concierge_services_provider_id_fkey" FOREIGN KEY ("provider_id") REFERENCES "service_providers"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "concierge_services_tenant_id_category_idx" ON "concierge_services"("tenant_id", "category");
+// CREATE INDEX "concierge_services_tenant_id_is_active_idx" ON "concierge_services"("tenant_id", "is_active");

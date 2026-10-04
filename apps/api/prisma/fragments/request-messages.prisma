@@ -1,0 +1,35 @@
+// Phase 55 Track 4: Request Chat/Thread — concierge service requests par member<->staff chat thread.
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   ServiceRequest { messages RequestMessage[] }
+// NOTE: ServiceRequest model Track 2 (service-requests.prisma) se aata hai — usay PEHLE merge karein.
+// schema.prisma untouched by this track.
+
+model RequestMessage {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  requestId String   @map("request_id")
+  senderId  String   @map("sender_id")
+  message   String
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant  Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  sender  User           @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, requestId, createdAt])
+  @@map("request_messages")
+}
+
+// --- migration SQL (coordinator: 20261003640000_phase55_concierge) ---
+// CREATE TABLE "request_messages" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "request_id" TEXT NOT NULL,
+//   "sender_id" TEXT NOT NULL,
+//   "message" TEXT NOT NULL,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "request_messages_request_id_fkey" FOREIGN KEY ("request_id") REFERENCES "service_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "request_messages_sender_id_fkey" FOREIGN KEY ("sender_id") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "request_messages_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "request_messages_tenant_id_request_id_created_at_idx" ON "request_messages"("tenant_id", "request_id", "created_at");

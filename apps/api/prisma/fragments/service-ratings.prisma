@@ -1,0 +1,40 @@
+// Phase 55 Track 6/10: Service Ratings (Concierge).
+// Coordinator: merge into apps/api/prisma/schema.prisma + back-relations joro:
+//   Tenant { serviceRatings ServiceRating[] }
+//   ServiceRequest { rating ServiceRating? }
+//   Member { serviceRatings ServiceRating[] }
+// schema.prisma untouched by this track.
+// NOTE: ServiceRequest model Track 2 (service-requests.prisma) se ayega — relation naam align kare.
+
+model ServiceRating {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  requestId String   @unique @map("request_id")
+  memberId  String   @map("member_id")
+  rating    Int // 1..5
+  comment   String? // optional review text (max 2000)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant  Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  request ServiceRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  member  Member         @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, memberId])
+  @@map("service_ratings")
+}
+
+// --- migration SQL (coordinator: phase55 migration me daale) ---
+// CREATE TABLE "service_ratings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "request_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "rating" INTEGER NOT NULL CHECK ("rating" BETWEEN 1 AND 5),
+//   "comment" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "service_ratings_request_id_fkey" FOREIGN KEY ("request_id") REFERENCES "service_requests"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "service_ratings_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "service_ratings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "service_ratings_request_id_key" ON "service_ratings"("request_id");
+// CREATE INDEX "service_ratings_tenant_id_member_id_idx" ON "service_ratings"("tenant_id", "member_id");

@@ -1,0 +1,58 @@
+// Phase 55 Track 2: Service Requests
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { serviceRequests ServiceRequest[] }
+//   Member { serviceRequests ServiceRequest[] }
+//   ConciergeService { requests ServiceRequest[] }
+//   User { assignedServiceRequests ServiceRequest[] }  (named relation "ServiceRequestAssignee")
+// NOTE: ConciergeService model Track 1 (concierge-services.prisma) se aata hai — usay PEHLE merge karein.
+// schema.prisma untouched by this track.
+
+model ServiceRequest {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  memberId    String   @map("member_id")
+  serviceId   String?  @map("service_id")
+  title       String
+  details     String?
+  status      String   @default("new") // new | accepted | in_progress | done | cancelled
+  priority    String   @default("normal") // low | normal | high | urgent
+  assignedTo  String?  @map("assigned_to")
+  price       Decimal? @db.Decimal(12, 2)
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant           @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member           @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  service  ConciergeService? @relation(fields: [serviceId], references: [id], onDelete: SetNull)
+  assignee User?            @relation("ServiceRequestAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, memberId])
+  @@index([tenantId, assignedTo])
+  @@map("service_requests")
+}
+
+// --- migration SQL (coordinator: 20261003640000_phase55_concierge) ---
+// CREATE TABLE "service_requests" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "service_id" TEXT,
+//   "title" TEXT NOT NULL,
+//   "details" TEXT,
+//   "status" TEXT NOT NULL DEFAULT 'new',
+//   "priority" TEXT NOT NULL DEFAULT 'normal',
+//   "assigned_to" TEXT,
+//   "price" DECIMAL(12,2),
+//   "completed_at" TIMESTAMP(3),
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "service_requests_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "service_requests_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "service_requests_service_id_fkey" FOREIGN KEY ("service_id") REFERENCES "concierge_services"("id") ON DELETE SET NULL ON UPDATE CASCADE,
+//   CONSTRAINT "service_requests_assigned_to_fkey" FOREIGN KEY ("assigned_to") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "service_requests_tenant_id_status_idx" ON "service_requests"("tenant_id", "status");
+// CREATE INDEX "service_requests_tenant_id_member_id_idx" ON "service_requests"("tenant_id", "member_id");
+// CREATE INDEX "service_requests_tenant_id_assigned_to_idx" ON "service_requests"("tenant_id", "assigned_to");

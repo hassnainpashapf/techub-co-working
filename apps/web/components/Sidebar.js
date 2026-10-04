@@ -196,6 +196,14 @@ const NAV_MAIN = [
       { label: '🚀 Onboarding', path: '/success/onboarding' },
     ],
   },
+  { key: 'concierge', label: '🛎️ Concierge', path: '/concierge', icon: 'message',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Concierge Dashboard', path: '/concierge' },
+      { label: '🧾 Service Catalog', path: '/concierge/services' },
+      { label: '📋 Staff Board', path: '/concierge/board' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only
@@ -223,6 +231,7 @@ const NAV_MEMBER = [
   { key: 'printing', label: 'Printing', path: '/portal/printing', icon: 'investor' },
   { key: 'lostfound', label: 'Lost & Found', path: '/portal/lost-found', icon: 'launchpad' },
   { key: 'myacademy', label: '🎓 Academy', path: '/portal/academy', icon: 'school' },
+  { key: 'myconcierge', label: '🛎️ Concierge', path: '/portal/concierge', icon: 'message' },
 ];
 
 const NAV_OTHERS = [
