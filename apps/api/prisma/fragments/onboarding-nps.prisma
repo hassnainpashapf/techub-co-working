@@ -1,0 +1,35 @@
+// Phase 54 Track 6: 30-Day Feedback Auto-NPS
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { onboardingFeedback OnboardingFeedback[] }
+//   Member { onboardingFeedback OnboardingFeedback? }
+// schema.prisma untouched by this track.
+
+model OnboardingFeedback {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  memberId    String   @map("member_id")
+  score       Int // 0..10 (NPS)
+  comment     String?
+  submittedAt DateTime @default(now()) @map("submitted_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, memberId]) // ek member ek dafa feedback deta hai
+  @@index([tenantId, submittedAt])
+  @@map("onboarding_feedback")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase54_success) ---
+// CREATE TABLE "onboarding_feedback" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "score" INTEGER NOT NULL CHECK ("score" BETWEEN 0 AND 10),
+//   "comment" TEXT,
+//   "submitted_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "onboarding_feedback_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "onboarding_feedback_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "onboarding_feedback_tenant_id_member_id_key" ON "onboarding_feedback"("tenant_id", "member_id");
+// CREATE INDEX "onboarding_feedback_tenant_id_submitted_at_idx" ON "onboarding_feedback"("tenant_id", "submitted_at");

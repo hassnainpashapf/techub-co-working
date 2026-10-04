@@ -1,0 +1,79 @@
+// Phase 54 Track 8: Win-Back Campaigns
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { winbackCampaigns WinbackCampaign[] }
+//   WinbackCampaign { logs WinbackLog[] }
+//   Member { winbackLogs WinbackLog[] }
+// schema.prisma untouched by this track.
+
+model WinbackCampaign {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  name         String
+  targetFilter Json     @default("{}") // { inactiveDays: 60, plans: ["starter"], minInactiveDays }
+  offerText    String?  @map("offer_text")
+  subject      String?  // email subject override
+  status       String   @default("draft") // draft | active | done
+  sentCount    Int      @default(0) @map("sent_count")
+  lastRunAt    DateTime? @map("last_run_at")
+  createdBy    String?  @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  logs   WinbackLog[]
+
+  @@index([tenantId, status])
+  @@map("winback_campaigns")
+}
+
+model WinbackLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  campaignId String   @map("campaign_id")
+  memberId   String   @map("member_id")
+  email      String
+  status     String   @default("sent") // sent | skipped | failed
+  error      String?
+  sentAt     DateTime @default(now()) @map("sent_at")
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  campaign WinbackCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  member   Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, memberId]) // dedupe: ek member ko ek campaign me ek dafa
+  @@index([tenantId, memberId])
+  @@map("winback_logs")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase54_success) ---
+// CREATE TABLE "winback_campaigns" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "target_filter" JSONB NOT NULL DEFAULT '{}',
+//   "offer_text" TEXT,
+//   "subject" TEXT,
+//   "status" TEXT NOT NULL DEFAULT 'draft',
+//   "sent_count" INT NOT NULL DEFAULT 0,
+//   "last_run_at" TIMESTAMP(3),
+//   "created_by" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "winback_campaigns_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "winback_campaigns_tenant_id_status_idx" ON "winback_campaigns"("tenant_id", "status");
+// CREATE TABLE "winback_logs" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "campaign_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "email" TEXT NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'sent',
+//   "error" TEXT,
+//   "sent_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "winback_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "winback_logs_campaign_id_fkey" FOREIGN KEY ("campaign_id") REFERENCES "winback_campaigns"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "winback_logs_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "winback_logs_campaign_id_member_id_key" ON "winback_logs"("campaign_id", "member_id");
+// CREATE INDEX "winback_logs_tenant_id_member_id_idx" ON "winback_logs"("tenant_id", "member_id");

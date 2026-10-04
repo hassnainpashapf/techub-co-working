@@ -1,0 +1,54 @@
+// Phase 54 Track 7: Success Manager Tasks
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { successTasks SuccessTask[] }
+//   Member { successTasks SuccessTask[] }
+//   User { assignedSuccessTasks SuccessTask[] }
+// schema.prisma untouched by this track.
+
+model SuccessTask {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  memberId    String   @map("member_id")
+  title       String
+  dueAt       DateTime @map("due_at")
+  status      String   @default("open") // open | done | overdue
+  assignedTo  String?  @map("assigned_to")
+  notes       String?
+  source      String   @default("manual") // manual | health-alert | journey-stalled | nps
+  createdBy   String?  @map("created_by")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  assignee User?  @relation("SuccessTaskAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, memberId])
+  @@index([tenantId, assignedTo])
+  @@map("success_tasks")
+}
+
+// --- migration SQL (coordinator: 20261003630000_phase54_success) ---
+// CREATE TABLE "success_tasks" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "due_at" TIMESTAMP(3) NOT NULL,
+//   "status" TEXT NOT NULL DEFAULT 'open',
+//   "assigned_to" TEXT,
+//   "notes" TEXT,
+//   "source" TEXT NOT NULL DEFAULT 'manual',
+//   "created_by" TEXT,
+//   "completed_at" TIMESTAMP(3),
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL,
+//   CONSTRAINT "success_tasks_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "success_tasks_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "success_tasks_assigned_to_fkey" FOREIGN KEY ("assigned_to") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "success_tasks_tenant_id_status_idx" ON "success_tasks"("tenant_id", "status");
+// CREATE INDEX "success_tasks_tenant_id_member_id_idx" ON "success_tasks"("tenant_id", "member_id");
+// CREATE INDEX "success_tasks_tenant_id_assigned_to_idx" ON "success_tasks"("tenant_id", "assigned_to");

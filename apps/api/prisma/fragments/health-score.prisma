@@ -1,0 +1,35 @@
+// Phase 54 Track 2: Member Health Score — schema fragment
+// COORDINATOR: schema.prisma me paste + back-relations:
+//   Tenant { memberHealths MemberHealth[] }
+//   Member { health MemberHealth? }
+// migration SQL neeche (20261003630000_phase53_academy naming coordinator final kare —
+// suggest: 20261003630000_phase54_success).
+
+model MemberHealth {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String   @unique @map("member_id")
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  score      Int      @default(50) // 0..100 weighted health score
+  factors    Json     @default("{}") // {bookings, payments, attendance, engagement, detail:{...}}
+  computedAt DateTime @default(now()) @map("computed_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, score])
+  @@map("member_health")
+}
+
+// --- migration SQL (coordinator: phase54_success migration) ---
+// CREATE TABLE "member_health" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL UNIQUE,
+//   "score" INTEGER NOT NULL DEFAULT 50 CHECK ("score" BETWEEN 0 AND 100),
+//   "factors" JSONB NOT NULL DEFAULT '{}',
+//   "computed_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "member_health_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "member_health_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "member_health_tenant_id_score_idx" ON "member_health"("tenant_id", "score");

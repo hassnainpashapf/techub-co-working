@@ -189,6 +189,13 @@ const NAV_MAIN = [
       { label: '🎤 Workshops', path: '/academy/workshops' },
     ],
   },
+  { key: 'success', label: '🌱 Member Success', path: '/success', icon: 'team',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Success Dashboard', path: '/success' },
+      { label: '🚀 Onboarding', path: '/success/onboarding' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only

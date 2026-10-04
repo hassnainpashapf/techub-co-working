@@ -1,0 +1,74 @@
+// Phase 54 Track 1/10: Member Success — Onboarding Journeys schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma + back-relations joro:
+//   Tenant { onboardingTemplates OnboardingTemplate[] ; memberJourneys MemberJourney[] }
+//   Member { memberJourneys MemberJourney[] }
+//   OnboardingTemplate { journeys MemberJourney[] }
+// schema.prisma untouched by this track.
+
+// Journey blueprint: stages = [{ title, dayOffset, tasks: ["task1","task2"] }]
+model OnboardingTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  stages    Json // [{ title, dayOffset, tasks: [...] }]
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  journeys MemberJourney[]
+
+  @@index([tenantId, isDefault])
+  @@map("onboarding_templates")
+}
+
+model MemberJourney {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  memberId     String    @map("member_id")
+  templateId   String?   @map("template_id")
+  templateName String    @default("") @map("template_name") // snapshot (template badal jaye to history mehfooz)
+  stageTasks   Json      @default("[]") @map("stage_tasks") // [[true,false],[true]] — stage ke tasks ka done state snapshot
+  currentStage Int       @default(0) @map("current_stage")
+  status       String    @default("active") // active | completed | stalled
+  startedAt    DateTime  @default(now()) @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+
+  tenant   Tenant            @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member            @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  template OnboardingTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, memberId, status])
+  @@index([tenantId, status])
+  @@map("member_journeys")
+}
+
+// --- migration SQL (coordinator: 20261003630000_phase54_success me daale) ---
+// CREATE TABLE "onboarding_templates" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "stages" JSONB NOT NULL,
+//   "is_default" BOOLEAN NOT NULL DEFAULT false,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "onboarding_templates_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE TABLE "member_journeys" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "template_id" TEXT,
+//   "template_name" TEXT NOT NULL DEFAULT '',
+//   "stage_tasks" JSONB NOT NULL DEFAULT '[]',
+//   "current_stage" INTEGER NOT NULL DEFAULT 0,
+//   "status" TEXT NOT NULL DEFAULT 'active',
+//   "started_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "completed_at" TIMESTAMP(3),
+//   CONSTRAINT "member_journeys_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "member_journeys_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "member_journeys_template_id_fkey" FOREIGN KEY ("template_id") REFERENCES "onboarding_templates"("id") ON DELETE SET NULL ON UPDATE CASCADE
+// );
+// CREATE INDEX "onboarding_templates_tenant_id_is_default_idx" ON "onboarding_templates"("tenant_id", "is_default");
+// CREATE INDEX "member_journeys_tenant_id_member_id_status_idx" ON "member_journeys"("tenant_id", "member_id", "status");
+// CREATE INDEX "member_journeys_tenant_id_status_idx" ON "member_journeys"("tenant_id", "status");

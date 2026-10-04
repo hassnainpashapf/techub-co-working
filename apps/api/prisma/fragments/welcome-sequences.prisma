@@ -1,0 +1,73 @@
+// Phase 54 Track 3: Welcome Automation (Day 1/7/30)
+// COORDINATOR: merge into schema.prisma + add back-relations:
+//   Tenant { welcomeSequences WelcomeSequence[] }
+//   Member { welcomeLogs WelcomeLog[] }
+//   WelcomeSequence { logs WelcomeLog[] }
+// schema.prisma untouched by this track.
+
+model WelcomeSequence {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  steps     Json     @default("[]") // [{dayOffset, channel: "email"|"sms"|"whatsapp", templateId?, subject?}]
+  isActive  Boolean  @default(true) @map("is_active")
+  createdBy String?  @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  logs   WelcomeLog[]
+
+  @@index([tenantId, isActive])
+  @@map("welcome_sequences")
+}
+
+model WelcomeLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  memberId   String   @map("member_id")
+  sequenceId String   @map("sequence_id")
+  stepIndex  Int      @map("step_index")
+  channel    String   // email|sms|whatsapp
+  sentAt     DateTime @default(now()) @map("sent_at")
+  status     String   @default("sent") // sent|skipped|failed
+  error      String?
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  sequence WelcomeSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+
+  @@unique([sequenceId, memberId, stepIndex]) // dedupe: ek member ko ek step ek dafa
+  @@index([tenantId, memberId])
+  @@map("welcome_logs")
+}
+
+// --- migration SQL (coordinator: 2026xxxxxx_phase54_success) ---
+// CREATE TABLE "welcome_sequences" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "name" TEXT NOT NULL,
+//   "steps" JSONB NOT NULL DEFAULT '[]',
+//   "is_active" BOOLEAN NOT NULL DEFAULT true,
+//   "created_by" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updated_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "welcome_sequences_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE INDEX "welcome_sequences_tenant_id_is_active_idx" ON "welcome_sequences"("tenant_id", "is_active");
+// CREATE TABLE "welcome_logs" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "sequence_id" TEXT NOT NULL,
+//   "step_index" INT NOT NULL,
+//   "channel" TEXT NOT NULL,
+//   "sent_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "status" TEXT NOT NULL DEFAULT 'sent',
+//   "error" TEXT,
+//   CONSTRAINT "welcome_logs_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "welcome_logs_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "welcome_logs_sequence_id_fkey" FOREIGN KEY ("sequence_id") REFERENCES "welcome_sequences"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "welcome_logs_sequence_id_member_id_step_index_key" ON "welcome_logs"("sequence_id", "member_id", "step_index");
+// CREATE INDEX "welcome_logs_tenant_id_member_id_idx" ON "welcome_logs"("tenant_id", "member_id");

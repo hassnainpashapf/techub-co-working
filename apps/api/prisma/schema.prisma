@@ -244,6 +244,17 @@ model Tenant {
   workshopBookings     WorkshopBooking[]
   courseRatings        CourseRating[]
   learningPaths        LearningPath[]
+  // Phase 54: Member Success & Onboarding Pack
+  memberJourneyTemplates MemberJourneyTemplate[]
+  memberJourneys       MemberJourney[]
+  memberHealths        MemberHealth[]
+  welcomeSequences     WelcomeSequence[]
+  welcomeLogs          WelcomeLog[]
+  buddyPairs           BuddyPair[]
+  onboardingFeedback   OnboardingFeedback[]
+  successTasks         SuccessTask[]
+  winbackCampaigns     WinbackCampaign[]
+  winbackLogs          WinbackLog[]
 }
 
 // ----------------------------------------------------------------- user ---
@@ -347,6 +358,8 @@ model User {
   createdLegalDocuments      LegalDocument[]   @relation("CreatedLegalDocs")
   // Phase 53: Learning & Academy Pack
   taughtCourses            Course[]              @relation("CourseInstructor")
+  // Phase 54: Member Success & Onboarding Pack
+  assignedSuccessTasks     SuccessTask[]         @relation("SuccessTaskAssignee")
 }
 
 // ---------------------------------------------------------------- space ---
@@ -551,6 +564,15 @@ model Member {
   certificates               Certificate[]           @relation("MemberCertificates")
   workshopBookings           WorkshopBooking[]
   courseRatings              CourseRating[]
+  // Phase 54: Member Success & Onboarding Pack
+  health                     MemberHealth?
+  memberJourneys             MemberJourney[]
+  welcomeLogs                WelcomeLog[]
+  newcomerBuddyPairs         BuddyPair[]             @relation("NewcomerBuddyPairs")
+  buddyForPairs              BuddyPair[]             @relation("BuddyForPairs")
+  onboardingFeedback         OnboardingFeedback[]
+  successTasks               SuccessTask[]
+  winbackLogs                WinbackLog[]
 }
 
 // ------------------------------------------------------------ company ------
@@ -4682,4 +4704,199 @@ model LearningPath {
 
   @@index([tenantId, isPublished])
   @@map("LearningPath")
+}
+
+// ------------------------------------------------ Phase 54: Member Success & Onboarding Pack ---
+// Note: Phase 42 me already staff-side OnboardingTemplate hai; member journeys ke liye alag naam rakha gaya hai.
+
+model MemberJourneyTemplate {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  stages    Json // [{ title, dayOffset, tasks: [...] }]
+  isDefault Boolean  @default(false) @map("is_default")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant         @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  journeys MemberJourney[]
+
+  @@index([tenantId, isDefault])
+  @@map("member_journey_templates")
+}
+
+model MemberJourney {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  memberId     String    @map("member_id")
+  templateId   String?   @map("template_id")
+  templateName String    @default("") @map("template_name")
+  stageTasks   Json      @default("[]") @map("stage_tasks")
+  currentStage Int       @default(0) @map("current_stage")
+  status       String    @default("active") // active | completed | stalled
+  startedAt    DateTime  @default(now()) @map("started_at")
+  completedAt  DateTime? @map("completed_at")
+
+  tenant   Tenant                @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member                @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  template MemberJourneyTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, memberId, status])
+  @@index([tenantId, status])
+  @@map("member_journeys")
+}
+
+model MemberHealth {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  memberId   String   @unique @map("member_id")
+  member     Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  score      Int      @default(50)
+  factors    Json     @default("{}")
+  computedAt DateTime @default(now()) @map("computed_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, score])
+  @@map("member_health")
+}
+
+model WelcomeSequence {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  name      String
+  steps     Json     @default("[]")
+  isActive  Boolean  @default(true) @map("is_active")
+  createdBy String?  @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant      @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  logs   WelcomeLog[]
+
+  @@index([tenantId, isActive])
+  @@map("welcome_sequences")
+}
+
+model WelcomeLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  memberId   String   @map("member_id")
+  sequenceId String   @map("sequence_id")
+  stepIndex  Int      @map("step_index")
+  channel    String
+  sentAt     DateTime @default(now()) @map("sent_at")
+  status     String   @default("sent") // sent | skipped | failed
+  error      String?
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  sequence WelcomeSequence @relation(fields: [sequenceId], references: [id], onDelete: Cascade)
+
+  @@unique([sequenceId, memberId, stepIndex])
+  @@index([tenantId, memberId])
+  @@map("welcome_logs")
+}
+
+model BuddyPair {
+  id         String   @id @default(uuid())
+  tenantId   String
+  newcomerId String
+  buddyId    String
+  assignedAt DateTime @default(now())
+  status     String   @default("active") // active | completed
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  newcomer Member @relation("NewcomerBuddyPairs", fields: [newcomerId], references: [id], onDelete: Cascade)
+  buddy    Member @relation("BuddyForPairs", fields: [buddyId], references: [id], onDelete: Cascade)
+
+  @@unique([newcomerId, buddyId])
+  @@index([tenantId, status])
+  @@index([buddyId])
+  @@index([newcomerId])
+  @@map("buddy_pairs")
+}
+
+model OnboardingFeedback {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  memberId    String   @map("member_id")
+  score       Int // 0..10 (NPS)
+  comment     String?
+  submittedAt DateTime @default(now()) @map("submitted_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([tenantId, memberId])
+  @@index([tenantId, submittedAt])
+  @@map("onboarding_feedback")
+}
+
+model SuccessTask {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  memberId    String   @map("member_id")
+  title       String
+  dueAt       DateTime @map("due_at")
+  status      String   @default("open") // open | done | overdue
+  assignedTo  String?  @map("assigned_to")
+  notes       String?
+  source      String   @default("manual") // manual | health-alert | journey-stalled | nps
+  createdBy   String?  @map("created_by")
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  assignee User?  @relation("SuccessTaskAssignee", fields: [assignedTo], references: [id], onDelete: SetNull)
+
+  @@index([tenantId, status])
+  @@index([tenantId, memberId])
+  @@index([tenantId, assignedTo])
+  @@map("success_tasks")
+}
+
+model WinbackCampaign {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  name         String
+  targetFilter Json     @default("{}")
+  offerText    String?  @map("offer_text")
+  subject      String?
+  status       String   @default("draft") // draft | active | done
+  sentCount    Int      @default(0) @map("sent_count")
+  lastRunAt    DateTime? @map("last_run_at")
+  createdBy    String?  @map("created_by")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  tenant Tenant       @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  logs   WinbackLog[]
+
+  @@index([tenantId, status])
+  @@map("winback_campaigns")
+}
+
+model WinbackLog {
+  id         String   @id @default(cuid())
+  tenantId   String   @map("tenant_id")
+  campaignId String   @map("campaign_id")
+  memberId   String   @map("member_id")
+  email      String
+  status     String   @default("sent") // sent | skipped | failed
+  error      String?
+  sentAt     DateTime @default(now()) @map("sent_at")
+
+  tenant   Tenant          @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  campaign WinbackCampaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  member   Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, memberId])
+  @@index([tenantId, memberId])
+  @@map("winback_logs")
 }

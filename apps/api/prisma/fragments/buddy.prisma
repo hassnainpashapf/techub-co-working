@@ -1,0 +1,48 @@
+// Phase 54 Track 4/10: Buddy/Mentor Program — newcomers ko experienced members assign.
+// Merge (coordinator): models + Tenant/Member back-relations -> schema.prisma,
+// phir migration SQL (neeche) ko phase-54 wali migration me jorein.
+//
+// Back-relations (schema.prisma me add karein):
+//   model Tenant { ... buddyPairs BuddyPair[] }
+//   model Member { ... newcomerBuddyPairs BuddyPair[] @relation("NewcomerBuddyPairs")
+//                        buddyForPairs     BuddyPair[] @relation("BuddyForPairs") }
+
+model BuddyPair {
+  id         String   @id @default(uuid())
+  tenantId   String
+  newcomerId String
+  buddyId    String
+  assignedAt DateTime @default(now())
+  status     String   @default("active") // active | completed
+  notes      String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  newcomer Member @relation("NewcomerBuddyPairs", fields: [newcomerId], references: [id], onDelete: Cascade)
+  buddy    Member @relation("BuddyForPairs", fields: [buddyId], references: [id], onDelete: Cascade)
+
+  @@unique([newcomerId, buddyId]) // ek jodi ek dafa — dobara assign = naya notes ke sath edit
+  @@index([tenantId, status])
+  @@index([buddyId])
+  @@index([newcomerId])
+  @@map("buddy_pairs")
+}
+
+// --- Migration SQL (PostgreSQL) ---
+// CREATE TABLE buddy_pairs (
+//   id TEXT PRIMARY KEY,
+//   tenant_id TEXT NOT NULL REFERENCES tenants(id) ON DELETE CASCADE,
+//   newcomer_id TEXT NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+//   buddy_id TEXT NOT NULL REFERENCES members(id) ON DELETE CASCADE,
+//   assigned_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   status TEXT NOT NULL DEFAULT 'active',
+//   notes TEXT,
+//   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+//   UNIQUE (newcomer_id, buddy_id),
+//   CHECK (newcomer_id <> buddy_id)
+// );
+// CREATE INDEX buddy_pairs_tenant_status_idx ON buddy_pairs (tenant_id, status);
+// CREATE INDEX buddy_pairs_buddy_idx ON buddy_pairs (buddy_id);
+// CREATE INDEX buddy_pairs_newcomer_idx ON buddy_pairs (newcomer_id);

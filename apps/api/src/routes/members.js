@@ -315,6 +315,8 @@ router.post('/', write, validateBody(memberSchema), async (req, res, next) => {
     emitWebhook(req.user.tenantId, 'member.created', { id: member.id, name: member.name, email: member.email });
     // Phase 40 Track 9: new-member intro matching (fire-and-forget — member creation kabhi fail nahi hoti)
     try { require('../lib/introMatcher').onNewMember(req.user.tenantId, member.id); } catch {}
+    // Phase 54: auto-start onboarding journey on member creation (fire-and-forget)
+    try { require('./member-journeys').ensureJourneyForMember(prisma, req.user.tenantId, member.id); } catch {}
     auditAsync({ tenantId: req.user.tenantId, actorId: req.user.sub, action: 'member.create', entity: 'Member', entityId: member.id, newValue: { name: member.name }, ip: req.ip, userAgent: req.headers['user-agent'] });
     return res.status(201).json({ member });
   } catch (err) {

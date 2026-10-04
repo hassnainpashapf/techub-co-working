@@ -396,6 +396,28 @@ app.use('/api/course-ratings', require('./routes/course-ratings').router || requ
 app.use('/api/learning-paths', require('./routes/learning-paths'));
 app.use('/api/instructor', require('./routes/instructor'));
 app.use('/api/academy-dashboard', require('./routes/academy-dashboard'));
+// Phase 54: Member Success & Onboarding Pack (additive) — mount paths chosen to avoid clashes:
+//   /api/member-journeys (NOT /api/onboarding — Phase 35 tenant wizard), /api/member-health (NOT /api/health — Phase 32 system health)
+app.use('/api/member-journeys', require('./routes/member-journeys').router);
+app.use('/api/member-health', require('./routes/member-health'));
+app.use('/api/welcome', require('./routes/welcome').router);
+app.use('/api/buddy', require('./routes/buddy'));
+app.use('/api/onboarding-feedback', require('./routes/onboarding-feedback'));
+app.use('/api/success-tasks', require('./routes/success-tasks'));
+app.use('/api/winback', require('./routes/winback'));
+app.use('/api/member-success', require('./routes/member-success'));
+app.use('/api/success-dashboard', require('./routes/success-dashboard'));
+// Phase 54: member success jobs (additive)
+try {
+  require('./lib/healthScore').ensureHealthScheduled();
+  require('./lib/welcomeAutomation').ensureWelcomeSequencesScheduled();
+  require('./lib/firstBookingNudge').ensureFirstBookingNudge();
+  require('./lib/onboardingNps').ensureOnboardingNpsScheduled();
+} catch (e) { console.error('[phase54] success jobs schedule failed:', e.message); }
+try {
+  const { generateSuccessTasks } = require('./lib/successTaskGen');
+  setInterval(() => { generateSuccessTasks().catch(() => {}); }, 24 * 60 * 60 * 1000).unref();
+} catch (e) { console.error('[phase54] success task generation schedule failed:', e.message); }
 try {
   require('./lib/reportScheduler').ensureReportScheduler();
 } catch (e) { console.error('[phase52] report scheduler schedule failed:', e.message); }
