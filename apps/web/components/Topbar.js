@@ -21,7 +21,7 @@ const TITLES = {
   '/attendance': 'Attendance',
 };
 
-export default function Topbar() {
+export default function Topbar({ onMenuClick, sidebarOpen }) {
   const { user, logout } = useAuth();
   const [unread, setUnread] = useState(0);
   const [path, setPath] = useState('');
@@ -133,6 +133,13 @@ export default function Topbar() {
   return (
     <header className="bg-white border-b border-gray-200 px-7 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <div className="flex items-center gap-3 text-[14px] whitespace-nowrap">
+        <button
+          onClick={onMenuClick}
+          title={sidebarOpen ? 'Hide sidebar' : 'Show sidebar'}
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
+        >
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
         <span className="text-gray-900 font-bold text-[20px] tracking-tight">{title}</span>
         
         
