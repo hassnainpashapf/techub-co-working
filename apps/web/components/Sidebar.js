@@ -54,6 +54,7 @@ const NAV_MAIN = [
   {
     key: 'workspaces', label: 'Workspaces', path: '/spaces', icon: 'workspaces',
     children: [
+      { label: 'Workspaces Overview', path: '/spaces/overview' },
       { label: 'Discover Booking', path: '/discover' },
       { label: 'Booking History', path: '/bookings' },
       { label: 'Requests', path: '/bookings/requests' },
@@ -75,6 +76,7 @@ const NAV_MAIN = [
   },
   { key: 'investor', label: 'Investor', path: '/finance', icon: 'investor',
     children: [
+      { label: 'Investor Overview', path: '/investor/overview' },
       { label: 'Finance Overview', path: '/finance' },
       { label: 'Billing & Invoices', path: '/billing' },
       { label: 'Recurring Invoices', path: '/billing/recurring' },
@@ -106,6 +108,7 @@ const NAV_MAIN = [
   },
   { key: 'school', label: 'School', path: '/members', icon: 'school',
     children: [
+      { label: 'School Overview', path: '/school/overview' },
       { label: 'Members', path: '/members' },
       { label: 'Companies', path: '/companies' },
       { label: 'Leads', path: '/leads' },
@@ -116,6 +119,7 @@ const NAV_MAIN = [
   },
   { key: 'launchpad', label: 'Launchpad', path: '/tasks', icon: 'launchpad',
     children: [
+      { label: 'Launchpad Overview', path: '/launchpad/overview' },
       { label: 'Tasks', path: '/tasks' },
       { label: 'Tickets', path: '/tickets' },
       { label: 'Maintenance', path: '/maintenance' },
@@ -133,7 +137,12 @@ const NAV_MAIN = [
       { label: 'Reminders', path: '/reminders' },
     ],
   },
-  { key: 'message', label: 'Message', path: '/reminders', icon: 'message' },
+  { key: 'message', label: 'Message', path: '/message/overview', icon: 'message',
+    children: [
+      { label: 'Message Overview', path: '/message/overview' },
+      { label: 'Reminders', path: '/reminders' },
+    ],
+  },
   { key: 'forms', label: 'Forms & Surveys', path: '/forms', icon: 'message',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
