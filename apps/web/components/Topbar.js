@@ -11,6 +11,7 @@ const TITLES = {
   '/discover': 'Discover Booking',
   '/bookings': 'Booking History',
   '/users': 'Team Members',
+  '/team': 'Team Overview',
   '/finance': 'Investor',
   '/members': 'School',
   '/tasks': 'Launchpad',

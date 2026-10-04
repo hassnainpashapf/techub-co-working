@@ -64,6 +64,7 @@ const NAV_MAIN = [
   },
   { key: 'team', label: 'Team', path: '/users', icon: 'team',
     children: [
+      { label: 'Team Overview', path: '/team' },
       { label: 'Team Members', path: '/users' },
       { label: 'Attendance', path: '/attendance' },
       { label: 'Scan QR', path: '/attendance/scan' },
