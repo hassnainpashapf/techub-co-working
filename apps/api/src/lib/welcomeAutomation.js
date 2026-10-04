@@ -6,7 +6,7 @@
 
 const prisma = require('./prisma');
 const { sendEmail } = require('./mailer');
-const { writeAudit } = require('./audit');
+const { writeAudit } = require('../middleware/audit');
 
 function daysSince(date) {
   if (!date) return null;
@@ -100,7 +100,7 @@ async function runWelcomeSequences() {
         }
       }
     }
-    await writeAudit(seq.tenantId, 'welcome.sequence_run', { sequenceId: seq.id, name: seq.name, ...out });
+    await writeAudit({ tenantId: seq.tenantId, action: 'welcome.sequence_run', entity: 'WelcomeSequence', entityId: seq.id, newValue: { sequenceId: seq.id, name: seq.name, ...out } });
   }
   return out;
 }
