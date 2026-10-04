@@ -57,7 +57,7 @@ export default function ApiDocsPage() {
   const docsUrl = `${API_BASE}/docs`;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader
         title="API Documentation"
         sub="CoworkOS REST API — 40+ documented endpoints, OpenAPI 3.0"

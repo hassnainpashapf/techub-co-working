@@ -60,7 +60,7 @@ export default function OvertimePage() {
   ];
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader title="⏱️ Overtime" subtitle="Overtime requests aur approvals" action={<button className="btn-primary" onClick={() => setModal(true)}>+ Request Overtime</button>} />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (

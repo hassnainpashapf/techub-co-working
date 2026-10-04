@@ -104,7 +104,7 @@ export default function AdvancesPage() {
   ];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
+    <div className="p-6">
       <PageHeader
         title="Advances & Loans"
         subtitle="Salary advance aur loan requests — payroll se auto-deduct"

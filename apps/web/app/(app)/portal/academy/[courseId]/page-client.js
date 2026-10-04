@@ -285,7 +285,7 @@ export default function AcademyDetailPage() {
   const completed = enrollment?.status === 'completed' || (enrollment?.progressPct || 0) >= 100;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <Link href="/portal/academy" className="text-sm text-teal-700 hover:text-teal-700">← Back to Academy</Link>
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <div>

@@ -346,7 +346,7 @@ export default function PortalInvoicesPage() {
   ];
 
   return (
-    <div className="p-4 sm:p-6 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6">
       <PageHeader
         title="Invoices & Payments"
         sub="Your bills, receipts and payment history"

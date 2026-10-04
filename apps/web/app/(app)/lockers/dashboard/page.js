@@ -44,7 +44,7 @@ export default function LockerDashboardPage() {
   const expiring = s.expiring7d || [];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-3">
+    <div className="p-6 mx-auto space-y-3">
       <PageHeader title="🔐 Locker Dashboard" subtitle="Occupancy, rentals, revenue aur expiring rentals" />
 
       {pendingModules.length > 0 && (

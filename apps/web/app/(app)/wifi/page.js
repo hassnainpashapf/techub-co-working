@@ -83,7 +83,7 @@ export default function WifiPage() {
   vouchers.forEach((v) => { if (counts[v.status] !== undefined) counts[v.status]++; });
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader
         title="📶 WiFi Vouchers"
         subtitle="Guest WiFi access codes generate, assign aur manage karo"

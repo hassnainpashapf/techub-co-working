@@ -90,7 +90,7 @@ export default function StaffReferralsPage() {
   const counts = data?.counts || {};
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader
         title="Referrals"
         sub="Track member invitations and reward referrers."

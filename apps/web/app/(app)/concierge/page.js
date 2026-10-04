@@ -59,7 +59,7 @@ export default function ConciergeDashboardPage() {
   const pendingModules = Object.entries(s.modules || {}).filter(([, v]) => !v).map(([k]) => k);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-3">
+    <div className="p-6 mx-auto space-y-3">
       <PageHeader title="🛎️ Concierge Dashboard" subtitle="Service requests, SLA, ratings aur revenue" />
 
       {pendingModules.length > 0 && (

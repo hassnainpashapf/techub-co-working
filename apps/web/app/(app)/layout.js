@@ -56,7 +56,7 @@ export default function AppLayout({ children }) {
           <div className="flex-1 min-w-0 flex flex-col">
             <Topbar onMenuClick={toggle} sidebarOpen={sidebarOpen} />
             <Shortcuts />
-            <main className="flex-1 p-3 3xl:p-4 4xl:p-5 max-w-7xl 3xl:max-w-[1680px] 4xl:max-w-[2400px] w-full mx-auto">{children}</main>
+            <main className="flex-1 p-3 3xl:p-4 4xl:p-5 w-full">{children}</main>
           </div>
         </div>
         <OnboardingTour />

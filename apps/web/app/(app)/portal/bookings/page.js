@@ -195,7 +195,7 @@ export default function PortalBookingsPage() {
   ];
 
   return (
-    <div className="max-w-6xl mx-auto px-4 sm:px-6 pb-10">
+    <div className=" mx-auto px-4 sm:px-6 pb-10">
       <PageHeader
         title="My Bookings"
         sub="Your space bookings — cancel or reschedule anytime before they start"

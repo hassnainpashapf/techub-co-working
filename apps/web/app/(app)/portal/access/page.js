@@ -79,7 +79,7 @@ export default function MyAccessPage() {
   const pendingMig = data?.pendingMigration || [];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-3">
+    <div className="p-6 mx-auto space-y-3">
       <PageHeader
         title="🔐 My Access"
         sub={data?.member ? `${data.member.name} · ${data.member.status}` : 'Entry access overview'}

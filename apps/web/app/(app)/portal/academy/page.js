@@ -138,7 +138,7 @@ export default function AcademyPortalPage() {
   }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader title="Academy" sub="Courses seekho, progress track karo, certificates hasil karo" />
 
       {error ? <div className="mt-3"><ErrorBanner message={error} onRetry={load} /></div> : null}

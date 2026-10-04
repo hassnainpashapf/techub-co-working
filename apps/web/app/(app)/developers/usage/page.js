@@ -56,7 +56,7 @@ export default function ApiUsagePage() {
   if (!allowed) return <AccessDenied />;
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
+    <div className="p-6">
       <PageHeader title="API Usage" subtitle="Requests made with API keys — volume, latency, errors and rate limits" />
       <div className="flex gap-2 mb-3">
         {[7, 14, 30].map((d) => (
