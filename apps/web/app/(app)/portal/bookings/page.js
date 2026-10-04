@@ -7,10 +7,10 @@ import { PageHeader, Modal, Field, Badge, Spinner, EmptyState, ErrorBanner } fro
 
 // Same image pool as Discover page
 const IMAGES = [
-  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=900&q=80&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=900&q=80&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900&q=80&auto=format&fit=crop',
-  'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=900&q=80&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1497366216548-37526070297c?w=1600&q=80&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1524758631624-e2822e304c36?w=1600&q=80&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=1600&q=80&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1527192491265-7e15c55b1ed2?w=1600&q=80&auto=format&fit=crop',
 ];
 
 function imgFor(code) {
