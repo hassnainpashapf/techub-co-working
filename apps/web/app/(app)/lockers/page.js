@@ -140,18 +140,18 @@ export default function LockersPage() {
 
       <div className="flex flex-wrap gap-3 items-end">
         <div>
-          <label className="text-xs text-slate-400">Search</label>
+          <label className="text-xs text-gray-500">Search</label>
           <input className="input" value={q} onChange={(e) => setQ(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && load()} placeholder="Code ya location…" />
         </div>
         <div>
-          <label className="text-xs text-slate-400">Status</label>
+          <label className="text-xs text-gray-500">Status</label>
           <select className="input" value={statusF} onChange={(e) => setStatusF(e.target.value)}>
             <option value="">Sab</option>
             {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
           </select>
         </div>
         <div>
-          <label className="text-xs text-slate-400">Size</label>
+          <label className="text-xs text-gray-500">Size</label>
           <select className="input" value={sizeF} onChange={(e) => setSizeF(e.target.value)}>
             <option value="">Sab</option>
             {SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -170,7 +170,7 @@ export default function LockersPage() {
                 <div className="font-semibold text-lg">{l.code}</div>
                 <Badge tone={statusTone(l.status)}>{l.status}</Badge>
               </div>
-              <div className="text-sm text-slate-400">{l.location || '—'} · Size {l.size}</div>
+              <div className="text-sm text-gray-500">{l.location || '—'} · Size {l.size}</div>
               <div className="text-sm">{l.monthlyRate != null ? `Rs ${Number(l.monthlyRate).toLocaleString()}/mo` : 'Rate set nahi'}</div>
               <div className="flex flex-wrap gap-2 pt-2">
                 <button className="btn-secondary btn-sm" onClick={() => setModal(l)}>Edit</button>

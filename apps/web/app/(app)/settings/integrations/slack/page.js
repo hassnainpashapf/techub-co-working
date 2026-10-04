@@ -79,16 +79,16 @@ export default function SlackPage() {
 
       <div className="card-premium p-6 max-w-2xl">
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-bold text-white">💬 Slack Webhook</h2>
+          <h2 className="text-lg font-bold text-gray-900">💬 Slack Webhook</h2>
           {config?.configured && (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${config.isActive ? 'bg-emerald-500/15 text-emerald-300' : 'bg-slate-500/15 text-slate-300'}`}>
+            <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${config.isActive ? 'bg-emerald-500/15 text-emerald-300' : 'bg-slate-500/15 text-gray-600'}`}>
               {config.isActive ? 'ACTIVE' : 'PAUSED'}
             </span>
           )}
         </div>
 
         <div className="mb-4">
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5">Incoming Webhook URL</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">Incoming Webhook URL</label>
           <input
             type="password"
             className="input font-mono"
@@ -102,7 +102,7 @@ export default function SlackPage() {
         </div>
 
         <div className="mb-4">
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5">Channel (optional, sirf label)</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">Channel (optional, sirf label)</label>
           <input
             type="text"
             className="input"
@@ -113,19 +113,19 @@ export default function SlackPage() {
         </div>
 
         <div className="mb-5">
-          <label className="block text-xs font-semibold text-slate-300 mb-2">Kin events par notify karein</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-2">Kin events par notify karein</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {supportedEvents.map((ev) => (
-              <label key={ev.key} className="flex items-start gap-2.5 rounded-xl border border-white/10 bg-white/5 px-3 py-2.5 cursor-pointer hover:border-white/20">
+              <label key={ev.key} className="flex items-start gap-2.5 rounded-xl border border-gray-200 bg-gray-100 px-3 py-2.5 cursor-pointer hover:border-gray-300">
                 <input
                   type="checkbox"
                   checked={events.includes(ev.key)}
                   onChange={() => toggleEvent(ev.key)}
-                  className="mt-1 accent-[#8b5cf6]"
+                  className="mt-1 accent-[#0f766e]"
                 />
                 <span>
-                  <span className="block text-sm font-semibold text-white">{ev.label}</span>
-                  <span className="block text-xs text-slate-400">{ev.desc}</span>
+                  <span className="block text-sm font-semibold text-gray-900">{ev.label}</span>
+                  <span className="block text-xs text-gray-500">{ev.desc}</span>
                 </span>
               </label>
             ))}
@@ -138,9 +138,9 @@ export default function SlackPage() {
             type="checkbox"
             checked={isActive}
             onChange={(e) => setIsActive(e.target.checked)}
-            className="accent-[#8b5cf6]"
+            className="accent-[#0f766e]"
           />
-          <label htmlFor="slack-active" className="text-sm text-slate-300">Integration active</label>
+          <label htmlFor="slack-active" className="text-sm text-gray-600">Integration active</label>
         </div>
 
         <div className="flex flex-wrap gap-3">

@@ -123,12 +123,12 @@ function InviteSuccess({ invite, onClose }) {
   return (
     <Modal title="Invite created" onClose={onClose}>
       <div className="text-center">
-        <p className="text-slate-300 text-sm mb-2">Check-in code for <span className="font-semibold text-white">{invite.visitorName}</span></p>
-        <div className="inline-block bg-gradient-to-br from-[#7c3aed]/20 to-violet-600/20 border border-[#8b5cf6]/40 rounded-2xl px-8 py-5 mb-4">
-          <div className="text-4xl font-bold tracking-[0.3em] text-[#c4b5fd]">{invite.code}</div>
-          <div className="text-xs text-slate-400 mt-1">{fmtDateTime(invite.expectedAt)}</div>
+        <p className="text-gray-600 text-sm mb-2">Check-in code for <span className="font-semibold text-gray-900">{invite.visitorName}</span></p>
+        <div className="inline-block bg-gradient-to-br from-[#0f766e]/20 to-teal-700/20 border border-[#0f766e]/40 rounded-2xl px-8 py-5 mb-4">
+          <div className="text-4xl font-bold tracking-[0.3em] text-teal-700">{invite.code}</div>
+          <div className="text-xs text-gray-500 mt-1">{fmtDateTime(invite.expectedAt)}</div>
         </div>
-        <p className="text-xs text-slate-400 mb-4">Visitor shows this code at reception for fast check-in.</p>
+        <p className="text-xs text-gray-500 mb-4">Visitor shows this code at reception for fast check-in.</p>
         <div className="flex flex-col sm:flex-row gap-2">
           <button onClick={copyCode} className="btn-secondary flex-1">
             {copied ? 'Copied ✓' : 'Copy invite text'}
@@ -200,16 +200,16 @@ export default function PortalVisitorsPage() {
             <div key={inv.id} className="card p-4">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
-                  <div className="font-semibold text-white">{inv.visitorName}</div>
-                  <div className="text-xs text-slate-400">{fmtDateTime(inv.expectedAt)}</div>
+                  <div className="font-semibold text-gray-900">{inv.visitorName}</div>
+                  <div className="text-xs text-gray-500">{fmtDateTime(inv.expectedAt)}</div>
                 </div>
                 <Badge tone={statusTone(inv.status)}>{statusLabel(inv.status)}</Badge>
               </div>
               <div className="flex items-center justify-between">
-                <div className="text-xs text-slate-400">
-                  Code <span className="font-mono font-bold text-[#c4b5fd] tracking-widest">{inv.code}</span>
+                <div className="text-xs text-gray-500">
+                  Code <span className="font-mono font-bold text-teal-700 tracking-widest">{inv.code}</span>
                 </div>
-                <div className="text-xs text-slate-400 capitalize">{inv.purpose}</div>
+                <div className="text-xs text-gray-500 capitalize">{inv.purpose}</div>
               </div>
               {inv.status === 'pending' && (
                 <button

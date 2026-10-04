@@ -54,7 +54,7 @@ export default function PortalPollsPage() {
                   <span className="text-xs text-slate-500">Closes {new Date(p.closesAt).toLocaleString()}</span>
                 )}
               </div>
-              <p className="text-white font-semibold mb-4">{p.question}</p>
+              <p className="text-gray-900 font-semibold mb-4">{p.question}</p>
               {p.status === 'open' ? (
                 <div className="space-y-2">
                   {(p.options || []).map((o) => {
@@ -66,13 +66,13 @@ export default function PortalPollsPage() {
                         onClick={() => vote(p.id, o.id)}
                         className={`w-full text-left rounded-xl px-4 py-3 border text-sm transition ${
                           mine
-                            ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/50 text-blue-100'
-                            : 'bg-white/5 border-white/10 text-slate-200 hover:border-[#8b5cf6]/40'
+                            ? 'bg-[#0f766e]/20 border-[#0f766e]/50 text-blue-100'
+                            : 'bg-gray-100 border-gray-200 text-gray-800 hover:border-[#0f766e]/40'
                         }`}
                       >
                         <span className="flex items-center justify-between">
                           {o.text}
-                          {mine && <span className="text-[#c4b5fd]">✓ Your vote</span>}
+                          {mine && <span className="text-teal-700">✓ Your vote</span>}
                         </span>
                       </button>
                     );
@@ -83,15 +83,15 @@ export default function PortalPollsPage() {
                 <div className="space-y-2">
                   {(p.breakdown || []).map((b) => (
                     <div key={b.optionId}>
-                      <div className="flex justify-between text-xs text-slate-300 mb-1">
+                      <div className="flex justify-between text-xs text-gray-600 mb-1">
                         <span>
-                          {b.text} {p.myVote?.optionId === b.optionId && <span className="text-[#c4b5fd]">✓ you</span>}
+                          {b.text} {p.myVote?.optionId === b.optionId && <span className="text-teal-700">✓ you</span>}
                         </span>
-                        <span className="text-slate-400">{b.percent ?? 0}%</span>
+                        <span className="text-gray-500">{b.percent ?? 0}%</span>
                       </div>
-                      <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                      <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500"
+                          className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600"
                           style={{ width: `${b.percent ?? 0}%` }}
                         />
                       </div>

@@ -63,24 +63,24 @@ export default function LockerDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-slate-700/60 bg-[#141422]/80 p-5">
-          <h3 className="text-base font-semibold text-slate-100 mb-1">⏳ Expiring in 7 days</h3>
-          <p className="text-xs text-slate-400 mb-4">Renew ya release follow-up karein</p>
+        <div className="rounded-2xl border border-gray-200/60 bg-white/80 p-5">
+          <h3 className="text-base font-semibold text-gray-900 mb-1">⏳ Expiring in 7 days</h3>
+          <p className="text-xs text-gray-500 mb-4">Renew ya release follow-up karein</p>
           {expiring.length === 0 ? (
             <EmptyState title="Koi expiring rental nahi" />
           ) : (
             <div className="space-y-2">
               {expiring.map((r) => (
-                <div key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-slate-800/40 px-3 py-2">
+                <div key={r.id} className="flex items-center justify-between gap-3 rounded-xl bg-gray-100/40 px-3 py-2">
                   <div className="min-w-0">
-                    <div className="text-sm font-medium text-slate-100 truncate">
-                      {r.lockerCode} {r.location ? <span className="text-slate-400 font-normal">· {r.location}</span> : null}
+                    <div className="text-sm font-medium text-gray-900 truncate">
+                      {r.lockerCode} {r.location ? <span className="text-gray-500 font-normal">· {r.location}</span> : null}
                     </div>
-                    <div className="text-xs text-slate-400 truncate">{r.member}</div>
+                    <div className="text-xs text-gray-500 truncate">{r.member}</div>
                   </div>
                   <div className="flex items-center gap-2 shrink-0">
                     {r.autoRenew ? <Badge tone="green">auto-renew</Badge> : <Badge tone="amber">manual</Badge>}
-                    <span className="text-xs text-slate-300">
+                    <span className="text-xs text-gray-600">
                       {r.endDate ? new Date(r.endDate).toLocaleDateString() : '—'}
                     </span>
                   </div>
@@ -90,17 +90,17 @@ export default function LockerDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-700/60 bg-[#141422]/80 p-5">
-          <h3 className="text-base font-semibold text-slate-100 mb-1">🚀 Quick Links</h3>
-          <p className="text-xs text-slate-400 mb-4">Locker management shortcuts</p>
+        <div className="rounded-2xl border border-gray-200/60 bg-white/80 p-5">
+          <h3 className="text-base font-semibold text-gray-900 mb-1">🚀 Quick Links</h3>
+          <p className="text-xs text-gray-500 mb-4">Locker management shortcuts</p>
           <div className="grid gap-2">
             {QUICK_LINKS.map((q) => (
-              <a key={q.href} href={q.href} className="flex items-center justify-between rounded-xl bg-slate-800/40 px-4 py-3 hover:bg-slate-700/40 transition">
+              <a key={q.href} href={q.href} className="flex items-center justify-between rounded-xl bg-gray-100/40 px-4 py-3 hover:bg-slate-700/40 transition">
                 <div>
-                  <div className="text-sm font-medium text-slate-100">{q.label}</div>
-                  <div className="text-xs text-slate-400">{q.desc}</div>
+                  <div className="text-sm font-medium text-gray-900">{q.label}</div>
+                  <div className="text-xs text-gray-500">{q.desc}</div>
                 </div>
-                <span className="text-slate-400">→</span>
+                <span className="text-gray-500">→</span>
               </a>
             ))}
           </div>

@@ -102,7 +102,7 @@ export default function MaintenanceRequestsPage() {
         <div className="card-premium p-0 overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Title</th>
                 <th className="p-3">Priority</th>
                 <th className="p-3">Status</th>
@@ -114,16 +114,16 @@ export default function MaintenanceRequestsPage() {
             </thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="border-b border-white/5 hover:bg-white/5">
+                <tr key={r.id} className="border-b border-gray-200 hover:bg-gray-100">
                   <td className="p-3">
-                    <div className="font-semibold text-white">{r.title}</div>
-                    <div className="text-xs text-slate-400">{r.location || r.unit?.code || ''}</div>
+                    <div className="font-semibold text-gray-900">{r.title}</div>
+                    <div className="text-xs text-gray-500">{r.location || r.unit?.code || ''}</div>
                   </td>
                   <td className="p-3"><Badge tone={PRIORITY_TONE[r.priority] || 'slate'}>{r.priority}</Badge></td>
                   <td className="p-3"><Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status.replace('_', ' ')}</Badge></td>
-                  <td className="p-3 text-slate-300">{r.member?.name || r.reportedBy?.name || '—'}</td>
-                  <td className="p-3 text-slate-300">{r.assignedTo?.name || '—'}</td>
-                  <td className="p-3 text-slate-400 text-xs">{fmtDate(r.createdAt)}</td>
+                  <td className="p-3 text-gray-600">{r.member?.name || r.reportedBy?.name || '—'}</td>
+                  <td className="p-3 text-gray-600">{r.assignedTo?.name || '—'}</td>
+                  <td className="p-3 text-gray-500 text-xs">{fmtDate(r.createdAt)}</td>
                   <td className="p-3"><button className="btn-ghost text-xs" onClick={() => { setSelected(r); setNote(''); }}>Open</button></td>
                 </tr>
               ))}
@@ -133,15 +133,15 @@ export default function MaintenanceRequestsPage() {
       )}
       {selected && (
         <Modal title={selected.title} onClose={() => setSelected(null)}>
-          {note && <p className="text-sm text-slate-300 mb-3">{note}</p>}
-          {selected.description && <p className="text-sm text-slate-300 whitespace-pre-wrap mb-3">{selected.description}</p>}
+          {note && <p className="text-sm text-gray-600 mb-3">{note}</p>}
+          {selected.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-3">{selected.description}</p>}
           <div className="grid grid-cols-2 gap-3 text-sm mb-4">
             <div><span className="text-slate-500">Priority:</span> <Badge tone={PRIORITY_TONE[selected.priority]}>{selected.priority}</Badge></div>
             <div><span className="text-slate-500">Status:</span> <Badge tone={STATUS_TONE[selected.status]}>{selected.status.replace('_', ' ')}</Badge></div>
-            <div><span className="text-slate-500">Location:</span> <span className="text-slate-200">{selected.location || '—'}</span></div>
-            <div><span className="text-slate-500">Unit:</span> <span className="text-slate-200">{selected.unit?.code || '—'}</span></div>
-            <div><span className="text-slate-500">Reporter:</span> <span className="text-slate-200">{selected.member?.name || selected.reportedBy?.name || '—'}</span></div>
-            <div><span className="text-slate-500">Assigned:</span> <span className="text-slate-200">{selected.assignedTo?.name || '—'}</span></div>
+            <div><span className="text-slate-500">Location:</span> <span className="text-gray-800">{selected.location || '—'}</span></div>
+            <div><span className="text-slate-500">Unit:</span> <span className="text-gray-800">{selected.unit?.code || '—'}</span></div>
+            <div><span className="text-slate-500">Reporter:</span> <span className="text-gray-800">{selected.member?.name || selected.reportedBy?.name || '—'}</span></div>
+            <div><span className="text-slate-500">Assigned:</span> <span className="text-gray-800">{selected.assignedTo?.name || '—'}</span></div>
           </div>
           <div className="flex flex-wrap gap-2">
             <Field label="Status">

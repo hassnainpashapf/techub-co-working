@@ -20,11 +20,11 @@ export function MilestonesList({ limit = 20, compact = false }) {
   }, [limit]);
 
   if (loading) {
-    return <div className="text-sm text-slate-400">Milestones load ho rahe hain…</div>;
+    return <div className="text-sm text-gray-500">Milestones load ho rahe hain…</div>;
   }
   if (!items.length) {
     return (
-      <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-6 text-center text-sm text-slate-400">
+      <div className="rounded-xl border border-gray-200/60 bg-white/60 p-6 text-center text-sm text-gray-500">
         🎉 Abhi tak koi milestone celebrate nahi hua. Milestone detector rozana chalta hai — 100th booking, anniversaries, 50 events, 10 referrals, 1000 loyalty points par auto celebrate hoga.
       </div>
     );
@@ -40,10 +40,10 @@ export function MilestonesList({ limit = 20, compact = false }) {
             🎉
           </div>
           <div className="min-w-0 flex-1">
-            <div className="truncate text-sm font-semibold text-slate-100">
+            <div className="truncate text-sm font-semibold text-gray-900">
               {m.memberName} <span className="font-normal text-amber-300">— {m.label}</span>
             </div>
-            <div className="text-xs text-slate-400">
+            <div className="text-xs text-gray-500">
               {m.celebratedAt ? new Date(m.celebratedAt).toLocaleDateString() : ''}
             </div>
           </div>

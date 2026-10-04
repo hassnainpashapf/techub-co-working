@@ -15,7 +15,7 @@ export default function Protected({ children }) {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7]">
         <Spinner size="lg" />
       </div>
     );
@@ -41,7 +41,7 @@ export function AccessDenied() {
   return (
     <div className="card max-w-md mx-auto text-center">
       <div className="text-4xl mb-3">🔒</div>
-      <h2 className="text-lg font-semibold text-white mb-1">Access denied</h2>
+      <h2 className="text-lg font-semibold text-gray-900 mb-1">Access denied</h2>
       <p className="text-sm text-slate-500">
         Your role does not have permission to view this section.
       </p>

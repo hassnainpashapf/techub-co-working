@@ -7,13 +7,13 @@ import { useRequireRoles, AccessDenied } from '../../../../components/Protected'
 
 const STATUS_STYLES = {
   pending: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  processing: 'bg-[#8b5cf6]/15 text-[#c4b5fd] border-[#8b5cf6]/30',
+  processing: 'bg-[#0f766e]/15 text-teal-700 border-[#0f766e]/30',
   completed: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
   failed: 'bg-red-500/15 text-red-300 border-red-500/30',
 };
 
 function StatusBadge({ status }) {
-  const cls = STATUS_STYLES[status] || 'bg-slate-500/15 text-slate-300 border-slate-500/30';
+  const cls = STATUS_STYLES[status] || 'bg-slate-500/15 text-gray-600 border-slate-500/30';
   return <span className={`text-xs px-2 py-0.5 rounded-full border ${cls}`}>{status}</span>;
 }
 
@@ -76,8 +76,8 @@ export default function JobsPage() {
             onClick={() => setFilter(f)}
             className={`text-xs px-3 py-1.5 rounded-full border transition ${
               filter === f
-                ? 'bg-violet-500/20 text-violet-200 border-violet-500/40'
-                : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10'
+                ? 'bg-teal-600/20 text-violet-200 border-teal-600/40'
+                : 'bg-gray-100 text-gray-600 border-gray-200 hover:bg-gray-100'
             }`}
           >
             {f || 'All'}{f ? ` (${countFor(f)})` : ` (${counts.reduce((a, c) => a + (c._count || 0), 0)})`}
@@ -89,7 +89,7 @@ export default function JobsPage() {
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs uppercase tracking-wider text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
                 <th className="px-4 py-3">Type</th>
                 <th className="px-4 py-3">Status</th>
                 <th className="px-4 py-3">Attempts</th>
@@ -100,14 +100,14 @@ export default function JobsPage() {
             </thead>
             <tbody>
               {jobs.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-8 text-center text-slate-400">No jobs found.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-500">No jobs found.</td></tr>
               )}
               {jobs.map((j) => (
-                <tr key={j.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                <tr key={j.id} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3 font-mono text-xs text-violet-200">{j.type}</td>
                   <td className="px-4 py-3"><StatusBadge status={j.status} /></td>
-                  <td className="px-4 py-3 text-slate-300">{j.attempts}/{j.maxAttempts}</td>
-                  <td className="px-4 py-3 text-slate-400 text-xs">{j.runAt ? new Date(j.runAt).toLocaleString() : '—'}</td>
+                  <td className="px-4 py-3 text-gray-600">{j.attempts}/{j.maxAttempts}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{j.runAt ? new Date(j.runAt).toLocaleString() : '—'}</td>
                   <td className="px-4 py-3 text-xs text-red-300/80 max-w-[280px] truncate" title={j.lastError || ''}>{j.lastError || '—'}</td>
                   <td className="px-4 py-3 text-right whitespace-nowrap">
                     {j.status === 'failed' && (

@@ -51,7 +51,7 @@ export default function PortalBadgesPage() {
 
       {/* Meri badge wall */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-3">Meri Badge Wall</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">Meri Badge Wall</h2>
         {mine.length === 0 ? (
           <EmptyState title="Abhi koi badge nahi" message="Events attend karo, referrals lao aur feedback do — badges khud mil jayenge!" />
         ) : (
@@ -59,8 +59,8 @@ export default function PortalBadgesPage() {
             {mine.map((b) => (
               <div key={b.id} className="rounded-xl border border-amber-400/30 bg-gradient-to-br from-amber-500/10 to-transparent p-4 text-center">
                 <div className="text-4xl mb-2">{b.icon || '🏅'}</div>
-                <div className="text-white font-medium text-sm">{b.name}</div>
-                <div className="text-xs text-slate-400 mt-1">{fmtDate(b.awardedAt)}</div>
+                <div className="text-gray-900 font-medium text-sm">{b.name}</div>
+                <div className="text-xs text-gray-500 mt-1">{fmtDate(b.awardedAt)}</div>
               </div>
             ))}
           </div>
@@ -69,18 +69,18 @@ export default function PortalBadgesPage() {
 
       {/* Catalog */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-3">Tamam Badges</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">Tamam Badges</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {catalog.map((b) => (
             <div
               key={b.id}
-              className={`rounded-xl border p-4 ${b.earned ? 'border-amber-400/30 bg-amber-500/5' : 'border-slate-700/50 bg-slate-800/40 opacity-70'}`}
+              className={`rounded-xl border p-4 ${b.earned ? 'border-amber-400/30 bg-amber-500/5' : 'border-gray-200/50 bg-gray-100/40 opacity-70'}`}
             >
               <div className="flex items-start gap-3">
                 <div className={`text-3xl ${b.earned ? '' : 'grayscale'}`}>{b.icon || '🏅'}</div>
                 <div className="flex-1">
-                  <div className="text-white font-medium text-sm">{b.name}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">{b.description}</div>
+                  <div className="text-gray-900 font-medium text-sm">{b.name}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">{b.description}</div>
                   <div className="text-xs mt-2">
                     {b.earned
                       ? <span className="text-amber-300">✅ Mil gaya</span>
@@ -95,18 +95,18 @@ export default function PortalBadgesPage() {
 
       {/* Leaderboard */}
       <section>
-        <h2 className="text-lg font-semibold text-white mb-3">🏆 Leaderboard</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">🏆 Leaderboard</h2>
         {board.length === 0 ? (
           <EmptyState title="Abhi koi ranking nahi" message="Pehle badges earn honge to leaderboard yahan dikhega" />
         ) : (
-          <div className="rounded-xl border border-slate-700/50 overflow-hidden">
+          <div className="rounded-xl border border-gray-200/50 overflow-hidden">
             {board.map((r, i) => (
-              <div key={r.memberId} className="flex items-center gap-3 px-4 py-3 border-b border-slate-700/40 last:border-0 bg-slate-800/30">
-                <div className="w-8 text-center font-bold text-slate-300">
+              <div key={r.memberId} className="flex items-center gap-3 px-4 py-3 border-b border-gray-200/40 last:border-0 bg-gray-100/30">
+                <div className="w-8 text-center font-bold text-gray-600">
                   {i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : `#${i + 1}`}
                 </div>
                 <div className="flex-1">
-                  <div className="text-white text-sm font-medium">{r.name}</div>
+                  <div className="text-gray-900 text-sm font-medium">{r.name}</div>
                   {r.companyName && <div className="text-xs text-slate-500">{r.companyName}</div>}
                 </div>
                 <div className="text-lg">{r.latest.map((b) => b.icon).join(' ')}</div>

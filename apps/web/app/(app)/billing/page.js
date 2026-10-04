@@ -66,7 +66,7 @@ function PayOnlineButton({ invoiceId }) {
                   {gateways.map((g) => <option key={g.name} value={g.name}>{g.displayName}</option>)}
                 </select>
               </Field>
-              {gateways.length === 0 && <p className="text-sm text-slate-400 mb-3">No payment gateways configured.</p>}
+              {gateways.length === 0 && <p className="text-sm text-gray-500 mb-3">No payment gateways configured.</p>}
               <button className="btn-primary btn-sm" disabled={busy || !selected} onClick={create}>
                 {busy ? 'Creating…' : 'Continue'}
               </button>
@@ -76,10 +76,10 @@ function PayOnlineButton({ invoiceId }) {
               {result.paymentUrl ? (
                 <a href={result.paymentUrl} target="_blank" rel="noreferrer" className="btn-primary btn-sm">Open payment page ↗</a>
               ) : (
-                <div className="bg-[#141422] border border-white/[0.06] rounded-2xl p-4 text-sm text-slate-200 whitespace-pre-wrap">{result.instructions}</div>
+                <div className="bg-white border border-gray-200 rounded-2xl p-4 text-sm text-gray-800 whitespace-pre-wrap">{result.instructions}</div>
               )}
               {result.reference && (
-                <p className="mt-3 text-sm text-slate-400">Reference: <span className="text-white font-mono">{result.reference}</span></p>
+                <p className="mt-3 text-sm text-gray-500">Reference: <span className="text-gray-900 font-mono">{result.reference}</span></p>
               )}
               <p className="mt-2 text-xs text-slate-500">Payment confirm hone par invoice auto-paid mark ho jayegi.</p>
             </div>
@@ -179,14 +179,14 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
             </button>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm mb-4">
-            <div><p className="text-xs text-slate-400">Member</p><p className="font-medium">{inv.memberName || inv.member?.name || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Total</p><p className="font-medium">{money(inv.amount)}</p></div>
-            <div><p className="text-xs text-slate-400">Balance</p><p className="font-medium">{money(inv.balance ?? inv.amount)}</p></div>
-            <div><p className="text-xs text-slate-400">Due date</p><p className="font-medium">{inv.dueDate ? String(inv.dueDate).slice(0, 10) : '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Status</p><Badge tone={STATUS_TONE[inv.status] || 'slate'}>{inv.status || '—'}</Badge></div>
+            <div><p className="text-xs text-gray-500">Member</p><p className="font-medium">{inv.memberName || inv.member?.name || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Total</p><p className="font-medium">{money(inv.amount)}</p></div>
+            <div><p className="text-xs text-gray-500">Balance</p><p className="font-medium">{money(inv.balance ?? inv.amount)}</p></div>
+            <div><p className="text-xs text-gray-500">Due date</p><p className="font-medium">{inv.dueDate ? String(inv.dueDate).slice(0, 10) : '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Status</p><Badge tone={STATUS_TONE[inv.status] || 'slate'}>{inv.status || '—'}</Badge></div>
           </div>
 
-          <h3 className="font-semibold text-white mb-2">Payments ({payments.length})</h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Payments ({payments.length})</h3>
           <DataTable
             columns={[
               { key: 'date', label: 'Date', render: (r) => (r.date ? String(r.date).slice(0, 10) : '—') },
@@ -200,8 +200,8 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
           />
 
           {canRecordPayment && String(inv.status).toLowerCase() !== 'paid' && (
-            <form onSubmit={recordPayment} className="mt-4 bg-[#141422] border border-white/[0.06] rounded-2xl p-4">
-              <h3 className="font-semibold text-white mb-3 text-sm">Record payment</h3>
+            <form onSubmit={recordPayment} className="mt-4 bg-white border border-gray-200 rounded-2xl p-4">
+              <h3 className="font-semibold text-gray-900 mb-3 text-sm">Record payment</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Amount (Rs)"><input type="number" min="1" step="any" className="input" value={payForm.amount} onChange={(e) => setPayForm({ ...payForm, amount: e.target.value })} required /></Field>
                 <Field label="Method">
@@ -442,7 +442,7 @@ export default function BillingPage() {
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`chip ${tab === t ? 'bg-[#8b5cf6] text-white' : 'bg-[#131322] text-slate-400 border border-white/10 hover:bg-white/5'}`}
+            className={`chip ${tab === t ? 'bg-[#0f766e] text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-100'}`}
           >
             {t === 'invoices' ? 'Invoices' : `Dues (${dues.length})`}
           </button>
@@ -469,8 +469,8 @@ export default function BillingPage() {
           </div>
           {/* Phase 30: bulk actions bar */}
           {canBulk && bulkIds.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30">
-              <span className="text-sm font-semibold text-[#ddd6fe]">{bulkIds.length} selected</span>
+            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
+              <span className="text-sm font-semibold text-teal-700">{bulkIds.length} selected</span>
               <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
                 <option value="paid">Paid</option>
                 <option value="unpaid">Unpaid</option>
@@ -487,7 +487,7 @@ export default function BillingPage() {
               ...bulkSelectColumn,
               { key: 'no', label: 'Invoice', render: (r) => (
                 <span className="flex items-center gap-2">
-                  <a className="text-violet-400 font-medium cursor-pointer hover:underline" onClick={() => setSelected(r)}>{r.number || r.id?.slice(0, 8) || '—'}</a>
+                  <a className="text-teal-500 font-medium cursor-pointer hover:underline" onClick={() => setSelected(r)}>{r.number || r.id?.slice(0, 8) || '—'}</a>
                   {(r.invoiceType || 'standard') === 'proforma' && <Badge tone="amber">PROFORMA</Badge>}
                 </span>
               ) },
@@ -518,12 +518,12 @@ export default function BillingPage() {
       {tab === 'dues' && (
         <div className="card">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-white">Outstanding dues</h2>
-            <p className="text-sm text-slate-400">Total: <span className="font-bold text-red-600">{money(totalDues)}</span></p>
+            <h2 className="font-semibold text-gray-900">Outstanding dues</h2>
+            <p className="text-sm text-gray-500">Total: <span className="font-bold text-red-600">{money(totalDues)}</span></p>
           </div>
           <DataTable
             columns={[
-              { key: 'no', label: 'Invoice', render: (r) => <a className="text-violet-400 font-medium cursor-pointer hover:underline" onClick={() => setSelected(r)}>{r.number || r.id?.slice(0, 8) || '—'}</a> },
+              { key: 'no', label: 'Invoice', render: (r) => <a className="text-teal-500 font-medium cursor-pointer hover:underline" onClick={() => setSelected(r)}>{r.number || r.id?.slice(0, 8) || '—'}</a> },
               { key: 'member', label: 'Member', render: (r) => (<span>{r.memberName || r.member?.name || '—'}<LimitBadge memberId={r.memberId || r.member?.id} /></span>) },
               { key: 'balance', label: 'Balance', render: (r) => <span className="font-semibold">{money(r.balance ?? r.amount)}</span> },
               { key: 'due', label: 'Due date', render: (r) => (r.dueDate ? String(r.dueDate).slice(0, 10) : '—') },

@@ -22,7 +22,7 @@ function WebhookForm({ initial, events, onSave, saving }) {
       <Field label="Events">
         <div className="flex flex-wrap gap-2">
           {events.map((e) => (
-            <label key={e} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.events.includes(e) ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            <label key={e} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.events.includes(e) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.events.includes(e)} onChange={() => toggle(e)} />
               {e}
             </label>
@@ -32,8 +32,8 @@ function WebhookForm({ initial, events, onSave, saving }) {
       <Field label="Secret (HMAC signing — shown once, then masked)">
         <input className="input font-mono text-xs" value={f.secret} onChange={(e) => setF({ ...f, secret: e.target.value })} placeholder="Auto-generated if blank" />
       </Field>
-      <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
-        <input type="checkbox" checked={f.active} onChange={(e) => setF({ ...f, active: e.target.checked })} className="accent-violet-500" />
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <input type="checkbox" checked={f.active} onChange={(e) => setF({ ...f, active: e.target.checked })} className="accent-teal-600" />
         Active
       </label>
       <button type="submit" className="btn-primary w-full" disabled={saving || !f.events.length}>{saving ? 'Saving…' : 'Save Webhook'}</button>
@@ -62,15 +62,15 @@ function Deliveries({ webhookId }) {
   };
   if (loading) return <Spinner />;
   const cols = [
-    { key: 'event', label: 'Event', render: (r) => <span className="font-mono text-xs text-slate-300">{r.event}</span> },
+    { key: 'event', label: 'Event', render: (r) => <span className="font-mono text-xs text-gray-600">{r.event}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'success' ? 'green' : r.status === 'failed' ? 'red' : 'amber'}>{r.status}</Badge> },
-    { key: 'code', label: 'HTTP', render: (r) => <span className="text-xs text-slate-400">{r.responseCode || '—'}</span> },
-    { key: 'attempts', label: 'Attempts', render: (r) => <span className="text-xs text-slate-400">{r.attempts ?? 1}{r.status === 'failed' && (r.attempts ?? 1) > 1 ? ' (retrying)' : ''}</span> },
+    { key: 'code', label: 'HTTP', render: (r) => <span className="text-xs text-gray-500">{r.responseCode || '—'}</span> },
+    { key: 'attempts', label: 'Attempts', render: (r) => <span className="text-xs text-gray-500">{r.attempts ?? 1}{r.status === 'failed' && (r.attempts ?? 1) > 1 ? ' (retrying)' : ''}</span> },
     { key: 'error', label: 'Error', render: (r) => <span className="text-xs text-red-300 truncate max-w-[200px] block">{r.error || '—'}</span> },
-    { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleString()}</span> },
+    { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-gray-500">{new Date(r.createdAt).toLocaleString()}</span> },
     {
       key: 'resend', label: '', render: (r) => r.status === 'failed' ? (
-        <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] disabled:opacity-50" disabled={busy === r.id} onClick={() => resend(r.id)}>
+        <button className="text-xs text-teal-700 hover:text-teal-700 disabled:opacity-50" disabled={busy === r.id} onClick={() => resend(r.id)}>
           {busy === r.id ? 'Sending…' : 'Resend'}
         </button>
       ) : null,
@@ -93,8 +93,8 @@ function TestConsole({ webhook, catalog, onClose }) {
   };
   return (
     <div>
-      <p className="text-sm text-slate-400 mb-3">
-        Send a real signed test delivery to <span className="font-mono text-xs text-slate-200">{webhook.url}</span> using a catalog sample payload.
+      <p className="text-sm text-gray-500 mb-3">
+        Send a real signed test delivery to <span className="font-mono text-xs text-gray-800">{webhook.url}</span> using a catalog sample payload.
       </p>
       <Field label="Event">
         <select className="input" value={event} onChange={(e) => setEvent(e.target.value)}>
@@ -102,11 +102,11 @@ function TestConsole({ webhook, catalog, onClose }) {
         </select>
       </Field>
       <Field label="Payload preview (signed envelope wraps this in {event, tenantId, at, data})">
-        <pre className="text-[11px] font-mono text-slate-300 bg-black/40 border border-white/10 rounded-xl p-3 max-h-56 overflow-auto whitespace-pre-wrap">
+        <pre className="text-[11px] font-mono text-gray-600 bg-black/40 border border-gray-200 rounded-xl p-3 max-h-56 overflow-auto whitespace-pre-wrap">
           {JSON.stringify(def?.samplePayload || {}, null, 2)}
         </pre>
       </Field>
-      {result && <p className="text-xs text-slate-300 mb-3">{result}</p>}
+      {result && <p className="text-xs text-gray-600 mb-3">{result}</p>}
       <button className="btn-primary w-full" disabled={sending} onClick={send}>{sending ? 'Sending…' : 'Send test delivery'}</button>
     </div>
   );
@@ -167,16 +167,16 @@ export default function WebhooksPage() {
   const sendTest = (h) => setTestConsole(h);
 
   const cols = [
-    { key: 'name', label: 'Name', render: (h) => <div><div className="font-medium text-white">{h.name}</div><div className="text-xs text-slate-400 font-mono truncate max-w-[260px]">{h.url}</div></div> },
-    { key: 'events', label: 'Events', render: (h) => <div className="flex flex-wrap gap-1">{h.events.map((e) => <span key={e} className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-white/5 border border-white/10 text-slate-300">{e}</span>)}</div> },
+    { key: 'name', label: 'Name', render: (h) => <div><div className="font-medium text-gray-900">{h.name}</div><div className="text-xs text-gray-500 font-mono truncate max-w-[260px]">{h.url}</div></div> },
+    { key: 'events', label: 'Events', render: (h) => <div className="flex flex-wrap gap-1">{h.events.map((e) => <span key={e} className="text-[10px] font-mono px-1.5 py-0.5 rounded bg-gray-100 border border-gray-200 text-gray-600">{e}</span>)}</div> },
     { key: 'active', label: 'Status', render: (h) => <Badge tone={h.active ? 'green' : 'slate'}>{h.active ? 'active' : 'paused'}</Badge> },
     {
       key: 'action', label: '', render: (h) => (
         <div className="flex gap-2 flex-wrap">
-          <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe]" onClick={() => setViewDeliveries(h)}>Logs</button>
-          <button className="text-xs text-slate-300 hover:text-white" onClick={() => sendTest(h)}>Test</button>
+          <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => setViewDeliveries(h)}>Logs</button>
+          <button className="text-xs text-gray-600 hover:text-gray-900" onClick={() => sendTest(h)}>Test</button>
           <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => regenSecret(h)}>Secret</button>
-          <button className="text-xs text-slate-300 hover:text-white" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>
+          <button className="text-xs text-gray-600 hover:text-gray-900" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>
           <button className="text-xs text-red-300 hover:text-red-200" onClick={() => remove(h.id)}>Delete</button>
         </div>
       ),
@@ -209,9 +209,9 @@ export default function WebhooksPage() {
       )}
       {secretModal && (
         <Modal title={secretModal.title} onClose={() => setSecretModal(null)}>
-          <p className="text-sm text-slate-300 mb-3">
+          <p className="text-sm text-gray-600 mb-3">
             Copy this secret now — it will never be shown again. Receivers verify the{' '}
-            <span className="font-mono text-xs text-violet-300">X-CoworkOS-Signature</span> header with it.
+            <span className="font-mono text-xs text-teal-300">X-CoworkOS-Signature</span> header with it.
           </p>
           <div className="flex gap-2">
             <input className="input font-mono text-xs" readOnly value={secretModal.secret} onFocus={(e) => e.target.select()} />

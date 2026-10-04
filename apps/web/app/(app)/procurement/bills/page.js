@@ -116,7 +116,7 @@ export default function VendorBillsPage() {
   const columns = [
     { key: 'billNo', label: 'Bill No', render: (b) => <span className="font-semibold">{b.billNo}</span> },
     { key: 'vendor', label: 'Vendor', render: (b) => <span>{b.vendor?.company || b.vendor?.name || '—'}</span> },
-    { key: 'po', label: 'PO', render: (b) => <span className="text-slate-300">{b.purchaseOrder?.number || '—'}</span> },
+    { key: 'po', label: 'PO', render: (b) => <span className="text-gray-600">{b.purchaseOrder?.number || '—'}</span> },
     { key: 'amount', label: 'Amount', render: (b) => <span className="font-semibold">{fmtMoney(b.amount)}</span> },
     {
       key: 'due', label: 'Due Date',
@@ -138,7 +138,7 @@ export default function VendorBillsPage() {
             </button>
           )}
           {b.status === 'approved' && (
-            <button className="btn-ghost text-[#c4b5fd] text-xs" disabled={busy === b.id} onClick={() => doAction(b, 'pay')}>
+            <button className="btn-ghost text-teal-700 text-xs" disabled={busy === b.id} onClick={() => doAction(b, 'pay')}>
               {busy === b.id ? '…' : 'Mark Paid'}
             </button>
           )}
@@ -171,7 +171,7 @@ export default function VendorBillsPage() {
       <div className="flex flex-wrap gap-2 mb-4">
         <input className="input max-w-xs" placeholder="Search bill no / vendor…" value={search} onChange={(e) => setSearch(e.target.value)} />
         {['', 'pending', 'approved', 'paid', 'disputed'].map((s) => (
-          <button key={s} className={`btn-ghost text-xs ${status === s ? '!bg-[#8b5cf6]/20 !text-[#c4b5fd]' : ''}`} onClick={() => setStatus(s)}>
+          <button key={s} className={`btn-ghost text-xs ${status === s ? '!bg-[#0f766e]/20 !text-teal-700' : ''}`} onClick={() => setStatus(s)}>
             {s === '' ? 'All' : s}
           </button>
         ))}

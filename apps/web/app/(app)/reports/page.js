@@ -42,7 +42,7 @@ function BarChart({ data, labelKey, valueKey, height = 160 }) {
         </linearGradient>
       </defs>
       {[0.25, 0.5, 0.75].map((f) => (
-        <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+        <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
       ))}
       {data.map((d, i) => {
         const v = Number(d[valueKey] || 0);
@@ -73,15 +73,15 @@ function Donut({ pct, label }) {
     <div className="flex flex-col items-center">
       <div className="relative w-36 h-36">
         <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
-          <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="16" />
-          <circle cx="80" cy="80" r={r} fill="none" stroke="#8b5cf6" strokeWidth="16" strokeLinecap="round"
+          <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="16" />
+          <circle cx="80" cy="80" r={r} fill="none" stroke="#0f766e" strokeWidth="16" strokeLinecap="round"
             strokeDasharray={circ} strokeDashoffset={circ * (1 - Math.min(pct, 100) / 100)} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
-          <div className="text-2xl font-extrabold text-white">{pct}%</div>
+          <div className="text-2xl font-extrabold text-gray-900">{pct}%</div>
         </div>
       </div>
-      <div className="text-xs text-slate-400 mt-1">{label}</div>
+      <div className="text-xs text-gray-500 mt-1">{label}</div>
     </div>
   );
 }
@@ -106,16 +106,16 @@ function RangeBar({ from, to, setFrom, setTo, groupBy, setGroupBy, exportType, o
   return (
     <div className="flex flex-wrap items-end gap-3 mb-4">
       <div>
-        <label className="block text-xs font-semibold text-slate-300 mb-1">From</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
         <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
       </div>
       <div>
-        <label className="block text-xs font-semibold text-slate-300 mb-1">To</label>
+        <label className="block text-xs font-semibold text-gray-600 mb-1">To</label>
         <input type="date" className="input" value={to} onChange={(e) => setTo(e.target.value)} />
       </div>
       {setGroupBy && (
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">Group by</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Group by</label>
           <select className="input" value={groupBy} onChange={(e) => setGroupBy(e.target.value)}>
             <option value="month">Month</option>
             <option value="week">Week</option>
@@ -197,15 +197,15 @@ export default function ReportsPage() {
     <div>
       <PageHeader title="Reports & Analytics" sub="Real-time business insights with CSV export" />
 
-      <div className="flex gap-2 mb-5 border-b border-white/10">
+      <div className="flex gap-2 mb-5 border-b border-gray-200">
         {TABS.map((t) => (
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
             className={`px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${
               tab === t.key
-                ? 'border-[#8b5cf6] text-white'
-                : 'border-transparent text-slate-400 hover:text-white'
+                ? 'border-[#0f766e] text-gray-900'
+                : 'border-transparent text-gray-500 hover:text-gray-900'
             }`}
           >
             {t.label}
@@ -242,11 +242,11 @@ export default function ReportsPage() {
                 <StatCard label="Open invoices" value={data.openInvoiceCount} accent="indigo" />
               </div>
               <div className="card mb-4">
-                <h2 className="font-semibold text-white mb-3">Revenue by {groupBy}</h2>
+                <h2 className="font-semibold text-gray-900 mb-3">Revenue by {groupBy}</h2>
                 {data.series.length ? (
                   <BarChart data={data.series} labelKey="period" valueKey="total" />
                 ) : (
-                  <p className="text-sm text-slate-400">No payments in this range.</p>
+                  <p className="text-sm text-gray-500">No payments in this range.</p>
                 )}
               </div>
               {data.series.length > 0 && (
@@ -271,13 +271,13 @@ export default function ReportsPage() {
                   <div key={r.type} className="card flex items-center justify-between">
                     <Donut pct={r.occupancyPct} label={r.type.replace(/_/g, ' ')} />
                     <div className="text-sm space-y-1">
-                      <div className="text-slate-400">Units <span className="text-white font-semibold">{r.totalUnits}</span></div>
-                      <div className="text-slate-400">Booked days <span className="text-white font-semibold">{r.bookedDays}</span></div>
-                      <div className="text-slate-400">Available <span className="text-white font-semibold">{r.availableDays}</span></div>
+                      <div className="text-gray-500">Units <span className="text-gray-900 font-semibold">{r.totalUnits}</span></div>
+                      <div className="text-gray-500">Booked days <span className="text-gray-900 font-semibold">{r.bookedDays}</span></div>
+                      <div className="text-gray-500">Available <span className="text-gray-900 font-semibold">{r.availableDays}</span></div>
                     </div>
                   </div>
                 ))}
-                {!data.byType.length && <p className="text-sm text-slate-400">No units found.</p>}
+                {!data.byType.length && <p className="text-sm text-gray-500">No units found.</p>}
               </div>
               {data.byType.length > 0 && (
                 <div className="card">
@@ -307,31 +307,31 @@ export default function ReportsPage() {
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">New members per month</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">New members per month</h2>
                   {data.growth.length ? (
                     <BarChart data={data.growth} labelKey="month" valueKey="newMembers" />
                   ) : (
-                    <p className="text-sm text-slate-400">No growth data in range.</p>
+                    <p className="text-sm text-gray-500">No growth data in range.</p>
                   )}
                 </div>
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">Top companies by members</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">Top companies by members</h2>
                   {data.topCompanies.length ? (
                     <div className="space-y-3">
                       {data.topCompanies.map((c) => (
                         <div key={c.name}>
                           <div className="flex justify-between text-sm mb-1">
-                            <span className="font-medium text-white">{c.name}</span>
-                            <span className="text-slate-400">{c.count} members</span>
+                            <span className="font-medium text-gray-900">{c.name}</span>
+                            <span className="text-gray-500">{c.count} members</span>
                           </div>
-                          <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
-                            <div className="h-full rounded-full bg-[#8b5cf6]" style={{ width: `${(c.count / data.topCompanies[0].count) * 100}%` }} />
+                          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+                            <div className="h-full rounded-full bg-[#0f766e]" style={{ width: `${(c.count / data.topCompanies[0].count) * 100}%` }} />
                           </div>
                         </div>
                       ))}
                     </div>
                   ) : (
-                    <p className="text-sm text-slate-400">No company data.</p>
+                    <p className="text-sm text-gray-500">No company data.</p>
                   )}
                 </div>
               </div>
@@ -352,25 +352,25 @@ export default function ReportsPage() {
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">Bookings per day</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">Bookings per day</h2>
                   {data.perDay.length ? (
                     <BarChart data={data.perDay} labelKey="day" valueKey="count" />
                   ) : (
-                    <p className="text-sm text-slate-400">No bookings in range.</p>
+                    <p className="text-sm text-gray-500">No bookings in range.</p>
                   )}
                 </div>
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">Peak hours</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">Peak hours</h2>
                   {data.total ? (
                     <BarChart data={data.peakHours.filter((h) => h.hour >= 6 && h.hour <= 22)} labelKey="hour" valueKey="count" />
                   ) : (
-                    <p className="text-sm text-slate-400">No bookings in range.</p>
+                    <p className="text-sm text-gray-500">No bookings in range.</p>
                   )}
                 </div>
               </div>
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">By status</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">By status</h2>
                   <DataTable
                     columns={[
                       { key: 'status', label: 'Status' },
@@ -381,7 +381,7 @@ export default function ReportsPage() {
                   />
                 </div>
                 <div className="card">
-                  <h2 className="font-semibold text-white mb-3">By unit type</h2>
+                  <h2 className="font-semibold text-gray-900 mb-3">By unit type</h2>
                   <DataTable
                     columns={[
                       { key: 'type', label: 'Unit type', render: (r) => r.type.replace(/_/g, ' ') },
@@ -429,15 +429,15 @@ function CustomReportsHub({ hub, loading, onRetry }) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card">
           <div className="flex items-center justify-between mb-3">
-            <h2 className="font-semibold text-white">🔥 Recent Reports</h2>
+            <h2 className="font-semibold text-gray-900">🔥 Recent Reports</h2>
             <Link href="/reports/builder" className="btn-primary">+ Nayi Report</Link>
           </div>
           {stats?.popular?.length ? (
             <ul className="space-y-2">
               {stats.popular.map((r) => (
                 <li key={r.id}>
-                  <Link href={`/reports/builder/${r.id}`} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2 hover:bg-white/10">
-                    <span className="font-medium text-white">{r.name}</span>
+                  <Link href={`/reports/builder/${r.id}`} className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2 hover:bg-gray-100">
+                    <span className="font-medium text-gray-900">{r.name}</span>
                     <span className="flex items-center gap-2">
                       <Badge tone="slate">{r.entity}</Badge>
                       {r.isPublic && <Badge tone="green">shared</Badge>}
@@ -451,12 +451,12 @@ function CustomReportsHub({ hub, loading, onRetry }) {
           )}
         </div>
         <div className="card">
-          <h2 className="font-semibold text-white mb-3">⚡ Quick Links</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">⚡ Quick Links</h2>
           <div className="grid grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
-              <Link key={q.label} href={q.path} className="rounded-xl bg-white/5 p-4 hover:bg-white/10 transition">
-                <div className="font-semibold text-white">{q.label}</div>
-                <div className="text-sm text-slate-400 mt-1">{q.desc}</div>
+              <Link key={q.label} href={q.path} className="rounded-xl bg-gray-100 p-4 hover:bg-gray-100 transition">
+                <div className="font-semibold text-gray-900">{q.label}</div>
+                <div className="text-sm text-gray-500 mt-1">{q.desc}</div>
               </Link>
             ))}
           </div>

@@ -34,7 +34,7 @@ function CompareChart({ rows }) {
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={h * f} x2="100" y2={h * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+          <line key={f} x1="0" y1={h * f} x2="100" y2={h * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
         ))}
         {rows.map((r, i) => {
           const rh = Math.max((r.revenue / max) * (h - 40), 2);
@@ -44,7 +44,7 @@ function CompareChart({ rows }) {
             <g key={r.buildingId}>
               <rect x={gx + groupW * 0.2} y={h - 20 - rh} width={groupW * 0.26} height={rh} rx="1.2" fill="url(#locRev)" />
               <rect x={gx + groupW * 0.52} y={h - 20 - eh} width={groupW * 0.26} height={eh} rx="1.2" fill="url(#locExp)" />
-              <text x={gx + groupW / 2} y={h - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3.4" fontWeight="600">
+              <text x={gx + groupW / 2} y={h - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.4" fontWeight="600">
                 {(r.name || '').slice(0, 12)}
               </text>
             </g>
@@ -124,8 +124,8 @@ export default function LocationsComparePage() {
 
           <div className="card-premium p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-bold text-white">Revenue vs Expenses</h2>
-              <div className="flex items-center gap-4 text-xs text-slate-400">
+              <h2 className="text-lg font-bold text-gray-900">Revenue vs Expenses</h2>
+              <div className="flex items-center gap-4 text-xs text-gray-500">
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block" /> Revenue</span>
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-rose-500 inline-block" /> Expenses</span>
               </div>
@@ -142,47 +142,47 @@ export default function LocationsComparePage() {
                   <div className="flex items-start justify-between mb-3">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h3 className="text-base font-bold text-white">#{r.rank} {r.name}</h3>
+                        <h3 className="text-base font-bold text-gray-900">#{r.rank} {r.name}</h3>
                         {isBest && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/30">🏆 BEST</span>}
                         {isWorst && <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-400/30">⚠️ WORST</span>}
                       </div>
-                      {r.city && <p className="text-xs text-slate-400 mt-0.5">{r.city}</p>}
+                      {r.city && <p className="text-xs text-gray-500 mt-0.5">{r.city}</p>}
                     </div>
                     <span className={`text-lg font-extrabold ${r.net >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>{fmt(r.net)}</span>
                   </div>
 
                   <div className="mb-3">
-                    <div className="flex justify-between text-xs text-slate-400 mb-1">
+                    <div className="flex justify-between text-xs text-gray-500 mb-1">
                       <span>Occupancy</span>
-                      <span className="font-semibold text-slate-200">{r.occupancyPct}% ({r.occupied}/{r.units})</span>
+                      <span className="font-semibold text-gray-800">{r.occupancyPct}% ({r.occupied}/{r.units})</span>
                     </div>
-                    <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+                    <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all duration-700"
+                        className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600 transition-all duration-700"
                         style={{ width: `${Math.min(r.occupancyPct, 100)}%` }}
                       />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="rounded-xl bg-white/[0.03] border border-white/5 p-2.5">
+                    <div className="rounded-xl bg-gray-50 border border-gray-200 p-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-slate-500">Revenue</p>
                       <p className="font-bold text-emerald-300">{fmt(r.revenue)}</p>
                     </div>
-                    <div className="rounded-xl bg-white/[0.03] border border-white/5 p-2.5">
+                    <div className="rounded-xl bg-gray-50 border border-gray-200 p-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-slate-500">Expenses*</p>
                       <p className="font-bold text-rose-300">{fmt(r.expensesAllocated)}</p>
                     </div>
-                    <div className="rounded-xl bg-white/[0.03] border border-white/5 p-2.5">
+                    <div className="rounded-xl bg-gray-50 border border-gray-200 p-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-slate-500">Units</p>
-                      <p className="font-bold text-slate-200">{r.units}</p>
+                      <p className="font-bold text-gray-800">{r.units}</p>
                     </div>
-                    <div className="rounded-xl bg-white/[0.03] border border-white/5 p-2.5">
+                    <div className="rounded-xl bg-gray-50 border border-gray-200 p-2.5">
                       <p className="text-[10px] uppercase tracking-wide text-slate-500">Active Members</p>
-                      <p className="font-bold text-slate-200">{r.activeMembers}</p>
+                      <p className="font-bold text-gray-800">{r.activeMembers}</p>
                     </div>
                   </div>
-                  <p className="text-[10px] text-slate-600 mt-3">* Expenses allocated by unit share (no building link in data model)</p>
+                  <p className="text-[10px] text-gray-500 mt-3">* Expenses allocated by unit share (no building link in data model)</p>
                 </div>
               );
             })}

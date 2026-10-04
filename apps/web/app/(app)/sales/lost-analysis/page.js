@@ -9,7 +9,7 @@ const REASON_COLORS = {
   price: 'bg-red-500',
   location: 'bg-amber-500',
   timing: 'bg-sky-500',
-  competitor: 'bg-violet-500',
+  competitor: 'bg-teal-600',
   no_response: 'bg-slate-500',
   other: 'bg-zinc-400',
 };
@@ -51,8 +51,8 @@ export default function LostAnalysisPage() {
                 onClick={() => setDays(d)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
                   days === d
-                    ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
-                    : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                    ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
+                    : 'bg-gray-100 text-gray-600 hover:bg-slate-700'
                 }`}
               >
                 {d} days
@@ -74,8 +74,8 @@ export default function LostAnalysisPage() {
           </div>
 
           {/* Reason breakdown */}
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-            <h3 className="text-sm font-semibold text-slate-100 mb-4">Reason breakdown</h3>
+          <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Reason breakdown</h3>
             {data.totalLost === 0 ? (
               <EmptyState title="No lost leads" hint="Is period me koi lead lost nahi hui — pipeline healthy hai." />
             ) : (
@@ -85,10 +85,10 @@ export default function LostAnalysisPage() {
                   return (
                     <div key={r.reason}>
                       <div className="flex justify-between text-xs mb-1">
-                        <span className="text-slate-200 font-medium">{r.label}</span>
-                        <span className="text-slate-400">{r.count} ({pct}%)</span>
+                        <span className="text-gray-800 font-medium">{r.label}</span>
+                        <span className="text-gray-500">{r.count} ({pct}%)</span>
                       </div>
-                      <div className="h-2.5 rounded-full bg-slate-800 overflow-hidden">
+                      <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all ${REASON_COLORS[r.reason] || 'bg-zinc-400'}`}
                           style={{ width: `${(r.count / maxReason) * 100}%` }}
@@ -102,18 +102,18 @@ export default function LostAnalysisPage() {
           </div>
 
           {/* Funnel drop-off */}
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-            <h3 className="text-sm font-semibold text-slate-100 mb-4">Funnel drop-off (leads created in period)</h3>
+          <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Funnel drop-off (leads created in period)</h3>
             <div className="space-y-3">
               {data.funnel.map((f) => (
                 <div key={f.stage}>
                   <div className="flex justify-between text-xs mb-1">
-                    <span className="text-slate-200 font-medium capitalize">{f.stage.replace('_', ' ')}</span>
-                    <span className="text-slate-400">{f.count} ({f.pct}%)</span>
+                    <span className="text-gray-800 font-medium capitalize">{f.stage.replace('_', ' ')}</span>
+                    <span className="text-gray-500">{f.count} ({f.pct}%)</span>
                   </div>
-                  <div className="h-2.5 rounded-full bg-slate-800 overflow-hidden">
+                  <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all ${f.stage === 'lost' ? 'bg-red-500' : 'bg-[#8b5cf6]'}`}
+                      className={`h-full rounded-full transition-all ${f.stage === 'lost' ? 'bg-red-500' : 'bg-[#0f766e]'}`}
                       style={{ width: `${(f.count / maxFunnel) * 100}%` }}
                     />
                   </div>
@@ -123,29 +123,29 @@ export default function LostAnalysisPage() {
           </div>
 
           {/* Source-wise loss rate */}
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-            <h3 className="text-sm font-semibold text-slate-100 mb-4">Source-wise loss rate</h3>
+          <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-4">Source-wise loss rate</h3>
             {data.bySource.length === 0 ? (
               <EmptyState title="No data" hint="Is period me koi leads nahi bani." />
             ) : (
               <DataTable
                 columns={['Source', 'Lost', 'Total', 'Loss rate']}
                 rows={data.bySource.map((s) => [
-                  <span key="s" className="capitalize text-slate-100">{s.source}</span>,
+                  <span key="s" className="capitalize text-gray-900">{s.source}</span>,
                   s.lost,
                   s.total,
-                  <span key="r" className={s.lossRate >= 30 ? 'text-red-400 font-semibold' : 'text-slate-300'}>{s.lossRate}%</span>,
+                  <span key="r" className={s.lossRate >= 30 ? 'text-red-400 font-semibold' : 'text-gray-600'}>{s.lossRate}%</span>,
                 ])}
               />
             )}
           </div>
 
           {/* Insights */}
-          <div className="rounded-xl bg-slate-900/60 border border-slate-800 p-5">
-            <h3 className="text-sm font-semibold text-slate-100 mb-3">Insights</h3>
+          <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Insights</h3>
             <ul className="space-y-2">
               {data.insights.map((ins, i) => (
-                <li key={i} className="flex gap-2 text-sm text-slate-300">
+                <li key={i} className="flex gap-2 text-sm text-gray-600">
                   <span className="text-amber-400">💡</span>
                   <span>{ins}</span>
                 </li>

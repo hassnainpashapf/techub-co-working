@@ -389,28 +389,31 @@ export default function Sidebar() {
     const active = isActive(item.path) || isChildActive(item.children);
     const expanded = openMenu === item.key;
     return (
-      <div key={item.key}>
+      <div key={item.key} className="relative">
+        {active && (
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-[3px] rounded-full bg-[#0f766e]" />
+        )}
         <a
           href={item.path}
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : undefined}
-          className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 group ${
+          className={`flex items-center gap-3 pl-5 pr-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 group ${
             active
-              ? 'text-white font-semibold border border-[#8b5cf6]/45 bg-[#8b5cf6]/[0.12]'
-              : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent font-medium'
+              ? 'text-[#0f766e] font-semibold bg-teal-50'
+              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium'
           }`}
         >
-          <span className={`transition-all ${active ? 'text-[#c4b5fd]' : 'text-slate-500 group-hover:text-slate-300'}`}>
+          <span className={`transition-all ${active ? 'text-[#0f766e]' : 'text-gray-400 group-hover:text-gray-600'}`}>
             {ICONS[item.icon]}
           </span>
           <span className="flex-1">{item.label}</span>
           {(item.children || item.chevron) && (
-            <span className={`transition-transform duration-200 ${active ? 'text-slate-400' : 'text-slate-600 group-hover:text-slate-400'}`}>
+            <span className={`transition-transform duration-200 ${active ? 'text-teal-600' : 'text-gray-400 group-hover:text-gray-500'}`}>
               {item.children ? (expanded ? ICONS.chevron : ICONS.chevronRight) : ICONS.chevron}
             </span>
           )}
         </a>
         {item.children && expanded && (
-          <div className="mt-1 ml-3 rounded-xl bg-white/[0.03] border border-white/[0.05] p-1.5 space-y-0.5 animate-[fadeSlideIn_0.25s_ease-out]">
+          <div className="mt-1 ml-3 rounded-xl bg-gray-50 border border-gray-100 p-1.5 space-y-0.5 animate-[fadeSlideIn_0.25s_ease-out]">
             {item.children.map((child) => {
               const childActive = isActive(child.path);
               return (
@@ -419,8 +422,8 @@ export default function Sidebar() {
                   href={child.path}
                   className={`block px-3.5 py-2 rounded-lg text-[13.5px] transition-all duration-200 ${
                     childActive
-                      ? 'text-white font-semibold bg-[#8b5cf6]/[0.14] border border-[#8b5cf6]/30'
-                      : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
+                      ? 'text-teal-800 font-semibold bg-teal-50'
+                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
                   }`}
                 >
                   {child.label}
@@ -434,15 +437,15 @@ export default function Sidebar() {
   };
 
   return (
-    <aside className="w-[248px] shrink-0 bg-[#08080f] flex flex-col min-h-screen border-r border-white/[0.06] relative">
+    <aside className="w-[248px] shrink-0 bg-white flex flex-col min-h-screen border-r border-gray-200 relative">
       {/* Brand */}
       <div className="px-5 pt-5 pb-4 flex items-center gap-3">
-        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center text-white text-lg font-extrabold">
+        <div className="w-10 h-10 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
           T
         </div>
         <div>
-          <p className="text-white text-[15px] font-bold tracking-tight leading-tight">Techub</p>
-          <p className="text-slate-500 text-[11px] font-medium tracking-wide">CO-WORKING</p>
+          <p className="text-gray-900 text-[15px] font-bold tracking-tight leading-tight">Techub</p>
+          <p className="text-gray-400 text-[11px] font-medium tracking-wide">CO-WORKING</p>
         </div>
       </div>
 
@@ -450,25 +453,25 @@ export default function Sidebar() {
       <div className="px-4 mb-4 relative">
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="flex items-center gap-3 px-3 py-2.5 w-full text-left rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-[#8b5cf6]/40 transition-all duration-200 group"
+          className="flex items-center gap-3 px-3 py-2.5 w-full text-left rounded-xl bg-gray-50 border border-gray-200 hover:border-teal-300 transition-all duration-200 group"
         >
           <span className="relative shrink-0">
-            <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+            <span className="w-10 h-10 rounded-full bg-[#134e4a] flex items-center justify-center text-white text-sm font-bold overflow-hidden">
               {(user.name || user.email || 'U').charAt(0).toUpperCase()}
             </span>
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-[#0b0b14]" />
+            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white" />
           </span>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-[14px] font-semibold truncate">{user.tenantName || 'Techub Studio'}</p>
-            <p className="text-slate-500 text-[12px] capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</p>
+            <p className="text-gray-900 text-[14px] font-semibold truncate">{user.tenantName || 'Techub Studio'}</p>
+            <p className="text-gray-500 text-[12px] capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</p>
           </div>
-          <span className="text-slate-500 group-hover:text-slate-300 transition-colors">{ICONS.chevUpDown}</span>
+          <span className="text-gray-400 group-hover:text-gray-600 transition-colors">{ICONS.chevUpDown}</span>
         </button>
         {showUserMenu && (
-          <div className="absolute left-4 right-4 top-full mt-1 rounded-xl bg-[#151528] border border-white/10 shadow-xl p-1.5 z-50 animate-[fadeSlideIn_0.2s_ease-out]">
+          <div className="absolute left-4 right-4 top-full mt-1 rounded-xl bg-white border border-gray-200 shadow-xl p-1.5 z-50 animate-[fadeSlideIn_0.2s_ease-out]">
             <button
               onClick={() => { logout(); window.location = '/login'; }}
-              className="w-full text-left px-3.5 py-2 rounded-lg text-[13.5px] text-slate-300 hover:text-white hover:bg-white/5 transition-colors"
+              className="w-full text-left px-3.5 py-2 rounded-lg text-[13.5px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
             >
               Logout
             </button>
@@ -480,14 +483,14 @@ export default function Sidebar() {
       <nav className="flex-1 px-3.5 space-y-1 overflow-y-auto pb-4">
         {user.role === 'member' ? (
           <>
-            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">My Space</p>
+            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
             {NAV_MEMBER.map(renderItem)}
           </>
         ) : (
           <>
-            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">Main</p>
+            <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
             {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
-            <p className="px-3.5 pt-5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-slate-600">Others</p>
+            <p className="px-3.5 pt-5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}
@@ -495,10 +498,10 @@ export default function Sidebar() {
 
       {/* Upgrade promo card — Fobework style */}
       <div className="px-4 pb-5">
-        <div className="rounded-2xl p-4 border border-[#8b5cf6]/25 bg-[#141422]">
+        <div className="rounded-2xl p-4 border border-teal-200 bg-teal-50">
           <ul className="space-y-1.5 mb-3">
             {['Unlimited features', 'Unlimited workspaces', 'Cancel Anytime'].map((t) => (
-              <li key={t} className="flex items-center gap-2 text-[12.5px] text-[#c4b5fd]">
+              <li key={t} className="flex items-center gap-2 text-[12.5px] text-teal-800">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
                 {t}
               </li>
@@ -506,7 +509,7 @@ export default function Sidebar() {
           </ul>
           <button
             onClick={() => (window.location.href = '/settings/subscription')}
-            className="w-full px-3 py-2.5 rounded-xl text-[13px] font-bold text-[#4c1d95] bg-[#ddd6fe] hover:bg-[#c4b5fd] transition-colors"
+            className="w-full px-3 py-2.5 rounded-xl text-[13px] font-bold text-white bg-[#134e4a] hover:bg-[#0f766e] transition-colors"
           >
             Upgrade Now
           </button>

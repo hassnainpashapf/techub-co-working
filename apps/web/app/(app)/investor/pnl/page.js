@@ -36,7 +36,7 @@ function ProfitChart({ data, height = 220 }) {
                 <animate attributeName="y" from={midY} to={y} dur="0.8s" fill="freeze" />
                 <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
               </rect>
-              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3.2" fontWeight="600">{d.month.slice(2)}</text>
+              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.2" fontWeight="600">{d.month.slice(2)}</text>
             </g>
           );
         })}
@@ -49,9 +49,9 @@ const fmt = (v) => `Rs ${Number(v || 0).toLocaleString()}`;
 
 function Line({ label, value, bold, negative, tone }) {
   return (
-    <div className={`flex items-center justify-between py-2.5 border-b border-white/5 ${bold ? 'font-bold text-white' : ''}`}>
-      <span className={bold ? 'text-white' : 'text-slate-300'}>{label}</span>
-      <span className={`font-mono ${tone === 'green' ? 'text-emerald-300' : tone === 'red' ? 'text-rose-300' : bold ? 'text-white' : 'text-slate-200'}`}>
+    <div className={`flex items-center justify-between py-2.5 border-b border-gray-200 ${bold ? 'font-bold text-gray-900' : ''}`}>
+      <span className={bold ? 'text-gray-900' : 'text-gray-600'}>{label}</span>
+      <span className={`font-mono ${tone === 'green' ? 'text-emerald-300' : tone === 'red' ? 'text-rose-300' : bold ? 'text-gray-900' : 'text-gray-800'}`}>
         {negative ? '−' : ''}{fmt(Math.abs(value))}
       </span>
     </div>
@@ -112,11 +112,11 @@ export default function PnlPage() {
 
       <div className="flex flex-wrap items-end gap-3 mb-5">
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">From</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">To</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">To</label>
           <input type="date" className="input" value={to} onChange={(e) => setTo(e.target.value)} />
         </div>
         <button className="btn-primary" onClick={load}>Apply</button>
@@ -136,15 +136,15 @@ export default function PnlPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
             <div className="card-premium p-6">
-              <h2 className="text-lg font-bold text-white mb-4">Profit & Loss Statement</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Profit & Loss Statement</h2>
               <div className="text-sm">
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1">Revenue</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Revenue</div>
                 <Line label="Contract revenue" value={data.revenue.contract} />
                 <Line label="Ad-hoc revenue" value={data.revenue.adhoc} />
                 <Line label="Less: refunds" value={data.revenue.refunds} negative />
                 <Line label="Total revenue" value={data.revenue.total} bold tone="green" />
 
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 mt-5">Expenses</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-5">Expenses</div>
                 {data.expenses.byCategory.map((c) => (
                   <Line key={c.category} label={c.category.replace(/_/g, ' ')} value={c.amount} />
                 ))}
@@ -153,19 +153,19 @@ export default function PnlPage() {
                 )}
                 <Line label="Total expenses" value={data.expenses.total} bold tone="red" />
 
-                <div className="text-xs font-bold uppercase tracking-wider text-slate-400 mb-1 mt-5">Profit</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-5">Profit</div>
                 <Line label="Gross profit" value={data.grossProfit} />
                 <Line label="Net profit" value={data.netProfit} bold tone={data.netProfit >= 0 ? 'green' : 'red'} />
                 <div className="flex items-center justify-between py-2.5">
-                  <span className="text-slate-300">Net margin</span>
-                  <span className="font-mono text-white font-bold">{data.marginPct.toFixed(1)}%</span>
+                  <span className="text-gray-600">Net margin</span>
+                  <span className="font-mono text-gray-900 font-bold">{data.marginPct.toFixed(1)}%</span>
                 </div>
               </div>
             </div>
 
             <div className="card-premium p-6">
-              <h2 className="text-lg font-bold text-white mb-1">Monthly Profit</h2>
-              <p className="text-xs text-slate-400 mb-4">Revenue minus expenses per month</p>
+              <h2 className="text-lg font-bold text-gray-900 mb-1">Monthly Profit</h2>
+              <p className="text-xs text-gray-500 mb-4">Revenue minus expenses per month</p>
               {data.monthly.length === 0 ? (
                 <EmptyState title="No data" hint="No activity in this period." />
               ) : (
@@ -175,11 +175,11 @@ export default function PnlPage() {
           </div>
 
           <div className="card-premium p-6">
-            <h2 className="text-lg font-bold text-white mb-4">Monthly Breakdown</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-4">Monthly Breakdown</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-xs uppercase tracking-wider text-slate-400 border-b border-white/10">
+                  <tr className="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200">
                     <th className="py-2 pr-4">Month</th>
                     <th className="py-2 pr-4 text-right">Revenue</th>
                     <th className="py-2 pr-4 text-right">Expenses</th>
@@ -188,8 +188,8 @@ export default function PnlPage() {
                 </thead>
                 <tbody>
                   {data.monthly.map((m) => (
-                    <tr key={m.month} className="border-b border-white/5">
-                      <td className="py-2.5 pr-4 text-slate-300 font-semibold">{m.month}</td>
+                    <tr key={m.month} className="border-b border-gray-200">
+                      <td className="py-2.5 pr-4 text-gray-600 font-semibold">{m.month}</td>
                       <td className="py-2.5 pr-4 text-right font-mono text-emerald-300">{fmt(m.revenue)}</td>
                       <td className="py-2.5 pr-4 text-right font-mono text-rose-300">{fmt(m.expenses)}</td>
                       <td className={`py-2.5 text-right font-mono font-bold ${m.profit >= 0 ? 'text-emerald-300' : 'text-rose-300'}`}>{fmt(m.profit)}</td>

@@ -176,7 +176,7 @@ function Page({ children }) {
 const card = { background: '#171724', border: '1px solid #2a2a3d', borderRadius: 12, padding: 16, marginBottom: 12 };
 const muted = { color: '#9ca3af', fontSize: 14 };
 const btn = { width: 34, height: 34, borderRadius: 8, border: '1px solid #3b3b52', background: '#1e1e2e', color: '#fff', fontSize: 18, cursor: 'pointer' };
-const primary = { width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#7c3aed,#4f46e5)', color: '#fff', fontWeight: 700, fontSize: 16, cursor: 'pointer', marginTop: 8 };
+const primary = { width: '100%', padding: '14px', borderRadius: 10, border: 'none', background: 'linear-gradient(135deg,#0f766e,#4f46e5)', color: '#fff', fontWeight: 700, fontSize: 16, cursor: 'pointer', marginTop: 8 };
 const back = { background: 'none', border: 'none', color: '#9ca3af', cursor: 'pointer', marginBottom: 12 };
 const field = { marginBottom: 12 };
 const lbl = { display: 'block', fontSize: 13, color: '#9ca3af', marginBottom: 6 };

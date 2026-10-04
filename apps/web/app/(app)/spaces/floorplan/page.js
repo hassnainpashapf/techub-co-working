@@ -11,7 +11,7 @@ const STATUS_STYLE = {
   vacant: 'bg-emerald-500/15 border-emerald-400/50 text-emerald-200',
   occupied: 'bg-red-500/15 border-red-400/50 text-red-200',
   reserved: 'bg-amber-500/15 border-amber-400/50 text-amber-200',
-  maintenance: 'bg-slate-500/15 border-slate-400/50 text-slate-200',
+  maintenance: 'bg-slate-500/15 border-slate-400/50 text-gray-800',
 };
 
 const TYPE_LABEL = {
@@ -159,7 +159,7 @@ export default function FloorPlanPage() {
 
       {loading ? <Spinner /> : (
         <>
-          {editMode && <div className="mb-3 text-sm text-violet-300">✏️ Edit mode: click a unit to select it, then click an empty cell to move it.</div>}
+          {editMode && <div className="mb-3 text-sm text-teal-300">✏️ Edit mode: click a unit to select it, then click an empty cell to move it.</div>}
           <div className="card-premium p-4 overflow-x-auto">
             <div className="grid gap-1.5 min-w-[600px]" style={{ gridTemplateColumns: `repeat(${GRID_COLS}, minmax(0, 1fr))` }}>
               {cells.map(({ x, y, unit }) => (
@@ -168,10 +168,10 @@ export default function FloorPlanPage() {
                   onClick={() => (unit ? setSelected(unit) : handleCellClick(x, y))}
                   className={`aspect-square rounded-lg border flex flex-col items-center justify-center text-center p-1 cursor-pointer transition-all ${
                     unit
-                      ? `${STATUS_STYLE[unit.status] || STATUS_STYLE.vacant} ${selected?.id === unit.id ? 'ring-2 ring-violet-400 scale-105' : 'hover:scale-105'}`
+                      ? `${STATUS_STYLE[unit.status] || STATUS_STYLE.vacant} ${selected?.id === unit.id ? 'ring-2 ring-teal-500 scale-105' : 'hover:scale-105'}`
                       : editMode
-                        ? 'border-dashed border-white/15 bg-white/[0.02] hover:bg-violet-500/10 hover:border-violet-400/40'
-                        : 'border-white/5 bg-white/[0.02]'
+                        ? 'border-dashed border-white/15 bg-gray-50 hover:bg-teal-600/10 hover:border-teal-500/40'
+                        : 'border-gray-200 bg-gray-50'
                   }`}
                 >
                   {unit ? (
@@ -180,14 +180,14 @@ export default function FloorPlanPage() {
                       <span className="text-[10px] opacity-75">{TYPE_LABEL[unit.type] || unit.type}</span>
                     </>
                   ) : editMode ? (
-                    <span className="text-white/20 text-lg">+</span>
+                    <span className="text-gray-900/20 text-lg">+</span>
                   ) : null}
                 </div>
               ))}
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-4 mt-4 text-xs text-slate-300">
+          <div className="flex flex-wrap gap-4 mt-4 text-xs text-gray-600">
             {Object.entries({ vacant: 'Vacant', occupied: 'Occupied', reserved: 'Reserved', maintenance: 'Maintenance' }).map(([k, l]) => (
               <span key={k} className="flex items-center gap-1.5">
                 <span className={`w-3 h-3 rounded border ${STATUS_STYLE[k]}`} />{l}
@@ -202,12 +202,12 @@ export default function FloorPlanPage() {
         <Modal title={`Unit ${selected.code}`} onClose={() => setSelected(null)}>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
-              <div><div className="text-xs text-slate-400">Type</div><div className="text-white">{TYPE_LABEL[selected.type] || selected.type}</div></div>
-              <div><div className="text-xs text-slate-400">Status</div><Badge tone={selected.status === 'vacant' ? 'green' : selected.status === 'occupied' ? 'red' : 'amber'}>{selected.status}</Badge></div>
-              <div><div className="text-xs text-slate-400">Zone</div><div className="text-white">{selected.zone?.name || '—'}</div></div>
-              <div><div className="text-xs text-slate-400">Monthly price</div><div className="text-white">Rs {Number(selected.monthlyPrice).toLocaleString()}</div></div>
-              <div><div className="text-xs text-slate-400">Capacity</div><div className="text-white">{selected.capacity}</div></div>
-              <div><div className="text-xs text-slate-400">Position</div><div className="text-white">({selected.posX}, {selected.posY})</div></div>
+              <div><div className="text-xs text-gray-500">Type</div><div className="text-gray-900">{TYPE_LABEL[selected.type] || selected.type}</div></div>
+              <div><div className="text-xs text-gray-500">Status</div><Badge tone={selected.status === 'vacant' ? 'green' : selected.status === 'occupied' ? 'red' : 'amber'}>{selected.status}</Badge></div>
+              <div><div className="text-xs text-gray-500">Zone</div><div className="text-gray-900">{selected.zone?.name || '—'}</div></div>
+              <div><div className="text-xs text-gray-500">Monthly price</div><div className="text-gray-900">Rs {Number(selected.monthlyPrice).toLocaleString()}</div></div>
+              <div><div className="text-xs text-gray-500">Capacity</div><div className="text-gray-900">{selected.capacity}</div></div>
+              <div><div className="text-xs text-gray-500">Position</div><div className="text-gray-900">({selected.posX}, {selected.posY})</div></div>
             </div>
             {canWrite && !editMode && (
               <button className="btn-secondary w-full" onClick={() => { setEditMode(true); }}>Move on floor plan</button>

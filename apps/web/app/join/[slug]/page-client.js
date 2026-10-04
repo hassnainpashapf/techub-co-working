@@ -9,7 +9,7 @@ const INTERESTS = ['Hot Desk', 'Dedicated Desk', 'Private Office', 'Meeting Room
 
 export default function JoinPage() {
   const { slug } = useParams();
-  const [brand, setBrand] = useState({ brandName: 'CoworkOS', primaryColor: '#7c3aed', supportEmail: null });
+  const [brand, setBrand] = useState({ brandName: 'CoworkOS', primaryColor: '#0f766e', supportEmail: null });
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', interest: '', budget: '', message: '', website: '' });
   const [state, setState] = useState('idle'); // idle | sending | done | error
   const [error, setError] = useState('');
@@ -60,21 +60,21 @@ export default function JoinPage() {
     }
   }
 
-  const color = brand.primaryColor || '#7c3aed';
+  const color = brand.primaryColor || '#0f766e';
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] px-4 py-10 flex items-start justify-center">
+    <div className="min-h-screen bg-[#f4f5f7] px-4 py-10 flex items-start justify-center">
       <div className="card-premium w-full max-w-lg p-8">
-        <h1 className="text-2xl font-extrabold text-white mb-1">Request a Tour</h1>
-        <p className="text-sm text-slate-400 mb-6">
-          Get in touch with <span className="text-white font-semibold">{brand.brandName}</span> — we'll show you around.
+        <h1 className="text-2xl font-extrabold text-gray-900 mb-1">Request a Tour</h1>
+        <p className="text-sm text-gray-500 mb-6">
+          Get in touch with <span className="text-gray-900 font-semibold">{brand.brandName}</span> — we'll show you around.
         </p>
 
         {state === 'done' ? (
           <div className="text-center py-8">
             <div className="text-4xl mb-3">✅</div>
-            <h2 className="text-xl font-bold text-white mb-2">Thanks, {form.name.split(' ')[0] || 'there'}!</h2>
-            <p className="text-sm text-slate-400">Your request has been received. Someone from {brand.brandName} will contact you shortly.</p>
+            <h2 className="text-xl font-bold text-gray-900 mb-2">Thanks, {form.name.split(' ')[0] || 'there'}!</h2>
+            <p className="text-sm text-gray-500">Your request has been received. Someone from {brand.brandName} will contact you shortly.</p>
           </div>
         ) : (
           <form onSubmit={submit} className="space-y-4">
@@ -85,26 +85,26 @@ export default function JoinPage() {
               style={{ position: 'absolute', left: '-9999px', opacity: 0, height: 0 }}
             />
             <div>
-              <label className="text-xs font-semibold text-slate-300">Full name *</label>
+              <label className="text-xs font-semibold text-gray-600">Full name *</label>
               <input className="input mt-1" value={form.name} onChange={set('name')} required placeholder="Your name" />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Email *</label>
+                <label className="text-xs font-semibold text-gray-600">Email *</label>
                 <input type="email" className="input mt-1" value={form.email} onChange={set('email')} placeholder="you@example.com" />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-300">Phone</label>
+                <label className="text-xs font-semibold text-gray-600">Phone</label>
                 <input className="input mt-1" value={form.phone} onChange={set('phone')} placeholder="+92 …" />
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-xs font-semibold text-slate-300">Company</label>
+                <label className="text-xs font-semibold text-gray-600">Company</label>
                 <input className="input mt-1" value={form.company} onChange={set('company')} placeholder="Optional" />
               </div>
               <div>
-                <label className="text-xs font-semibold text-slate-300">Interested in</label>
+                <label className="text-xs font-semibold text-gray-600">Interested in</label>
                 <select className="input mt-1" value={form.interest} onChange={set('interest')}>
                   <option value="">Select…</option>
                   {INTERESTS.map((i) => <option key={i} value={i}>{i}</option>)}
@@ -112,11 +112,11 @@ export default function JoinPage() {
               </div>
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300">Monthly budget</label>
+              <label className="text-xs font-semibold text-gray-600">Monthly budget</label>
               <input type="number" min="0" className="input mt-1" value={form.budget} onChange={set('budget')} placeholder="Optional" />
             </div>
             <div>
-              <label className="text-xs font-semibold text-slate-300">Message</label>
+              <label className="text-xs font-semibold text-gray-600">Message</label>
               <textarea className="input mt-1" rows="3" value={form.message} onChange={set('message')} placeholder="Anything you'd like us to know…" />
             </div>
 
@@ -131,7 +131,7 @@ export default function JoinPage() {
 
             {brand.supportEmail && (
               <p className="text-center text-xs text-slate-500">
-                Prefer email? <a className="text-slate-300 underline" href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>
+                Prefer email? <a className="text-gray-600 underline" href={`mailto:${brand.supportEmail}`}>{brand.supportEmail}</a>
               </p>
             )}
           </form>

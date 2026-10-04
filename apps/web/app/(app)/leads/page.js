@@ -52,12 +52,12 @@ function LeadCard({ lead, onMove, onEdit, onConvert, onDelete }) {
     <div className="card-premium p-3 mb-2.5">
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0">
-          <div className="font-semibold text-white text-sm truncate">{lead.name}</div>
-          {lead.company && <div className="text-xs text-slate-400 truncate">{lead.company}</div>}
+          <div className="font-semibold text-gray-900 text-sm truncate">{lead.name}</div>
+          {lead.company && <div className="text-xs text-gray-500 truncate">{lead.company}</div>}
         </div>
         {lead.convertedMemberId && <Badge tone="green">Member</Badge>}
       </div>
-      <div className="mt-1.5 space-y-0.5 text-xs text-slate-400">
+      <div className="mt-1.5 space-y-0.5 text-xs text-gray-500">
         {lead.phone && <div>📞 {lead.phone}</div>}
         {lead.email && <div className="truncate">✉️ {lead.email}</div>}
         {lead.budget != null && <div>💰 Rs {Number(lead.budget).toLocaleString()}</div>}
@@ -137,9 +137,9 @@ function ConvertModal({ lead, onClose, onDone }) {
       {result ? (
         <div className="text-center py-4">
           <div className="text-4xl mb-3">🎉</div>
-          <div className="text-white font-semibold text-lg">"{result.member.name}" is now a member!</div>
+          <div className="text-gray-900 font-semibold text-lg">"{result.member.name}" is now a member!</div>
           {result.contract && (
-            <div className="text-sm text-slate-400 mt-2">Contract created — {result.contract.unitId ? `unit ${result.contract.unitId}` : ''} from {new Date(result.contract.startDate).toLocaleDateString()}</div>
+            <div className="text-sm text-gray-500 mt-2">Contract created — {result.contract.unitId ? `unit ${result.contract.unitId}` : ''} from {new Date(result.contract.startDate).toLocaleDateString()}</div>
           )}
           <a href="/members" className="btn-primary inline-block mt-4" onClick={() => { onClose(); onDone(); }}>
             View member →
@@ -271,15 +271,15 @@ export default function LeadsPage() {
           {STAGES.map((st) => {
             const items = leads.filter((l) => l.stage === st.key);
             return (
-              <div key={st.key} className="rounded-xl bg-[#0d0d1a] border border-white/5 p-3 min-h-[200px]">
+              <div key={st.key} className="rounded-xl bg-white border border-gray-200 p-3 min-h-[200px]">
                 <div className="flex items-center justify-between mb-3">
-                  <span className="text-sm font-semibold text-white">{st.label}</span>
+                  <span className="text-sm font-semibold text-gray-900">{st.label}</span>
                   <Badge tone={st.tone}>{items.length}</Badge>
                 </div>
                 {items.map((lead) => (
                   <LeadCard key={lead.id} lead={lead} onMove={move} onEdit={setModal} onConvert={convert} onDelete={del} />
                 ))}
-                {items.length === 0 && <div className="text-xs text-slate-600 text-center py-6">No leads</div>}
+                {items.length === 0 && <div className="text-xs text-gray-500 text-center py-6">No leads</div>}
               </div>
             );
           })}

@@ -58,17 +58,17 @@ export default function PortalEventsPage() {
               <div key={ev.id} className="card-premium p-5">
                 {ev.imageUrl && <img src={ev.imageUrl} alt="" className="rounded-xl h-36 w-full object-cover mb-3" />}
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <h3 className="font-bold text-white">{ev.title}</h3>
+                  <h3 className="font-bold text-gray-900">{ev.title}</h3>
                   <Badge tone={STATUS_TONE[ev.status] || 'slate'}>{ev.status}</Badge>
                 </div>
-                {ev.description && <p className="text-sm text-slate-400 mb-2 line-clamp-2">{ev.description}</p>}
-                <p className="text-sm text-slate-300 mb-1">📅 {fmtDate(ev.startsAt)}</p>
-                {ev.location && <p className="text-sm text-slate-300 mb-2">📍 {ev.location}</p>}
-                <p className="text-sm text-slate-400 mb-3">✅ {ev.counts?.going || 0} going{ev.capacity ? ` / ${ev.capacity} seats` : ''}</p>
+                {ev.description && <p className="text-sm text-gray-500 mb-2 line-clamp-2">{ev.description}</p>}
+                <p className="text-sm text-gray-600 mb-1">📅 {fmtDate(ev.startsAt)}</p>
+                {ev.location && <p className="text-sm text-gray-600 mb-2">📍 {ev.location}</p>}
+                <p className="text-sm text-gray-500 mb-3">✅ {ev.counts?.going || 0} going{ev.capacity ? ` / ${ev.capacity} seats` : ''}</p>
                 {mine && mine !== 'cancelled' ? (
                   <div className="flex items-center gap-2">
                     <Badge tone={mine === 'going' ? 'green' : 'blue'}>You're {mine}</Badge>
-                    <button className="text-sm text-slate-400 hover:text-white" disabled={busy === ev.id} onClick={() => rsvp(ev, 'cancelled')}>Cancel RSVP</button>
+                    <button className="text-sm text-gray-500 hover:text-gray-900" disabled={busy === ev.id} onClick={() => rsvp(ev, 'cancelled')}>Cancel RSVP</button>
                   </div>
                 ) : full ? (
                   <Badge tone="red">Full</Badge>

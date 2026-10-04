@@ -78,12 +78,12 @@ export default function PortalLostFoundPage() {
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
+        <div className="flex gap-1 p-1 rounded-xl bg-gray-100 border border-gray-200">
           {[{ v: 'all', l: 'Sab' }, { v: 'lost', l: '🔍 Khoi hui' }, { v: 'found', l: '📦 Mili hui' }].map((t) => (
             <button
               key={t.v}
               onClick={() => setTab(t.v)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(139,92,246,0.4)]' : 'text-slate-300 hover:text-white'}`}
+              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(15,118,110,0.4)]' : 'text-gray-600 hover:text-gray-900'}`}
             >
               {t.l}
             </button>
@@ -109,11 +109,11 @@ export default function PortalLostFoundPage() {
                 <Badge tone={TYPE_TONE[it.type] || 'slate'}>{TYPE_LABEL[it.type] || it.type}</Badge>
                 {it.status !== 'open' && <Badge tone="amber">{it.status.toUpperCase()}</Badge>}
               </div>
-              <h3 className="text-base font-bold text-white mb-1">{it.title}</h3>
-              {it.description && <p className="text-sm text-slate-300 mb-2 line-clamp-3">{it.description}</p>}
-              {it.location && <div className="text-xs text-slate-400 mb-1">📍 {it.location}</div>}
+              <h3 className="text-base font-bold text-gray-900 mb-1">{it.title}</h3>
+              {it.description && <p className="text-sm text-gray-600 mb-2 line-clamp-3">{it.description}</p>}
+              {it.location && <div className="text-xs text-gray-500 mb-1">📍 {it.location}</div>}
               <div className="mt-auto">
-                <div className="text-xs text-slate-400 mb-1">
+                <div className="text-xs text-gray-500 mb-1">
                   👤 {it.member?.name || 'Staff'}{it.member?.companyName ? ` • ${it.member.companyName}` : ''}
                 </div>
                 <div className="text-[11px] text-slate-500">{timeAgo(it.createdAt)}</div>

@@ -116,7 +116,7 @@ export default function StaffReferralsPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${filter === s ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${filter === s ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}
           >
             {s || 'All'}
           </button>
@@ -131,7 +131,7 @@ export default function StaffReferralsPage() {
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Referred</th>
                 <th className="p-3">Referrer</th>
                 <th className="p-3">Code</th>
@@ -143,16 +143,16 @@ export default function StaffReferralsPage() {
             </thead>
             <tbody>
               {data.referrals.map((r) => (
-                <tr key={r.id} className="border-b border-white/5 hover:bg-white/5">
+                <tr key={r.id} className="border-b border-gray-200 hover:bg-gray-100">
                   <td className="p-3">
-                    <div className="text-white font-medium">{r.referredName}</div>
-                    <div className="text-xs text-slate-400">{r.referredEmail}</div>
+                    <div className="text-gray-900 font-medium">{r.referredName}</div>
+                    <div className="text-xs text-gray-500">{r.referredEmail}</div>
                   </td>
-                  <td className="p-3 text-slate-300">{r.code?.member?.name || '—'}</td>
-                  <td className="p-3 text-slate-400 font-mono text-xs">{r.code?.code}</td>
+                  <td className="p-3 text-gray-600">{r.code?.member?.name || '—'}</td>
+                  <td className="p-3 text-gray-500 font-mono text-xs">{r.code?.code}</td>
                   <td className="p-3">{statusBadge(r.status)}</td>
-                  <td className="p-3 text-slate-300">{r.rewardAmount ? `Rs ${Number(r.rewardAmount).toLocaleString()}` : '—'}</td>
-                  <td className="p-3 text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 text-gray-600">{r.rewardAmount ? `Rs ${Number(r.rewardAmount).toLocaleString()}` : '—'}</td>
+                  <td className="p-3 text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</td>
                   <td className="p-3">
                     <div className="flex gap-2">
                       {r.status === 'invited' && (

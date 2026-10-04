@@ -71,19 +71,19 @@ function TemplateGallery() {
   return (
     <div className="card p-4 mt-6">
       <h3 className="font-semibold mb-1">📚 Template Gallery</h3>
-      <p className="text-sm text-slate-400 mb-3">Ready-made report definitions — ek click me clone karo aur customize karo</p>
+      <p className="text-sm text-gray-500 mb-3">Ready-made report definitions — ek click me clone karo aur customize karo</p>
       {err && <ErrorBanner message={err} />}
       {loading ? <Spinner /> : templates.length === 0 ? (
         <EmptyState title="Koi template nahi" hint="Backend migration ke baad templates yahan aayenge" />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {templates.map((t) => (
-            <div key={t.key} className="p-3 rounded-xl border border-white/[0.08] bg-white/[0.02]">
+            <div key={t.key} className="p-3 rounded-xl border border-gray-200 bg-gray-50">
               <div className="flex items-center justify-between mb-1">
-                <span className="font-medium text-slate-100">{t.title || t.name}</span>
+                <span className="font-medium text-gray-900">{t.title || t.name}</span>
                 <Badge>{ENTITIES[t.entity] || t.entity}</Badge>
               </div>
-              <p className="text-xs text-slate-400 mb-2">{t.description || `${t.columnCount ?? (t.columns || []).length} columns`}</p>
+              <p className="text-xs text-gray-500 mb-2">{t.description || `${t.columnCount ?? (t.columns || []).length} columns`}</p>
               <button className="btn-sm btn-primary" onClick={() => clone(t)} disabled={!!cloning}>
                 {cloning === t.key ? 'Cloning…' : '⧉ Clone'}
               </button>

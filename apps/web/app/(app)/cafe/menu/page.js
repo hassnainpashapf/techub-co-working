@@ -125,24 +125,24 @@ export default function CafeMenuPage() {
 
       <div className="grid md:grid-cols-[240px_1fr] gap-6">
         {/* Categories column */}
-        <div className="rounded-xl border border-white/10 bg-[#14142a] p-4 space-y-3 h-fit">
+        <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3 h-fit">
           <div className="flex items-center justify-between">
-            <h3 className="font-semibold text-white">Categories</h3>
-            <button onClick={openCatAdd} className="text-sm px-3 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#8b5cf6]">+ Add</button>
+            <h3 className="font-semibold text-gray-900">Categories</h3>
+            <button onClick={openCatAdd} className="text-sm px-3 py-1.5 rounded-lg bg-[#0f766e] text-white hover:bg-[#0f766e]">+ Add</button>
           </div>
           <div className="space-y-1">
             <button
               onClick={() => setSelCat('all')}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selCat === 'all' ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/40 text-white' : 'text-slate-300 hover:bg-white/5'}`}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selCat === 'all' ? 'bg-[#0f766e]/20 border border-[#0f766e]/40 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
             >🍽️ All Items ({items.length})</button>
             {categories.map((c) => (
-              <div key={c.id} className={`flex items-center gap-1 px-1 py-1 rounded-lg ${selCat === c.id ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/40' : ''}`}>
-                <button onClick={() => setSelCat(c.id)} className="flex-1 text-left px-2 py-1 text-sm text-slate-200 truncate">
+              <div key={c.id} className={`flex items-center gap-1 px-1 py-1 rounded-lg ${selCat === c.id ? 'bg-[#0f766e]/20 border border-[#0f766e]/40' : ''}`}>
+                <button onClick={() => setSelCat(c.id)} className="flex-1 text-left px-2 py-1 text-sm text-gray-800 truncate">
                   {c.name} <span className="text-slate-500">({c._count?.items ?? 0})</span>
                   {!c.isActive && <span className="text-amber-400"> ⏸</span>}
                 </button>
-                <button onClick={() => openCatEdit(c)} className="text-slate-400 hover:text-white text-xs px-1">✏️</button>
-                <button onClick={() => deleteCat(c)} className="text-slate-400 hover:text-red-400 text-xs px-1">🗑️</button>
+                <button onClick={() => openCatEdit(c)} className="text-gray-500 hover:text-gray-900 text-xs px-1">✏️</button>
+                <button onClick={() => deleteCat(c)} className="text-gray-500 hover:text-red-400 text-xs px-1">🗑️</button>
               </div>
             ))}
             {categories.length === 0 && <EmptyState title="Koi category nahi" />}
@@ -155,9 +155,9 @@ export default function CafeMenuPage() {
             <input
               value={search} onChange={(e) => setSearch(e.target.value)}
               placeholder="Item search..."
-              className="flex-1 min-w-[180px] px-4 py-2 rounded-lg bg-[#14142a] border border-white/10 text-white text-sm focus:outline-none focus:border-[#8b5cf6]"
+              className="flex-1 min-w-[180px] px-4 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm focus:outline-none focus:border-[#0f766e]"
             />
-            <button onClick={openItemAdd} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">+ Add Item</button>
+            <button onClick={openItemAdd} className="px-4 py-2 rounded-lg bg-[#0f766e] text-white text-sm hover:bg-[#0f766e]">+ Add Item</button>
           </div>
 
           {filteredItems.length === 0 ? (
@@ -165,27 +165,27 @@ export default function CafeMenuPage() {
           ) : (
             <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
               {filteredItems.map((it) => (
-                <div key={it.id} className="rounded-xl border border-white/10 bg-[#14142a] p-4 space-y-2">
+                <div key={it.id} className="rounded-xl border border-gray-200 bg-white p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>
-                      <div className="font-semibold text-white">{it.name}</div>
-                      <div className="text-xs text-slate-400">{it.category?.name}</div>
+                      <div className="font-semibold text-gray-900">{it.name}</div>
+                      <div className="text-xs text-gray-500">{it.category?.name}</div>
                     </div>
                     <button
                       onClick={() => toggleAvail(it)}
                       title={it.isAvailable ? 'Unavailable karein' : 'Available karein'}
-                      className={`text-xs px-2.5 py-1 rounded-full ${it.isAvailable ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-500/20 text-slate-400'}`}
+                      className={`text-xs px-2.5 py-1 rounded-full ${it.isAvailable ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-500/20 text-gray-500'}`}
                     >{it.isAvailable ? '● Available' : '○ Off'}</button>
                   </div>
-                  {it.description && <p className="text-sm text-slate-400 line-clamp-2">{it.description}</p>}
+                  {it.description && <p className="text-sm text-gray-500 line-clamp-2">{it.description}</p>}
                   <div className="flex flex-wrap gap-1">
-                    {(it.tags || []).map((t) => <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-white/5 text-slate-300">{tagLabel(t)}</span>)}
+                    {(it.tags || []).map((t) => <span key={t} className="text-[11px] px-2 py-0.5 rounded-full bg-gray-100 text-gray-600">{tagLabel(t)}</span>)}
                   </div>
                   <div className="flex items-center justify-between pt-1">
-                    <div className="text-lg font-bold text-white">Rs {Number(it.price).toLocaleString()}</div>
+                    <div className="text-lg font-bold text-gray-900">Rs {Number(it.price).toLocaleString()}</div>
                     <div className="flex gap-1">
-                      <button onClick={() => openItemEdit(it)} className="text-xs px-2.5 py-1.5 rounded-lg bg-white/5 text-slate-300 hover:bg-white/10">✏️ Edit</button>
-                      <button onClick={() => deleteItem(it)} className="text-xs px-2.5 py-1.5 rounded-lg bg-white/5 text-red-400 hover:bg-red-500/20">🗑️</button>
+                      <button onClick={() => openItemEdit(it)} className="text-xs px-2.5 py-1.5 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-100">✏️ Edit</button>
+                      <button onClick={() => deleteItem(it)} className="text-xs px-2.5 py-1.5 rounded-lg bg-gray-100 text-red-400 hover:bg-red-500/20">🗑️</button>
                     </div>
                   </div>
                 </div>
@@ -199,14 +199,14 @@ export default function CafeMenuPage() {
       {catModal && (
         <Modal title={catModal === 'add' ? 'Nayi Category' : 'Category Edit'} onClose={() => setCatModal(null)}>
           <div className="space-y-4">
-            <Field label="Name"><input value={catForm.name} onChange={(e) => setCatForm({ ...catForm, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
-            <Field label="Sort Order"><input type="number" value={catForm.sortOrder} onChange={(e) => setCatForm({ ...catForm, sortOrder: Number(e.target.value) })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <Field label="Name"><input value={catForm.name} onChange={(e) => setCatForm({ ...catForm, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
+            <Field label="Sort Order"><input type="number" value={catForm.sortOrder} onChange={(e) => setCatForm({ ...catForm, sortOrder: Number(e.target.value) })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
+            <label className="flex items-center gap-2 text-sm text-gray-600">
               <input type="checkbox" checked={catForm.isActive} onChange={(e) => setCatForm({ ...catForm, isActive: e.target.checked })} /> Active (menu me dikhe)
             </label>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setCatModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-slate-300 text-sm">Cancel</button>
-              <button onClick={saveCat} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">{saving ? 'Saving...' : 'Save'}</button>
+              <button onClick={() => setCatModal(null)} className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm">Cancel</button>
+              <button onClick={saveCat} disabled={saving} className="px-4 py-2 rounded-lg bg-[#0f766e] text-white text-sm hover:bg-[#0f766e]">{saving ? 'Saving...' : 'Save'}</button>
             </div>
           </div>
         </Modal>
@@ -217,35 +217,35 @@ export default function CafeMenuPage() {
         <Modal title={itemModal === 'add' ? 'Naya Item' : 'Item Edit'} onClose={() => setItemModal(null)}>
           <div className="space-y-4">
             <Field label="Category">
-              <select value={itemForm.categoryId} onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm">
+              <select value={itemForm.categoryId} onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm">
                 <option value="">— Select —</option>
                 {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
               </select>
             </Field>
-            <Field label="Name"><input value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
-            <Field label="Description"><textarea value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
+            <Field label="Name"><input value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
+            <Field label="Description"><textarea value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} rows={2} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Price (Rs)"><input type="number" min="0" step="1" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
-              <Field label="Prep Time (min)"><input type="number" min="0" value={itemForm.prepTimeMin} onChange={(e) => setItemForm({ ...itemForm, prepTimeMin: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
+              <Field label="Price (Rs)"><input type="number" min="0" step="1" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
+              <Field label="Prep Time (min)"><input type="number" min="0" value={itemForm.prepTimeMin} onChange={(e) => setItemForm({ ...itemForm, prepTimeMin: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
             </div>
-            <Field label="Image URL"><input value={itemForm.imageUrl} onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })} placeholder="https://..." className="w-full px-3 py-2 rounded-lg bg-[#0f0f23] border border-white/10 text-white text-sm" /></Field>
+            <Field label="Image URL"><input value={itemForm.imageUrl} onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })} placeholder="https://..." className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
             <Field label="Tags">
               <div className="flex flex-wrap gap-2">
                 {TAGS.map((t) => (
                   <button
                     key={t.value} type="button"
                     onClick={() => setItemForm({ ...itemForm, tags: itemForm.tags.includes(t.value) ? itemForm.tags.filter((x) => x !== t.value) : [...itemForm.tags, t.value] })}
-                    className={`text-xs px-3 py-1.5 rounded-full border ${itemForm.tags.includes(t.value) ? 'bg-[#7c3aed]/30 border-[#8b5cf6]/50 text-white' : 'bg-white/5 border-white/10 text-slate-400'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full border ${itemForm.tags.includes(t.value) ? 'bg-[#0f766e]/30 border-[#0f766e]/50 text-white' : 'bg-gray-100 border-gray-200 text-gray-500'}`}
                   >{t.label}</button>
                 ))}
               </div>
             </Field>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm text-gray-600">
               <input type="checkbox" checked={itemForm.isAvailable} onChange={(e) => setItemForm({ ...itemForm, isAvailable: e.target.checked })} /> Available (menu me dikhe)
             </label>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setItemModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-slate-300 text-sm">Cancel</button>
-              <button onClick={saveItem} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">{saving ? 'Saving...' : 'Save'}</button>
+              <button onClick={() => setItemModal(null)} className="px-4 py-2 rounded-lg bg-gray-100 text-gray-600 text-sm">Cancel</button>
+              <button onClick={saveItem} disabled={saving} className="px-4 py-2 rounded-lg bg-[#0f766e] text-white text-sm hover:bg-[#0f766e]">{saving ? 'Saving...' : 'Save'}</button>
             </div>
           </div>
         </Modal>

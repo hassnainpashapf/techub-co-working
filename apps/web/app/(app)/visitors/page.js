@@ -96,11 +96,11 @@ export default function VisitorsPage() {
   const inside = visitors.filter((v) => !v.checkOutAt).length;
 
   const columns = [
-    { key: 'name', label: 'Visitor', render: (v) => <div><div className="font-medium text-white">{v.name}</div><div className="text-xs text-slate-400">{v.phone || ''}</div></div> },
-    { key: 'purpose', label: 'Purpose', render: (v) => <span className="text-sm text-slate-300">{purposeLabel(v.purpose)}</span> },
-    { key: 'host', label: 'Host', render: (v) => <span className="text-sm text-slate-300">{v.hostMember?.name || v.hostName || '—'}</span> },
-    { key: 'badge', label: 'Badge', render: (v) => <span className="font-mono text-sm text-slate-300">{v.badgeNo || '—'}</span> },
-    { key: 'in', label: 'Check-in', render: (v) => <span className="text-xs text-slate-400">{new Date(v.checkInAt).toLocaleTimeString()}</span> },
+    { key: 'name', label: 'Visitor', render: (v) => <div><div className="font-medium text-gray-900">{v.name}</div><div className="text-xs text-gray-500">{v.phone || ''}</div></div> },
+    { key: 'purpose', label: 'Purpose', render: (v) => <span className="text-sm text-gray-600">{purposeLabel(v.purpose)}</span> },
+    { key: 'host', label: 'Host', render: (v) => <span className="text-sm text-gray-600">{v.hostMember?.name || v.hostName || '—'}</span> },
+    { key: 'badge', label: 'Badge', render: (v) => <span className="font-mono text-sm text-gray-600">{v.badgeNo || '—'}</span> },
+    { key: 'in', label: 'Check-in', render: (v) => <span className="text-xs text-gray-500">{new Date(v.checkInAt).toLocaleTimeString()}</span> },
     { key: 'status', label: 'Status', render: (v) => v.checkOutAt ? <Badge tone="slate">Out</Badge> : <Badge tone="green">Inside</Badge> },
     {
       key: 'action', label: '', render: (v) => !v.checkOutAt ? (
@@ -120,7 +120,7 @@ export default function VisitorsPage() {
       <div className="flex gap-2 mb-4 flex-wrap items-center">
         {[['walkin', 'Walk-in'], ['prereg', 'Pre-registered']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -135,7 +135,7 @@ export default function VisitorsPage() {
       <div className="flex gap-2 mb-4">
         {[['today', 'Today'], ['inside', 'Inside Now'], ['all', 'All']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${filter === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${filter === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -144,14 +144,14 @@ export default function VisitorsPage() {
       </>) : (
       <div className="grid gap-3">
         {invites.length === 0 ? (
-          <div className="card-premium p-8 text-center text-sm text-slate-400">No pending pre-registrations.</div>
+          <div className="card-premium p-8 text-center text-sm text-gray-500">No pending pre-registrations.</div>
         ) : invites.map((i) => (
           <div key={i.id} className="card-premium p-4 flex items-center justify-between gap-3">
             <div>
-              <div className="font-semibold text-white">{i.visitorName}</div>
-              <div className="text-xs text-slate-400">
+              <div className="font-semibold text-gray-900">{i.visitorName}</div>
+              <div className="text-xs text-gray-500">
                 Host: {i.member?.name || '—'} · {new Date(i.expectedAt).toLocaleString()} · {purposeLabel(i.purpose)} ·{' '}
-                Code <span className="font-mono font-bold text-violet-300 tracking-widest">{i.code}</span>
+                Code <span className="font-mono font-bold text-teal-300 tracking-widest">{i.code}</span>
               </div>
             </div>
             <button className="btn-primary text-xs px-4 py-1.5 shrink-0" onClick={() => fastCheckIn(i.code)}>Check In</button>

@@ -72,12 +72,12 @@ export default function CalendarSettingsPage() {
         <div className="card-premium p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#8b5cf6] to-emerald-500 flex items-center justify-center text-xl">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0f766e] to-emerald-500 flex items-center justify-center text-xl">
                 📅
               </div>
               <div>
-                <div className="font-bold text-white">Google Calendar</div>
-                <div className="text-xs text-slate-400">
+                <div className="font-bold text-gray-900">Google Calendar</div>
+                <div className="text-xs text-gray-500">
                   {status.connected ? `Connected as ${status.email || 'your Google account'}` : 'Not connected'}
                 </div>
               </div>
@@ -91,9 +91,9 @@ export default function CalendarSettingsPage() {
               Calendar tables abhi database me nahi hain (migration pending).
             </p>
           )}
-          <p className="text-sm text-slate-400 mb-5">
+          <p className="text-sm text-gray-500 mb-5">
             Connect karne ke baad har nayi booking aapke Google Calendar me event ban jayegi,
-            aur cancel par event delete ho jayega. Sirf <code className="text-slate-300">calendar.events</code> scope
+            aur cancel par event delete ho jayega. Sirf <code className="text-gray-600">calendar.events</code> scope
             use hota hai — aapka poora calendar parha nahi jata.
           </p>
           {status.connected ? (

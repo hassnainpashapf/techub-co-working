@@ -90,7 +90,7 @@ function QuizPlayer({ lessonId, onPass }) {
   return (
     <div className="p-6">
       <div className="flex flex-wrap items-center justify-between gap-2">
-        <h3 className="text-white font-bold text-lg">{quiz.title || 'Quiz'}</h3>
+        <h3 className="text-gray-900 font-bold text-lg">{quiz.title || 'Quiz'}</h3>
         <div className="flex gap-2">
           <Badge tone="slate">Pass: {quiz.passingPct ?? 60}%</Badge>
           {quiz.bestScore != null ? <Badge tone="blue">Best: {quiz.bestScore}%</Badge> : null}
@@ -99,10 +99,10 @@ function QuizPlayer({ lessonId, onPass }) {
       </div>
       {result ? (
         <div className={`mt-4 rounded-xl border p-4 ${result.passed ? 'border-green-500/40 bg-green-500/10' : 'border-red-500/40 bg-red-500/10'}`}>
-          <div className="text-white font-bold">{result.passed ? '🎉 Quiz pass!' : 'Quiz pass nahi hua'}</div>
-          <div className="text-sm text-slate-300 mt-1">Score: {result.score}%</div>
+          <div className="text-gray-900 font-bold">{result.passed ? '🎉 Quiz pass!' : 'Quiz pass nahi hua'}</div>
+          <div className="text-sm text-gray-600 mt-1">Score: {result.score}%</div>
           {!result.passed && quiz.remainingAttempts > 0 ? (
-            <button onClick={() => { setResult(null); setAnswers({}); }} className="mt-3 px-4 py-2 rounded-xl text-sm font-semibold border border-white/20 text-white hover:bg-white/10">
+            <button onClick={() => { setResult(null); setAnswers({}); }} className="mt-3 px-4 py-2 rounded-xl text-sm font-semibold border border-gray-300 text-gray-900 hover:bg-gray-100">
               Dobara try karo
             </button>
           ) : null}
@@ -110,17 +110,17 @@ function QuizPlayer({ lessonId, onPass }) {
       ) : (
         <div className="mt-4 space-y-5">
           {qs.map((q, i) => (
-            <div key={q.id} className="rounded-xl border border-white/10 bg-white/5 p-4">
-              <div className="text-white font-medium">{i + 1}. {q.text}</div>
+            <div key={q.id} className="rounded-xl border border-gray-200 bg-gray-100 p-4">
+              <div className="text-gray-900 font-medium">{i + 1}. {q.text}</div>
               <div className="mt-2 space-y-1.5">
                 {(q.options || []).map((opt, oi) => (
-                  <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer border ${answers[q.id] === oi ? 'border-[#8b5cf6] bg-[#8b5cf6]/15 text-white' : 'border-white/10 text-slate-300 hover:bg-white/5'}`}>
+                  <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer border ${answers[q.id] === oi ? 'border-[#0f766e] bg-[#0f766e]/15 text-white' : 'border-gray-200 text-gray-600 hover:bg-gray-100'}`}>
                     <input
                       type="radio"
                       name={`q-${q.id}`}
                       checked={answers[q.id] === oi}
                       onChange={() => setAnswers((a) => ({ ...a, [q.id]: oi }))}
-                      className="accent-[#8b5cf6]"
+                      className="accent-[#0f766e]"
                     />
                     {opt}
                   </label>
@@ -132,7 +132,7 @@ function QuizPlayer({ lessonId, onPass }) {
           <button
             onClick={submit}
             disabled={submitting || (quiz.remainingAttempts != null && quiz.remainingAttempts <= 0)}
-            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:opacity-50"
+            className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:opacity-50"
           >
             {submitting ? 'Submitting…' : 'Submit answers'}
           </button>
@@ -140,7 +140,7 @@ function QuizPlayer({ lessonId, onPass }) {
       )}
       {quiz.myAttempts?.length > 0 ? (
         <div className="mt-6">
-          <div className="text-slate-400 text-xs uppercase tracking-wider mb-2">Past attempts</div>
+          <div className="text-gray-500 text-xs uppercase tracking-wider mb-2">Past attempts</div>
           <div className="flex flex-wrap gap-2">
             {quiz.myAttempts.slice(0, 5).map((a) => (
               <Badge key={a.id} tone={a.passed ? 'green' : 'red'}>{a.score}%</Badge>
@@ -159,15 +159,15 @@ function LessonPlayer({ lesson, onPass, enrolled }) {
     return (
       <div className="p-6">
         {embed ? (
-          <div className="aspect-video rounded-xl overflow-hidden border border-white/10 bg-black">
+          <div className="aspect-video rounded-xl overflow-hidden border border-gray-200 bg-black">
             <iframe src={embed} className="w-full h-full" allowFullScreen title={lesson.title} />
           </div>
         ) : lesson.contentUrl ? (
-          <video src={lesson.contentUrl} controls className="w-full rounded-xl border border-white/10 bg-black" />
+          <video src={lesson.contentUrl} controls className="w-full rounded-xl border border-gray-200 bg-black" />
         ) : (
           <EmptyState title="Video available nahi" hint="Is lesson ka video link abhi add nahi hua." />
         )}
-        {lesson.body ? <p className="mt-4 text-sm text-slate-300 whitespace-pre-wrap">{lesson.body}</p> : null}
+        {lesson.body ? <p className="mt-4 text-sm text-gray-600 whitespace-pre-wrap">{lesson.body}</p> : null}
       </div>
     );
   }
@@ -175,20 +175,20 @@ function LessonPlayer({ lesson, onPass, enrolled }) {
     return (
       <div className="p-6 text-center">
         <div className="text-5xl">📎</div>
-        <div className="mt-3 text-white font-semibold">{lesson.title}</div>
-        {lesson.body ? <p className="mt-2 text-sm text-slate-400">{lesson.body}</p> : null}
+        <div className="mt-3 text-gray-900 font-semibold">{lesson.title}</div>
+        {lesson.body ? <p className="mt-2 text-sm text-gray-500">{lesson.body}</p> : null}
         {enrolled && lesson.contentUrl ? (
           <a
             href={lesson.contentUrl}
             download
             target="_blank"
             rel="noreferrer"
-            className="mt-5 inline-block px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600"
+            className="mt-5 inline-block px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700"
           >
             ⬇ Download file
           </a>
         ) : (
-          <div className="mt-4 text-sm text-slate-400">File download ke liye course me enroll hona zaroori hai.</div>
+          <div className="mt-4 text-sm text-gray-500">File download ke liye course me enroll hona zaroori hai.</div>
         )}
       </div>
     );
@@ -197,7 +197,7 @@ function LessonPlayer({ lesson, onPass, enrolled }) {
   return (
     <div className="p-6">
       {lesson.body ? (
-        <div className="text-slate-200 leading-relaxed whitespace-pre-wrap">{lesson.body}</div>
+        <div className="text-gray-800 leading-relaxed whitespace-pre-wrap">{lesson.body}</div>
       ) : (
         <EmptyState title="Content khali hai" hint="Is lesson ka text abhi add nahi hua." />
       )}
@@ -286,29 +286,29 @@ export default function AcademyDetailPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <Link href="/portal/academy" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Academy</Link>
+      <Link href="/portal/academy" className="text-sm text-teal-700 hover:text-teal-700">← Back to Academy</Link>
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">{course.title}</h1>
+          <h1 className="text-2xl font-extrabold text-gray-900">{course.title}</h1>
           <div className="mt-2 flex flex-wrap gap-1.5">
             <Badge tone="blue">{course.category || 'general'}</Badge>
             <Badge tone="slate">{course.level || 'beginner'}</Badge>
             <Badge tone="green">{lessons.length} lessons</Badge>
             {course.durationMin ? <Badge tone="amber">{course.durationMin} min</Badge> : null}
           </div>
-          {course.description ? <p className="mt-3 text-sm text-slate-300 max-w-3xl">{course.description}</p> : null}
+          {course.description ? <p className="mt-3 text-sm text-gray-600 max-w-3xl">{course.description}</p> : null}
         </div>
         <div className="flex flex-col items-end gap-2">
           {enrolled ? (
             <>
               <Badge tone={completed ? 'green' : 'blue'}>{completed ? 'Completed 🎓' : `${enrollment?.progressPct || 0}% complete`}</Badge>
-              <span className="text-xs text-slate-400">{doneCount}/{lessons.length} lessons done</span>
+              <span className="text-xs text-gray-500">{doneCount}/{lessons.length} lessons done</span>
             </>
           ) : (
             <button
               onClick={enroll}
               disabled={acting}
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600 hover:from-[#8b5cf6] hover:to-violet-500 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700 hover:from-[#0f766e] hover:to-teal-600 disabled:opacity-50"
             >
               {acting ? 'Enrolling…' : 'Enroll now — start learning'}
             </button>
@@ -326,8 +326,8 @@ export default function AcademyDetailPage() {
 
       <div className="mt-6 grid gap-5 lg:grid-cols-[280px_1fr]">
         {/* Lesson list */}
-        <div className="rounded-2xl border border-white/10 bg-[#101020] p-3 self-start lg:sticky lg:top-4 max-h-[70vh] overflow-y-auto">
-          <div className="px-2 py-1 text-xs uppercase tracking-wider text-slate-400">Lessons</div>
+        <div className="rounded-2xl border border-gray-200 bg-white p-3 self-start lg:sticky lg:top-4 max-h-[70vh] overflow-y-auto">
+          <div className="px-2 py-1 text-xs uppercase tracking-wider text-gray-500">Lessons</div>
           {lessons.map((l, i) => {
             const isActive = l.id === activeId;
             const isDone = !!progressMap[l.id];
@@ -336,9 +336,9 @@ export default function AcademyDetailPage() {
               <button
                 key={l.id}
                 onClick={() => setActiveId(l.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-xl mt-1 flex items-center gap-2 text-sm transition ${isActive ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/50 text-white' : 'border border-transparent text-slate-300 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2.5 rounded-xl mt-1 flex items-center gap-2 text-sm transition ${isActive ? 'bg-[#0f766e]/20 border border-[#0f766e]/50 text-white' : 'border border-transparent text-gray-600 hover:bg-gray-100'}`}
               >
-                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${isDone ? 'bg-green-500 text-white' : 'bg-white/10 text-slate-300'}`}>
+                <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${isDone ? 'bg-green-500 text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {isDone ? '✓' : i + 1}
                 </span>
                 <span className="flex-1 min-w-0">
@@ -356,27 +356,27 @@ export default function AcademyDetailPage() {
         </div>
 
         {/* Player */}
-        <div className="rounded-2xl border border-white/10 bg-[#101020] overflow-hidden min-h-[400px]">
+        <div className="rounded-2xl border border-gray-200 bg-white overflow-hidden min-h-[400px]">
           {activeLesson ? (
             <>
               <div className="px-6 pt-5 flex flex-wrap items-center justify-between gap-3">
-                <h2 className="text-white font-bold text-lg">{activeLesson.title}</h2>
-                {activeLesson.durationMin ? <span className="text-xs text-slate-400">{activeLesson.durationMin} min</span> : null}
+                <h2 className="text-gray-900 font-bold text-lg">{activeLesson.title}</h2>
+                {activeLesson.durationMin ? <span className="text-xs text-gray-500">{activeLesson.durationMin} min</span> : null}
               </div>
               <LessonPlayer lesson={activeLesson} enrolled={enrolled} onPass={() => markDone(true)} />
-              <div className="px-6 pb-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/10 pt-4">
+              <div className="px-6 pb-6 flex flex-wrap items-center justify-between gap-3 border-t border-gray-200 pt-4">
                 <div className="flex gap-2">
                   <button
                     onClick={() => activeIndex > 0 && setActiveId(lessons[activeIndex - 1].id)}
                     disabled={activeIndex <= 0}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-slate-200 hover:bg-white/5 disabled:opacity-40"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
                   >
                     ← Previous
                   </button>
                   <button
                     onClick={() => activeIndex < lessons.length - 1 && setActiveId(lessons[activeIndex + 1].id)}
                     disabled={activeIndex >= lessons.length - 1}
-                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-slate-200 hover:bg-white/5 disabled:opacity-40"
+                    className="px-4 py-2 rounded-xl text-sm font-semibold border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-40"
                   >
                     Next →
                   </button>
@@ -394,13 +394,13 @@ export default function AcademyDetailPage() {
                     <button
                       onClick={() => markDone(true)}
                       disabled={acting}
-                      className="px-5 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:opacity-50"
+                      className="px-5 py-2 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 disabled:opacity-50"
                     >
                       ✓ Mark as done
                     </button>
                   )
                 ) : (
-                  <span className="text-xs text-slate-400">Progress save karne ke liye enroll karein.</span>
+                  <span className="text-xs text-gray-500">Progress save karne ke liye enroll karein.</span>
                 )}
               </div>
             </>

@@ -86,9 +86,9 @@ export default function PortalLoyaltyPage() {
             <StatCard label="Earn Rate" value={`${data?.loyaltyRate ?? 10} pts / Rs 1,000`} accent="blue" />
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5 mb-6">
-            <h2 className="text-white font-semibold mb-3">Redeem Points</h2>
-            <p className="text-xs text-slate-400 mb-4">
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 mb-6">
+            <h2 className="text-gray-900 font-semibold mb-3">Redeem Points</h2>
+            <p className="text-xs text-gray-500 mb-4">
               1 point = Rs {pointValue}. Redeemed points become a credit note you can apply to invoices.
               Referral bonus: {data?.referralBonusPoints ?? 100} pts per successful referral.
             </p>
@@ -104,7 +104,7 @@ export default function PortalLoyaltyPage() {
                   placeholder="e.g. 100"
                 />
               </Field>
-              <div className="text-sm text-slate-400 pb-3">
+              <div className="text-sm text-gray-500 pb-3">
                 = <span className="text-emerald-300 font-semibold">Rs {(Math.floor(Number(points) || 0) * pointValue).toLocaleString()}</span>
               </div>
               <button type="submit" className="btn-primary" disabled={redeeming || balance <= 0}>
@@ -118,8 +118,8 @@ export default function PortalLoyaltyPage() {
             )}
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-            <h2 className="text-white font-semibold mb-4">History</h2>
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+            <h2 className="text-gray-900 font-semibold mb-4">History</h2>
             {(data?.entries || []).length === 0 ? (
               <EmptyState title="No activity yet" hint="Points are earned automatically when your invoices are paid in full." />
             ) : (
@@ -134,8 +134,8 @@ export default function PortalLoyaltyPage() {
                   </thead>
                   <tbody>
                     {data.entries.map((e) => (
-                      <tr key={e.id} className="border-t border-white/5">
-                        <td className="py-2.5 pr-4 text-slate-400">{fmtDate(e.createdAt)}</td>
+                      <tr key={e.id} className="border-t border-gray-200">
+                        <td className="py-2.5 pr-4 text-gray-500">{fmtDate(e.createdAt)}</td>
                         <td className="py-2.5 pr-4">
                           <Badge>{REASON_LABELS[e.reason] || e.reason}</Badge>
                         </td>

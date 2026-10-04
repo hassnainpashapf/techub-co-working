@@ -74,7 +74,7 @@ function BuilderForm({ vendors, initial, onSave, saving }) {
       <div className="mt-3 grid grid-cols-2 gap-2 items-end">
         <Field label="Tax (Rs)"><input type="number" min="0" step="any" className="input" value={f.tax} onChange={(e) => setF({ ...f, tax: e.target.value })} /></Field>
         <div className="text-right">
-          <div className="text-sm text-slate-400">Subtotal: {fmtMoney(sub)}</div>
+          <div className="text-sm text-gray-500">Subtotal: {fmtMoney(sub)}</div>
           <div className="text-lg font-bold">Total: {fmtMoney(total)}</div>
         </div>
       </div>

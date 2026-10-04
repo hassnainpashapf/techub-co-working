@@ -37,14 +37,14 @@ function BookingModal({ booking, onClose }) {
   return (
     <Modal title="Booking Details" onClose={onClose}>
       <div className="space-y-3">
-        <div><div className="text-xs text-slate-400">Title</div><div className="text-white font-semibold">{booking.title}</div></div>
+        <div><div className="text-xs text-gray-500">Title</div><div className="text-gray-900 font-semibold">{booking.title}</div></div>
         <div className="grid grid-cols-2 gap-3">
-          <div><div className="text-xs text-slate-400">Unit</div><div className="text-white">{booking.unit?.code} ({booking.unit?.type})</div></div>
-          <div><div className="text-xs text-slate-400">Member</div><div className="text-white">{booking.member?.name || '—'}</div></div>
-          <div><div className="text-xs text-slate-400">Start</div><div className="text-white">{new Date(booking.startAt).toLocaleString()}</div></div>
-          <div><div className="text-xs text-slate-400">End</div><div className="text-white">{new Date(booking.endAt).toLocaleString()}</div></div>
+          <div><div className="text-xs text-gray-500">Unit</div><div className="text-gray-900">{booking.unit?.code} ({booking.unit?.type})</div></div>
+          <div><div className="text-xs text-gray-500">Member</div><div className="text-gray-900">{booking.member?.name || '—'}</div></div>
+          <div><div className="text-xs text-gray-500">Start</div><div className="text-gray-900">{new Date(booking.startAt).toLocaleString()}</div></div>
+          <div><div className="text-xs text-gray-500">End</div><div className="text-gray-900">{new Date(booking.endAt).toLocaleString()}</div></div>
         </div>
-        <div><div className="text-xs text-slate-400">Status</div><Badge tone={booking.status === 'confirmed' ? 'green' : 'red'}>{booking.status}</Badge></div>
+        <div><div className="text-xs text-gray-500">Status</div><Badge tone={booking.status === 'confirmed' ? 'green' : 'red'}>{booking.status}</Badge></div>
       </div>
     </Modal>
   );
@@ -77,21 +77,21 @@ function MonthView({ cursor, bookings, onSelect }) {
     <div className="card-premium p-4">
       <div className="grid grid-cols-7 gap-1 mb-1">
         {DAYS.map((d) => (
-          <div key={d} className="text-center text-xs font-semibold text-slate-400 py-2">{d}</div>
+          <div key={d} className="text-center text-xs font-semibold text-gray-500 py-2">{d}</div>
         ))}
       </div>
       <div className="grid grid-cols-7 gap-1">
         {cells.map((date, i) => {
-          if (!date) return <div key={i} className="min-h-[90px] rounded-lg bg-white/[0.02]" />;
+          if (!date) return <div key={i} className="min-h-[90px] rounded-lg bg-gray-50" />;
           const key = isoDay(date);
           const dayBookings = byDay[key] || [];
           const isToday = key === todayKey;
           return (
             <div
               key={i}
-              className={`min-h-[90px] rounded-lg p-1.5 border transition-colors ${isToday ? 'border-violet-400/50 bg-violet-500/10' : 'border-white/5 bg-white/[0.03] hover:bg-white/[0.06]'}`}
+              className={`min-h-[90px] rounded-lg p-1.5 border transition-colors ${isToday ? 'border-teal-500/50 bg-teal-600/10' : 'border-gray-200 bg-gray-50 hover:bg-gray-100'}`}
             >
-              <div className={`text-xs font-semibold mb-1 ${isToday ? 'text-violet-300' : 'text-slate-300'}`}>{date.getDate()}</div>
+              <div className={`text-xs font-semibold mb-1 ${isToday ? 'text-teal-300' : 'text-gray-600'}`}>{date.getDate()}</div>
               <div className="space-y-1">
                 {dayBookings.slice(0, 3).map((b) => (
                   <button
@@ -104,7 +104,7 @@ function MonthView({ cursor, bookings, onSelect }) {
                   </button>
                 ))}
                 {dayBookings.length > 3 && (
-                  <div className="text-[11px] text-slate-400 px-1">+{dayBookings.length - 3} more</div>
+                  <div className="text-[11px] text-gray-500 px-1">+{dayBookings.length - 3} more</div>
                 )}
               </div>
             </div>
@@ -157,9 +157,9 @@ function WeekView({ weekStart, bookings, onSelect }) {
             const key = isoDay(d);
             const isToday = key === todayKey;
             return (
-              <div key={key} className={`text-center py-2 rounded-lg ${isToday ? 'bg-violet-500/15' : ''}`}>
-                <div className="text-[11px] font-semibold text-slate-400">{DAYS[(d.getDay() + 6) % 7]}</div>
-                <div className={`text-lg font-bold ${isToday ? 'text-violet-300' : 'text-white'}`}>{d.getDate()}</div>
+              <div key={key} className={`text-center py-2 rounded-lg ${isToday ? 'bg-teal-600/15' : ''}`}>
+                <div className="text-[11px] font-semibold text-gray-500">{DAYS[(d.getDay() + 6) % 7]}</div>
+                <div className={`text-lg font-bold ${isToday ? 'text-teal-300' : 'text-gray-900'}`}>{d.getDate()}</div>
               </div>
             );
           })}
@@ -177,9 +177,9 @@ function WeekView({ weekStart, bookings, onSelect }) {
             const items = layoutDay(byDay[key] || []);
             const isToday = key === todayKey;
             return (
-              <div key={key} className={`relative border-l border-white/5 ${isToday ? 'bg-violet-500/[0.04]' : ''}`} style={{ height: hours.length * HOUR_PX }}>
+              <div key={key} className={`relative border-l border-gray-200 ${isToday ? 'bg-teal-600/[0.04]' : ''}`} style={{ height: hours.length * HOUR_PX }}>
                 {hours.map((h) => (
-                  <div key={h} className="border-t border-white/[0.06]" style={{ height: HOUR_PX }} />
+                  <div key={h} className="border-t border-gray-200" style={{ height: HOUR_PX }} />
                 ))}
                 {items.map(({ b, lane, laneCount }) => {
                   const top = (clampHour(new Date(b.startAt)) - HOUR_START) * HOUR_PX;
@@ -194,8 +194,8 @@ function WeekView({ weekStart, bookings, onSelect }) {
                       className={`absolute rounded-md border px-1.5 py-0.5 text-left overflow-hidden transition-colors ${WEEK_BAR[b.status] || WEEK_BAR.confirmed}`}
                       style={{ top, height, left: `${lane * widthPct}%`, width: `calc(${widthPct}% - 3px)` }}
                     >
-                      <div className="text-[11px] font-semibold text-white truncate">{b.title}</div>
-                      <div className="text-[10px] text-white/80 truncate">{fmtTime(b.startAt)}</div>
+                      <div className="text-[11px] font-semibold text-gray-900 truncate">{b.title}</div>
+                      <div className="text-[10px] text-gray-700 truncate">{fmtTime(b.startAt)}</div>
                     </button>
                   );
                 })}
@@ -260,10 +260,10 @@ export default function BookingCalendarPage() {
         subtitle="All bookings at a glance"
         action={
           <div className="flex items-center gap-2 flex-wrap">
-            <div className="flex rounded-lg border border-white/10 overflow-hidden mr-1">
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden mr-1">
               {['month', 'week'].map((v) => (
                 <button key={v} onClick={() => setView(v)}
-                  className={`px-3 py-1.5 text-xs font-medium capitalize ${view === v ? 'bg-violet-500/25 text-violet-200' : 'text-slate-400 hover:bg-white/5'}`}>
+                  className={`px-3 py-1.5 text-xs font-medium capitalize ${view === v ? 'bg-teal-600/25 text-violet-200' : 'text-gray-500 hover:bg-gray-100'}`}>
                   {v}
                 </button>
               ))}
@@ -274,7 +274,7 @@ export default function BookingCalendarPage() {
           </div>
         }
       />
-      <h2 className="text-xl font-bold text-white mb-4">{title}</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-4">{title}</h2>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : view === 'week' ? (
         <WeekView weekStart={weekCursor} bookings={bookings} onSelect={setSelected} />

@@ -79,9 +79,9 @@ export default function MemberReferralsPage() {
       {code && (
         <div className="grid sm:grid-cols-3 gap-4 mb-6">
           <div className="card-premium p-5 sm:col-span-2">
-            <p className="text-xs font-semibold text-slate-400 mb-1">YOUR REFERRAL CODE</p>
+            <p className="text-xs font-semibold text-gray-500 mb-1">YOUR REFERRAL CODE</p>
             <div className="flex items-center gap-3 flex-wrap">
-              <span className="text-2xl font-extrabold tracking-widest text-white">{code.code}</span>
+              <span className="text-2xl font-extrabold tracking-widest text-gray-900">{code.code}</span>
               <button className="btn-secondary text-sm" onClick={copyCode}>
                 {copied ? '✓ Copied!' : 'Copy invite link'}
               </button>
@@ -98,14 +98,14 @@ export default function MemberReferralsPage() {
         </div>
       )}
 
-      <h2 className="text-lg font-bold text-white mb-3">My invitations</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-3">My invitations</h2>
       {referrals.length === 0 ? (
         <EmptyState title="No invitations yet" hint="Invite a friend to get started." />
       ) : (
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Name</th>
                 <th className="p-3">Email</th>
                 <th className="p-3">Status</th>
@@ -115,12 +115,12 @@ export default function MemberReferralsPage() {
             </thead>
             <tbody>
               {referrals.map((r) => (
-                <tr key={r.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-3 text-white font-medium">{r.referredName}</td>
-                  <td className="p-3 text-slate-300">{r.referredEmail}</td>
+                <tr key={r.id} className="border-b border-gray-200 hover:bg-gray-100">
+                  <td className="p-3 text-gray-900 font-medium">{r.referredName}</td>
+                  <td className="p-3 text-gray-600">{r.referredEmail}</td>
                   <td className="p-3">{statusBadge(r.status)}</td>
-                  <td className="p-3 text-slate-300">{r.rewardAmount ? `Rs ${Number(r.rewardAmount).toLocaleString()}` : '—'}</td>
-                  <td className="p-3 text-slate-400">{new Date(r.createdAt).toLocaleDateString()}</td>
+                  <td className="p-3 text-gray-600">{r.rewardAmount ? `Rs ${Number(r.rewardAmount).toLocaleString()}` : '—'}</td>
+                  <td className="p-3 text-gray-500">{new Date(r.createdAt).toLocaleDateString()}</td>
                 </tr>
               ))}
             </tbody>

@@ -138,10 +138,10 @@ export default function PortalCafePage() {
           <h3 className="font-semibold mb-3">🔔 Active orders</h3>
           <div className="space-y-2">
             {activeOrders.map((o) => (
-              <div key={o.id} className="flex items-center justify-between gap-3 rounded-lg bg-slate-800/60 px-4 py-3">
+              <div key={o.id} className="flex items-center justify-between gap-3 rounded-lg bg-gray-100/60 px-4 py-3">
                 <div className="min-w-0">
                   <div className="truncate text-sm">{o.items.map((i) => `${i.qty}x ${i.name}`).join(', ')}</div>
-                  <div className="text-xs text-slate-400">Rs {Number(o.subtotal).toFixed(2)} · {new Date(o.orderedAt).toLocaleString()}</div>
+                  <div className="text-xs text-gray-500">Rs {Number(o.subtotal).toFixed(2)} · {new Date(o.orderedAt).toLocaleString()}</div>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
                   <Badge tone={STATUS_COLOR[o.status] || 'slate'}>{o.status}</Badge>
@@ -178,11 +178,11 @@ export default function PortalCafePage() {
             <div key={m.id} className="card-premium p-4 flex items-center justify-between gap-3">
               <div className="min-w-0">
                 <div className="font-medium truncate">{m.name}</div>
-                {m.description && <div className="text-xs text-slate-400 truncate">{m.description}</div>}
+                {m.description && <div className="text-xs text-gray-500 truncate">{m.description}</div>}
                 <div className="text-sm font-semibold text-amber-300 mt-1">Rs {Number(m.price).toFixed(2)}</div>
                 <div className="flex items-center gap-1 mt-1">
                   {[1, 2, 3, 4, 5].map((s) => (
-                    <button key={s} onClick={() => rateItem(m.id, s)} className={`text-sm ${(m.myRating || Math.round(m.avgRating || 0)) >= s ? 'text-amber-400' : 'text-slate-600'}`} title={`${s} star`}>
+                    <button key={s} onClick={() => rateItem(m.id, s)} className={`text-sm ${(m.myRating || Math.round(m.avgRating || 0)) >= s ? 'text-amber-400' : 'text-gray-500'}`} title={`${s} star`}>
                       ★
                     </button>
                   ))}
@@ -212,7 +212,7 @@ export default function PortalCafePage() {
             <div key={i.id} className="flex items-center justify-between">
               <div>
                 <div className="font-medium">{i.name}</div>
-                <div className="text-xs text-slate-400">{i.qty} × Rs {Number(i.price).toFixed(2)}</div>
+                <div className="text-xs text-gray-500">{i.qty} × Rs {Number(i.price).toFixed(2)}</div>
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => sub(i.id)} className="btn-ghost w-8 h-8">−</button>
@@ -256,14 +256,14 @@ export default function PortalCafePage() {
       <div className="card-premium p-5">
         <h3 className="font-semibold mb-3">Order history</h3>
         {orders.length === 0 ? (
-          <div className="text-sm text-slate-400">No orders yet.</div>
+          <div className="text-sm text-gray-500">No orders yet.</div>
         ) : (
           <div className="space-y-2">
             {orders.map((o) => (
-              <div key={o.id} className="flex items-center justify-between gap-3 rounded-lg bg-slate-800/60 px-4 py-2.5">
+              <div key={o.id} className="flex items-center justify-between gap-3 rounded-lg bg-gray-100/60 px-4 py-2.5">
                 <div className="min-w-0 text-sm">
                   <span className="truncate block">{o.items.map((i) => `${i.qty}x ${i.name}`).join(', ')}</span>
-                  <span className="text-xs text-slate-400">Rs {Number(o.subtotal).toFixed(2)} · {new Date(o.orderedAt).toLocaleString()}</span>
+                  <span className="text-xs text-gray-500">Rs {Number(o.subtotal).toFixed(2)} · {new Date(o.orderedAt).toLocaleString()}</span>
                 </div>
                 <Badge tone={STATUS_COLOR[o.status] || 'slate'}>{o.status}</Badge>
               </div>

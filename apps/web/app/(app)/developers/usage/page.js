@@ -63,7 +63,7 @@ export default function ApiUsagePage() {
           <button
             key={d}
             onClick={() => setDays(d)}
-            className={`px-4 py-1.5 rounded-lg text-sm font-semibold border ${days === d ? 'border-indigo-400/60 bg-indigo-500/20 text-indigo-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}
+            className={`px-4 py-1.5 rounded-lg text-sm font-semibold border ${days === d ? 'border-indigo-400/60 bg-indigo-500/20 text-indigo-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}
           >
             {d} days
           </button>
@@ -83,16 +83,16 @@ export default function ApiUsagePage() {
           </div>
 
           <div className="card-premium p-5 mb-6">
-            <h3 className="text-sm font-bold text-slate-200 mb-3">Requests per day</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-3">Requests per day</h3>
             <BarsChart data={data.perDay} />
           </div>
 
           <div className="card-premium p-5 mb-6">
-            <h3 className="text-sm font-bold text-slate-200 mb-3">Top endpoints</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-3">Top endpoints</h3>
             <DataTable
               columns={[
-                { key: 'method', label: 'Method', render: (r) => <span className="font-mono text-xs px-2 py-0.5 rounded bg-white/5 text-indigo-300">{r.method}</span> },
-                { key: 'endpoint', label: 'Endpoint', render: (r) => <span className="font-mono text-xs text-slate-300">{r.endpoint}</span> },
+                { key: 'method', label: 'Method', render: (r) => <span className="font-mono text-xs px-2 py-0.5 rounded bg-gray-100 text-indigo-300">{r.method}</span> },
+                { key: 'endpoint', label: 'Endpoint', render: (r) => <span className="font-mono text-xs text-gray-600">{r.endpoint}</span> },
                 { key: 'requests', label: 'Requests', render: (r) => r.requests.toLocaleString() },
                 { key: 'avgMs', label: 'Avg ms', render: (r) => `${r.avgMs} ms` },
                 { key: 'errors', label: 'Errors', render: (r) => r.errors > 0 ? <Badge tone="red">{r.errors}</Badge> : <span className="text-slate-500">0</span> },
@@ -103,10 +103,10 @@ export default function ApiUsagePage() {
           </div>
 
           <div className="card-premium p-5">
-            <h3 className="text-sm font-bold text-slate-200 mb-3">Top API keys</h3>
+            <h3 className="text-sm font-bold text-gray-800 mb-3">Top API keys</h3>
             <DataTable
               columns={[
-                { key: 'name', label: 'Key', render: (r) => <span className="text-slate-200 font-medium">{r.name} <span className="font-mono text-xs text-slate-500">…{r.keyPrefix}</span></span> },
+                { key: 'name', label: 'Key', render: (r) => <span className="text-gray-800 font-medium">{r.name} <span className="font-mono text-xs text-slate-500">…{r.keyPrefix}</span></span> },
                 { key: 'requests', label: 'Requests', render: (r) => r.requests.toLocaleString() },
                 { key: 'errors', label: 'Errors', render: (r) => r.errors > 0 ? <Badge tone="red">{r.errors}</Badge> : <span className="text-slate-500">0</span> },
                 {

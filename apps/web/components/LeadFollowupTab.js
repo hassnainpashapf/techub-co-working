@@ -110,7 +110,7 @@ export default function LeadFollowupTab({ leadId }) {
             <div className="text-sm">
               <Badge tone={toneFor(r.type)}>{labelFor(r.type)}</Badge>
               <span className="ml-2 font-medium">{fmtDate(r.dueAt)}</span>
-              {r.note && <p className="text-slate-400 mt-1">{r.note}</p>}
+              {r.note && <p className="text-gray-500 mt-1">{r.note}</p>}
               {r.assignee && <p className="text-xs text-slate-500 mt-1">Assigned: {r.assignee.name}</p>}
             </div>
             <div className="flex gap-2 shrink-0">
@@ -124,10 +124,10 @@ export default function LeadFollowupTab({ leadId }) {
 
       {past.length > 0 && (
         <>
-          <h3 className="font-semibold text-sm text-slate-400">Completed / Skipped ({past.length})</h3>
+          <h3 className="font-semibold text-sm text-gray-500">Completed / Skipped ({past.length})</h3>
           <div className="space-y-2">
             {past.map((r) => (
-              <div key={r.id} className="card p-3 text-sm text-slate-400 flex justify-between">
+              <div key={r.id} className="card p-3 text-sm text-gray-500 flex justify-between">
                 <span><Badge tone="slate">{r.status}</Badge> <span className="ml-2">{labelFor(r.type)} — {fmtDate(r.dueAt)}</span></span>
               </div>
             ))}

@@ -80,7 +80,7 @@ export default function ProcurementDashboardPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <PageHeader title="Procurement Dashboard" sub="Purchases, bills aur vendor spend ka overview"
-        actions={<button onClick={load} className="px-4 py-2 rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-semibold">↻ Refresh</button>} />
+        actions={<button onClick={load} className="px-4 py-2 rounded-xl bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-semibold">↻ Refresh</button>} />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       {stats && (
@@ -95,21 +95,21 @@ export default function ProcurementDashboardPage() {
       )}
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
-          <h3 className="text-white font-semibold mb-3">📈 Vendor Spend Trend (6 mahine)</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+          <h3 className="text-gray-900 font-semibold mb-3">📈 Vendor Spend Trend (6 mahine)</h3>
           {trend.length ? <SpendChart data={trend} /> : <EmptyState title="Data nahi" hint="Paid vendor bills par trend banega" />}
         </div>
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
-          <h3 className="text-white font-semibold mb-3">🏆 Top Vendors (spend-wise)</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+          <h3 className="text-gray-900 font-semibold mb-3">🏆 Top Vendors (spend-wise)</h3>
           {top.length ? (
             <div className="space-y-2">
               {top.map((v, i) => (
-                <div key={v.vendorId} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-2.5">
+                <div key={v.vendorId} className="flex items-center justify-between rounded-xl bg-gray-100 px-4 py-2.5">
                   <div className="flex items-center gap-3">
                     <span className="text-lg">{i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : '▫️'}</span>
-                    <span className="text-slate-200 font-medium">{v.name}</span>
+                    <span className="text-gray-800 font-medium">{v.name}</span>
                   </div>
-                  <span className="text-slate-100 font-semibold">{fmt(v.totalSpend)}</span>
+                  <span className="text-gray-900 font-semibold">{fmt(v.totalSpend)}</span>
                 </div>
               ))}
             </div>
@@ -118,25 +118,25 @@ export default function ProcurementDashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
-          <h3 className="text-white font-semibold mb-3">✍️ Approval Inbox {stats && stats.inbox.length > 0 && <Badge tone="amber">{stats.inbox.length}</Badge>}</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+          <h3 className="text-gray-900 font-semibold mb-3">✍️ Approval Inbox {stats && stats.inbox.length > 0 && <Badge tone="amber">{stats.inbox.length}</Badge>}</h3>
           {stats && stats.inbox.length ? (
             <div className="space-y-2">
               {stats.inbox.map((po) => (
                 <a key={po.id} href="/procurement/purchase-orders"
-                  className="flex items-center justify-between rounded-xl bg-white/5 hover:bg-white/10 px-4 py-3 transition">
+                  className="flex items-center justify-between rounded-xl bg-gray-100 hover:bg-gray-100 px-4 py-3 transition">
                   <div>
-                    <div className="text-slate-100 font-semibold">{po.number} <span className="text-slate-400 font-normal">· {po.vendorName}</span></div>
-                    <div className="text-xs text-slate-400">{po.requestedBy} ne request kiya · Level {po.level}</div>
+                    <div className="text-gray-900 font-semibold">{po.number} <span className="text-gray-500 font-normal">· {po.vendorName}</span></div>
+                    <div className="text-xs text-gray-500">{po.requestedBy} ne request kiya · Level {po.level}</div>
                   </div>
-                  <span className="text-slate-100 font-semibold">{fmt(po.total)}</span>
+                  <span className="text-gray-900 font-semibold">{fmt(po.total)}</span>
                 </a>
               ))}
             </div>
           ) : <EmptyState title="Koi pending approval nahi" hint={modules.purchaseOrders === false ? 'Purchase Orders module abhi enable nahi' : 'Sab approvals clear hain 🎉'} />}
         </div>
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
-          <h3 className="text-white font-semibold mb-3">⚠️ Alerts</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900 to-slate-950 p-5">
+          <h3 className="text-gray-900 font-semibold mb-3">⚠️ Alerts</h3>
           {stats && stats.alerts.length ? (
             <div className="space-y-2">
               {stats.alerts.map((a, i) => (

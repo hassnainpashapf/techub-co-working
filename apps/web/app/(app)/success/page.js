@@ -89,7 +89,7 @@ export default function SuccessDashboardPage() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
-            <h3 className="text-lg font-semibold text-white">🚨 At-Risk Members</h3>
+            <h3 className="text-lg font-semibold text-gray-900">🚨 At-Risk Members</h3>
             <Badge tone={atRisk.length ? 'red' : 'green'}>{atRisk.length} flagged</Badge>
           </div>
           {!atRisk.length ? (
@@ -98,7 +98,7 @@ export default function SuccessDashboardPage() {
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400 border-b border-slate-700">
+                  <tr className="text-left text-gray-500 border-b border-gray-200">
                     <th className="py-2 pr-3">Member</th>
                     <th className="py-2 pr-3">Score</th>
                     <th className="py-2 pr-3">Journey</th>
@@ -107,18 +107,18 @@ export default function SuccessDashboardPage() {
                 </thead>
                 <tbody>
                   {atRisk.map((r) => (
-                    <tr key={r.memberId} className="border-b border-slate-800 hover:bg-slate-800/40">
+                    <tr key={r.memberId} className="border-b border-gray-200 hover:bg-gray-100/40">
                       <td className="py-2 pr-3">
-                        <div className="text-white font-medium">{r.memberName || '—'}</div>
-                        <div className="text-xs text-slate-400">{r.memberEmail || ''}</div>
+                        <div className="text-gray-900 font-medium">{r.memberName || '—'}</div>
+                        <div className="text-xs text-gray-500">{r.memberEmail || ''}</div>
                       </td>
                       <td className="py-2 pr-3">
                         <Badge tone={healthTone(r.score)}>{r.score}</Badge>
                       </td>
-                      <td className="py-2 pr-3 text-slate-300">
+                      <td className="py-2 pr-3 text-gray-600">
                         {r.journey ? `${r.journey.status}${r.journey.currentStage ? ` · stage ${r.journey.currentStage}` : ''}` : '—'}
                       </td>
-                      <td className="py-2 text-xs text-slate-400 max-w-[200px] truncate" title={factorLabel(r.factors)}>
+                      <td className="py-2 text-xs text-gray-500 max-w-[200px] truncate" title={factorLabel(r.factors)}>
                         {factorLabel(r.factors)}
                       </td>
                     </tr>
@@ -130,20 +130,20 @@ export default function SuccessDashboardPage() {
         </div>
 
         <div className="card p-5">
-          <h3 className="text-lg font-semibold text-white mb-4">⚡ Quick Links</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-4">⚡ Quick Links</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
               <a key={q.label} href={q.href} className="card p-4 hover:border-indigo-500/50 transition-colors">
-                <div className="text-white font-medium">{q.label}</div>
-                <div className="text-xs text-slate-400 mt-1">{q.desc}</div>
+                <div className="text-gray-900 font-medium">{q.label}</div>
+                <div className="text-xs text-gray-500 mt-1">{q.desc}</div>
               </a>
             ))}
           </div>
-          <div className="mt-4 text-sm text-slate-300 space-y-1">
-            <div>💓 Health sample: <span className="text-white font-semibold">{stats.healthSample ?? 0}</span> members</div>
-            <div>📊 NPS responses (30d): <span className="text-white font-semibold">{stats.npsResponses ?? 0}</span></div>
-            <div>📩 Win-back campaigns: <span className="text-white font-semibold">{stats.winbackCampaigns ?? 0}</span></div>
-            <div>⏰ Overdue tasks: <span className="text-white font-semibold">{stats.overdueSuccessTasks ?? 0}</span></div>
+          <div className="mt-4 text-sm text-gray-600 space-y-1">
+            <div>💓 Health sample: <span className="text-gray-900 font-semibold">{stats.healthSample ?? 0}</span> members</div>
+            <div>📊 NPS responses (30d): <span className="text-gray-900 font-semibold">{stats.npsResponses ?? 0}</span></div>
+            <div>📩 Win-back campaigns: <span className="text-gray-900 font-semibold">{stats.winbackCampaigns ?? 0}</span></div>
+            <div>⏰ Overdue tasks: <span className="text-gray-900 font-semibold">{stats.overdueSuccessTasks ?? 0}</span></div>
           </div>
         </div>
       </div>

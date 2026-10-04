@@ -81,10 +81,10 @@ function ReportForm({ initial, onSave, saving }) {
       </Field>
       <label className="flex items-center gap-3 mb-4 cursor-pointer">
         <button type="button" role="switch" aria-checked={f.isActive} onClick={() => setF({ ...f, isActive: !f.isActive })}
-          className={`w-11 h-6 rounded-full relative transition-colors ${f.isActive ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}>
+          className={`w-11 h-6 rounded-full relative transition-colors ${f.isActive ? 'bg-[#0f766e]' : 'bg-gray-100'}`}>
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${f.isActive ? 'left-[22px]' : 'left-0.5'}`} />
         </button>
-        <span className="text-sm text-white font-medium">Active</span>
+        <span className="text-sm text-gray-900 font-medium">Active</span>
       </label>
       <div className="flex justify-end gap-2">
         <button type="submit" disabled={saving} className="btn-primary">{saving ? 'Saving…' : 'Save report'}</button>
@@ -171,22 +171,22 @@ export default function ScheduledReportsPage() {
             <div key={r.id} className="card-premium p-5">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <p className="text-white font-semibold">{r.name}</p>
-                  <p className="text-slate-400 text-xs mt-0.5">
+                  <p className="text-gray-900 font-semibold">{r.name}</p>
+                  <p className="text-gray-500 text-xs mt-0.5">
                     {TYPE_LABEL[r.reportType] || r.reportType} • {r.frequency === 'weekly' ? 'Weekly' : 'Monthly'} • {String(r.format).toUpperCase()}
                   </p>
                 </div>
                 <Badge tone={r.isActive ? 'green' : 'slate'}>{r.isActive ? 'Active' : 'Paused'}</Badge>
               </div>
-              <p className="text-slate-400 text-xs mb-1">To: {(r.recipients || []).join(', ')}</p>
+              <p className="text-gray-500 text-xs mb-1">To: {(r.recipients || []).join(', ')}</p>
               <p className="text-slate-500 text-xs mb-4">
                 Last sent: {r.lastSentAt ? new Date(r.lastSentAt).toLocaleString() : 'Never'}
               </p>
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => sendNow(r.id)} disabled={sending === r.id} className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-3 py-1.5">
+                <button onClick={() => sendNow(r.id)} disabled={sending === r.id} className="text-xs text-white bg-[#0f766e]/80 hover:bg-[#0f766e] rounded-lg px-3 py-1.5">
                   {sending === r.id ? 'Queuing…' : 'Send now'}
                 </button>
-                <button onClick={() => { setEditing(r); setShowForm(true); }} className="text-xs text-slate-300 hover:text-white border border-white/10 rounded-lg px-3 py-1.5">Edit</button>
+                <button onClick={() => { setEditing(r); setShowForm(true); }} className="text-xs text-gray-600 hover:text-gray-900 border border-gray-200 rounded-lg px-3 py-1.5">Edit</button>
                 <button onClick={() => remove(r.id)} className="text-xs text-red-300 hover:text-red-200 border border-red-500/30 rounded-lg px-3 py-1.5">Delete</button>
               </div>
             </div>

@@ -95,19 +95,19 @@ export default function BackupsPage() {
         {loading ? <div className="p-8 flex justify-center"><Spinner /></div> : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
-              <thead><tr className="text-left text-slate-400 border-b border-white/10">
+              <thead><tr className="text-left text-gray-500 border-b border-gray-200">
                 <th className="px-4 py-3">File</th><th className="px-4 py-3">Size</th>
                 <th className="px-4 py-3">Created</th><th className="px-4 py-3">Note</th>
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr></thead>
               <tbody>
-                {backups.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-400">Koi backup nahi — "Run Backup Now" dabayein.</td></tr>}
+                {backups.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">Koi backup nahi — "Run Backup Now" dabayein.</td></tr>}
                 {backups.map((b) => (
-                  <tr key={b.id} className="border-b border-white/5 hover:bg-white/5">
+                  <tr key={b.id} className="border-b border-gray-200 hover:bg-gray-100">
                     <td className="px-4 py-3 font-mono text-xs">{b.fileName}{!b.exists && <span className="ml-2 text-amber-300">(file missing)</span>}</td>
                     <td className="px-4 py-3">{fmtSize(b.sizeBytes)}</td>
-                    <td className="px-4 py-3 text-slate-300">{new Date(b.createdAt).toLocaleString()}</td>
-                    <td className="px-4 py-3 text-slate-400 text-xs max-w-xs truncate">{b.note || '—'}</td>
+                    <td className="px-4 py-3 text-gray-600">{new Date(b.createdAt).toLocaleString()}</td>
+                    <td className="px-4 py-3 text-gray-500 text-xs max-w-xs truncate">{b.note || '—'}</td>
                     <td className="px-4 py-3 text-right space-x-2 whitespace-nowrap">
                       <button onClick={() => download(b)} className="btn-ghost btn-sm">⬇</button>
                       <button onClick={() => dryRun(b)} className="btn-ghost btn-sm" title="Restore (dry-run check)">♻</button>
@@ -133,7 +133,7 @@ export default function BackupsPage() {
                   <p>Gzip valid: <b>{restoreDry.checks.gzipOk ? '✅' : '❌'}</b></p>
                   <p>SQL dump jaisa lagta hai: <b>{restoreDry.checks.looksLikeSql ? '✅' : '❌'}</b></p>
                 </div>
-                <p className="text-sm text-slate-300">Restore se pehle <b>safety backup</b> khud ban jayega. Phir bhi ye action poora database badal dega.</p>
+                <p className="text-sm text-gray-600">Restore se pehle <b>safety backup</b> khud ban jayega. Phir bhi ye action poora database badal dega.</p>
                 <div className="flex gap-3 justify-end">
                   <button onClick={() => { setRestoreId(null); setRestoreDry(null); }} className="btn-ghost">Cancel</button>
                   <button onClick={doRestore} disabled={restoring || !restoreDry.checks.gzipOk || !restoreDry.checks.looksLikeSql} className="btn-danger">
@@ -146,8 +146,8 @@ export default function BackupsPage() {
         </div>
       )}
 
-      <div className="card p-4 text-xs text-slate-400">
-        <b className="text-slate-200">Kaise kaam karta hai:</b> roz raat 2:30 baje job queue se automatic backup banta hai.
+      <div className="card p-4 text-xs text-gray-500">
+        <b className="text-gray-800">Kaise kaam karta hai:</b> roz raat 2:30 baje job queue se automatic backup banta hai.
         pg_dump maujood ho to full backup (schema + data), warna data-only fallback. Purane backups me se sirf latest 7 rakhe jate hain.
         Restore sirf yahan se, dry-run check + safety backup ke baad.
       </div>

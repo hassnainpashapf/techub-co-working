@@ -103,23 +103,23 @@ export default function InventoryPage() {
       const low = i.quantity <= i.reorderLevel;
       return (
         <div>
-          <div className="font-medium text-white flex items-center gap-2">
+          <div className="font-medium text-gray-900 flex items-center gap-2">
             {i.name}
             {low && <Badge tone="red">LOW</Badge>}
           </div>
-          <div className="text-xs text-slate-400 capitalize">{i.category}{i.sku ? ` · ${i.sku}` : ''} · reorder at {i.reorderLevel}</div>
+          <div className="text-xs text-gray-500 capitalize">{i.category}{i.sku ? ` · ${i.sku}` : ''} · reorder at {i.reorderLevel}</div>
         </div>
       );
     } },
     { key: 'qty', label: 'Stock', render: (i) => <span className={`font-bold ${i.quantity <= i.reorderLevel ? 'text-red-300' : 'text-emerald-300'}`}>{i.quantity} {i.unit}</span> },
-    { key: 'price', label: 'Unit Price', render: (i) => <span className="text-sm text-slate-300">{i.unitPrice ? money(i.unitPrice) : '—'}</span> },
+    { key: 'price', label: 'Unit Price', render: (i) => <span className="text-sm text-gray-600">{i.unitPrice ? money(i.unitPrice) : '—'}</span> },
     { key: 'action', label: '', render: (i) => <button className="btn-secondary text-xs px-2 py-1" onClick={() => setMoveItem(i)}>Stock In/Out</button> },
   ];
   const assetCols = [
-    { key: 'name', label: 'Asset', render: (a) => <div><div className="font-medium text-white">{a.name}</div><div className="text-xs text-slate-400 capitalize">{a.category}{a.assetTag ? ` · ${a.assetTag}` : ''}</div></div> },
+    { key: 'name', label: 'Asset', render: (a) => <div><div className="font-medium text-gray-900">{a.name}</div><div className="text-xs text-gray-500 capitalize">{a.category}{a.assetTag ? ` · ${a.assetTag}` : ''}</div></div> },
     { key: 'status', label: 'Status', render: (a) => <Badge tone={ASSET_TONES[a.status]}>{a.status.replace('_', ' ')}</Badge> },
-    { key: 'cost', label: 'Cost', render: (a) => <span className="text-sm text-slate-300">{a.purchaseCost ? money(a.purchaseCost) : '—'}</span> },
-    { key: 'unit', label: 'Location', render: (a) => <span className="text-sm text-slate-300">{a.unit?.code || '—'}</span> },
+    { key: 'cost', label: 'Cost', render: (a) => <span className="text-sm text-gray-600">{a.purchaseCost ? money(a.purchaseCost) : '—'}</span> },
+    { key: 'unit', label: 'Location', render: (a) => <span className="text-sm text-gray-600">{a.unit?.code || '—'}</span> },
     {
       key: 'action', label: '', render: (a) => (
         <select className="input text-xs py-1" value={a.status} onChange={(e) => setAssetStatus(a.id, e.target.value)}>
@@ -154,7 +154,7 @@ export default function InventoryPage() {
       <div className="flex gap-2 mb-4">
         {[['items', `Inventory (${items.length})`], ['assets', `Assets (${assets.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -175,7 +175,7 @@ export default function InventoryPage() {
             </Field>
             <Field label="Quantity"><input type="number" min="1" className="input" value={moveQty} onChange={(e) => setMoveQty(e.target.value)} /></Field>
           </div>
-          <div className="text-sm text-slate-400 mb-3">Current stock: <span className="text-white font-bold">{moveItem.quantity}</span></div>
+          <div className="text-sm text-gray-500 mb-3">Current stock: <span className="text-gray-900 font-bold">{moveItem.quantity}</span></div>
           <button className="btn-primary w-full" onClick={doMove}>Confirm</button>
         </Modal>
       )}

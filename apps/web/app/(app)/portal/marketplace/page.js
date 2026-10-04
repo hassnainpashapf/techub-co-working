@@ -109,12 +109,12 @@ export default function PortalMarketplacePage() {
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
-        <div className="flex gap-1 p-1 rounded-xl bg-white/5 border border-white/10">
+        <div className="flex gap-1 p-1 rounded-xl bg-gray-100 border border-gray-200">
           {[{ v: 'all', l: 'Sab listings' }, { v: 'mine', l: 'Meri listings' }].map((t) => (
             <button
               key={t.v}
               onClick={() => setTab(t.v)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(139,92,246,0.4)]' : 'text-slate-300 hover:text-white'}`}
+              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(15,118,110,0.4)]' : 'text-gray-600 hover:text-gray-900'}`}
             >
               {t.l}
             </button>
@@ -131,7 +131,7 @@ export default function PortalMarketplacePage() {
             <button
               key={c.v}
               onClick={() => setCat(c.v)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${cat === c.v ? 'bg-[#7c3aed]/30 border-[#8b5cf6]/50 text-white' : 'bg-white/5 border-white/10 text-slate-300 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${cat === c.v ? 'bg-[#0f766e]/30 border-[#0f766e]/50 text-white' : 'bg-gray-100 border-gray-200 text-gray-600 hover:text-gray-900'}`}
             >
               {c.l}
             </button>
@@ -153,16 +153,16 @@ export default function PortalMarketplacePage() {
                   <Badge tone={l.status === 'sold' ? 'amber' : 'slate'}>{l.status.toUpperCase()}</Badge>
                 )}
               </div>
-              <h3 className="text-base font-bold text-white mb-1">{l.title}</h3>
-              {l.description && <p className="text-sm text-slate-300 mb-3 line-clamp-3">{l.description}</p>}
+              <h3 className="text-base font-bold text-gray-900 mb-1">{l.title}</h3>
+              {l.description && <p className="text-sm text-gray-600 mb-3 line-clamp-3">{l.description}</p>}
               <div className="mt-auto">
                 {fmtPrice(l.price) && (
                   <div className="text-lg font-extrabold text-emerald-300 mb-2">{fmtPrice(l.price)}</div>
                 )}
-                <div className="text-xs text-slate-400 mb-1">
+                <div className="text-xs text-gray-500 mb-1">
                   👤 {l.member?.name || 'Member'}{l.member?.companyName ? ` • ${l.member.companyName}` : ''}
                 </div>
-                {l.contactInfo && <div className="text-xs text-slate-300 mb-1">📞 {l.contactInfo}</div>}
+                {l.contactInfo && <div className="text-xs text-gray-600 mb-1">📞 {l.contactInfo}</div>}
                 <div className="text-[11px] text-slate-500 mb-3">{timeAgo(l.createdAt)}</div>
                 {tab === 'mine' && (
                   <div className="flex gap-2">

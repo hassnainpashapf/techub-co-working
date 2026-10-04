@@ -109,7 +109,7 @@ export default function EmailTemplatesPage() {
   const previewHtml = () => {
     let out = form.htmlBody;
     (tpl?.variables || []).forEach((v) => {
-      out = out.replace(new RegExp(`\\{\\{\\s*${v}\\s*\\}\\}`, 'g'), `<span style="background:#7c3aed33;border:1px dashed #7c3aed;padding:0 4px;border-radius:4px">[${v}]</span>`);
+      out = out.replace(new RegExp(`\\{\\{\\s*${v}\\s*\\}\\}`, 'g'), `<span style="background:#0f766e33;border:1px dashed #0f766e;padding:0 4px;border-radius:4px">[${v}]</span>`);
     });
     return out;
   };
@@ -117,7 +117,7 @@ export default function EmailTemplatesPage() {
   return (
     <div>
       <PageHeader title="Email Templates" sub="Customize the emails your workspace sends. Use {{variables}} — they are filled in automatically." />
-      <div className="mb-4 rounded-xl bg-violet-500/10 border border-violet-400/30 px-4 py-3 text-sm text-violet-200">
+      <div className="mb-4 rounded-xl bg-teal-600/10 border border-teal-500/30 px-4 py-3 text-sm text-violet-200">
         ⚙️ Want these emails sent automatically? Set up{' '}
         <Link href="/settings/lifecycle" className="underline font-semibold">Lifecycle Automation</Link>
         {' '}— trial ending, contract expiring, inactivity & overdue reminders.
@@ -128,8 +128,8 @@ export default function EmailTemplatesPage() {
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
         <div className="card-premium p-4">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-sm font-bold text-white">Templates</h3>
-            <button type="button" className="text-[11px] text-[#c4b5fd] hover:text-[#ddd6fe] underline" onClick={seedDefaults} disabled={seeding}>
+            <h3 className="text-sm font-bold text-gray-900">Templates</h3>
+            <button type="button" className="text-[11px] text-teal-700 hover:text-teal-700 underline" onClick={seedDefaults} disabled={seeding}>
               {seeding ? 'Seeding…' : 'Seed all defaults'}
             </button>
           </div>
@@ -138,7 +138,7 @@ export default function EmailTemplatesPage() {
               <button
                 key={b.key}
                 onClick={() => setSelected(b.key)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between ${selected === b.key ? 'bg-violet-500/20 text-white' : 'text-slate-300 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between ${selected === b.key ? 'bg-teal-600/20 text-white' : 'text-gray-600 hover:bg-gray-100'}`}
               >
                 <span className="font-mono text-xs">{b.key}</span>
                 {activeMap[b.key] === true && customKeys.has(b.key) && <Badge tone="green">custom</Badge>}
@@ -152,7 +152,7 @@ export default function EmailTemplatesPage() {
           {!tpl ? <Spinner /> : (
             <form onSubmit={save}>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white font-mono">{selected}</h3>
+                <h3 className="text-lg font-bold text-gray-900 font-mono">{selected}</h3>
                 <div className="flex items-center gap-2">
                   {tpl.custom
                     ? (tpl.isCustom ? <Badge tone="green">customized</Badge> : <Badge tone="blue">seeded default</Badge>)
@@ -165,17 +165,17 @@ export default function EmailTemplatesPage() {
               </Field>
 
               <div className="mb-1.5 flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-300">HTML body</label>
+                <label className="text-xs font-semibold text-gray-600">HTML body</label>
                 <div className="flex flex-wrap gap-1">
                   {(tpl.variables || []).map((v) => (
-                    <button key={v} type="button" onClick={() => insertVar(v)} className="text-[11px] px-2 py-0.5 rounded-full bg-violet-500/15 text-violet-300 hover:bg-violet-500/30 font-mono">{`{{${v}}}`}</button>
+                    <button key={v} type="button" onClick={() => insertVar(v)} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/15 text-teal-300 hover:bg-teal-600/30 font-mono">{`{{${v}}}`}</button>
                   ))}
                 </div>
               </div>
               <textarea id="tpl-html" className="input font-mono text-xs" rows={14} value={form.htmlBody} onChange={(e) => setForm({ ...form, htmlBody: e.target.value })} required />
 
-              <label className="flex items-center gap-2 mt-4 text-sm text-slate-300 cursor-pointer">
-                <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="w-4 h-4 accent-violet-500" />
+              <label className="flex items-center gap-2 mt-4 text-sm text-gray-600 cursor-pointer">
+                <input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} className="w-4 h-4 accent-teal-600" />
                 Use this custom template (uncheck to fall back to built-in without deleting)
               </label>
 
@@ -185,8 +185,8 @@ export default function EmailTemplatesPage() {
                 {tpl.custom && <button type="button" className="btn-danger" onClick={resetDefault} disabled={saving}>Reset to default</button>}
               </div>
 
-              <div className="mt-6 rounded-xl border border-white/10 p-4">
-                <h4 className="text-xs font-semibold text-slate-300 mb-2">SEND TEST EMAIL</h4>
+              <div className="mt-6 rounded-xl border border-gray-200 p-4">
+                <h4 className="text-xs font-semibold text-gray-600 mb-2">SEND TEST EMAIL</h4>
                 <div className="flex flex-wrap gap-2">
                   <input className="input flex-1 min-w-[200px]" type="email" placeholder="you@example.com" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
                   <button type="button" className="btn-secondary" onClick={sendTest} disabled={testing}>{testing ? 'Sending…' : 'Send test'}</button>
@@ -196,9 +196,9 @@ export default function EmailTemplatesPage() {
 
               {preview && (
                 <div className="mt-6">
-                  <h4 className="text-xs font-semibold text-slate-400 mb-2">PREVIEW (variables highlighted)</h4>
-                  <div className="rounded-xl border border-white/10 bg-[#0a0a14] p-4 text-sm text-slate-200" dangerouslySetInnerHTML={{ __html: previewHtml() }} />
-                  <p className="text-xs text-slate-500 mt-2">Subject preview: <span className="text-slate-300">{form.subject}</span></p>
+                  <h4 className="text-xs font-semibold text-gray-500 mb-2">PREVIEW (variables highlighted)</h4>
+                  <div className="rounded-xl border border-gray-200 bg-[#f4f5f7] p-4 text-sm text-gray-800" dangerouslySetInnerHTML={{ __html: previewHtml() }} />
+                  <p className="text-xs text-slate-500 mt-2">Subject preview: <span className="text-gray-600">{form.subject}</span></p>
                 </div>
               )}
             </form>

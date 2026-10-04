@@ -232,12 +232,12 @@ export default function ToursPage() {
                   {isToday(t.scheduledAt) && t.status === 'scheduled' && <Badge tone="amber">Today</Badge>}
                   {t.outcome && <Badge tone="blue">{(OUTCOMES.find((o) => o.key === t.outcome) || {}).label || t.outcome}</Badge>}
                 </div>
-                <div className="text-sm text-slate-300 mt-1">
+                <div className="text-sm text-gray-600 mt-1">
                   {fmtDateTime(t.scheduledAt)} · {t.durationMin} min
                   {t.lead?.phone && ` · ${t.lead.phone}`}
                   {t.assignee?.name && ` · Host: ${t.assignee.name}`}
                 </div>
-                {t.notes && <div className="text-sm text-slate-400 mt-1">{t.notes}</div>}
+                {t.notes && <div className="text-sm text-gray-500 mt-1">{t.notes}</div>}
               </div>
               <div className="flex gap-2 flex-wrap">
                 {t.status === 'scheduled' && (

@@ -62,24 +62,24 @@ export default function MemberCommsTab({ memberId, memberPhone, memberEmail }) {
     <div>
       {error && <ErrorBanner message={error} />}
       <div className="flex gap-2 mb-4">
-        <button onClick={() => setShowSend(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-violet-500/20 border border-violet-400/40 text-violet-200 hover:bg-violet-500/30">✉️ Message bhejein</button>
+        <button onClick={() => setShowSend(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-600/20 border border-teal-500/40 text-violet-200 hover:bg-teal-600/30">✉️ Message bhejein</button>
         <button onClick={() => setShowCall(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-500/20 border border-blue-400/40 text-blue-200 hover:bg-blue-500/30">📞 Log call</button>
         {tel && <a href={tel} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 border border-emerald-400/40 text-emerald-200 hover:bg-emerald-500/30">📱 Call karein</a>}
       </div>
 
       {loading ? <Spinner /> : items.length === 0 ? (
-        <p className="text-sm text-slate-400">Abhi koi communication record nahi.</p>
+        <p className="text-sm text-gray-500">Abhi koi communication record nahi.</p>
       ) : (
         <div className="space-y-2 max-h-80 overflow-y-auto">
           {items.map((it, i) => (
-            <div key={i} className="bg-white/5 rounded-lg p-3 text-sm">
+            <div key={i} className="bg-gray-100 rounded-lg p-3 text-sm">
               <div className="flex items-center gap-2 mb-1">
                 <Badge tone={CHANNEL_TONE[it.badge?.tone] ? it.badge.tone : CHANNEL_TONE[it.channel] || 'slate'}>{it.badge?.label || it.channel}</Badge>
                 <span className="text-xs text-slate-500">{it.direction === 'in' ? '⬅ incoming' : '➡ outgoing'}</span>
                 <span className="text-xs text-slate-500 ml-auto">{it.createdAt ? new Date(it.createdAt).toLocaleString() : ''}</span>
               </div>
-              {it.subject && <p className="font-medium text-slate-200">{it.subject}</p>}
-              <p className="text-slate-300 whitespace-pre-wrap">{it.snippet || it.body}</p>
+              {it.subject && <p className="font-medium text-gray-800">{it.subject}</p>}
+              <p className="text-gray-600 whitespace-pre-wrap">{it.snippet || it.body}</p>
             </div>
           ))}
         </div>

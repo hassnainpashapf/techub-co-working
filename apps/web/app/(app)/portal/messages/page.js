@@ -87,14 +87,14 @@ export default function PortalMessagesPage() {
           {convs.length === 0 && <EmptyState title="No messages yet" hint="Hamari team se chat yahan dikhegi." />}
           {convs.map((c) => (
             <button key={c.id} onClick={() => openConv(c.id)}
-              className={`w-full text-left p-3 rounded-xl mb-2 border transition ${c.id === activeId ? 'bg-[#8b5cf6]/15 border-[#8b5cf6]/40' : 'bg-white/5 border-white/10 hover:border-[#8b5cf6]/30'}`}>
+              className={`w-full text-left p-3 rounded-xl mb-2 border transition ${c.id === activeId ? 'bg-[#0f766e]/15 border-[#0f766e]/40' : 'bg-gray-100 border-gray-200 hover:border-[#0f766e]/30'}`}>
               <div className="flex items-center justify-between">
-                <span className="text-sm font-semibold text-white truncate">
+                <span className="text-sm font-semibold text-gray-900 truncate">
                   {c.title || 'Team chat'}
                 </span>
-                {c.unread && <span className="w-2.5 h-2.5 rounded-full bg-[#8b5cf6]" />}
+                {c.unread && <span className="w-2.5 h-2.5 rounded-full bg-[#0f766e]" />}
               </div>
-              <p className="text-xs text-slate-400 truncate mt-1">{c.lastMessage?.body || 'No messages yet'}</p>
+              <p className="text-xs text-gray-500 truncate mt-1">{c.lastMessage?.body || 'No messages yet'}</p>
               <div className="mt-1.5"><Badge color="slate">{c.type}</Badge></div>
             </button>
           ))}
@@ -104,22 +104,22 @@ export default function PortalMessagesPage() {
             <div className="flex-1 flex items-center justify-center"><EmptyState title="Select a conversation" hint="Left se koi chat kholo." /></div>
           ) : (
             <>
-              <div className="p-3 border-b border-white/10">
-                <p className="text-white font-semibold">{active?.title || 'Team chat'}</p>
-                <p className="text-xs text-slate-400">{active?.participants.map((p) => p.name).join(', ')}</p>
+              <div className="p-3 border-b border-gray-200">
+                <p className="text-gray-900 font-semibold">{active?.title || 'Team chat'}</p>
+                <p className="text-xs text-gray-500">{active?.participants.map((p) => p.name).join(', ')}</p>
               </div>
               <div ref={boxRef} className="flex-1 overflow-y-auto p-4 space-y-2" style={{ maxHeight: 400 }}>
                 {messages.map((m) => (
                   <div key={m.id} className={`flex ${m.mine ? 'justify-end' : 'justify-start'}`}>
-                    <div className={`max-w-[75%] rounded-2xl px-3 py-2 ${m.mine ? 'bg-[#7c3aed] text-white' : 'bg-white/10 text-slate-100'}`}>
-                      {!m.mine && <p className="text-[11px] text-slate-400 mb-0.5">{m.senderName}</p>}
+                    <div className={`max-w-[75%] rounded-2xl px-3 py-2 ${m.mine ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-900'}`}>
+                      {!m.mine && <p className="text-[11px] text-gray-500 mb-0.5">{m.senderName}</p>}
                       <p className="text-sm whitespace-pre-wrap">{m.body}</p>
                       <p className="text-[10px] opacity-60 mt-1">{new Date(m.createdAt).toLocaleTimeString()}</p>
                     </div>
                   </div>
                 ))}
               </div>
-              <div className="p-3 border-t border-white/10 flex gap-2">
+              <div className="p-3 border-t border-gray-200 flex gap-2">
                 <input value={draft} onChange={(e) => setDraft(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && send()}
                   placeholder="Type a message…" className="input flex-1" />

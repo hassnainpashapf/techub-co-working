@@ -21,21 +21,21 @@ function MemberNav() {
   return (
     <>
       {/* Top bar */}
-      <header className="sticky top-0 z-20 bg-[#0c0c18]/90 backdrop-blur border-b border-white/10">
+      <header className="sticky top-0 z-20 bg-white/95 backdrop-blur border-b border-gray-200">
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-          <Link href="/m" className="font-extrabold text-white text-lg">
-            <span className="text-violet-400">Techub</span> Member
+          <Link href="/m" className="font-extrabold text-gray-900 text-lg">
+            <span className="text-teal-700">Techub</span> Member
           </Link>
           <div className="flex items-center gap-3">
-            <span className="text-sm text-slate-300 hidden sm:block">{user?.name}</span>
-            <button onClick={logout} className="text-xs text-slate-400 hover:text-white border border-white/10 rounded-lg px-3 py-1.5">
+            <span className="text-sm text-gray-600 hidden sm:block">{user?.name}</span>
+            <button onClick={logout} className="text-xs text-gray-500 hover:text-gray-900 border border-gray-300 rounded-lg px-3 py-1.5">
               Logout
             </button>
           </div>
         </div>
       </header>
       {/* Bottom nav (mobile-friendly) */}
-      <nav className="fixed bottom-0 left-0 right-0 z-20 bg-[#0c0c18]/95 backdrop-blur border-t border-white/10">
+      <nav className="fixed bottom-0 left-0 right-0 z-20 bg-white/95 backdrop-blur border-t border-gray-200">
         <div className="max-w-5xl mx-auto px-2 py-2 grid grid-cols-5">
           {NAV.map((item) => {
             const active = pathname === item.path;
@@ -43,7 +43,7 @@ function MemberNav() {
               <Link
                 key={item.path}
                 href={item.path}
-                className={`flex flex-col items-center py-1.5 rounded-lg text-[11px] font-medium transition-colors ${active ? 'text-violet-300' : 'text-slate-400 hover:text-white'}`}
+                className={`flex flex-col items-center py-1.5 rounded-lg text-[11px] font-medium transition-colors ${active ? 'text-teal-700' : 'text-gray-400 hover:text-gray-900'}`}
               >
                 <span className="text-xl mb-0.5">{item.icon}</span>
                 {item.label}
@@ -61,13 +61,13 @@ export default function MemberLayout({ children }) {
   // super_admin can also preview the member portal
   if (allowed === null) return null;
   if (!allowed && user?.role !== 'super_admin') return (
-    <div className="min-h-screen bg-[#08080f] flex items-center justify-center p-4">
+    <div className="min-h-screen bg-[#f4f5f7] flex items-center justify-center p-4">
       <AccessDenied />
     </div>
   );
   return (
     <Protected>
-      <div className="min-h-screen bg-[#08080f] pb-24">
+      <div className="min-h-screen bg-[#f4f5f7] pb-24">
         <MemberNav />
         <main className="max-w-5xl mx-auto px-4 py-6">{children}</main>
       </div>

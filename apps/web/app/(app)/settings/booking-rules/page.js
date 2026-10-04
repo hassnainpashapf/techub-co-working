@@ -67,7 +67,7 @@ export default function BookingRulesPage() {
                 onChange={(e) => setForm({ ...form, [f.key]: e.target.value })}
               />
             </Field>
-            <p className="text-xs text-slate-400 -mt-2">{f.hint}</p>
+            <p className="text-xs text-gray-500 -mt-2">{f.hint}</p>
           </div>
         ))}
         <button className="btn-primary" onClick={save} disabled={saving}>

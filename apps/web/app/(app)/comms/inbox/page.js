@@ -132,7 +132,7 @@ export default function TeamInboxPage() {
           <div className="flex gap-2">
             {[['open', 'Open'], ['unassigned', 'Unassigned'], ['me', 'Meri'], ['resolved', 'Resolved']].map(([v, l]) => (
               <button key={v} onClick={() => setFilter(v)}
-                className={`px-3 py-1.5 rounded-lg text-sm ${filter === v ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>{l}</button>
+                className={`px-3 py-1.5 rounded-lg text-sm ${filter === v ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600'}`}>{l}</button>
             ))}
           </div>
         }
@@ -148,14 +148,14 @@ export default function TeamInboxPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-320px)] min-h-[480px]">
         {/* Conversation list */}
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] overflow-y-auto">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-y-auto">
           {convos.length === 0 && <EmptyState title="Koi conversation nahi" />}
           {convos.map((c) => (
             <button key={c.key} onClick={() => pick(c)}
-              className={`w-full text-left p-4 border-b border-white/5 hover:bg-white/5 ${sel?.key === c.key ? 'bg-[#7c3aed]/10 border-l-2 border-l-blue-500' : ''}`}>
+              className={`w-full text-left p-4 border-b border-gray-200 hover:bg-gray-100 ${sel?.key === c.key ? 'bg-[#0f766e]/10 border-l-2 border-l-blue-500' : ''}`}>
               <div className="flex items-center justify-between gap-2">
-                <div className="font-medium text-slate-100 truncate">{c.member?.name || c.external || 'Unknown'}</div>
-                {c.unread > 0 && <span className="text-xs bg-[#7c3aed] text-white rounded-full px-2 py-0.5">{c.unread}</span>}
+                <div className="font-medium text-gray-900 truncate">{c.member?.name || c.external || 'Unknown'}</div>
+                {c.unread > 0 && <span className="text-xs bg-[#0f766e] text-white rounded-full px-2 py-0.5">{c.unread}</span>}
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <Badge tone={CHANNEL_TONES[c.lastMessage.channel] || 'slate'}>{CHANNEL_LABELS[c.lastMessage.channel] || c.lastMessage.channel}</Badge>
@@ -163,26 +163,26 @@ export default function TeamInboxPage() {
                 {c.isResolved && <Badge tone="green">Resolved</Badge>}
                 <span className="text-xs text-slate-500 ml-auto">{timeAgo(c.lastAt)}</span>
               </div>
-              <div className="text-sm text-slate-400 truncate mt-1">{c.lastMessage.body}</div>
+              <div className="text-sm text-gray-500 truncate mt-1">{c.lastMessage.body}</div>
             </button>
           ))}
         </div>
 
         {/* Thread */}
-        <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-white/[0.03] flex flex-col overflow-hidden">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-gray-50 flex flex-col overflow-hidden">
           {!sel ? (
             <div className="flex-1 flex items-center justify-center text-slate-500">Conversation select karein</div>
           ) : (
             <>
-              <div className="p-4 border-b border-white/10 flex items-center gap-3 flex-wrap">
-                <div className="font-semibold text-slate-100">{sel.member?.name || sel.external}</div>
-                <div className="text-xs text-slate-400">{sel.member?.email} {sel.member?.phone && `• ${sel.member.phone}`}</div>
+              <div className="p-4 border-b border-gray-200 flex items-center gap-3 flex-wrap">
+                <div className="font-semibold text-gray-900">{sel.member?.name || sel.external}</div>
+                <div className="text-xs text-gray-500">{sel.member?.email} {sel.member?.phone && `• ${sel.member.phone}`}</div>
                 <div className="ml-auto flex items-center gap-2">
                   <select className="input-premium !w-auto text-sm" value={assignTo} onChange={(e) => setAssignTo(e.target.value)}>
                     <option value="">Assign...</option>
                     {users.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
                   </select>
-                  <button onClick={doAssign} className="px-3 py-1.5 rounded-lg bg-white/10 text-sm">Assign</button>
+                  <button onClick={doAssign} className="px-3 py-1.5 rounded-lg bg-gray-100 text-sm">Assign</button>
                   {sel.isResolved
                     ? <button onClick={() => doResolve(false)} className="px-3 py-1.5 rounded-lg bg-amber-600/20 text-amber-300 text-sm">Reopen</button>
                     : <button onClick={() => doResolve(true)} className="px-3 py-1.5 rounded-lg bg-green-600/20 text-green-300 text-sm">✓ Resolve</button>}
@@ -191,20 +191,20 @@ export default function TeamInboxPage() {
 
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {thread.map((m) => (
-                  <div key={m.id} className={`max-w-[80%] rounded-xl p-3 ${m.direction === 'in' ? 'bg-white/5 mr-auto' : 'bg-[#7c3aed]/20 ml-auto'}`}>
+                  <div key={m.id} className={`max-w-[80%] rounded-xl p-3 ${m.direction === 'in' ? 'bg-gray-100 mr-auto' : 'bg-[#0f766e]/20 ml-auto'}`}>
                     <div className="flex items-center gap-2 mb-1">
                       <Badge tone={CHANNEL_TONES[m.channel] || 'slate'}>{CHANNEL_LABELS[m.channel] || m.channel}</Badge>
                       <span className="text-xs text-slate-500">{m.direction === 'in' ? (sel.member?.name || 'Visitor') : (m.user?.name || 'Staff')} • {timeAgo(m.createdAt)}</span>
                     </div>
-                    {m.subject && <div className="text-sm font-medium text-slate-200">{m.subject}</div>}
-                    <div className="text-sm text-slate-200 whitespace-pre-wrap">{m.body}</div>
+                    {m.subject && <div className="text-sm font-medium text-gray-800">{m.subject}</div>}
+                    <div className="text-sm text-gray-800 whitespace-pre-wrap">{m.body}</div>
                     {m.status === 'failed' && <div className="text-xs text-red-400 mt-1">⚠ Bheja nahi ja saka</div>}
                   </div>
                 ))}
                 <div ref={threadEnd} />
               </div>
 
-              <div className="p-4 border-t border-white/10">
+              <div className="p-4 border-t border-gray-200">
                 <div className="flex gap-2 mb-2">
                   <select className="input-premium !w-auto text-sm" value={replyChannel} onChange={(e) => setReplyChannel(e.target.value)}>
                     <option value="internal">Internal</option>
@@ -222,7 +222,7 @@ export default function TeamInboxPage() {
                     value={reply} onChange={(e) => setReply(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && doReply()} />
                   <button onClick={doReply} disabled={sending || !reply.trim()}
-                    className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm disabled:opacity-50">
+                    className="px-4 py-2 rounded-lg bg-[#0f766e] text-white text-sm disabled:opacity-50">
                     {sending ? '...' : scheduleAt ? '📅 Schedule' : 'Bhejein'}
                   </button>
                 </div>
@@ -230,7 +230,7 @@ export default function TeamInboxPage() {
                   <label className="text-xs text-slate-500">📅 Schedule send:</label>
                   <input type="datetime-local" value={scheduleAt} onChange={(e) => setScheduleAt(e.target.value)}
                     className="input-premium !w-auto text-xs" />
-                  {scheduleAt && <button onClick={() => setScheduleAt('')} className="text-xs text-slate-400 hover:text-slate-200">✕</button>}
+                  {scheduleAt && <button onClick={() => setScheduleAt('')} className="text-xs text-gray-500 hover:text-gray-800">✕</button>}
                 </div>
                 <div className="text-xs text-slate-500">WhatsApp/SMS ke liye credentials configure hona lazmi hai, warna message queue me rahega.</div>
               </div>

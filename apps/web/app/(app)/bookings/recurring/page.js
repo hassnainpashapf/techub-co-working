@@ -93,7 +93,7 @@ function RecurringForm({ units, members, isMember, onSave, saving, error }) {
           <input type="date" className="input" value={form.endDate} onChange={set('endDate')} min={form.startDate} />
         </Field>
       </div>
-      <p className="text-xs text-slate-400">Bookings for the next 8 weeks will be created automatically. Conflicting slots are skipped.</p>
+      <p className="text-xs text-gray-500">Bookings for the next 8 weeks will be created automatically. Conflicting slots are skipped.</p>
       <button type="submit" className="btn-primary w-full" disabled={saving}>
         {saving ? 'Creating…' : 'Create recurring booking'}
       </button>
@@ -175,12 +175,12 @@ export default function RecurringBookingsPage() {
   const columns = ['Title', 'Member', 'Unit', 'Repeats', 'Time', 'Period', 'Bookings', 'Status', 'Actions'];
 
   const rows = filtered.map((r) => [
-    <span key="t" className="font-medium text-white">{r.title}</span>,
+    <span key="t" className="font-medium text-gray-900">{r.title}</span>,
     r.member?.name || <span key="m" className="text-slate-500">—</span>,
     r.unit?.code || <span key="u" className="text-slate-500">—</span>,
     <span key="w">Every {r.weekdayLabel || WEEKDAYS[r.dayOfWeek]}</span>,
-    <span key="ti" className="text-slate-300">{r.startTime}–{r.endTime}</span>,
-    <span key="p" className="text-slate-400 text-xs">
+    <span key="ti" className="text-gray-600">{r.startTime}–{r.endTime}</span>,
+    <span key="p" className="text-gray-500 text-xs">
       {String(r.startDate).slice(0, 10)} → {r.endDate ? String(r.endDate).slice(0, 10) : 'ongoing'}
     </span>,
     <span key="g">{(r.generatedIds || []).length}</span>,

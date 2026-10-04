@@ -96,26 +96,26 @@ export default function AuditLogsPage() {
       {/* Filters */}
       <div className="card-premium p-4 mb-4 grid grid-cols-2 md:grid-cols-6 gap-3">
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">From</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={f.from} onChange={(e) => setF({ ...f, from: e.target.value })} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">To</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">To</label>
           <input type="date" className="input" value={f.to} onChange={(e) => setF({ ...f, to: e.target.value })} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">Action search</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Action search</label>
           <input className="input" value={f.action} onChange={(e) => setF({ ...f, action: e.target.value })} placeholder="e.g. member.create" />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">User</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">User</label>
           <select className="input" value={f.userId} onChange={(e) => setF({ ...f, userId: e.target.value })}>
             <option value="">All users</option>
             {users.map((u) => <option key={u.id} value={u.id}>{u.name || u.email}</option>)}
           </select>
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">Entity</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">Entity</label>
           <input className="input" value={f.entity} onChange={(e) => setF({ ...f, entity: e.target.value })} placeholder="e.g. Member" />
         </div>
         <div className="flex items-end gap-2">
@@ -129,7 +129,7 @@ export default function AuditLogsPage() {
         <div className="card-premium overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Time</th>
                 <th className="p-3">User</th>
                 <th className="p-3">Action</th>
@@ -142,30 +142,30 @@ export default function AuditLogsPage() {
             <tbody>
               {logs.map((r) => (
                 <>
-                  <tr key={r.id} className="border-b border-white/5 hover:bg-white/5">
-                    <td className="p-3 text-slate-300 whitespace-nowrap">{new Date(r.createdAt).toLocaleString()}</td>
-                    <td className="p-3 text-white">{r.actor?.name || r.actor?.email || <span className="text-slate-500">system</span>}</td>
+                  <tr key={r.id} className="border-b border-gray-200 hover:bg-gray-100">
+                    <td className="p-3 text-gray-600 whitespace-nowrap">{new Date(r.createdAt).toLocaleString()}</td>
+                    <td className="p-3 text-gray-900">{r.actor?.name || r.actor?.email || <span className="text-slate-500">system</span>}</td>
                     <td className="p-3"><Badge tone={actionColor(r.action)}>{r.action}</Badge></td>
-                    <td className="p-3 text-slate-300">{r.entity}</td>
-                    <td className="p-3 text-slate-400 font-mono text-xs">{r.entityId ? r.entityId.slice(0, 8) + '…' : '—'}</td>
-                    <td className="p-3 text-slate-400 font-mono text-xs">{r.ip || '—'}</td>
+                    <td className="p-3 text-gray-600">{r.entity}</td>
+                    <td className="p-3 text-gray-500 font-mono text-xs">{r.entityId ? r.entityId.slice(0, 8) + '…' : '—'}</td>
+                    <td className="p-3 text-gray-500 font-mono text-xs">{r.ip || '—'}</td>
                     <td className="p-3">
-                      <button className="text-xs text-violet-300 hover:text-violet-200" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
+                      <button className="text-xs text-teal-300 hover:text-violet-200" onClick={() => setExpanded(expanded === r.id ? null : r.id)}>
                         {expanded === r.id ? 'Hide' : 'Details'}
                       </button>
                     </td>
                   </tr>
                   {expanded === r.id && (
-                    <tr key={r.id + '-d'} className="border-b border-white/5 bg-black/30">
+                    <tr key={r.id + '-d'} className="border-b border-gray-200 bg-black/30">
                       <td colSpan={7} className="p-3">
                         <div className="grid md:grid-cols-2 gap-3 text-xs">
                           <div>
-                            <div className="text-slate-400 font-semibold mb-1">Old value</div>
-                            <pre className="bg-black/50 rounded p-2 overflow-auto max-h-40 text-slate-300">{JSON.stringify(r.oldValue, null, 2) || '—'}</pre>
+                            <div className="text-gray-500 font-semibold mb-1">Old value</div>
+                            <pre className="bg-black/50 rounded p-2 overflow-auto max-h-40 text-gray-600">{JSON.stringify(r.oldValue, null, 2) || '—'}</pre>
                           </div>
                           <div>
-                            <div className="text-slate-400 font-semibold mb-1">New value</div>
-                            <pre className="bg-black/50 rounded p-2 overflow-auto max-h-40 text-slate-300">{JSON.stringify(r.newValue, null, 2) || '—'}</pre>
+                            <div className="text-gray-500 font-semibold mb-1">New value</div>
+                            <pre className="bg-black/50 rounded p-2 overflow-auto max-h-40 text-gray-600">{JSON.stringify(r.newValue, null, 2) || '—'}</pre>
                           </div>
                         </div>
                         {r.userAgent && <div className="mt-2 text-slate-500 font-mono break-all">{r.userAgent}</div>}
@@ -183,7 +183,7 @@ export default function AuditLogsPage() {
       {pages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-4">
           <button className="btn-secondary" disabled={page <= 1} onClick={() => fetchLogs(page - 1)}>‹ Prev</button>
-          <span className="text-sm text-slate-400">Page {page} of {pages} ({total} total)</span>
+          <span className="text-sm text-gray-500">Page {page} of {pages} ({total} total)</span>
           <button className="btn-secondary" disabled={page >= pages} onClick={() => fetchLogs(page + 1)}>Next ›</button>
         </div>
       )}
@@ -257,18 +257,18 @@ function RetentionTab() {
     <div>
       {error && <ErrorBanner message={error} />}
       {result && (
-        <div className="card-premium p-4 mb-4 text-sm text-slate-200">
+        <div className="card-premium p-4 mb-4 text-sm text-gray-800">
           {result.message
             ? result.message
             : `Archived ${result.archived ?? 0} logs, deleted ${result.deleted ?? 0} rows.`}
-          {result.filePath && <div className="text-xs text-slate-400 mt-1 font-mono break-all">{result.filePath}</div>}
+          {result.filePath && <div className="text-xs text-gray-500 mt-1 font-mono break-all">{result.filePath}</div>}
         </div>
       )}
 
       {/* Settings */}
       <div className="card-premium p-4 mb-4">
-        <div className="text-sm font-semibold text-white mb-1">Retention window</div>
-        <div className="text-xs text-slate-400 mb-3">
+        <div className="text-sm font-semibold text-gray-900 mb-1">Retention window</div>
+        <div className="text-xs text-gray-500 mb-3">
           Logs older than this are archived to a verified JSONL file and then deleted. Default 365 days (min 30, max 3650).
         </div>
         <div className="flex items-center gap-3">
@@ -280,7 +280,7 @@ function RetentionTab() {
             value={days}
             onChange={(e) => setDays(e.target.value)}
           />
-          <span className="text-sm text-slate-400">days</span>
+          <span className="text-sm text-gray-500">days</span>
           <button className="btn-primary" disabled={saving} onClick={saveSettings}>
             {saving ? 'Saving…' : 'Save'}
           </button>
@@ -295,7 +295,7 @@ function RetentionTab() {
         <div className="card-premium overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Archived at</th>
                 <th className="p-3">Period</th>
                 <th className="p-3">Records</th>
@@ -304,13 +304,13 @@ function RetentionTab() {
             </thead>
             <tbody>
               {archives.map((a) => (
-                <tr key={a.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-3 text-slate-300 whitespace-nowrap">{new Date(a.createdAt).toLocaleString()}</td>
-                  <td className="p-3 text-slate-300 whitespace-nowrap">
+                <tr key={a.id} className="border-b border-gray-200 hover:bg-gray-100">
+                  <td className="p-3 text-gray-600 whitespace-nowrap">{new Date(a.createdAt).toLocaleString()}</td>
+                  <td className="p-3 text-gray-600 whitespace-nowrap">
                     {new Date(a.periodFrom).toLocaleDateString()} → {new Date(a.periodTo).toLocaleDateString()}
                   </td>
-                  <td className="p-3 text-white">{a.recordCount}</td>
-                  <td className="p-3 text-slate-400 font-mono text-xs break-all">{a.filePath || '—'}</td>
+                  <td className="p-3 text-gray-900">{a.recordCount}</td>
+                  <td className="p-3 text-gray-500 font-mono text-xs break-all">{a.filePath || '—'}</td>
                 </tr>
               ))}
               {archives.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-slate-500">No archives yet.</td></tr>}

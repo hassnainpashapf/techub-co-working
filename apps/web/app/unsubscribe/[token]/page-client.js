@@ -21,16 +21,16 @@ export default function UnsubscribePage() {
   }, [token]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a14] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] px-4">
       <div className="card-premium w-full max-w-sm p-8 text-center">
-        {state === 'loading' && <p className="text-slate-300">Processing…</p>}
+        {state === 'loading' && <p className="text-gray-600">Processing…</p>}
         {state === 'done' && <>
-          <h1 className="text-2xl font-extrabold text-white mb-2">Unsubscribed ✅</h1>
-          <p className="text-sm text-slate-400">{email ? `${email} will` : 'You will'} no longer receive marketing emails.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Unsubscribed ✅</h1>
+          <p className="text-sm text-gray-500">{email ? `${email} will` : 'You will'} no longer receive marketing emails.</p>
         </>}
         {state === 'error' && <>
-          <h1 className="text-2xl font-extrabold text-white mb-2">Invalid link</h1>
-          <p className="text-sm text-slate-400">This unsubscribe link is not valid or already used.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Invalid link</h1>
+          <p className="text-sm text-gray-500">This unsubscribe link is not valid or already used.</p>
         </>}
       </div>
     </div>

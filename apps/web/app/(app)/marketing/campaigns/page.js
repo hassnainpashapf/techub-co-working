@@ -145,10 +145,10 @@ export default function CampaignsPage() {
               <div className="flex items-start justify-between gap-4 flex-wrap">
                 <div>
                   <div className="flex items-center gap-2">
-                    <h3 className="text-lg font-bold text-white">{c.name}</h3>
+                    <h3 className="text-lg font-bold text-gray-900">{c.name}</h3>
                     <Badge tone={STATUS_TONE[c.status] || 'slate'}>{c.status}</Badge>
                   </div>
-                  <p className="text-sm text-slate-400 mt-1">{c.subject}</p>
+                  <p className="text-sm text-gray-500 mt-1">{c.subject}</p>
                   <p className="text-xs text-slate-500 mt-1">
                     Audience: {c.segment?.type || 'all'} · Recipients: {c.recipientCount} · Sent: {c.sentCount}
                     {c.scheduledAt ? ` · Scheduled: ${new Date(c.scheduledAt).toLocaleString()}` : ''}

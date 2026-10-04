@@ -39,14 +39,14 @@ function ComposeForm({ onSend, sending }) {
           <input type="date" className="input [color-scheme:dark]" value={f.expiresAt} min={new Date().toISOString().slice(0, 10)} onChange={(e) => setF({ ...f, expiresAt: e.target.value })} />
         </Field>
       </div>
-      <label className="flex items-center gap-2 mb-4 text-sm text-slate-300 cursor-pointer">
-        <input type="checkbox" checked={f.pinned} onChange={(e) => setF({ ...f, pinned: e.target.checked })} className="accent-violet-500 w-4 h-4" />
+      <label className="flex items-center gap-2 mb-4 text-sm text-gray-600 cursor-pointer">
+        <input type="checkbox" checked={f.pinned} onChange={(e) => setF({ ...f, pinned: e.target.checked })} className="accent-teal-600 w-4 h-4" />
         📌 Pin to top of feed
       </label>
       <Field label="Channels">
         <div className="flex flex-wrap gap-2">
           {CHANNELS.map((c) => (
-            <label key={c.value} className={`px-3 py-1.5 rounded-lg text-xs border cursor-pointer ${f.channels.includes(c.value) ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            <label key={c.value} className={`px-3 py-1.5 rounded-lg text-xs border cursor-pointer ${f.channels.includes(c.value) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.channels.includes(c.value)} onChange={() => toggle(c.value)} />
               {c.label}
             </label>
@@ -112,17 +112,17 @@ export default function AnnouncementsPage() {
       ) : (
         <div className="space-y-3">
           {list.map((a) => (
-            <div key={a.id} className={`card-premium p-5 ${a.pinned ? 'border-violet-400/40 shadow-[0_0_24px_rgba(139,92,246,0.15)]' : ''}`}>
+            <div key={a.id} className={`card-premium p-5 ${a.pinned ? 'border-teal-500/40 shadow-[0_0_24px_rgba(15,118,110,0.15)]' : ''}`}>
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     {a.pinned && <Badge tone="violet">📌 Pinned</Badge>}
-                    <h3 className="text-white font-semibold">{a.title}</h3>
+                    <h3 className="text-gray-900 font-semibold">{a.title}</h3>
                     {a.sentAt && <Badge tone="emerald">Sent</Badge>}
                     <Badge tone="slate">{AUDIENCES.find((x) => x.value === a.audience)?.label || a.audience}</Badge>
                     {a.expiresAt && <Badge tone="amber">Expires {new Date(a.expiresAt).toLocaleDateString()}</Badge>}
                   </div>
-                  <p className="text-sm text-slate-400 mt-2 whitespace-pre-wrap">{a.body}</p>
+                  <p className="text-sm text-gray-500 mt-2 whitespace-pre-wrap">{a.body}</p>
                   <div className="flex items-center gap-2 mt-3 flex-wrap">
                     {(a.channels || []).map((c) => <Badge key={c} tone="violet">{c}</Badge>)}
                     <span className="text-xs text-slate-500">

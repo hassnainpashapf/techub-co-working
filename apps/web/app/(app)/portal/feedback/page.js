@@ -30,22 +30,22 @@ function FeedbackCard({ f, onUpvote, upvoting }) {
           disabled={upvoting === f.id}
           className={`flex items-center gap-1 text-xs rounded-full px-3 py-1.5 border transition ${
             f.upvotedByMe
-              ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
-              : 'bg-white/5 border-white/10 text-slate-300 hover:border-[#8b5cf6]/40'
+              ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
+              : 'bg-gray-100 border-gray-200 text-gray-600 hover:border-[#0f766e]/40'
           }`}
         >
           👍 {f.upvotes || 0}
         </button>
       </div>
-      {f.title && <p className="text-white font-semibold text-sm mb-1">{f.title}</p>}
-      <p className="text-sm text-slate-200 whitespace-pre-wrap">{f.body}</p>
+      {f.title && <p className="text-gray-900 font-semibold text-sm mb-1">{f.title}</p>}
+      <p className="text-sm text-gray-800 whitespace-pre-wrap">{f.body}</p>
       <p className="text-xs text-slate-500 mt-2">
         {f.isAnonymous ? '🕵️ Anonymous' : `👤 ${f.member?.name || 'Member'}`} • {new Date(f.createdAt).toLocaleString()}
       </p>
       {f.adminReply && (
-        <div className="mt-3 p-3 rounded-lg bg-[#8b5cf6]/10 border border-[#8b5cf6]/20">
-          <p className="text-xs font-semibold text-[#c4b5fd] mb-1">Admin reply:</p>
-          <p className="text-sm text-slate-200 whitespace-pre-wrap">{f.adminReply}</p>
+        <div className="mt-3 p-3 rounded-lg bg-[#0f766e]/10 border border-[#0f766e]/20">
+          <p className="text-xs font-semibold text-teal-700 mb-1">Admin reply:</p>
+          <p className="text-sm text-gray-800 whitespace-pre-wrap">{f.adminReply}</p>
         </div>
       )}
     </div>
@@ -126,8 +126,8 @@ export default function PortalFeedbackPage() {
             onClick={() => setTab(t.v)}
             className={`text-sm rounded-full px-4 py-2 border transition ${
               tab === t.v
-                ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
-                : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/25'
+                ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
+                : 'bg-gray-100 border-gray-200 text-gray-600 hover:border-white/25'
             }`}
           >
             {t.l}
@@ -139,21 +139,21 @@ export default function PortalFeedbackPage() {
 
       {tab === 'new' && (
         <div className="card-premium p-6 mb-6 max-w-2xl">
-          <h2 className="text-lg font-bold text-white mb-4">Naya feedback</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">Naya feedback</h2>
           {done && <div className="mb-4 text-sm text-emerald-300">✅ Shukriya! Aap ka feedback mil gaya.</div>}
           <form onSubmit={submit}>
             <div className="mb-4">
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Category</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Category</label>
               <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
                 {CATS.map((c) => <option key={c.v} value={c.v}>{c.l}</option>)}
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Title (optional)</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Title (optional)</label>
               <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Mukhtasar unwan…" maxLength={200} />
             </div>
             <div className="mb-4">
-              <label className="block text-xs font-semibold text-slate-300 mb-1.5">Details</label>
+              <label className="block text-xs font-semibold text-gray-600 mb-1.5">Details</label>
               <textarea className="input" rows={4} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Apni tajweez ya shikayat likhein…" required />
             </div>
             <label className="flex items-center gap-3 mb-5 cursor-pointer">
@@ -162,11 +162,11 @@ export default function PortalFeedbackPage() {
                 role="switch"
                 aria-checked={isAnonymous}
                 onClick={() => setIsAnonymous(!isAnonymous)}
-                className={`w-11 h-6 rounded-full relative transition-colors ${isAnonymous ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}
+                className={`w-11 h-6 rounded-full relative transition-colors ${isAnonymous ? 'bg-[#0f766e]' : 'bg-gray-100'}`}
               >
                 <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${isAnonymous ? 'left-[22px]' : 'left-0.5'}`} />
               </button>
-              <span className="text-sm text-slate-300">🕵️ Anonymous bhejein (naam zahir nahi hoga)</span>
+              <span className="text-sm text-gray-600">🕵️ Anonymous bhejein (naam zahir nahi hoga)</span>
             </label>
             <button type="submit" className="btn-primary" disabled={sending}>
               {sending ? 'Bhej rahe hain…' : 'Submit Feedback'}
@@ -177,8 +177,8 @@ export default function PortalFeedbackPage() {
 
       {tab === 'board' && (
         <div>
-          <h2 className="text-lg font-bold text-white mb-3">Community suggestions</h2>
-          <p className="text-sm text-slate-400 mb-4">Members ki tajaveez — achi lage to 👍 upvote karein.</p>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Community suggestions</h2>
+          <p className="text-sm text-gray-500 mb-4">Members ki tajaveez — achi lage to 👍 upvote karein.</p>
           {loading ? <Spinner /> : board.length === 0 ? (
             <EmptyState title="Abhi koi suggestion nahi" />
           ) : (
@@ -191,7 +191,7 @@ export default function PortalFeedbackPage() {
 
       {tab === 'mine' && (
         <div>
-          <h2 className="text-lg font-bold text-white mb-3">Mera feedback</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Mera feedback</h2>
           {loading ? <Spinner /> : mine.length === 0 ? (
             <EmptyState title="Abhi koi feedback nahi" />
           ) : (

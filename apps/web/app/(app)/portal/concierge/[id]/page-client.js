@@ -44,7 +44,7 @@ function Stars({ value, onPick, size = 'text-2xl' }) {
           key={n}
           type="button"
           onClick={() => onPick && onPick(n)}
-          className={`${size} ${n <= value ? 'text-amber-400' : 'text-slate-600'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
+          className={`${size} ${n <= value ? 'text-amber-400' : 'text-gray-500'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
           aria-label={`${n} star${n > 1 ? 's' : ''}`}
         >
           ★
@@ -147,7 +147,7 @@ export default function ConciergeRequestDetailPage() {
   if (error && !req) {
     return (
       <div>
-        <Link href="/portal/concierge" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Concierge</Link>
+        <Link href="/portal/concierge" className="text-sm text-teal-700 hover:text-teal-700">← Back to Concierge</Link>
         <ErrorBanner message={error} onRetry={load} />
       </div>
     );
@@ -160,7 +160,7 @@ export default function ConciergeRequestDetailPage() {
 
   return (
     <div>
-      <Link href="/portal/concierge" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Concierge</Link>
+      <Link href="/portal/concierge" className="text-sm text-teal-700 hover:text-teal-700">← Back to Concierge</Link>
       <div className="mt-2">
         <PageHeader
           title={req.title || 'Concierge Request'}
@@ -173,24 +173,24 @@ export default function ConciergeRequestDetailPage() {
       <div className="flex flex-wrap gap-2 mb-4 text-xs items-center">
         <Badge tone={STATUS_TONE[req.status] || 'slate'}>{(req.status || 'new').replace('_', ' ')}</Badge>
         {req.priority && <Badge tone={req.priority === 'urgent' ? 'red' : 'slate'}>{req.priority}</Badge>}
-        {req.assignee?.name && <span className="text-slate-400">Assigned: {req.assignee.name}</span>}
-        {req.price != null && <span className="text-[#c4b5fd] font-semibold">PKR {Number(req.price).toLocaleString('en-PK')}</span>}
+        {req.assignee?.name && <span className="text-gray-500">Assigned: {req.assignee.name}</span>}
+        {req.price != null && <span className="text-teal-700 font-semibold">PKR {Number(req.price).toLocaleString('en-PK')}</span>}
       </div>
 
       {req.details && (
         <div className="card-premium p-4 mb-5">
-          <p className="text-sm text-slate-200 whitespace-pre-wrap">{req.details}</p>
+          <p className="text-sm text-gray-800 whitespace-pre-wrap">{req.details}</p>
         </div>
       )}
 
       {/* Timeline */}
       <div className="card-premium p-5 mb-5">
-        <h3 className="font-bold text-white mb-4">📍 Request Timeline</h3>
+        <h3 className="font-bold text-gray-900 mb-4">📍 Request Timeline</h3>
         <div className="flex gap-1 mb-5">
           {STEPS.map((s, i) => (
             <div key={s.key} className="flex-1">
-              <div className={`h-1.5 rounded-full ${stepIdx >= 0 && i <= stepIdx ? 'bg-[#8b5cf6]' : 'bg-slate-700'}`} />
-              <p className={`text-[11px] mt-1 ${stepIdx >= 0 && i <= stepIdx ? 'text-[#c4b5fd]' : 'text-slate-500'}`}>{s.label}</p>
+              <div className={`h-1.5 rounded-full ${stepIdx >= 0 && i <= stepIdx ? 'bg-[#0f766e]' : 'bg-slate-700'}`} />
+              <p className={`text-[11px] mt-1 ${stepIdx >= 0 && i <= stepIdx ? 'text-teal-700' : 'text-slate-500'}`}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -198,12 +198,12 @@ export default function ConciergeRequestDetailPage() {
           {timeline.map((t, i) => (
             <div key={i} className="flex gap-3">
               <div className="flex flex-col items-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-[#8b5cf6] mt-1" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#0f766e] mt-1" />
                 {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-700/60" />}
               </div>
               <div className="pb-3">
-                <p className="text-sm font-semibold text-white">{t.label}</p>
-                {t.note && <p className="text-xs text-slate-400">{t.note}</p>}
+                <p className="text-sm font-semibold text-gray-900">{t.label}</p>
+                {t.note && <p className="text-xs text-gray-500">{t.note}</p>}
                 <p className="text-xs text-slate-500">{fmtDate(t.at)}</p>
               </div>
             </div>
@@ -214,15 +214,15 @@ export default function ConciergeRequestDetailPage() {
       <div className="grid md:grid-cols-2 gap-5">
         {/* Chat */}
         <div className="card-premium p-5">
-          <h3 className="font-bold text-white mb-4">💬 Chat with Concierge</h3>
+          <h3 className="font-bold text-gray-900 mb-4">💬 Chat with Concierge</h3>
           <div className="space-y-3 max-h-80 overflow-y-auto mb-4 pr-1">
             {messages.map((m) => {
               const mine = user && (m.sender?.id === user.id || m.senderId === user.id);
               return (
                 <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
-                    <p className="text-xs text-slate-400 mb-0.5">{m.sender?.name || (mine ? 'You' : 'Concierge')} · {fmtDate(m.createdAt)}</p>
-                    <p className="text-sm text-slate-100 whitespace-pre-wrap">{m.message || m.body}</p>
+                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#0f766e]/30 border border-[#0f766e]/30' : 'bg-gray-100/60 border border-gray-200/50'}`}>
+                    <p className="text-xs text-gray-500 mb-0.5">{m.sender?.name || (mine ? 'You' : 'Concierge')} · {fmtDate(m.createdAt)}</p>
+                    <p className="text-sm text-gray-900 whitespace-pre-wrap">{m.message || m.body}</p>
                   </div>
                 </div>
               );
@@ -247,18 +247,18 @@ export default function ConciergeRequestDetailPage() {
 
         {/* Rating */}
         <div className="card-premium p-5">
-          <h3 className="font-bold text-white mb-4">⭐ Rate the Service</h3>
+          <h3 className="font-bold text-gray-900 mb-4">⭐ Rate the Service</h3>
           {req.status !== 'done' ? (
             <p className="text-sm text-slate-500">Once your request is completed, you can rate the service here.</p>
           ) : myRating ? (
             <div>
               <Stars value={myRating.rating} />
               <p className="text-sm text-amber-200 mt-2">Thanks for rating this service!</p>
-              {myRating.comment && <p className="text-sm text-slate-400 mt-1">"{myRating.comment}"</p>}
+              {myRating.comment && <p className="text-sm text-gray-500 mt-1">"{myRating.comment}"</p>}
             </div>
           ) : (
             <div>
-              <p className="text-sm text-slate-400 mb-3">Your request is complete. How was it?</p>
+              <p className="text-sm text-gray-500 mb-3">Your request is complete. How was it?</p>
               <Stars value={rating} onPick={setRating} />
               <Field label="Comment (optional)">
                 <textarea className="input mt-3" rows={3} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Anything we should know?" />

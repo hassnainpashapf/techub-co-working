@@ -22,7 +22,7 @@ function ProgressBar({ pct }) {
   return (
     <div className="h-2 w-full rounded-full bg-slate-700/60 overflow-hidden">
       <div
-        className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all"
+        className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600 transition-all"
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -113,7 +113,7 @@ export default function LearningPathsPage() {
         title="Learning Paths"
         sub={isStaff ? 'Ordered course sequences — curate, publish, track' : 'Guided course journeys — follow step by step'}
         actions={isStaff ? (
-          <button onClick={openCreate} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6]">
+          <button onClick={openCreate} className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-medium text-white hover:bg-[#0f766e]">
             + New Path
           </button>
         ) : null}
@@ -127,11 +127,11 @@ export default function LearningPathsPage() {
             const open = !!expanded[p.id];
             const courseList = p.courses || [];
             return (
-              <div key={p.id} className="rounded-xl border border-slate-700/60 bg-gradient-to-br from-[#1c1c30] to-[#12121f] p-5 shadow-lg">
+              <div key={p.id} className="rounded-xl border border-gray-200/60 bg-white p-5 shadow-lg">
                 <div className="flex items-start justify-between gap-3">
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-100">{p.title}</h3>
-                    {p.description && <p className="mt-1 text-sm text-slate-300">{p.description}</p>}
+                    <h3 className="text-lg font-semibold text-gray-900">{p.title}</h3>
+                    {p.description && <p className="mt-1 text-sm text-gray-600">{p.description}</p>}
                   </div>
                   {isStaff ? (
                     <Badge tone={p.isPublished ? 'green' : 'slate'}>{p.isPublished ? 'Published' : 'Draft'}</Badge>
@@ -142,30 +142,30 @@ export default function LearningPathsPage() {
                 {!isStaff && typeof p.progressPct === 'number' && (
                   <div className="mt-3 flex items-center gap-3">
                     <div className="flex-1"><ProgressBar pct={p.progressPct} /></div>
-                    <span className="text-xs font-medium text-slate-300">{p.progressPct}%</span>
+                    <span className="text-xs font-medium text-gray-600">{p.progressPct}%</span>
                   </div>
                 )}
                 <button
                   onClick={() => toggleExpanded(p.id)}
-                  className="mt-3 text-sm font-medium text-[#c4b5fd] hover:text-[#ddd6fe]"
+                  className="mt-3 text-sm font-medium text-teal-700 hover:text-teal-700"
                 >
                   {open ? 'Hide courses ▴' : `Show courses (${courseList.length}) ▾`}
                 </button>
                 {open && (
                   <ol className="mt-2 space-y-2">
                     {courseList.map((c, i) => (
-                      <li key={c.id || i} className="flex items-center gap-3 rounded-lg bg-slate-800/50 px-3 py-2">
-                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-700 text-xs font-bold text-slate-200">{i + 1}</span>
-                        <span className="flex-1 text-sm text-slate-200">{c.title || c.id}</span>
+                      <li key={c.id || i} className="flex items-center gap-3 rounded-lg bg-gray-100/50 px-3 py-2">
+                        <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-slate-700 text-xs font-bold text-gray-800">{i + 1}</span>
+                        <span className="flex-1 text-sm text-gray-800">{c.title || c.id}</span>
                         {!isStaff && c.completed && <span className="text-green-400">✓</span>}
                       </li>
                     ))}
-                    {courseList.length === 0 && <li className="text-sm text-slate-400">No courses in this path.</li>}
+                    {courseList.length === 0 && <li className="text-sm text-gray-500">No courses in this path.</li>}
                   </ol>
                 )}
                 {isStaff && (
                   <div className="mt-3 flex gap-2">
-                    <button onClick={() => openEdit(p)} className="rounded-lg bg-[#7c3aed] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#8b5cf6]">Edit</button>
+                    <button onClick={() => openEdit(p)} className="rounded-lg bg-[#0f766e] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#0f766e]">Edit</button>
                     <button onClick={() => remove(p)} className="rounded-lg bg-red-600/80 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-600">Delete</button>
                   </div>
                 )}
@@ -179,21 +179,21 @@ export default function LearningPathsPage() {
           <div className="space-y-4">
             <Field label="Title">
               <input
-                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100"
+                className="w-full rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-gray-900"
                 value={form.title}
                 onChange={(e) => setForm({ ...form, title: e.target.value })}
               />
             </Field>
             <Field label="Description">
               <textarea
-                className="w-full rounded-lg border border-slate-700 bg-slate-800 px-3 py-2 text-slate-100"
+                className="w-full rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-gray-900"
                 rows={3}
                 value={form.description}
                 onChange={(e) => setForm({ ...form, description: e.target.value })}
               />
             </Field>
             <Field label="Courses (in order — click to toggle)">
-              <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border border-slate-700 p-2">
+              <div className="max-h-48 space-y-1 overflow-y-auto rounded-lg border border-gray-200 p-2">
                 {courses.map((c) => {
                   const idx = form.courseIds.indexOf(c.id);
                   return (
@@ -201,18 +201,18 @@ export default function LearningPathsPage() {
                       key={c.id}
                       type="button"
                       onClick={() => toggleCourse(c.id)}
-                      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${idx >= 0 ? 'bg-[#7c3aed]/30 text-blue-100' : 'text-slate-300 hover:bg-slate-800'}`}
+                      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${idx >= 0 ? 'bg-[#0f766e]/30 text-blue-100' : 'text-gray-600 hover:bg-gray-100'}`}
                     >
-                      <span className="text-xs text-slate-400">{idx >= 0 ? `#${idx + 1}` : '—'}</span>
+                      <span className="text-xs text-gray-500">{idx >= 0 ? `#${idx + 1}` : '—'}</span>
                       <span className="flex-1">{c.title}</span>
-                      {idx >= 0 && <span className="text-[#c4b5fd]">✓</span>}
+                      {idx >= 0 && <span className="text-teal-700">✓</span>}
                     </button>
                   );
                 })}
-                {courses.length === 0 && <p className="p-2 text-sm text-slate-400">No courses found — create courses first.</p>}
+                {courses.length === 0 && <p className="p-2 text-sm text-gray-500">No courses found — create courses first.</p>}
               </div>
             </Field>
-            <label className="flex items-center gap-2 text-sm text-slate-200">
+            <label className="flex items-center gap-2 text-sm text-gray-800">
               <input
                 type="checkbox"
                 checked={form.isPublished}
@@ -221,11 +221,11 @@ export default function LearningPathsPage() {
               Published (visible to members)
             </label>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setShowForm(false)} className="rounded-lg border border-slate-600 px-4 py-2 text-sm text-slate-300">Cancel</button>
+              <button onClick={() => setShowForm(false)} className="rounded-lg border border-gray-300 px-4 py-2 text-sm text-gray-600">Cancel</button>
               <button
                 onClick={save}
                 disabled={saving}
-                className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6] disabled:opacity-50"
+                className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-medium text-white hover:bg-[#0f766e] disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save'}
               </button>

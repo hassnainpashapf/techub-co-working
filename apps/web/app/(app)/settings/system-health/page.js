@@ -72,7 +72,7 @@ export default function SystemHealthPage() {
           <button
             onClick={runCheck}
             disabled={checking}
-            className="text-sm px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white font-medium transition disabled:opacity-50"
+            className="text-sm px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white font-medium transition disabled:opacity-50"
           >
             {checking ? 'Checking…' : 'Run check now'}
           </button>
@@ -110,30 +110,30 @@ export default function SystemHealthPage() {
         <StatCard label="Last checked" value={status?.at ? new Date(status.at).toLocaleTimeString() : '—'} sub="server time" accent="slate" />
       </div>
 
-      <h3 className="text-sm font-semibold text-slate-200 mb-3">
+      <h3 className="text-sm font-semibold text-gray-800 mb-3">
         Failed jobs <span className="text-slate-500 font-normal">(last 24h)</span>
       </h3>
       {failed.length === 0 ? (
-        <p className="text-sm text-slate-500 bg-white/5 border border-white/10 rounded-xl px-4 py-6 text-center">
+        <p className="text-sm text-slate-500 bg-gray-100 border border-gray-200 rounded-xl px-4 py-6 text-center">
           No failed jobs in the last 24 hours 🎉
         </p>
       ) : (
         <div className="space-y-2">
           {failed.map((j) => (
-            <div key={j.id} className="flex items-start justify-between gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+            <div key={j.id} className="flex items-start justify-between gap-3 bg-gray-100 border border-gray-200 rounded-xl px-4 py-3">
               <div className="min-w-0">
                 <div className="flex items-center gap-2">
                   <Badge tone="red">failed</Badge>
-                  <span className="text-sm font-medium text-slate-200">{j.type}</span>
+                  <span className="text-sm font-medium text-gray-800">{j.type}</span>
                   <span className="text-xs text-slate-500">{j.attempts} attempts</span>
                 </div>
-                <p className="text-xs text-slate-400 mt-1 truncate">{j.lastError || 'no error recorded'}</p>
-                <p className="text-xs text-slate-600 mt-0.5">{j.updatedAt ? new Date(j.updatedAt).toLocaleString() : ''}</p>
+                <p className="text-xs text-gray-500 mt-1 truncate">{j.lastError || 'no error recorded'}</p>
+                <p className="text-xs text-gray-500 mt-0.5">{j.updatedAt ? new Date(j.updatedAt).toLocaleString() : ''}</p>
               </div>
               <button
                 onClick={() => retry(j.id)}
                 disabled={acting === j.id}
-                className="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-[#8b5cf6]/40 bg-[#8b5cf6]/15 text-[#ddd6fe] hover:bg-[#8b5cf6]/25 transition disabled:opacity-50"
+                className="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-[#0f766e]/40 bg-[#0f766e]/15 text-teal-700 hover:bg-[#0f766e]/25 transition disabled:opacity-50"
               >
                 {acting === j.id ? 'Retrying…' : 'Retry'}
               </button>

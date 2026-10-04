@@ -7,7 +7,7 @@ import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 
 const STATUS_COLORS = {
   active: 'bg-emerald-500/15 text-emerald-300 border-emerald-400/30',
-  used: 'bg-slate-500/15 text-slate-300 border-slate-400/30',
+  used: 'bg-slate-500/15 text-gray-600 border-slate-400/30',
   expired: 'bg-amber-500/15 text-amber-300 border-amber-400/30',
   revoked: 'bg-red-500/15 text-red-300 border-red-400/30',
 };
@@ -107,8 +107,8 @@ export default function WifiPage() {
             onClick={() => setStatusFilter(s)}
             className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${
               statusFilter === s
-                ? 'bg-violet-500/20 border-violet-400/40 text-violet-200'
-                : 'bg-white/5 border-white/10 text-slate-400 hover:text-white'
+                ? 'bg-teal-600/20 border-teal-500/40 text-violet-200'
+                : 'bg-gray-100 border-gray-200 text-gray-500 hover:text-gray-900'
             }`}
           >
             {s ? s.charAt(0).toUpperCase() + s.slice(1) : 'All'}
@@ -136,9 +136,9 @@ export default function WifiPage() {
           empty="No vouchers yet — click Generate Vouchers."
           rows={vouchers.map((v) => [
             <span key="c" className="flex items-center gap-2">
-              <code className="font-mono font-bold text-lg tracking-[0.2em] text-white bg-white/5 px-3 py-1 rounded-lg border border-white/10">{v.code}</code>
+              <code className="font-mono font-bold text-lg tracking-[0.2em] text-gray-900 bg-gray-100 px-3 py-1 rounded-lg border border-gray-200">{v.code}</code>
               <button
-                className="text-xs text-violet-300 hover:text-violet-100"
+                className="text-xs text-teal-300 hover:text-violet-100"
                 onClick={() => { copy(v.code); setCopied(v.id); setTimeout(() => setCopied(''), 1500); }}
               >{copied === v.id ? '✅ Copied' : '📋 Copy'}</button>
             </span>,
@@ -151,35 +151,35 @@ export default function WifiPage() {
             </span>,
             v.status === 'active' ? (
               <button key="r" className="text-xs text-red-300 hover:text-red-100" onClick={() => revoke(v.id)}>Revoke</button>
-            ) : <span key="r" className="text-slate-600 text-xs">—</span>,
+            ) : <span key="r" className="text-gray-500 text-xs">—</span>,
           ])}
         />
       )}
 
       {showGen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4" onClick={() => setShowGen(false)}>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4" onClick={() => setShowGen(false)}>
           <div className="card-premium w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-white mb-4">Generate Vouchers</h2>
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Generate Vouchers</h2>
             <form onSubmit={generate} className="space-y-4">
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Count (1–100)</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">Count (1–100)</label>
                   <input type="number" min="1" max="100" className="input" value={form.count}
                     onChange={(e) => setForm({ ...form, count: e.target.value })} required />
                 </div>
                 <div>
-                  <label className="block text-xs font-semibold text-slate-300 mb-1.5">Duration (hours)</label>
+                  <label className="block text-xs font-semibold text-gray-600 mb-1.5">Duration (hours)</label>
                   <input type="number" min="1" max="720" className="input" value={form.durationHours}
                     onChange={(e) => setForm({ ...form, durationHours: e.target.value })} required />
                 </div>
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Max devices</label>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Max devices</label>
                 <input type="number" min="1" max="20" className="input" value={form.maxDevices}
                   onChange={(e) => setForm({ ...form, maxDevices: e.target.value })} required />
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Assign to member (optional)</label>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Assign to member (optional)</label>
                 <select className="input" value={form.memberId}
                   onChange={(e) => setForm({ ...form, memberId: e.target.value })}>
                   <option value="">— Unassigned (guest codes) —</option>
@@ -188,11 +188,11 @@ export default function WifiPage() {
                   ))}
                 </select>
                 {form.memberId && (
-                  <p className="text-xs text-slate-400 mt-1">📧 Code member ko email me bhej diya jayega.</p>
+                  <p className="text-xs text-gray-500 mt-1">📧 Code member ko email me bhej diya jayega.</p>
                 )}
               </div>
               <div>
-                <label className="block text-xs font-semibold text-slate-300 mb-1.5">Expires at (optional)</label>
+                <label className="block text-xs font-semibold text-gray-600 mb-1.5">Expires at (optional)</label>
                 <input type="datetime-local" className="input" value={form.expiresAt}
                   onChange={(e) => setForm({ ...form, expiresAt: e.target.value })} />
               </div>

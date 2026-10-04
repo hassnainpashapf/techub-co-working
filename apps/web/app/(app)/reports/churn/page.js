@@ -20,7 +20,7 @@ function riskColor(score) {
 function RiskBar({ score }) {
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
-      <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+      <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
         <div
           className="h-full rounded-full"
           style={{ width: `${score}%`, backgroundColor: riskColor(score) }}
@@ -76,7 +76,7 @@ const REASON_STYLES = {
   overdue_invoices: 'border-red-400/40 bg-red-500/15 text-red-200',
   no_recent_bookings: 'border-amber-400/40 bg-amber-500/15 text-amber-200',
   no_recent_attendance: 'border-orange-400/40 bg-orange-500/15 text-orange-200',
-  contract_expiring: 'border-violet-400/40 bg-violet-500/15 text-violet-200',
+  contract_expiring: 'border-teal-500/40 bg-teal-600/15 text-violet-200',
   nps_detractor: 'border-pink-400/40 bg-pink-500/15 text-pink-200',
 };
 
@@ -104,12 +104,12 @@ function OfferModal({ member, onClose, onSent }) {
         className="card-premium w-full max-w-md p-6"
         onClick={(e) => e.stopPropagation()}
       >
-        <h3 className="text-lg font-bold text-white mb-1">Send retention offer</h3>
-        <p className="text-sm text-slate-400 mb-4">
-          To: <span className="text-white font-medium">{member.memberName}</span>
+        <h3 className="text-lg font-bold text-gray-900 mb-1">Send retention offer</h3>
+        <p className="text-sm text-gray-500 mb-4">
+          To: <span className="text-gray-900 font-medium">{member.memberName}</span>
           {member.email ? <span className="text-slate-500"> ({member.email})</span> : ' — no email on file'}
         </p>
-        <label className="block text-xs font-semibold text-slate-300 mb-1.5">
+        <label className="block text-xs font-semibold text-gray-600 mb-1.5">
           Personal message (optional)
         </label>
         <textarea
@@ -167,7 +167,7 @@ export default function ChurnPage() {
   const columns = [
     { key: 'memberName', label: 'Member', render: (r) => (
       <div>
-        <div className="font-medium text-white">{r.memberName}</div>
+        <div className="font-medium text-gray-900">{r.memberName}</div>
         <div className="text-xs text-slate-500">{r.companyName || r.status}</div>
       </div>
     )},
@@ -178,7 +178,7 @@ export default function ChurnPage() {
           <span
             key={reason.code}
             title={reason.detail || reason.label}
-            className={`text-xs px-2 py-0.5 rounded-full border ${REASON_STYLES[reason.code] || 'border-slate-400/40 bg-slate-500/15 text-slate-200'}`}
+            className={`text-xs px-2 py-0.5 rounded-full border ${REASON_STYLES[reason.code] || 'border-slate-400/40 bg-slate-500/15 text-gray-800'}`}
           >
             {reason.label}{reason.detail ? ` — ${reason.detail}` : ''}
           </span>
@@ -210,28 +210,28 @@ export default function ChurnPage() {
       </div>
 
       <div className="card-premium p-5 mb-6">
-        <h3 className="text-sm font-bold text-white mb-3">Monthly exits (last 6 months)</h3>
+        <h3 className="text-sm font-bold text-gray-900 mb-3">Monthly exits (last 6 months)</h3>
         <TrendChart trend={data.trend || []} />
       </div>
 
       <div className="card-premium p-5 mb-6">
-        <h3 className="text-sm font-bold text-white mb-2">Risk model</h3>
-        <div className="flex flex-wrap gap-2 text-xs text-slate-400">
+        <h3 className="text-sm font-bold text-gray-900 mb-2">Risk model</h3>
+        <div className="flex flex-wrap gap-2 text-xs text-gray-500">
           {Object.entries(data.weights || {}).map(([code, w]) => (
-            <span key={code} className="px-2 py-1 rounded-lg bg-white/5 border border-white/10">
+            <span key={code} className="px-2 py-1 rounded-lg bg-gray-100 border border-gray-200">
               +{w} · {code.replace(/_/g, ' ')}
             </span>
           ))}
-          <span className="px-2 py-1 rounded-lg bg-white/5 border border-white/10">
+          <span className="px-2 py-1 rounded-lg bg-gray-100 border border-gray-200">
             at-risk from {data.threshold}+
           </span>
         </div>
       </div>
 
       <div className="card-premium p-5">
-        <h3 className="text-sm font-bold text-white mb-3">At-risk members ({atRisk.length})</h3>
+        <h3 className="text-sm font-bold text-gray-900 mb-3">At-risk members ({atRisk.length})</h3>
         {atRisk.length === 0 ? (
-          <p className="text-sm text-slate-400">No members currently flagged at risk. 🎉</p>
+          <p className="text-sm text-gray-500">No members currently flagged at risk. 🎉</p>
         ) : (
           <DataTable columns={columns} rows={atRisk} />
         )}

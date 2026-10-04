@@ -149,8 +149,8 @@ export default function FormResponsesPage() {
             <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-4">
               {['new', 'reviewed', 'actioned', 'spam', 'total'].map((s) => (
                 <div key={s} className="card p-3 text-center cursor-pointer" onClick={() => { setStatusFilter(s === 'total' ? '' : s); setPage(1); }}>
-                  <div className="text-2xl font-bold text-white">{summary[s] || 0}</div>
-                  <div className="text-xs text-slate-400">{STATUS_LABELS[s] || 'Total'}</div>
+                  <div className="text-2xl font-bold text-gray-900">{summary[s] || 0}</div>
+                  <div className="text-xs text-gray-500">{STATUS_LABELS[s] || 'Total'}</div>
                 </div>
               ))}
             </div>
@@ -171,12 +171,12 @@ export default function FormResponsesPage() {
           ) : (
             <div className="space-y-2">
               {subs.map((s) => (
-                <div key={s.id} onClick={() => openDetail(s.id)} className="card p-4 cursor-pointer hover:border-[#8b5cf6]/40">
+                <div key={s.id} onClick={() => openDetail(s.id)} className="card p-4 cursor-pointer hover:border-[#0f766e]/40">
                   <div className="flex items-center justify-between gap-2">
                     <div>
-                      <p className="text-sm font-semibold text-white">{s.submitterName || s.submitterEmail || 'Anonymous'}</p>
-                      <p className="text-xs text-slate-400">{s.submitterEmail || '—'} • {s.answerCount} answers • {new Date(s.createdAt).toLocaleString('en-PK')}</p>
-                      {s.assignedTo && <p className="text-xs text-[#c4b5fd] mt-0.5">👤 {s.assignedTo.name}</p>}
+                      <p className="text-sm font-semibold text-gray-900">{s.submitterName || s.submitterEmail || 'Anonymous'}</p>
+                      <p className="text-xs text-gray-500">{s.submitterEmail || '—'} • {s.answerCount} answers • {new Date(s.createdAt).toLocaleString('en-PK')}</p>
+                      {s.assignedTo && <p className="text-xs text-teal-700 mt-0.5">👤 {s.assignedTo.name}</p>}
                     </div>
                     <Badge tone={STATUS_TONES[s.status] || 'slate'}>{STATUS_LABELS[s.status] || s.status}</Badge>
                   </div>
@@ -184,7 +184,7 @@ export default function FormResponsesPage() {
               ))}
               <div className="flex items-center justify-between pt-2">
                 <button disabled={page <= 1} onClick={() => setPage(page - 1)} className="btn-secondary text-sm">← Prev</button>
-                <span className="text-xs text-slate-400">Page {page} / {pages}</span>
+                <span className="text-xs text-gray-500">Page {page} / {pages}</span>
                 <button disabled={page >= pages} onClick={() => setPage(page + 1)} className="btn-secondary text-sm">Next →</button>
               </div>
             </div>
@@ -196,31 +196,31 @@ export default function FormResponsesPage() {
         <div className="space-y-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <div className="card p-4 text-center">
-              <div className="text-2xl font-bold text-white">{analytics.totals?.submissions || 0}</div>
-              <div className="text-xs text-slate-400">Total Responses</div>
+              <div className="text-2xl font-bold text-gray-900">{analytics.totals?.submissions || 0}</div>
+              <div className="text-xs text-gray-500">Total Responses</div>
             </div>
           </div>
           {(analytics.fieldStats || []).map((fs) => (
             <div key={fs.fieldId} className="card p-4">
-              <h4 className="font-semibold text-white text-sm mb-2">{fs.label} <span className="text-xs text-slate-500">({fs.responses} responses)</span></h4>
+              <h4 className="font-semibold text-gray-900 text-sm mb-2">{fs.label} <span className="text-xs text-slate-500">({fs.responses} responses)</span></h4>
               {fs.optionCounts && (
                 <div className="space-y-1">
                   {Object.entries(fs.optionCounts).sort((a, b) => b[1] - a[1]).map(([opt, c]) => (
                     <div key={opt} className="flex items-center gap-2 text-sm">
-                      <span className="text-slate-300 flex-1 truncate">{opt}</span>
-                      <div className="w-40 bg-white/10 rounded-full h-2"><div className="bg-[#8b5cf6] h-2 rounded-full" style={{ width: `${(c / fs.responses) * 100}%` }} /></div>
-                      <span className="text-slate-400 text-xs w-8 text-right">{c}</span>
+                      <span className="text-gray-600 flex-1 truncate">{opt}</span>
+                      <div className="w-40 bg-gray-100 rounded-full h-2"><div className="bg-[#0f766e] h-2 rounded-full" style={{ width: `${(c / fs.responses) * 100}%` }} /></div>
+                      <span className="text-gray-500 text-xs w-8 text-right">{c}</span>
                     </div>
                   ))}
                 </div>
               )}
               {fs.avg !== undefined && (
-                <p className="text-sm text-slate-300">Avg: <span className="font-bold text-amber-300">{fs.avg}</span>{fs.min !== undefined && fs.min !== null && <span className="text-slate-500"> (min {fs.min}, max {fs.max})</span>}</p>
+                <p className="text-sm text-gray-600">Avg: <span className="font-bold text-amber-300">{fs.avg}</span>{fs.min !== undefined && fs.min !== null && <span className="text-slate-500"> (min {fs.min}, max {fs.max})</span>}</p>
               )}
               {fs.distribution && (
                 <div className="flex gap-2 mt-1">
                   {Object.entries(fs.distribution).sort().map(([star, c]) => (
-                    <span key={star} className="text-xs bg-white/5 px-2 py-1 rounded text-amber-300">★{star}: {c}</span>
+                    <span key={star} className="text-xs bg-gray-100 px-2 py-1 rounded text-amber-300">★{star}: {c}</span>
                   ))}
                 </div>
               )}
@@ -236,14 +236,14 @@ export default function FormResponsesPage() {
         <Modal title={detail.submitterName || detail.submitterEmail || 'Submission'} onClose={() => setDetail(null)}>
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-2 text-sm">
-              <div className="text-slate-400">Email</div><div className="text-white">{detail.submitterEmail || '—'}</div>
-              <div className="text-slate-400">Date</div><div className="text-white">{new Date(detail.createdAt).toLocaleString('en-PK')}</div>
+              <div className="text-gray-500">Email</div><div className="text-gray-900">{detail.submitterEmail || '—'}</div>
+              <div className="text-gray-500">Date</div><div className="text-gray-900">{new Date(detail.createdAt).toLocaleString('en-PK')}</div>
             </div>
-            <div className="border-t border-white/10 pt-3 space-y-2">
+            <div className="border-t border-gray-200 pt-3 space-y-2">
               {fields.map((f) => (
                 <div key={f.id} className="grid grid-cols-3 gap-2 text-sm">
-                  <div className="text-slate-400">{f.label}</div>
-                  <div className="text-white col-span-2 break-words">{formatAnswer(detail.answers?.[f.id])}</div>
+                  <div className="text-gray-500">{f.label}</div>
+                  <div className="text-gray-900 col-span-2 break-words">{formatAnswer(detail.answers?.[f.id])}</div>
                 </div>
               ))}
             </div>

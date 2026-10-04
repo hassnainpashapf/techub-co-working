@@ -30,7 +30,7 @@ function Stars({ value, onPick, size = 'text-2xl' }) {
           key={n}
           type="button"
           onClick={() => onPick && onPick(n)}
-          className={`${size} ${n <= value ? 'text-amber-400' : 'text-slate-600'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
+          className={`${size} ${n <= value ? 'text-amber-400' : 'text-gray-500'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
           aria-label={`${n} star${n > 1 ? 's' : ''}`}
         >
           ★
@@ -162,16 +162,16 @@ export default function PortalSupportPage() {
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-[#c4b5fd]">{openCount}</p>
-          <p className="text-xs text-slate-400">Open</p>
+          <p className="text-2xl font-bold text-teal-700">{openCount}</p>
+          <p className="text-xs text-gray-500">Open</p>
         </div>
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-amber-300">{progCount}</p>
-          <p className="text-xs text-slate-400">In Progress</p>
+          <p className="text-xs text-gray-500">In Progress</p>
         </div>
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-emerald-300">{resCount}</p>
-          <p className="text-xs text-slate-400">Resolved</p>
+          <p className="text-xs text-gray-500">Resolved</p>
         </div>
       </div>
 
@@ -180,17 +180,17 @@ export default function PortalSupportPage() {
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {tickets.map((t) => (
-            <button key={t.id} onClick={() => openDetail(t.id)} className="card-premium p-5 text-left hover:border-[#8b5cf6]/40 transition w-full">
+            <button key={t.id} onClick={() => openDetail(t.id)} className="card-premium p-5 text-left hover:border-[#0f766e]/40 transition w-full">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <p className="text-xs text-slate-500 font-mono">#{t.ticketNumber}</p>
-                  <h3 className="font-bold text-white">{t.title}</h3>
+                  <h3 className="font-bold text-gray-900">{t.title}</h3>
                 </div>
                 <Badge tone={PRIORITY_TONE[t.priority] || 'slate'}>{t.priority}</Badge>
               </div>
-              {t.description && <p className="text-sm text-slate-300 line-clamp-2 mb-3">{t.description}</p>}
+              {t.description && <p className="text-sm text-gray-600 line-clamp-2 mb-3">{t.description}</p>}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">
+                <span className="text-gray-500">
                   {t.category} · {t._count?.comments || 0} replies · {fmtDate(t.updatedAt)}
                 </span>
                 <Badge tone={STATUS_TONE[t.status] || 'slate'}>{t.status.replace('_', ' ')}</Badge>
@@ -242,15 +242,15 @@ export default function PortalSupportPage() {
           {detail?.error && <ErrorBanner message={detail.error} onRetry={() => openDetail(detailId)} />}
           {detail && !detail.error && (
             <div>
-              <h3 className="font-bold text-white text-lg mb-1">{detail.title}</h3>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">{detail.title}</h3>
               <div className="flex flex-wrap gap-2 mb-3 text-xs">
                 <Badge tone={STATUS_TONE[detail.status] || 'slate'}>{detail.status.replace('_', ' ')}</Badge>
                 <Badge tone={PRIORITY_TONE[detail.priority] || 'slate'}>{detail.priority}</Badge>
                 <span className="text-slate-500 self-center">{detail.category}{detail.unit?.code ? ` · ${detail.unit.code}` : ''}{detail.assignedTo?.name ? ` · Assigned to ${detail.assignedTo.name}` : ''}</span>
               </div>
-              {detail.description && <p className="text-sm text-slate-300 whitespace-pre-wrap mb-4">{detail.description}</p>}
+              {detail.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-4">{detail.description}</p>}
 
-              <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide mb-2">Conversation</p>
+              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Conversation</p>
               <div className="space-y-3 max-h-72 overflow-y-auto mb-4 pr-1">
                 {(detail.comments || []).map((c) => {
                   const r = parseRating(c.body);
@@ -265,9 +265,9 @@ export default function PortalSupportPage() {
                   const mine = user && (c.author?.id === user.id);
                   return (
                     <div key={c.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
-                        <p className="text-xs text-slate-400 mb-0.5">{c.author?.name || 'Team'} · {fmtDate(c.createdAt)}</p>
-                        <p className="text-sm text-slate-100 whitespace-pre-wrap">{c.body}</p>
+                      <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#0f766e]/30 border border-[#0f766e]/30' : 'bg-gray-100/60 border border-gray-200/50'}`}>
+                        <p className="text-xs text-gray-500 mb-0.5">{c.author?.name || 'Team'} · {fmtDate(c.createdAt)}</p>
+                        <p className="text-sm text-gray-900 whitespace-pre-wrap">{c.body}</p>
                       </div>
                     </div>
                   );

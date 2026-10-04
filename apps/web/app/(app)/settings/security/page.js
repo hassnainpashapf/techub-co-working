@@ -74,14 +74,14 @@ export default function SecurityPage() {
       {error && <ErrorBanner message={error} onRetry={() => load()} />}
 
       {/* ---- IP allowlist ---- */}
-      <div className="rounded-2xl border border-slate-700/60 bg-gradient-to-br from-[#16162a] to-[#0e0e1c] p-5">
+      <div className="rounded-2xl border border-gray-200/60 bg-white p-5">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold text-slate-100">IP Allowlist</h2>
+          <h2 className="text-lg font-semibold text-gray-900">IP Allowlist</h2>
           <Badge tone={enabled ? 'green' : 'slate'}>{enabled ? `Enabled (${allowlist.length} IPs)` : 'Disabled'}</Badge>
         </div>
-        <p className="text-sm text-slate-400 mb-3">
-          When enabled, logins are allowed <b className="text-slate-200">only</b> from these IPs or CIDR ranges
-          (e.g. <code className="text-slate-300">203.0.113.10</code> or <code className="text-slate-300">203.0.113.0/24</code>).
+        <p className="text-sm text-gray-500 mb-3">
+          When enabled, logins are allowed <b className="text-gray-800">only</b> from these IPs or CIDR ranges
+          (e.g. <code className="text-gray-600">203.0.113.10</code> or <code className="text-gray-600">203.0.113.0/24</code>).
           Empty list = disabled (everyone can log in).
         </p>
         <Field label="Allowed IPs / CIDRs (one per line)">
@@ -90,31 +90,31 @@ export default function SecurityPage() {
             value={ipsText}
             onChange={(e) => setIpsText(e.target.value)}
             placeholder={'203.0.113.10\n203.0.113.0/24'}
-            className="w-full rounded-xl bg-[#0d0d1a] border border-slate-700/70 px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-[#8b5cf6]/60"
+            className="w-full rounded-xl bg-white border border-gray-200/70 px-3 py-2 text-sm text-gray-900 font-mono focus:outline-none focus:border-[#0f766e]/60"
           />
         </Field>
         <button
           onClick={saveAllowlist}
           disabled={saving}
-          className="mt-3 px-4 py-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-indigo-600 text-white text-sm font-semibold hover:from-[#8b5cf6] hover:to-indigo-500 disabled:opacity-50"
+          className="mt-3 px-4 py-2 rounded-xl bg-gradient-to-r from-[#0f766e] to-indigo-600 text-gray-900 text-sm font-semibold hover:from-[#0f766e] hover:to-indigo-500 disabled:opacity-50"
         >
           {saving ? 'Saving…' : 'Save Allowlist'}
         </button>
       </div>
 
       {/* ---- Alerts ---- */}
-      <div className="rounded-2xl border border-slate-700/60 bg-gradient-to-br from-[#16162a] to-[#0e0e1c] p-5">
+      <div className="rounded-2xl border border-gray-200/60 bg-white p-5">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="text-lg font-semibold text-slate-100">Login Alerts</h2>
+          <h2 className="text-lg font-semibold text-gray-900">Login Alerts</h2>
           <Badge tone={unacked ? 'amber' : 'green'}>{unacked} unacknowledged</Badge>
         </div>
         {alerts.length === 0 ? (
-          <p className="text-sm text-slate-400">No login alerts yet. New-device and blocked-IP logins will appear here.</p>
+          <p className="text-sm text-gray-500">No login alerts yet. New-device and blocked-IP logins will appear here.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-xs uppercase tracking-wider text-slate-400 border-b border-slate-700/60">
+                <tr className="text-left text-xs uppercase tracking-wider text-gray-500 border-b border-gray-200/60">
                   <th className="py-2 pr-3">Time</th>
                   <th className="py-2 pr-3">User</th>
                   <th className="py-2 pr-3">IP</th>
@@ -125,12 +125,12 @@ export default function SecurityPage() {
               </thead>
               <tbody>
                 {alerts.map((a) => (
-                  <tr key={a.id} className="border-b border-slate-800/60 hover:bg-slate-800/30">
-                    <td className="py-2 pr-3 text-slate-300 whitespace-nowrap">{fmtTime(a.createdAt)}</td>
-                    <td className="py-2 pr-3 text-slate-100">{a.user?.name || a.user?.email || '—'}</td>
-                    <td className="py-2 pr-3 font-mono text-slate-200">{a.ipAddress}</td>
+                  <tr key={a.id} className="border-b border-gray-200/60 hover:bg-gray-100/30">
+                    <td className="py-2 pr-3 text-gray-600 whitespace-nowrap">{fmtTime(a.createdAt)}</td>
+                    <td className="py-2 pr-3 text-gray-900">{a.user?.name || a.user?.email || '—'}</td>
+                    <td className="py-2 pr-3 font-mono text-gray-800">{a.ipAddress}</td>
                     <td className="py-2 pr-3"><Badge tone={TYPE_TONES[a.type] || 'slate'}>{a.type}</Badge></td>
-                    <td className="py-2 pr-3 text-slate-400 max-w-[220px] truncate" title={a.userAgent || ''}>{a.userAgent || '—'}</td>
+                    <td className="py-2 pr-3 text-gray-500 max-w-[220px] truncate" title={a.userAgent || ''}>{a.userAgent || '—'}</td>
                     <td className="py-2 text-right">
                       {a.acknowledgedAt ? (
                         <span className="text-xs text-slate-500">Acknowledged</span>
@@ -138,7 +138,7 @@ export default function SecurityPage() {
                         <button
                           onClick={() => acknowledge(a.id)}
                           disabled={ackId === a.id}
-                          className="text-xs px-3 py-1 rounded-lg border border-slate-600 text-slate-200 hover:border-[#8b5cf6]/60 hover:text-white disabled:opacity-50"
+                          className="text-xs px-3 py-1 rounded-lg border border-gray-300 text-gray-800 hover:border-[#0f766e]/60 hover:text-gray-900 disabled:opacity-50"
                         >
                           {ackId === a.id ? '…' : 'Acknowledge'}
                         </button>

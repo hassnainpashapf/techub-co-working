@@ -108,7 +108,7 @@ export default function MailPage() {
 
       <div className="flex flex-wrap items-center gap-2 mb-4">
         {['', 'received', 'notified', 'collected'].map((s) => (
-          <button key={s} onClick={() => setFilter(s)} className={`px-3 py-1.5 rounded-full text-sm font-semibold ${filter === s ? 'bg-violet-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+          <button key={s} onClick={() => setFilter(s)} className={`px-3 py-1.5 rounded-full text-sm font-semibold ${filter === s ? 'bg-teal-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
             {s === '' ? 'All' : s[0].toUpperCase() + s.slice(1)}
           </button>
         ))}
@@ -118,17 +118,17 @@ export default function MailPage() {
       {loading ? <Spinner /> : items.length === 0 ? <EmptyState title="No mail items" sub="Log an incoming letter or package to get started." /> : (
         <div className="card-premium overflow-x-auto">
           <table className="w-full text-sm">
-            <thead><tr className="text-left text-slate-400 text-xs uppercase tracking-wide">
+            <thead><tr className="text-left text-gray-500 text-xs uppercase tracking-wide">
               <th className="p-3">Type</th><th className="p-3">Member</th><th className="p-3">Sender</th><th className="p-3">Tracking</th><th className="p-3">Received</th><th className="p-3">Status</th><th className="p-3 text-right">Action</th>
             </tr></thead>
             <tbody>
               {items.map((it) => (
-                <tr key={it.id} className={`border-t border-white/5 hover:bg-white/5 ${it.status !== 'collected' ? 'font-semibold' : ''}`}>
+                <tr key={it.id} className={`border-t border-gray-200 hover:bg-gray-100 ${it.status !== 'collected' ? 'font-semibold' : ''}`}>
                   <td className="p-3">{it.type === 'letter' ? '✉️ Letter' : '📦 Package'}</td>
-                  <td className="p-3">{it.member?.name || '—'}{it.member?.companyName ? <span className="block text-xs text-slate-400">{it.member.companyName}</span> : null}</td>
+                  <td className="p-3">{it.member?.name || '—'}{it.member?.companyName ? <span className="block text-xs text-gray-500">{it.member.companyName}</span> : null}</td>
                   <td className="p-3">{it.sender || '—'}</td>
                   <td className="p-3 font-mono text-xs">{it.trackingNumber || '—'}</td>
-                  <td className="p-3 text-slate-400">{fmtDate(it.receivedAt)}</td>
+                  <td className="p-3 text-gray-500">{fmtDate(it.receivedAt)}</td>
                   <td className="p-3"><Badge tone={STATUS_TONE[it.status]}>{it.status}</Badge></td>
                   <td className="p-3 text-right">
                     {it.status !== 'collected' ? (

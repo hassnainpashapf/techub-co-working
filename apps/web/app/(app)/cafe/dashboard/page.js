@@ -93,7 +93,7 @@ export default function CafeDashboardPage() {
             <button key={d} onClick={() => { setDays(d); load(d); }}
               className={`px-3 py-1.5 rounded-full text-sm font-semibold transition ${days === d
                 ? 'bg-amber-500 text-black shadow-[0_0_16px_rgba(245,158,11,0.4)]'
-                : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+                : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
               {d}d
             </button>
           ))}
@@ -112,10 +112,10 @@ export default function CafeDashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 rounded-2xl border border-white/10 bg-gradient-to-br from-[#151527] to-[#101020] p-5">
+        <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="font-bold text-white">Sales trend — {days} din</h3>
-            <span className="text-xs text-slate-400">Total: Rs {Math.round((trend?.series || []).reduce((s, x) => s + x.revenue, 0)).toLocaleString()}</span>
+            <h3 className="font-bold text-gray-900">Sales trend — {days} din</h3>
+            <span className="text-xs text-gray-500">Total: Rs {Math.round((trend?.series || []).reduce((s, x) => s + x.revenue, 0)).toLocaleString()}</span>
           </div>
           {trend && trend.series.length > 0 ? (
             <SalesTrendChart series={trend.series} />
@@ -124,19 +124,19 @@ export default function CafeDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#151527] to-[#101020] p-5">
-          <h3 className="font-bold text-white mb-3">Kitchen load</h3>
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <h3 className="font-bold text-gray-900 mb-3">Kitchen load</h3>
           <div className="flex items-center gap-4 mb-4">
             <div className="text-5xl font-extrabold text-amber-400">{kitchenLoad}</div>
-            <div className="text-sm text-slate-400">active orders<br />queue me</div>
+            <div className="text-sm text-gray-500">active orders<br />queue me</div>
           </div>
           {statusEntries.length > 0 ? (
             <div className="space-y-2">
               {statusEntries.map(([st, c]) => (
                 <div key={st} className="flex items-center gap-2 text-sm">
                   <span className="w-3 h-3 rounded-full" style={{ background: STATUS_COLORS[st] || '#64748b' }} />
-                  <span className="text-slate-300 capitalize">{st}</span>
-                  <span className="text-white font-bold ml-auto">{c}</span>
+                  <span className="text-gray-600 capitalize">{st}</span>
+                  <span className="text-gray-900 font-bold ml-auto">{c}</span>
                 </div>
               ))}
             </div>
@@ -151,19 +151,19 @@ export default function CafeDashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#151527] to-[#101020] p-5">
-          <h3 className="font-bold text-white mb-3">Top items ({days} din)</h3>
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <h3 className="font-bold text-gray-900 mb-3">Top items ({days} din)</h3>
           {(top?.items || []).length > 0 ? (
             <div className="space-y-2">
               {top.items.map((it, i) => (
-                <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-white/5">
+                <div key={i} className="flex items-center gap-3 p-2.5 rounded-xl bg-gray-100">
                   <span className="text-lg font-extrabold text-amber-400 w-7">{i + 1}</span>
                   <div className="flex-1 min-w-0">
-                    <div className="text-white font-semibold truncate">{it.name}</div>
-                    <div className="text-xs text-slate-400">{it.qty} sold</div>
+                    <div className="text-gray-900 font-semibold truncate">{it.name}</div>
+                    <div className="text-xs text-gray-500">{it.qty} sold</div>
                   </div>
                   <div className="text-right">
-                    <div className="text-white font-bold">Rs {Math.round(it.revenue).toLocaleString()}</div>
+                    <div className="text-gray-900 font-bold">Rs {Math.round(it.revenue).toLocaleString()}</div>
                   </div>
                 </div>
               ))}
@@ -173,8 +173,8 @@ export default function CafeDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#151527] to-[#101020] p-5">
-          <h3 className="font-bold text-white mb-3">Quick links</h3>
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
+          <h3 className="font-bold text-gray-900 mb-3">Quick links</h3>
           <div className="grid grid-cols-2 gap-3">
             {[
               { label: 'Menu manage', path: '/cafe/menu', icon: '📋' },
@@ -183,9 +183,9 @@ export default function CafeDashboardPage() {
               { label: 'Portal cafe', path: '/portal/cafe', icon: '🛒' },
             ].map((l) => (
               <Link key={l.path} href={l.path}
-                className="p-4 rounded-xl bg-white/5 border border-white/10 hover:border-amber-400/40 hover:bg-white/10 transition text-center">
+                className="p-4 rounded-xl bg-gray-100 border border-gray-200 hover:border-amber-400/40 hover:bg-gray-100 transition text-center">
                 <div className="text-2xl mb-1">{l.icon}</div>
-                <div className="text-sm font-semibold text-slate-200">{l.label}</div>
+                <div className="text-sm font-semibold text-gray-800">{l.label}</div>
               </Link>
             ))}
           </div>

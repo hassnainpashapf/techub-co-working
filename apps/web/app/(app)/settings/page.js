@@ -70,7 +70,7 @@ export default function SettingsPage() {
       <ErrorBanner message={error} onRetry={refresh} />
 
       <div className="card mb-4">
-        <h2 className="font-semibold text-white mb-3">{editingKey ? `Edit: ${editingKey}` : 'Add / update setting'}</h2>
+        <h2 className="font-semibold text-gray-900 mb-3">{editingKey ? `Edit: ${editingKey}` : 'Add / update setting'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
             <Field label="Key">
@@ -105,7 +105,7 @@ export default function SettingsPage() {
       </div>
 
       <div className="card">
-        <h2 className="font-semibold text-white mb-3">Current settings ({settings.length})</h2>
+        <h2 className="font-semibold text-gray-900 mb-3">Current settings ({settings.length})</h2>
         <DataTable
           columns={[
             { key: 'key', label: 'Key', render: (r) => <span className="font-mono text-sm">{r.key}</span> },

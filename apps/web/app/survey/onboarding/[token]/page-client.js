@@ -41,25 +41,25 @@ export default function OnboardingSurveyPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a14] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] px-4">
       <div className="card-premium w-full max-w-md p-8 text-center">
-        {state === 'loading' && <p className="text-slate-300">Loading…</p>}
+        {state === 'loading' && <p className="text-gray-600">Loading…</p>}
         {state === 'invalid' && <>
-          <h1 className="text-2xl font-extrabold text-white mb-2">Invalid link</h1>
-          <p className="text-sm text-slate-400">Ye survey link ghalat ya expire ho chuka hai.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Invalid link</h1>
+          <p className="text-sm text-gray-500">Ye survey link ghalat ya expire ho chuka hai.</p>
         </>}
         {state === 'done' && <>
-          <h1 className="text-2xl font-extrabold text-white mb-2">Shukriya! 🙏</h1>
-          <p className="text-sm text-slate-400">Aap ka feedback mil gaya hai.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900 mb-2">Shukriya! 🙏</h1>
+          <p className="text-sm text-gray-500">Aap ka feedback mil gaya hai.</p>
         </>}
         {state === 'form' && <>
           <p className="text-xs text-slate-500 mb-1">{meta?.tenantName || 'Techub'}</p>
-          <h1 className="text-xl font-extrabold text-white mb-1">Salam {meta?.firstName || 'Member'}! 👋</h1>
-          <p className="text-sm text-slate-400 mb-6">Aap ko 30 din ho gaye hain — kya aap {meta?.tenantName || 'hamen'} doston ko recommend karenge?</p>
+          <h1 className="text-xl font-extrabold text-gray-900 mb-1">Salam {meta?.firstName || 'Member'}! 👋</h1>
+          <p className="text-sm text-gray-500 mb-6">Aap ko 30 din ho gaye hain — kya aap {meta?.tenantName || 'hamen'} doston ko recommend karenge?</p>
           <div className="grid grid-cols-11 gap-1 mb-4">
             {Array.from({ length: 11 }, (_, i) => (
               <button key={i} onClick={() => setScore(i)}
-                className={`py-2 rounded-lg text-sm font-bold transition ${score === i ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+                className={`py-2 rounded-lg text-sm font-bold transition ${score === i ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
                 {i}
               </button>
             ))}
@@ -69,7 +69,7 @@ export default function OnboardingSurveyPage() {
           </div>
           <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows={3}
             placeholder="Koi tajweez? (optional)"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#8b5cf6] mb-4" />
+            className="w-full bg-gray-100 border border-gray-200 rounded-xl px-3 py-2 text-sm text-gray-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0f766e] mb-4" />
           {err && <p className="text-red-400 text-xs mb-3">{err}</p>}
           <button onClick={submit} className="btn-primary w-full py-2.5 rounded-xl font-bold">Submit Feedback</button>
         </>}

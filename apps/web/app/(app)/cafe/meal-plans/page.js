@@ -121,7 +121,7 @@ export default function MealPlansPage() {
     { key: 'email', label: 'Email', render: (s) => s.member?.email || '—' },
     { key: 'used', label: 'Meals', render: (s) => `${s.mealsUsed}/${s.mealsTotal}` },
     { key: 'progress', label: 'Progress', render: (s) => (
-      <div className="w-28 h-2 rounded bg-white/10 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${Math.min(100, (s.mealsUsed / Math.max(1, s.mealsTotal)) * 100)}%` }} /></div>
+      <div className="w-28 h-2 rounded bg-gray-100 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${Math.min(100, (s.mealsUsed / Math.max(1, s.mealsTotal)) * 100)}%` }} /></div>
     ) },
     { key: 'end', label: 'Valid till', render: (s) => fmtDate(s.endDate) },
     { key: 'status', label: 'Status', render: (s) => (s.status === 'active' ? <Badge tone="green">Active</Badge> : <Badge tone="slate">{s.status}</Badge>) },
@@ -130,7 +130,7 @@ export default function MealPlansPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader title="🍱 Meal Plans" subtitle="Monthly lunch / meal subscriptions for members" action={
-        <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">+ New Plan</button>
+        <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">+ New Plan</button>
       } />
 
       {error && <ErrorBanner message={error} />}
@@ -138,7 +138,7 @@ export default function MealPlansPage() {
       <div className="flex gap-2">
         {['plans', 'subscribers'].map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-full text-sm capitalize ${tab === t ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm capitalize ${tab === t ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600'}`}>
             {t}
           </button>
         ))}
@@ -164,7 +164,7 @@ export default function MealPlansPage() {
         <div className="space-y-4">
           <div className="flex gap-2 items-center">
             <label className="text-sm opacity-70">Plan:</label>
-            <select value={planFilter} onChange={(e) => setPlanFilter(e.target.value)} className="bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm">
+            <select value={planFilter} onChange={(e) => setPlanFilter(e.target.value)} className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm">
               {plans.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
             </select>
           </div>
@@ -189,8 +189,8 @@ export default function MealPlansPage() {
             </label>
             <div className="text-xs opacity-60">Total meals per subscription: {Number(form.mealsPerDay || 0) * Number(form.validDays || 0)}</div>
             <div className="flex justify-end gap-2">
-              <button onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-sm">Cancel</button>
-              <button onClick={save} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm">{saving ? 'Saving…' : 'Save'}</button>
+              <button onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-gray-100 text-sm">Cancel</button>
+              <button onClick={save} disabled={saving} className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm">{saving ? 'Saving…' : 'Save'}</button>
             </div>
           </div>
         </Modal>

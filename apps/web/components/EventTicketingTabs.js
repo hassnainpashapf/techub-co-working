@@ -14,10 +14,10 @@ function Section({ title, hint, children, action }) {
   return (
     <div className="mb-6">
       <div className="flex items-center justify-between mb-2">
-        <h4 className="font-bold text-white">{title}</h4>
+        <h4 className="font-bold text-gray-900">{title}</h4>
         {action}
       </div>
-      {hint && <p className="text-xs text-slate-400 mb-2">{hint}</p>}
+      {hint && <p className="text-xs text-gray-500 mb-2">{hint}</p>}
       {children}
     </div>
   );
@@ -49,7 +49,7 @@ function TicketsTab({ eventId }) {
     <Section title="Ticket types" hint="Sale pricing and limits per event." action={<button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>+ Type</button>}>
       {err && <ErrorBanner message={err} />}
       {showForm && (
-        <form onSubmit={save} className="grid grid-cols-2 gap-3 mb-4 p-3 rounded-xl bg-white/5">
+        <form onSubmit={save} className="grid grid-cols-2 gap-3 mb-4 p-3 rounded-xl bg-gray-100">
           <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required maxLength={80} placeholder="Early Bird" /></Field>
           <Field label="Price (Rs) *"><input type="number" min={0} step="0.01" className="input" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} required /></Field>
           <Field label="Quantity *"><input type="number" min={1} className="input" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} required /></Field>
@@ -62,10 +62,10 @@ function TicketsTab({ eventId }) {
       {!types ? <Spinner /> : types.length === 0 ? <EmptyState title="No ticket types" hint="Add one to start selling tickets." /> : (
         <div className="space-y-2">
           {types.map((t) => (
-            <div key={t.id} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+            <div key={t.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
               <div>
-                <p className="text-sm font-semibold text-white">{t.name} <Badge tone={t.isActive ? 'green' : 'slate'}>{t.isActive ? 'active' : 'paused'}</Badge></p>
-                <p className="text-xs text-slate-400">Rs {t.price} · {t.soldCount}/{t.quantity} sold</p>
+                <p className="text-sm font-semibold text-gray-900">{t.name} <Badge tone={t.isActive ? 'green' : 'slate'}>{t.isActive ? 'active' : 'paused'}</Badge></p>
+                <p className="text-xs text-gray-500">Rs {t.price} · {t.soldCount}/{t.quantity} sold</p>
               </div>
               <div className="flex gap-2">
                 <button className="btn-secondary text-xs" onClick={() => toggle(t)}>{t.isActive ? 'Pause' : 'Activate'}</button>
@@ -101,7 +101,7 @@ function AgendaTab({ eventId }) {
       {err && <ErrorBanner message={err} />}
       <Section title="Speakers" action={<button className="btn-primary text-sm" onClick={() => setShowSp(!showSp)}>+ Speaker</button>}>
         {showSp && (
-          <form onSubmit={saveSpeaker} className="grid grid-cols-3 gap-2 mb-3 p-3 rounded-xl bg-white/5">
+          <form onSubmit={saveSpeaker} className="grid grid-cols-3 gap-2 mb-3 p-3 rounded-xl bg-gray-100">
             <Field label="Name *"><input className="input" value={spF.name} onChange={(e) => setSpF({ ...spF, name: e.target.value })} required /></Field>
             <Field label="Title"><input className="input" value={spF.title} onChange={(e) => setSpF({ ...spF, title: e.target.value })} /></Field>
             <Field label="Company"><input className="input" value={spF.company} onChange={(e) => setSpF({ ...spF, company: e.target.value })} /></Field>
@@ -111,8 +111,8 @@ function AgendaTab({ eventId }) {
         {!speakers ? <Spinner /> : speakers.length === 0 ? <EmptyState title="No speakers" /> : (
           <div className="space-y-2">
             {speakers.map((s) => (
-              <div key={s.id} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
-                <div><p className="text-sm font-semibold text-white">{s.name}</p><p className="text-xs text-slate-400">{[s.title, s.company].filter(Boolean).join(' @ ')}</p></div>
+              <div key={s.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
+                <div><p className="text-sm font-semibold text-gray-900">{s.name}</p><p className="text-xs text-gray-500">{[s.title, s.company].filter(Boolean).join(' @ ')}</p></div>
                 <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(`/event-agenda/speakers/${s.id}`)}>Delete</button>
               </div>
             ))}
@@ -121,7 +121,7 @@ function AgendaTab({ eventId }) {
       </Section>
       <Section title="Sessions" action={<button className="btn-primary text-sm" onClick={() => setShowSs(!showSs)}>+ Session</button>}>
         {showSs && (
-          <form onSubmit={saveSession} className="grid grid-cols-2 gap-2 mb-3 p-3 rounded-xl bg-white/5">
+          <form onSubmit={saveSession} className="grid grid-cols-2 gap-2 mb-3 p-3 rounded-xl bg-gray-100">
             <div className="col-span-2"><Field label="Title *"><input className="input" value={ssF.title} onChange={(e) => setSsF({ ...ssF, title: e.target.value })} required /></Field></div>
             <Field label="Speaker"><select className="input" value={ssF.speakerId} onChange={(e) => setSsF({ ...ssF, speakerId: e.target.value })}><option value="">—</option>{(speakers || []).map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}</select></Field>
             <Field label="Location"><input className="input" value={ssF.location} onChange={(e) => setSsF({ ...ssF, location: e.target.value })} /></Field>
@@ -133,10 +133,10 @@ function AgendaTab({ eventId }) {
         {!sessions ? <Spinner /> : sessions.length === 0 ? <EmptyState title="No sessions" /> : (
           <div className="space-y-2">
             {sessions.map((s) => (
-              <div key={s.id} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+              <div key={s.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
                 <div>
-                  <p className="text-sm font-semibold text-white">{s.title}</p>
-                  <p className="text-xs text-slate-400">{fmt(s.startTime)} → {fmt(s.endTime)}{s.speaker ? ` · 🎤 ${s.speaker.name}` : ''}{s.location ? ` · 📍 ${s.location}` : ''}</p>
+                  <p className="text-sm font-semibold text-gray-900">{s.title}</p>
+                  <p className="text-xs text-gray-500">{fmt(s.startTime)} → {fmt(s.endTime)}{s.speaker ? ` · 🎤 ${s.speaker.name}` : ''}{s.location ? ` · 📍 ${s.location}` : ''}</p>
                 </div>
                 <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(`/event-agenda/sessions/${s.id}`)}>Delete</button>
               </div>
@@ -163,7 +163,7 @@ function SponsorsTab({ eventId }) {
     <Section title="Sponsors" hint="Platinum / gold / silver tiers." action={<button className="btn-primary text-sm" onClick={() => setShow(!show)}>+ Sponsor</button>}>
       {err && <ErrorBanner message={err} />}
       {show && (
-        <form onSubmit={save} className="grid grid-cols-2 gap-2 mb-3 p-3 rounded-xl bg-white/5">
+        <form onSubmit={save} className="grid grid-cols-2 gap-2 mb-3 p-3 rounded-xl bg-gray-100">
           <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required /></Field>
           <Field label="Tier"><select className="input" value={f.tier} onChange={(e) => setF({ ...f, tier: e.target.value })}><option value="platinum">Platinum</option><option value="gold">Gold</option><option value="silver">Silver</option></select></Field>
           <Field label="Website"><input className="input" value={f.website} onChange={(e) => setF({ ...f, website: e.target.value })} placeholder="https://…" /></Field>
@@ -174,8 +174,8 @@ function SponsorsTab({ eventId }) {
       {!rows ? <Spinner /> : rows.length === 0 ? <EmptyState title="No sponsors" /> : (
         <div className="space-y-2">
           {rows.map((s) => (
-            <div key={s.id} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
-              <div><p className="text-sm font-semibold text-white">{s.name} <Badge tone={s.tier === 'platinum' ? 'amber' : s.tier === 'gold' ? 'blue' : 'slate'}>{s.tier}</Badge></p><p className="text-xs text-slate-400">{s.amount ? `Rs ${s.amount} · ` : ''}{s.isActive ? 'active' : 'inactive'}</p></div>
+            <div key={s.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
+              <div><p className="text-sm font-semibold text-gray-900">{s.name} <Badge tone={s.tier === 'platinum' ? 'amber' : s.tier === 'gold' ? 'blue' : 'slate'}>{s.tier}</Badge></p><p className="text-xs text-gray-500">{s.amount ? `Rs ${s.amount} · ` : ''}{s.isActive ? 'active' : 'inactive'}</p></div>
               <div className="flex gap-2">
                 <button className="btn-secondary text-xs" onClick={() => toggle(s)}>{s.isActive ? 'Hide' : 'Show'}</button>
                 <button className="text-xs text-red-300 hover:text-red-200" onClick={() => del(s.id)}>Delete</button>
@@ -202,16 +202,16 @@ function AnalyticsTab({ eventId }) {
     <Section title="Analytics" action={<button className="btn-secondary text-sm" onClick={exportCsv}>⬇ attendees.csv</button>}>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[['🎟️ Sold', stats.ticketsSold ?? 0], ['💰 Revenue', `Rs ${stats.revenue ?? 0}`], ['✅ Scanned in', stats.scannedIn ?? 0], ['↩️ Refunded', stats.refunded ?? 0]].map(([l, v]) => (
-          <div key={l} className="rounded-xl bg-white/5 p-3"><p className="text-xs text-slate-400">{l}</p><p className="text-lg font-bold text-white">{v}</p></div>
+          <div key={l} className="rounded-xl bg-gray-100 p-3"><p className="text-xs text-gray-500">{l}</p><p className="text-lg font-bold text-gray-900">{v}</p></div>
         ))}
       </div>
       {stats.byType && stats.byType.length > 0 && (
         <div className="mt-4">
-          <h4 className="font-bold text-white mb-2 text-sm">Sales by ticket type</h4>
+          <h4 className="font-bold text-gray-900 mb-2 text-sm">Sales by ticket type</h4>
           {stats.byType.map((b) => (
-            <div key={b.name} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2 mb-1">
-              <span className="text-sm text-white">{b.name}</span>
-              <span className="text-xs text-slate-400">{b.sold} sold · Rs {b.revenue}</span>
+            <div key={b.name} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2 mb-1">
+              <span className="text-sm text-gray-900">{b.name}</span>
+              <span className="text-xs text-gray-500">{b.sold} sold · Rs {b.revenue}</span>
             </div>
           ))}
         </div>
@@ -224,9 +224,9 @@ export default function EventTicketingTabs({ eventId }) {
   const [tab, setTab] = useState('Tickets');
   return (
     <div>
-      <div className="flex gap-2 mb-4 border-b border-white/10 pb-2">
+      <div className="flex gap-2 mb-4 border-b border-gray-200 pb-2">
         {TABS.map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`text-sm px-3 py-1.5 rounded-full ${tab === t ? 'bg-violet-600 text-white font-semibold' : 'text-slate-400 hover:text-white'}`}>{t}</button>
+          <button key={t} onClick={() => setTab(t)} className={`text-sm px-3 py-1.5 rounded-full ${tab === t ? 'bg-teal-700 text-white font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>{t}</button>
         ))}
       </div>
       {tab === 'Tickets' && <TicketsTab eventId={eventId} />}

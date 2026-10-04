@@ -77,12 +77,12 @@ export default function GatewaysPage() {
           const doc = SETUP_DOCS[g.name] || { title: g.displayName, steps: [] };
           const isOpen = open === g.name;
           return (
-            <div key={g.name} className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
+            <div key={g.name} className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
               <div className="flex items-start justify-between mb-3">
                 <div className="flex items-center gap-3">
                   <span className="text-3xl">{ICONS[g.name] || '💳'}</span>
                   <div>
-                    <h3 className="font-semibold text-white">{g.displayName}</h3>
+                    <h3 className="font-semibold text-gray-900">{g.displayName}</h3>
                     <span className={`text-xs px-2 py-0.5 rounded-full border ${g.configured
                       ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
                       : 'bg-amber-500/15 text-amber-300 border-amber-500/30'}`}>
@@ -93,12 +93,12 @@ export default function GatewaysPage() {
               </div>
               <button
                 onClick={() => setOpen(isOpen ? null : g.name)}
-                className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]"
+                className="text-sm text-teal-700 hover:text-teal-700"
               >
                 {isOpen ? 'Hide setup instructions ▲' : 'Setup instructions ▼'}
               </button>
               {isOpen && (
-                <ol className="mt-3 text-sm text-slate-300 space-y-2 list-decimal list-inside">
+                <ol className="mt-3 text-sm text-gray-600 space-y-2 list-decimal list-inside">
                   {doc.steps.map((s, i) => <li key={i}>{s}</li>)}
                 </ol>
               )}
@@ -107,9 +107,9 @@ export default function GatewaysPage() {
         })}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-        <h3 className="font-semibold text-white mb-2">Test payment flow</h3>
-        <p className="text-sm text-slate-400 mb-4">
+      <div className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+        <h3 className="font-semibold text-gray-900 mb-2">Test payment flow</h3>
+        <p className="text-sm text-gray-500 mb-4">
           Manual gateway hamesha ready hota hai. Member billing page par "Pay Online" dabakar reference hasil karta hai.
         </p>
         <button onClick={testManualFlow} disabled={testing} className="btn-primary btn-sm">
@@ -119,7 +119,7 @@ export default function GatewaysPage() {
 
       <div className="mt-4 text-xs text-slate-500">
         Webhook signature security: har gateway ka webhook HMAC-SHA256 signature verify karta hai.
-        Production me <code className="text-slate-300">GATEWAY_WEBHOOK_SECRET</code> env lazmi set karein.
+        Production me <code className="text-gray-600">GATEWAY_WEBHOOK_SECRET</code> env lazmi set karein.
       </div>
     </div>
   );

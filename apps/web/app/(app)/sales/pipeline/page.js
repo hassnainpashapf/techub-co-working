@@ -91,7 +91,7 @@ export default function SalesPipelinePage() {
             <button
               onClick={() => setSortByScore((s) => !s)}
               title="Score ke hisab se sort"
-              className={`btn-ghost ${sortByScore ? '!bg-[#8b5cf6]/20 !text-[#c4b5fd]' : ''}`}
+              className={`btn-ghost ${sortByScore ? '!bg-[#0f766e]/20 !text-teal-700' : ''}`}
             >
               {sortByScore ? '★ Score sort ON' : '☆ Score sort'}
             </button>
@@ -111,11 +111,11 @@ export default function SalesPipelinePage() {
               onDragLeave={() => setDragOver((d) => (d === col.key ? null : d))}
               onDrop={(e) => onDrop(e, col.key)}
               className={`shrink-0 w-[290px] snap-start rounded-2xl border p-3 transition-colors ${
-                dragOver === col.key ? 'border-[#8b5cf6] bg-[#8b5cf6]/10' : 'border-white/10 bg-white/[0.03]'
+                dragOver === col.key ? 'border-[#0f766e] bg-[#0f766e]/10' : 'border-gray-200 bg-gray-50'
               }`}
             >
               <div className="flex items-center justify-between px-1 pb-2">
-                <span className="font-semibold text-slate-200">{col.label}</span>
+                <span className="font-semibold text-gray-800">{col.label}</span>
                 <Badge tone={col.tone}>{grouped[col.key].length}</Badge>
               </div>
               <div className="space-y-2 min-h-[120px]">
@@ -128,12 +128,12 @@ export default function SalesPipelinePage() {
                     draggable
                     onDragStart={() => { dragId.current = lead.id; }}
                     onDragEnd={() => { dragId.current = null; setDragOver(null); }}
-                    className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.03] p-3 cursor-grab active:cursor-grabbing hover:border-[#8b5cf6]/40 transition-colors"
+                    className="rounded-xl border border-gray-200 bg-gradient-to-b from-white/[0.07] to-white/[0.03] p-3 cursor-grab active:cursor-grabbing hover:border-[#0f766e]/40 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="font-medium text-slate-100 truncate">{lead.name}</p>
-                        {lead.company && <p className="text-xs text-slate-400 truncate">{lead.company}</p>}
+                        <p className="font-medium text-gray-900 truncate">{lead.name}</p>
+                        {lead.company && <p className="text-xs text-gray-500 truncate">{lead.company}</p>}
                       </div>
                       {lead.score != null && lead.score !== '' && (
                         <ScoreBadge leadId={lead.id} score={lead.score} grade={lead.grade} />
@@ -152,7 +152,7 @@ export default function SalesPipelinePage() {
                           disabled={moving === lead.id}
                           onClick={() => moveLead(lead.id, NEXT[lead.stage])}
                           title="Next stage"
-                          className="text-[11px] px-2 py-1 rounded-lg bg-[#8b5cf6]/15 text-[#c4b5fd] hover:bg-[#8b5cf6]/30 disabled:opacity-50"
+                          className="text-[11px] px-2 py-1 rounded-lg bg-[#0f766e]/15 text-teal-700 hover:bg-[#0f766e]/30 disabled:opacity-50"
                         >
                           {moving === lead.id ? '…' : `→ ${COLUMNS.find((c) => c.key === NEXT[lead.stage])?.label}`}
                         </button>

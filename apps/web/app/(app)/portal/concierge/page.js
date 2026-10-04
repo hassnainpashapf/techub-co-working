@@ -51,7 +51,7 @@ function Stars({ value, onPick, size = 'text-2xl' }) {
           key={n}
           type="button"
           onClick={() => onPick && onPick(n)}
-          className={`${size} ${n <= value ? 'text-amber-400' : 'text-slate-600'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
+          className={`${size} ${n <= value ? 'text-amber-400' : 'text-gray-500'} ${onPick ? 'hover:scale-110 transition cursor-pointer' : ''}`}
           aria-label={`${n} star${n > 1 ? 's' : ''}`}
         >
           ★
@@ -174,16 +174,16 @@ export default function PortalConciergePage() {
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-[#c4b5fd]">{services.length}</p>
-          <p className="text-xs text-slate-400">Services</p>
+          <p className="text-2xl font-bold text-teal-700">{services.length}</p>
+          <p className="text-xs text-gray-500">Services</p>
         </div>
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-amber-300">{activeCount}</p>
-          <p className="text-xs text-slate-400">Active Requests</p>
+          <p className="text-xs text-gray-500">Active Requests</p>
         </div>
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-emerald-300">{doneCount}</p>
-          <p className="text-xs text-slate-400">Completed</p>
+          <p className="text-xs text-gray-500">Completed</p>
         </div>
       </div>
 
@@ -195,7 +195,7 @@ export default function PortalConciergePage() {
           <button
             key={t.k}
             onClick={() => setTab(t.k)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${tab === t.k ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/50 text-[#ddd6fe]' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${tab === t.k ? 'bg-[#0f766e]/30 border border-[#0f766e]/50 text-teal-700' : 'bg-gray-100/50 border border-gray-200/50 text-gray-500 hover:text-gray-800'}`}
           >
             {t.label}
           </button>
@@ -209,7 +209,7 @@ export default function PortalConciergePage() {
               <button
                 key={c}
                 onClick={() => setCat(c)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${cat === c ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/50 text-[#ddd6fe]' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${cat === c ? 'bg-[#0f766e]/30 border border-[#0f766e]/50 text-teal-700' : 'bg-gray-100/50 border border-gray-200/50 text-gray-500 hover:text-gray-800'}`}
               >
                 {c === 'all' ? 'All' : `${CAT_ICON[c] || ''} ${c.charAt(0).toUpperCase() + c.slice(1)}`}
               </button>
@@ -226,11 +226,11 @@ export default function PortalConciergePage() {
                     <span className="text-2xl">{CAT_ICON[s.category] || '🛎️'}</span>
                     <Badge tone="slate">{s.category}</Badge>
                   </div>
-                  <h3 className="font-bold text-white mb-1">{s.name}</h3>
-                  {s.description && <p className="text-sm text-slate-400 line-clamp-2 mb-1">{s.description}</p>}
+                  <h3 className="font-bold text-gray-900 mb-1">{s.name}</h3>
+                  {s.description && <p className="text-sm text-gray-500 line-clamp-2 mb-1">{s.description}</p>}
                   {s.provider?.name && <p className="text-xs text-slate-500 mb-3">by {s.provider.name}</p>}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-[#c4b5fd]">{fmtPrice(s.basePrice)}</span>
+                    <span className="text-sm font-semibold text-teal-700">{fmtPrice(s.basePrice)}</span>
                     <button className="btn-primary text-sm px-4 py-1.5" onClick={() => openForm(s)}>Request</button>
                   </div>
                 </div>
@@ -252,14 +252,14 @@ export default function PortalConciergePage() {
                   <div key={r.id} className="card-premium p-5">
                     <div className="flex items-start justify-between gap-2 mb-2">
                       <div>
-                        <h3 className="font-bold text-white">{r.title}</h3>
+                        <h3 className="font-bold text-gray-900">{r.title}</h3>
                         <p className="text-xs text-slate-500">{r.service?.name || 'Custom request'}</p>
                       </div>
                       <Badge tone={PRIORITY_TONE[r.priority] || 'slate'}>{r.priority}</Badge>
                     </div>
-                    {r.details && <p className="text-sm text-slate-400 line-clamp-2 mb-3">{r.details}</p>}
+                    {r.details && <p className="text-sm text-gray-500 line-clamp-2 mb-3">{r.details}</p>}
                     <div className="flex items-center justify-between text-xs mb-3">
-                      <span className="text-slate-400">{fmtDate(r.createdAt)}</span>
+                      <span className="text-gray-500">{fmtDate(r.createdAt)}</span>
                       <Badge tone={STATUS_TONE[r.status] || 'slate'}>{(r.status || 'new').replace('_', ' ')}</Badge>
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -309,7 +309,7 @@ export default function PortalConciergePage() {
 
       {rateId && (
         <Modal title="Rate this service" onClose={() => { setRateId(null); setRating(0); setComment(''); }}>
-          <p className="text-sm text-slate-400 mb-3">How was the concierge service?</p>
+          <p className="text-sm text-gray-500 mb-3">How was the concierge service?</p>
           <Stars value={rating} onPick={setRating} />
           <Field label="Comment (optional)">
             <textarea className="input mt-3" rows={3} value={comment} onChange={(e) => setComment(e.target.value)} placeholder="Anything we should know?" />

@@ -85,7 +85,7 @@ export default function PrintingPage() {
       )}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
         <div className="card-premium p-5">
-          <h2 className="text-lg font-bold text-white mb-4">🖨️ Quick log print job</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-4">🖨️ Quick log print job</h2>
           <form onSubmit={submit} className="space-y-3">
             <Field label="Member">
               <input
@@ -95,12 +95,12 @@ export default function PrintingPage() {
                 onChange={(e) => searchMembers(e.target.value)}
               />
               {members.length > 0 && (
-                <div className="mt-1 rounded-xl border border-slate-700 bg-[#141422] max-h-40 overflow-auto">
+                <div className="mt-1 rounded-xl border border-gray-200 bg-white max-h-40 overflow-auto">
                   {members.map((m) => (
                     <button
                       key={m.id}
                       type="button"
-                      className="block w-full text-left px-3 py-2 text-sm text-slate-200 hover:bg-slate-700/40"
+                      className="block w-full text-left px-3 py-2 text-sm text-gray-800 hover:bg-slate-700/40"
                       onClick={() => { setForm((f) => ({ ...f, memberId: m.id })); setSearch(m.name); setMembers([]); }}
                     >
                       {m.name} <span className="text-slate-500">{m.companyName || ''}</span>
@@ -123,14 +123,14 @@ export default function PrintingPage() {
         </div>
         <StatCard label="Pages printed this month" value={totalUsed.toLocaleString()} />
       </div>
-      <h2 className="text-lg font-bold text-white mb-3">Member quotas</h2>
+      <h2 className="text-lg font-bold text-gray-900 mb-3">Member quotas</h2>
       {loading ? <Spinner /> : rows.length === 0 ? (
         <EmptyState title="No quota rows yet" subtitle="Quotas are created automatically when members print or at month start." />
       ) : (
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-slate-400 border-b border-slate-800">
+              <tr className="text-left text-gray-500 border-b border-gray-200">
                 <th className="p-3">Member</th>
                 <th className="p-3">Included</th>
                 <th className="p-3">Used</th>
@@ -142,13 +142,13 @@ export default function PrintingPage() {
               {rows.map((r) => {
                 const pct = r.included > 0 ? Math.min(100, Math.round((r.used / r.included) * 100)) : 0;
                 return (
-                  <tr key={r.memberId} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                    <td className="p-3 text-white">{r.memberName} <span className="text-slate-500 text-xs">{r.companyName || ''}</span></td>
-                    <td className="p-3 text-slate-300">{r.included}</td>
-                    <td className="p-3 text-slate-300">{r.used}</td>
+                  <tr key={r.memberId} className="border-b border-gray-200/50 hover:bg-gray-100/30">
+                    <td className="p-3 text-gray-900">{r.memberName} <span className="text-slate-500 text-xs">{r.companyName || ''}</span></td>
+                    <td className="p-3 text-gray-600">{r.included}</td>
+                    <td className="p-3 text-gray-600">{r.used}</td>
                     <td className="p-3">{r.remaining <= 0 ? <Badge tone="red">0</Badge> : <span className="text-emerald-300">{r.remaining}</span>}</td>
                     <td className="p-3 w-40">
-                      <div className="h-2 rounded-full bg-slate-800 overflow-hidden">
+                      <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                         <div className={`h-full rounded-full ${pct >= 100 ? 'bg-red-500' : 'bg-sky-500'}`} style={{ width: `${pct}%` }} />
                       </div>
                     </td>

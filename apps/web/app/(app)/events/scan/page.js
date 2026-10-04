@@ -102,7 +102,7 @@ export default function TicketScanPage() {
           </button>
         </form>
 
-        <label className="flex items-center gap-2 text-sm text-slate-300 cursor-pointer">
+        <label className="flex items-center gap-2 text-sm text-gray-600 cursor-pointer">
           <input type="checkbox" checked={fastMode} onChange={(e) => setFastMode(e.target.checked)} />
           Fast-scan mode (success par input auto-clear)
         </label>
@@ -113,7 +113,7 @@ export default function TicketScanPage() {
               {res.valid ? '✅ Entry allowed' : '⛔ ' + (res.message || 'Invalid')}
             </div>
             {res.ticket && (
-              <div className="mt-2 text-sm text-slate-300 space-y-1">
+              <div className="mt-2 text-sm text-gray-600 space-y-1">
                 <div>Name: <b>{res.ticket.buyerName}</b></div>
                 {res.ticket.ticketType && <div>Ticket: {res.ticket.ticketType.name}</div>}
                 {res.ticket.event && <div>Event: {res.ticket.event.title}</div>}

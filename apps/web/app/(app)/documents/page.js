@@ -16,7 +16,7 @@ function DocForm({ members, onSave, saving }) {
     <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, memberId: f.memberId || null, file }); }}>
       <Field label="Title"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="e.g. Membership Agreement (optional if file chosen)" /></Field>
       <Field label="File *">
-        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-violet-500/20 file:text-violet-200 file:text-xs"
+        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-200 file:text-xs"
           onChange={(e) => setFile(e.target.files?.[0] || null)} required
           accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.xls,.xlsx,.txt,.csv" />
         <p className="text-[11px] text-slate-500 mt-1">PDF, images, Word/Excel, TXT, CSV — max 25MB</p>
@@ -106,14 +106,14 @@ export default function DocumentsPage() {
   };
 
   const docCols = [
-    { key: 'title', label: 'Document', render: (d) => <div><div className="font-medium text-white">{d.title}</div><div className="text-xs text-slate-400 capitalize">{d.category}{d.fileName ? ` · 📎 ${d.fileName}` : ''}{d.fileSize ? ` (${(d.fileSize / 1024).toFixed(0)} KB)` : ''}</div></div> },
-    { key: 'member', label: 'Member', render: (d) => <span className="text-sm text-slate-300">{d.member?.name || '—'}</span> },
-    { key: 'by', label: 'Uploaded by', render: (d) => <span className="text-sm text-slate-300">{d.uploadedBy?.name || '—'}</span> },
-    { key: 'date', label: 'Date', render: (d) => <span className="text-xs text-slate-400">{d.createdAt?.slice(0, 10)}</span> },
+    { key: 'title', label: 'Document', render: (d) => <div><div className="font-medium text-gray-900">{d.title}</div><div className="text-xs text-gray-500 capitalize">{d.category}{d.fileName ? ` · 📎 ${d.fileName}` : ''}{d.fileSize ? ` (${(d.fileSize / 1024).toFixed(0)} KB)` : ''}</div></div> },
+    { key: 'member', label: 'Member', render: (d) => <span className="text-sm text-gray-600">{d.member?.name || '—'}</span> },
+    { key: 'by', label: 'Uploaded by', render: (d) => <span className="text-sm text-gray-600">{d.uploadedBy?.name || '—'}</span> },
+    { key: 'date', label: 'Date', render: (d) => <span className="text-xs text-gray-500">{d.createdAt?.slice(0, 10)}</span> },
     {
       key: 'action', label: '', render: (d) => (
         <div className="flex gap-2">
-          {d.fileName && <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe]" onClick={() => downloadDoc(d)}>Download</button>}
+          {d.fileName && <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => downloadDoc(d)}>Download</button>}
           <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button>
         </div>
       ),
@@ -125,11 +125,11 @@ export default function DocumentsPage() {
     catch (e) { setError(e.message); }
   };
   const cnCols = [
-    { key: 'number', label: 'Number', render: (c) => <span className="font-mono text-sm text-slate-300">{c.number}</span> },
-    { key: 'member', label: 'Member', render: (c) => <span className="text-sm text-white">{c.member?.name}</span> },
-    { key: 'amount', label: 'Amount', render: (c) => <div><div className="text-white font-medium">{money(c.amount)}</div><div className="text-xs text-slate-400">Used: {money(c.amountUsed)}</div></div> },
+    { key: 'number', label: 'Number', render: (c) => <span className="font-mono text-sm text-gray-600">{c.number}</span> },
+    { key: 'member', label: 'Member', render: (c) => <span className="text-sm text-gray-900">{c.member?.name}</span> },
+    { key: 'amount', label: 'Amount', render: (c) => <div><div className="text-gray-900 font-medium">{money(c.amount)}</div><div className="text-xs text-gray-500">Used: {money(c.amountUsed)}</div></div> },
     { key: 'status', label: 'Status', render: (c) => <Badge tone={CN_TONES[c.status]}>{c.status}</Badge> },
-    { key: 'reason', label: 'Reason', render: (c) => <span className="text-xs text-slate-400">{c.reason || '—'}</span> },
+    { key: 'reason', label: 'Reason', render: (c) => <span className="text-xs text-gray-500">{c.reason || '—'}</span> },
   ];
 
   return (
@@ -145,7 +145,7 @@ export default function DocumentsPage() {
       <div className="flex gap-2 mb-4">
         {[['docs', `Documents (${docs.length})`], ['credits', `Credit Notes (${cns.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}

@@ -32,8 +32,8 @@ function BarChart({ data, height = 180 }) {
       <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0.25" />
+            <stop offset="0%" stopColor="#0f766e" stopOpacity="0.95" />
+            <stop offset="100%" stopColor="#0f766e" stopOpacity="0.25" />
           </linearGradient>
           <filter id="barGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="1.2" result="blur" />
@@ -41,7 +41,7 @@ function BarChart({ data, height = 180 }) {
           </filter>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
         ))}
         {data.map((d, i) => {
           const h = Math.max((d.value / max) * (height - 30), 3);
@@ -53,7 +53,7 @@ function BarChart({ data, height = 180 }) {
                 <animate attributeName="y" from={height - 20} to={height - 20 - h} dur="0.8s" fill="freeze" />
                 <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
               </rect>
-              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
+              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
             </g>
           );
         })}
@@ -72,29 +72,29 @@ function DonutChart({ percent, size = 160 }) {
       <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
         <defs>
           <linearGradient id="donutGrad" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#c4b5fd" />
-            <stop offset="100%" stopColor="#7c3aed" />
+            <stop offset="0%" stopColor="#5eead4" />
+            <stop offset="100%" stopColor="#0f766e" />
           </linearGradient>
           <filter id="donutGlow" x="-50%" y="-50%" width="200%" height="200%">
             <feGaussianBlur stdDeviation="3" result="blur" />
             <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
           </filter>
         </defs>
-        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="16" />
+        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="16" />
         <circle cx="80" cy="80" r={r} fill="none" stroke="url(#donutGrad)" strokeWidth="16" strokeLinecap="round"
           strokeDasharray={`${filled} ${circ}`} filter="url(#donutGlow)"
           style={{ transition: 'stroke-dasharray 1s ease-out' }} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[28px] font-bold text-white drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{percent}%</span>
-        <span className="text-[11px] font-semibold text-white/60 uppercase tracking-wider">Occupied</span>
+        <span className="text-[28px] font-bold text-gray-900 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{percent}%</span>
+        <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Occupied</span>
       </div>
     </div>
   );
 }
 
 // Rich SVG Area/Line Chart with glow
-function TrendChart({ data, height = 160, color = '#8b5cf6' }) {
+function TrendChart({ data, height = 160, color = '#0f766e' }) {
   const max = Math.max(...data.map((d) => d.value), 1);
   const pts = data.map((d, i) => {
     const x = (i / (data.length - 1)) * 100;
@@ -120,12 +120,12 @@ function TrendChart({ data, height = 160, color = '#8b5cf6' }) {
         {data.map((d, i) => {
           const x = (i / (data.length - 1)) * 100;
           const y = height - 24 - (d.value / max) * (height - 44);
-          return <circle key={i} cx={x} cy={y} r="1.6" fill="#fff" stroke={color} strokeWidth="1" style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
+          return <circle key={i} cx={x} cy={y} r="1.6" fill="#111827" stroke={color} strokeWidth="1" style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
         })}
       </svg>
       <div className="flex justify-between mt-1 px-0.5">
         {data.map((d, i) => (
-          <span key={i} className="text-[10px] font-semibold text-white/45">{d.label}</span>
+          <span key={i} className="text-[10px] font-semibold text-gray-900/45">{d.label}</span>
         ))}
       </div>
     </div>
@@ -134,14 +134,14 @@ function TrendChart({ data, height = 160, color = '#8b5cf6' }) {
 
 function ChartCard({ title, sub, children, action, icon }) {
   return (
-    <div className="relative overflow-hidden rounded-2xl bg-[#141422] border border-white/[0.06] p-5 hover:border-[#8b5cf6]/35 transition-all duration-200">
-      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#8b5cf6]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+    <div className="relative overflow-hidden rounded-2xl bg-white border border-gray-200 p-5 hover:border-[#0f766e]/35 transition-all duration-200">
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#0f766e]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       <div className="flex items-start justify-between mb-4">
         <div className="flex items-center gap-3">
           {icon && <span className="icon-tile w-9 h-9 text-base">{icon}</span>}
           <div>
-            <h3 className="text-[15px] font-bold text-white">{title}</h3>
-            {sub && <p className="text-[12px] text-white/55 font-medium mt-0.5">{sub}</p>}
+            <h3 className="text-[15px] font-bold text-gray-900">{title}</h3>
+            {sub && <p className="text-[12px] text-gray-900/55 font-medium mt-0.5">{sub}</p>}
           </div>
         </div>
         {action}
@@ -268,9 +268,9 @@ function StaffDashboard() {
           <button
             key={a.label}
             onClick={() => (window.location.href = a.href)}
-            className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#8b5cf6]/[0.08] border border-[#8b5cf6]/30 text-sm font-semibold text-slate-200 hover:bg-[#8b5cf6]/[0.16] hover:text-white transition-all duration-200"
+            className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#0f766e]/[0.08] border border-[#0f766e]/30 text-sm font-semibold text-gray-800 hover:bg-[#0f766e]/[0.16] hover:text-gray-900 transition-all duration-200"
           >
-            <span className="text-base group-hover:scale-125 group-hover:drop-shadow-[0_0_8px_rgba(139,92,246,0.6)] transition-all duration-200">{a.icon}</span>
+            <span className="text-base group-hover:scale-125 group-hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.6)] transition-all duration-200">{a.icon}</span>
             {a.label}
           </button>
         ))}
@@ -306,13 +306,13 @@ function StaffDashboard() {
 
       {/* Rich Charts Row */}
       <div className="flex items-center justify-between mb-3">
-        <h2 className="font-bold text-white text-[15px]">Trends</h2>
+        <h2 className="font-bold text-gray-900 text-[15px]">Trends</h2>
         <div className="flex gap-1">
           {[['3m', '3M'], ['6m', '6M'], ['12m', '1Y']].map(([v, l]) => (
             <button
               key={v}
               onClick={() => setRange(v)}
-              className={`px-3 py-1 rounded-lg text-xs font-medium border ${range === v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}
+              className={`px-3 py-1 rounded-lg text-xs font-medium border ${range === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}
             >{l}</button>
           ))}
         </div>
@@ -336,13 +336,13 @@ function StaffDashboard() {
       {memberData.some((d) => d.value > 0) && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
           <ChartCard title="New Members" sub="Signups per month">
-            <TrendChart data={memberData} color="#8b5cf6" />
+            <TrendChart data={memberData} color="#0f766e" />
           </ChartCard>
           <ChartCard title="Tickets by Status" sub="All time">
             <div className="flex flex-wrap gap-2 py-4">
               {Object.entries(trends?.ticketsByStatus || {}).map(([s, c]) => (
-                <span key={s} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200">
-                  <span className="capitalize">{s.replace('_', ' ')}</span>: <span className="font-bold text-white">{c}</span>
+                <span key={s} className="px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
+                  <span className="capitalize">{s.replace('_', ' ')}</span>: <span className="font-bold text-gray-900">{c}</span>
                 </span>
               ))}
               {Object.keys(trends?.ticketsByStatus || {}).length === 0 && (
@@ -356,23 +356,23 @@ function StaffDashboard() {
       {/* Activity Feed */}
       <div className="mb-6">
         <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-white text-[15px]">Recent Activity</h2>
+          <h2 className="font-bold text-gray-900 text-[15px]">Recent Activity</h2>
           <button
             onClick={() => (window.location.href = '/settings/audit-logs')}
-            className="text-xs font-semibold text-[#c4b5fd] hover:text-[#c4b5fd]"
+            className="text-xs font-semibold text-teal-700 hover:text-teal-700"
           >
             View all →
           </button>
         </div>
-        <div className="rounded-2xl bg-[#141422] border border-white/[0.06] p-2">
+        <div className="rounded-2xl bg-white border border-gray-200 p-2">
           {activity.length === 0 ? (
             <p className="text-sm text-slate-500 px-4 py-6 text-center">No recent activity yet.</p>
           ) : (
-            <ul className="divide-y divide-white/[0.06]">
+            <ul className="divide-y divide-gray-100">
               {activity.map((item, i) => (
-                <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-white/[0.03] rounded-xl transition-colors">
-                  <span className="w-9 h-9 rounded-xl glass flex items-center justify-center text-base shrink-0 group-hover:shadow-[0_0_16px_rgba(139,92,246,0.25)] group-hover:scale-105 transition-all duration-200">{item.icon || '📝'}</span>
-                  <span className="flex-1 text-[13px] text-slate-200 truncate group-hover:text-white transition-colors">{item.text}</span>
+                <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors">
+                  <span className="w-9 h-9 rounded-xl glass flex items-center justify-center text-base shrink-0 group-hover:shadow-[0_0_16px_rgba(15,118,110,0.25)] group-hover:scale-105 transition-all duration-200">{item.icon || '📝'}</span>
+                  <span className="flex-1 text-[13px] text-gray-800 truncate group-hover:text-gray-900 transition-colors">{item.text}</span>
                   <span className="text-[11px] text-slate-500 shrink-0 font-medium">{timeAgo(item.time)}</span>
                 </li>
               ))}
@@ -383,7 +383,7 @@ function StaffDashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
         <div>
-          <h2 className="font-bold text-white mb-3 text-[15px]">Top pending dues</h2>
+          <h2 className="font-bold text-gray-900 mb-3 text-[15px]">Top pending dues</h2>
           <DataTable
             columns={[
               { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
@@ -400,7 +400,7 @@ function StaffDashboard() {
           />
         </div>
         <div>
-          <h2 className="font-bold text-white mb-3 text-[15px]">Recent invoices</h2>
+          <h2 className="font-bold text-gray-900 mb-3 text-[15px]">Recent invoices</h2>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -477,19 +477,19 @@ function MemberDashboard() {
 
       {contract && (
         <div className="card mb-4">
-          <h2 className="font-semibold text-white mb-2">My contract</h2>
+          <h2 className="font-semibold text-gray-900 mb-2">My contract</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-            <div><p className="text-xs text-slate-400">Unit</p><p className="font-medium">{contract.unitCode || contract.space || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Plan</p><p className="font-medium">{contract.plan || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Start</p><p className="font-medium">{contract.startDate ? String(contract.startDate).slice(0, 10) : '—'}</p></div>
-            <div><p className="text-xs text-slate-400">End</p><p className="font-medium">{contract.endDate ? String(contract.endDate).slice(0, 10) : '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Unit</p><p className="font-medium">{contract.unitCode || contract.space || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Plan</p><p className="font-medium">{contract.plan || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Start</p><p className="font-medium">{contract.startDate ? String(contract.startDate).slice(0, 10) : '—'}</p></div>
+            <div><p className="text-xs text-gray-500">End</p><p className="font-medium">{contract.endDate ? String(contract.endDate).slice(0, 10) : '—'}</p></div>
           </div>
         </div>
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
         <div className="card">
-          <h2 className="font-semibold text-white mb-3">My dues</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">My dues</h2>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -502,7 +502,7 @@ function MemberDashboard() {
           />
         </div>
         <div className="card">
-          <h2 className="font-semibold text-white mb-3">My bookings</h2>
+          <h2 className="font-semibold text-gray-900 mb-3">My bookings</h2>
           <DataTable
             columns={[
               { key: 'title', label: 'Title', render: (r) => r.title || r.room || '—' },

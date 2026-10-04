@@ -56,7 +56,7 @@ const ACTION_TYPES = [
 function ActionEditor({ action, onChange, onRemove }) {
   const set = (k, v) => onChange({ ...action, [k]: v });
   return (
-    <div className="bg-white/[0.03] border border-white/[0.08] rounded-xl p-4 space-y-3">
+    <div className="bg-gray-50 border border-gray-200 rounded-xl p-4 space-y-3">
       <div className="flex items-center gap-3">
         <select className="input flex-1" value={action.type} onChange={(e) => set('type', e.target.value)}>
           {ACTION_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
@@ -159,18 +159,18 @@ function RuleModal({ rule, onClose, onSaved }) {
           ))}
         </div>
       )}
-      <p className="text-xs text-slate-500 mb-2">Available variables: <code className="text-slate-400">{meta.vars}</code></p>
+      <p className="text-xs text-slate-500 mb-2">Available variables: <code className="text-gray-500">{meta.vars}</code></p>
       <div className="space-y-3 mb-3">
-        <p className="text-sm font-semibold text-white">Then do (actions)</p>
+        <p className="text-sm font-semibold text-gray-900">Then do (actions)</p>
         {actions.map((a, i) => (
           <ActionEditor key={i} action={a}
             onChange={(na) => setActions(actions.map((x, j) => (j === i ? na : x)))}
             onRemove={() => setActions(actions.filter((_, j) => j !== i))} />
         ))}
       </div>
-      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] mb-4">+ Add action</button>
-      <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
-        <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="accent-[#8b5cf6]" />
+      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-teal-700 hover:text-teal-700 mb-4">+ Add action</button>
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="accent-[#0f766e]" />
         Rule active
       </label>
       <div className="flex justify-end gap-2">
@@ -238,16 +238,16 @@ export default function AutomationPage() {
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <div className="flex-1 min-w-[200px]">
-                <p className="text-white font-semibold">{r.name}</p>
-                <p className="text-xs text-slate-400 mt-1">
+                <p className="text-gray-900 font-semibold">{r.name}</p>
+                <p className="text-xs text-gray-500 mt-1">
                   <Badge tone={r.isActive ? 'emerald' : 'slate'}>{TRIGGER_META[r.trigger]?.label || r.trigger}</Badge>
                   <span className="ml-2">{(r.actions || []).length} action{(r.actions || []).length !== 1 ? 's' : ''}</span>
                 </p>
               </div>
-              <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-[#c4b5fd] border border-[#8b5cf6]/30 rounded-lg px-3 py-1.5 hover:bg-[#8b5cf6]/10">
+              <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-teal-700 border border-[#0f766e]/30 rounded-lg px-3 py-1.5 hover:bg-[#0f766e]/10">
                 {testing === r.id ? '…' : '🧪 Test'}
               </button>
-              <button onClick={() => setModal(r)} className="text-xs text-slate-300 border border-white/10 rounded-lg px-3 py-1.5 hover:bg-white/5">Edit</button>
+              <button onClick={() => setModal(r)} className="text-xs text-gray-600 border border-gray-200 rounded-lg px-3 py-1.5 hover:bg-gray-100">Edit</button>
               <button onClick={() => del(r.id)} className="text-xs text-red-300 border border-red-500/30 rounded-lg px-3 py-1.5 hover:bg-red-500/10">Delete</button>
             </div>
           ))}
@@ -256,27 +256,27 @@ export default function AutomationPage() {
 
       {testResult && (
         <div className="card-premium p-5 mb-8">
-          <h2 className="text-white font-bold mb-3">🧪 Dry-run: {testResult.rule.name}</h2>
-          <p className="text-sm text-slate-400 mb-3">
+          <h2 className="text-gray-900 font-bold mb-3">🧪 Dry-run: {testResult.rule.name}</h2>
+          <p className="text-sm text-gray-500 mb-3">
             Conditions matched: <Badge tone={testResult.conditionsMatched ? 'emerald' : 'red'}>{testResult.conditionsMatched ? 'Yes' : 'No'}</Badge>
           </p>
           {testResult.actions.map((a, i) => (
-            <p key={i} className="text-sm text-slate-300 mb-1">• {a.summary} {!a.supported && <span className="text-red-300">(unsupported)</span>}</p>
+            <p key={i} className="text-sm text-gray-600 mb-1">• {a.summary} {!a.supported && <span className="text-red-300">(unsupported)</span>}</p>
           ))}
           <p className="text-xs text-slate-500 mt-3">{testResult.note}</p>
-          <button onClick={() => setTestResult(null)} className="text-xs text-slate-400 underline mt-2">Close</button>
+          <button onClick={() => setTestResult(null)} className="text-xs text-gray-500 underline mt-2">Close</button>
         </div>
       )}
 
       <div className="card-premium p-5">
-        <h2 className="text-white font-bold mb-4">Recent runs</h2>
+        <h2 className="text-gray-900 font-bold mb-4">Recent runs</h2>
         {runs.length === 0 ? (
           <p className="text-slate-500 text-sm">No runs yet.</p>
         ) : (
           <div className="space-y-2">
             {runs.map((rn) => (
-              <div key={rn.id} className="flex items-center justify-between text-sm bg-white/[0.03] rounded-lg px-3 py-2">
-                <span className="text-slate-200">{rn.rule?.name || 'Rule'}</span>
+              <div key={rn.id} className="flex items-center justify-between text-sm bg-gray-50 rounded-lg px-3 py-2">
+                <span className="text-gray-800">{rn.rule?.name || 'Rule'}</span>
                 <span className="text-xs text-slate-500">{rn.trigger} • {new Date(rn.createdAt).toLocaleString()}</span>
               </div>
             ))}

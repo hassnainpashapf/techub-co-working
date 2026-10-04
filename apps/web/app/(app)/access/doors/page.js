@@ -57,19 +57,19 @@ function HardwareCard() {
   };
 
   return (
-    <div className="mb-6 rounded-xl border border-white/10 bg-gradient-to-br from-[#1a1a2e] to-[#12121f] p-5">
-      <h3 className="text-sm font-bold text-white">🔌 Hardware Integration</h3>
-      <p className="mt-1 text-xs text-white/50">Asal door controllers ke liye device API key aur unlock webhook.</p>
+    <div className="mb-6 rounded-xl border border-gray-200 bg-gradient-to-br from-[#1a1a2e] to-[#12121f] p-5">
+      <h3 className="text-sm font-bold text-gray-900">🔌 Hardware Integration</h3>
+      <p className="mt-1 text-xs text-gray-900/50">Asal door controllers ke liye device API key aur unlock webhook.</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div>
-          <div className="text-xs font-semibold text-white/70">Device API Key {dk.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
+          <div className="text-xs font-semibold text-gray-600">Device API Key {dk.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
           {newKey && (
             <div className="mt-2 rounded-lg bg-amber-500/10 border border-amber-500/30 p-3">
               <div className="text-xs text-amber-200 break-all font-mono">{newKey}</div>
             </div>
           )}
           <div className="mt-2 flex gap-2">
-            <button onClick={genKey} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+            <button onClick={genKey} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-50">
               {busy ? '…' : 'Generate Key'}
             </button>
             {dk.configured && (
@@ -80,22 +80,22 @@ function HardwareCard() {
           </div>
         </div>
         <div>
-          <div className="text-xs font-semibold text-white/70">Unlock Webhook {wh.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
+          <div className="text-xs font-semibold text-gray-600">Unlock Webhook {wh.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
           <div className="mt-2 flex gap-2">
             <input
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
               placeholder="https://device.local/unlock"
-              className="flex-1 rounded-lg bg-[#141422] border border-white/10 px-3 py-1.5 text-xs text-white"
+              className="flex-1 rounded-lg bg-white border border-gray-200 px-3 py-1.5 text-xs text-gray-900"
             />
-            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-50">
               Save
             </button>
           </div>
-          <p className="mt-1 text-[11px] text-white/40">Khali save karein to webhook remove ho jayega.</p>
+          <p className="mt-1 text-[11px] text-gray-900/40">Khali save karein to webhook remove ho jayega.</p>
         </div>
       </div>
-      {msg && <p className="mt-3 text-xs text-[#c4b5fd]">{msg}</p>}
+      {msg && <p className="mt-3 text-xs text-teal-700">{msg}</p>}
     </div>
   );
 }
@@ -172,8 +172,8 @@ export default function DoorsPage() {
       key: 'type', label: 'Type',
       render: (d) => <Badge tone="blue">{(TYPES.find((t) => t.value === d.type) || {}).label || d.type}</Badge>,
     },
-    { key: 'location', label: 'Location', render: (d) => d.location || <span className="text-white/40">—</span> },
-    { key: 'deviceId', label: 'Device ID', render: (d) => d.deviceId || <span className="text-white/40">—</span> },
+    { key: 'location', label: 'Location', render: (d) => d.location || <span className="text-gray-900/40">—</span> },
+    { key: 'deviceId', label: 'Device ID', render: (d) => d.deviceId || <span className="text-gray-900/40">—</span> },
     {
       key: 'isActive', label: 'Status',
       render: (d) => d.isActive
@@ -187,7 +187,7 @@ export default function DoorsPage() {
           <button onClick={() => toggleActive(d)} className="text-xs font-semibold text-amber-300 hover:text-amber-200">
             {d.isActive ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={() => openEdit(d)} className="text-xs font-semibold text-[#c4b5fd] hover:text-[#ddd6fe]">Edit</button>
+          <button onClick={() => openEdit(d)} className="text-xs font-semibold text-teal-700 hover:text-teal-700">Edit</button>
           <button onClick={() => remove(d)} className="text-xs font-semibold text-rose-300 hover:text-rose-200">Delete</button>
         </div>
       ),
@@ -202,7 +202,7 @@ export default function DoorsPage() {
         actions={(
           <button
             onClick={openAdd}
-            className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] hover:opacity-90"
+            className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 shadow-[0_0_16px_rgba(15,118,110,0.4)] hover:opacity-90"
           >
             + Add Door
           </button>
@@ -220,14 +220,14 @@ export default function DoorsPage() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Main Entrance"
-                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-white border border-gray-200 px-3 py-2 text-gray-900"
               />
             </Field>
             <Field label="Type">
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-white border border-gray-200 px-3 py-2 text-gray-900"
               >
                 {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
@@ -237,7 +237,7 @@ export default function DoorsPage() {
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="Ground floor, left corridor"
-                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-white border border-gray-200 px-3 py-2 text-gray-900"
               />
             </Field>
             <Field label="Device ID (hardware integration, optional)">
@@ -245,25 +245,25 @@ export default function DoorsPage() {
                 value={form.deviceId}
                 onChange={(e) => setForm({ ...form, deviceId: e.target.value })}
                 placeholder="e.g. ACS-CTRL-01"
-                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-white border border-gray-200 px-3 py-2 text-gray-900"
               />
             </Field>
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm text-gray-600">
               <input
                 type="checkbox"
                 checked={form.isActive}
                 onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                className="h-4 w-4 accent-[#8b5cf6]"
+                className="h-4 w-4 accent-[#0f766e]"
               />
               Active (door usable for access)
             </label>
             <div className="flex justify-end gap-2 pt-2">
-              <button type="button" onClick={() => setModal(null)} className="rounded-lg border border-white/10 px-4 py-2 text-sm text-white/70 hover:bg-white/5">
+              <button type="button" onClick={() => setModal(null)} className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">
                 Cancel
               </button>
               <button
                 type="submit" disabled={saving}
-                className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900 disabled:opacity-50"
               >
                 {saving ? 'Saving…' : modal.mode === 'add' ? 'Add Door' : 'Save Changes'}
               </button>

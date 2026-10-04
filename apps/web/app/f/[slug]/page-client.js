@@ -67,7 +67,7 @@ function formLogic_evaluateVisibility(fields, answers) {
 }
 
 function FieldInput({ field, value, onChange, error, uploadInfo }) {
-  const common = 'w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-white placeholder-slate-500 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/20 transition';
+  const common = 'w-full rounded-xl bg-gray-100 border border-gray-200 px-4 py-3 text-gray-900 placeholder-gray-400 outline-none focus:border-indigo-400/60 focus:ring-2 focus:ring-indigo-500/20 transition';
   const errCls = error ? 'border-red-400/60' : '';
   const opts = Array.isArray(field.options) ? field.options : [];
 
@@ -84,7 +84,7 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
       return <input type="date" className={`${common} ${errCls}`} value={value || ''} onChange={(e) => onChange(e.target.value)} />;
     case 'select':
       return (
-        <select className={`${common} ${errCls} [&>option]:bg-slate-900`} value={value || ''} onChange={(e) => onChange(e.target.value)}>
+        <select className={`${common} ${errCls} [&>option]:bg-white`} value={value || ''} onChange={(e) => onChange(e.target.value)}>
           <option value="">— Chunain —</option>
           {opts.map((o) => <option key={o} value={o}>{o}</option>)}
         </select>
@@ -93,9 +93,9 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
       return (
         <div className="space-y-2">
           {opts.map((o) => (
-            <label key={o} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition ${value === o ? 'border-indigo-400/60 bg-indigo-500/10' : 'border-white/10 bg-white/5 hover:border-white/20'}`}>
+            <label key={o} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition ${value === o ? 'border-indigo-400/60 bg-indigo-500/10' : 'border-gray-200 bg-gray-100 hover:border-gray-300'}`}>
               <input type="radio" name={field.id} checked={value === o} onChange={() => onChange(o)} className="accent-indigo-500" />
-              <span className="text-slate-200">{o}</span>
+              <span className="text-gray-800">{o}</span>
             </label>
           ))}
         </div>
@@ -107,9 +107,9 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
       return (
         <div className="space-y-2">
           {opts.map((o) => (
-            <label key={o} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition ${arr.includes(o) ? 'border-indigo-400/60 bg-indigo-500/10' : 'border-white/10 bg-white/5 hover:border-white/20'}`}>
+            <label key={o} className={`flex items-center gap-3 rounded-xl border px-4 py-3 cursor-pointer transition ${arr.includes(o) ? 'border-indigo-400/60 bg-indigo-500/10' : 'border-gray-200 bg-gray-100 hover:border-gray-300'}`}>
               <input type="checkbox" checked={arr.includes(o)} onChange={() => toggle(o)} className="accent-indigo-500" />
-              <span className="text-slate-200">{o}</span>
+              <span className="text-gray-800">{o}</span>
             </label>
           ))}
         </div>
@@ -121,7 +121,7 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
         <div className="flex gap-2">
           {[1, 2, 3, 4, 5].map((s) => (
             <button key={s} type="button" onClick={() => onChange(s)}
-              className={`text-3xl transition ${s <= n ? 'text-amber-400' : 'text-slate-600 hover:text-slate-400'}`} aria-label={`${s} star`}>★</button>
+              className={`text-3xl transition ${s <= n ? 'text-amber-400' : 'text-gray-500 hover:text-gray-500'}`} aria-label={`${s} star`}>★</button>
           ))}
         </div>
       );
@@ -130,7 +130,7 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
       const files = Array.isArray(value) ? value : [];
       return (
         <div>
-          <label className="block cursor-pointer rounded-xl border border-dashed border-white/20 bg-white/5 px-4 py-6 text-center text-slate-300 hover:border-indigo-400/60 transition">
+          <label className="block cursor-pointer rounded-xl border border-dashed border-gray-300 bg-gray-100 px-4 py-6 text-center text-gray-600 hover:border-indigo-400/60 transition">
             <input type="file" multiple className="hidden" accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.txt"
               onChange={async (e) => {
                 const picked = Array.from(e.target.files || []).slice(0, 3);
@@ -162,7 +162,7 @@ function FieldInput({ field, value, onChange, error, uploadInfo }) {
           {files.length > 0 && (
             <ul className="mt-2 space-y-1">
               {files.map((f, i) => (
-                <li key={i} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2 text-sm text-slate-300">
+                <li key={i} className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm text-gray-600">
                   <span>📄 {f.name}</span>
                   <button type="button" className="text-red-400 hover:text-red-300" onClick={() => onChange(files.filter((_, j) => j !== i))}>✕</button>
                 </li>
@@ -263,21 +263,21 @@ export default function PublicFormPage() {
   };
 
   if (state === 'loading') {
-    return <div className="min-h-screen flex items-center justify-center bg-[#0b0b14] text-slate-300">⏳ Form load ho raha hai…</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] text-gray-600">⏳ Form load ho raha hai…</div>;
   }
   if (state === 'notfound') {
-    return <div className="min-h-screen flex items-center justify-center bg-[#0b0b14]"><div className="text-center"><div className="text-5xl mb-3">📝</div><p className="text-slate-300">Form nahi mila.</p></div></div>;
+    return <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7]"><div className="text-center"><div className="text-5xl mb-3">📝</div><p className="text-gray-600">Form nahi mila.</p></div></div>;
   }
   if (state === 'error') {
-    return <div className="min-h-screen flex items-center justify-center bg-[#0b0b14] text-slate-300">⚠️ Filhal form available nahi. Baad me koshish karein.</div>;
+    return <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] text-gray-600">⚠️ Filhal form available nahi. Baad me koshish karein.</div>;
   }
   if (state === 'done') {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0b0b14] p-6">
-        <div className="max-w-md w-full rounded-2xl border border-white/10 bg-gradient-to-br from-[#17171f] to-[#101016] p-8 text-center shadow-2xl">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] p-6">
+        <div className="max-w-md w-full rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-2xl">
           <div className="text-6xl mb-4">✅</div>
-          <h1 className="text-xl font-bold text-white mb-2">Ho gaya!</h1>
-          <p className="text-slate-300">{successMsg || 'Shukriya! Aapka response mil gaya.'}</p>
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Ho gaya!</h1>
+          <p className="text-gray-600">{successMsg || 'Shukriya! Aapka response mil gaya.'}</p>
           {tenantName && <p className="mt-4 text-xs text-slate-500">— {tenantName}</p>}
         </div>
       </div>
@@ -285,12 +285,12 @@ export default function PublicFormPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0b0b14] py-10 px-4">
+    <div className="min-h-screen bg-[#f4f5f7] py-10 px-4">
       <div className="max-w-2xl mx-auto">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#17171f] to-[#101016] p-8 shadow-2xl">
+        <div className="rounded-2xl border border-gray-200 bg-white p-8 shadow-2xl">
           {tenantName && <p className="text-xs uppercase tracking-widest text-indigo-300/80 mb-2">{tenantName}</p>}
-          <h1 className="text-2xl font-bold text-white mb-2">{form.title}</h1>
-          {form.description && <p className="text-slate-400 mb-6 whitespace-pre-line">{form.description}</p>}
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">{form.title}</h1>
+          {form.description && <p className="text-gray-500 mb-6 whitespace-pre-line">{form.description}</p>}
           <form onSubmit={submit} className="space-y-5">
             {/* honeypot */}
             <input type="text" tabIndex={-1} autoComplete="off" className="hidden" aria-hidden="true"
@@ -300,7 +300,7 @@ export default function PublicFormPage() {
               if (!visible) return null;
               return (
                 <div key={f.id} data-field-error={errors[f.id] ? '1' : undefined}>
-                  <label className="block text-sm font-medium text-slate-200 mb-1.5">
+                  <label className="block text-sm font-medium text-gray-800 mb-1.5">
                     {f.label} {f.required && <span className="text-red-400">*</span>}
                   </label>
                   <FieldInput field={f} value={answers[f.id]} onChange={(v) => setVal(f.id, v)} error={errors[f.id]} uploadInfo={{ slug }} />
@@ -310,12 +310,12 @@ export default function PublicFormPage() {
             })}
             {submitError && <p className="rounded-xl bg-red-500/10 border border-red-400/30 px-4 py-3 text-sm text-red-300">{submitError}</p>}
             <button type="submit" disabled={submitting}
-              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-[#7c3aed] px-6 py-3.5 font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-500 hover:to-[#8b5cf6] disabled:opacity-50 transition">
+              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-[#0f766e] px-6 py-3.5 font-semibold text-gray-900 shadow-lg shadow-indigo-500/25 hover:from-indigo-500 hover:to-[#0f766e] disabled:opacity-50 transition">
               {submitting ? '⏳ Bhej rahe hain…' : (form.submitButtonText || 'Submit')}
             </button>
           </form>
         </div>
-        {tenantName && <p className="mt-4 text-center text-xs text-slate-600">Powered by {tenantName}</p>}
+        {tenantName && <p className="mt-4 text-center text-xs text-gray-500">Powered by {tenantName}</p>}
       </div>
     </div>
   );

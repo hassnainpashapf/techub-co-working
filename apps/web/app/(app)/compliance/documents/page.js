@@ -37,7 +37,7 @@ function DocForm({ members, onSave, saving }) {
     <form onSubmit={submit}>
       <Field label="Title *"><input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} placeholder="e.g. Trade License 2026" required /></Field>
       <Field label="File *">
-        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-violet-500/20 file:text-violet-200 file:text-xs"
+        <input type="file" className="input file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-teal-600/20 file:text-violet-200 file:text-xs"
           onChange={(e) => setFile(e.target.files?.[0] || null)} required
           accept=".pdf,.jpg,.jpeg,.png,.gif,.webp,.doc,.docx,.txt" />
       </Field>
@@ -162,13 +162,13 @@ export default function ComplianceDocumentsPage() {
 
       {alerts.length > 0 && (
         <div className="card-premium p-5 mb-6 border-l-4 border-l-amber-400">
-          <h2 className="text-white font-bold mb-3">⚠️ Expiring in 30 days</h2>
+          <h2 className="text-gray-900 font-bold mb-3">⚠️ Expiring in 30 days</h2>
           <div className="space-y-2">
             {alerts.map((d) => (
-              <div key={d.id} className="flex items-center justify-between bg-white/[0.03] rounded-xl px-4 py-2.5">
+              <div key={d.id} className="flex items-center justify-between bg-gray-50 rounded-xl px-4 py-2.5">
                 <div>
-                  <p className="text-white text-sm font-medium">{d.title}</p>
-                  <p className="text-slate-400 text-xs">{d.member?.name || 'Space doc'} • expires {fmtDate(d.expiresAt)}</p>
+                  <p className="text-gray-900 text-sm font-medium">{d.title}</p>
+                  <p className="text-gray-500 text-xs">{d.member?.name || 'Space doc'} • expires {fmtDate(d.expiresAt)}</p>
                 </div>
                 <Badge tone={STATUS_TONE[d.expiryStatus]}>{daysText(d.daysLeft, d.expiryStatus)}</Badge>
               </div>
@@ -178,16 +178,16 @@ export default function ComplianceDocumentsPage() {
       )}
 
       <div className="card-premium p-5">
-        <h2 className="text-white font-bold mb-4">All tracked documents</h2>
+        <h2 className="text-gray-900 font-bold mb-4">All tracked documents</h2>
         {loading ? <div className="flex justify-center py-10"><Spinner /></div> : docs.length === 0 ? (
-          <p className="text-slate-400 text-sm">No documents with expiry tracking yet. Click "Add document" to start.</p>
+          <p className="text-gray-500 text-sm">No documents with expiry tracking yet. Click "Add document" to start.</p>
         ) : (
           <div className="space-y-2">
             {docs.map((d) => (
-              <div key={d.id} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+              <div key={d.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                 <div className="min-w-0">
-                  <p className="text-white text-sm font-medium truncate">{d.title}</p>
-                  <p className="text-slate-400 text-xs capitalize">
+                  <p className="text-gray-900 text-sm font-medium truncate">{d.title}</p>
+                  <p className="text-gray-500 text-xs capitalize">
                     {String(d.category || '').replace('_', ' ')} • {d.member?.name || 'Space doc'} • expires {fmtDate(d.expiresAt)}
                   </p>
                 </div>

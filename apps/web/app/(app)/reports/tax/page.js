@@ -22,7 +22,7 @@ function BarChart({ data, height = 200 }) {
           </filter>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
         ))}
         {data.map((d, i) => {
           const h = Math.max((d.value / max) * (height - 30), 3);
@@ -34,7 +34,7 @@ function BarChart({ data, height = 200 }) {
                 <animate attributeName="y" from={height - 20} to={height - 20 - h} dur="0.8s" fill="freeze" />
                 <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
               </rect>
-              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
+              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
             </g>
           );
         })}
@@ -100,11 +100,11 @@ export default function TaxReportsPage() {
 
       <div className="flex flex-wrap items-end gap-3 mb-5">
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">From</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1">To</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1">To</label>
           <input type="date" className="input" value={to} onChange={(e) => setTo(e.target.value)} />
         </div>
         <button className="btn-primary" onClick={load}>Apply</button>
@@ -123,8 +123,8 @@ export default function TaxReportsPage() {
           </div>
 
           <div className="card-premium p-6">
-            <h2 className="text-lg font-bold text-white mb-1">Monthly Tax</h2>
-            <p className="text-xs text-slate-400 mb-4">Tax amount per month in the selected period</p>
+            <h2 className="text-lg font-bold text-gray-900 mb-1">Monthly Tax</h2>
+            <p className="text-xs text-gray-500 mb-4">Tax amount per month in the selected period</p>
             {data.byMonth.length === 0 ? (
               <EmptyState title="No data" hint="No invoices found in this period." />
             ) : (

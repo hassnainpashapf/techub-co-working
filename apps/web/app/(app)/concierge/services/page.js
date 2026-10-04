@@ -66,38 +66,38 @@ export default function ConciergeServicesPage() {
 
       <div className="flex flex-wrap gap-3 items-center">
         <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search services..."
-          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200 w-56" />
+          className="px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800 w-56" />
         <select value={catF} onChange={(e) => setCatF(e.target.value)}
-          className="px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200">
+          className="px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
           <option value="">All categories</option>
           {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
         </select>
         <div className="flex-1" />
         <button onClick={() => setSvcOpen('new')}
-          className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">+ Nayi Service</button>
+          className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">+ Nayi Service</button>
       </div>
 
       {filtered.length === 0 ? <EmptyState title="Koi service nahi" /> : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filtered.map((s) => (
-            <div key={s.id} className="rounded-xl bg-white/5 border border-white/10 p-4 space-y-2">
+            <div key={s.id} className="rounded-xl bg-gray-100 border border-gray-200 p-4 space-y-2">
               <div className="flex items-start justify-between gap-2">
-                <div className="font-semibold text-slate-100">{s.name}</div>
+                <div className="font-semibold text-gray-900">{s.name}</div>
                 <Badge tone={s.isActive ? 'green' : 'red'}>{s.isActive ? 'Active' : 'Off'}</Badge>
               </div>
               <Badge tone={catTone(s.category)}>{s.category}</Badge>
-              {s.description && <div className="text-sm text-slate-400 line-clamp-2">{s.description}</div>}
+              {s.description && <div className="text-sm text-gray-500 line-clamp-2">{s.description}</div>}
               <div className="flex items-center justify-between text-sm">
-                <span className="text-slate-300 font-medium">{s.basePrice != null ? `PKR ${s.basePrice}` : 'Price on request'}</span>
+                <span className="text-gray-600 font-medium">{s.basePrice != null ? `PKR ${s.basePrice}` : 'Price on request'}</span>
                 <span className="text-slate-500 text-xs">{s.provider?.name || 'No provider'}</span>
               </div>
               <div className="flex gap-2 pt-1">
-                <button onClick={() => setSvcOpen(s)} className="text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-slate-200">Edit</button>
+                <button onClick={() => setSvcOpen(s)} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-white/15 text-gray-800">Edit</button>
                 <button onClick={async () => {
                   if (!confirm(`${s.isActive ? 'Deactivate' : 'Activate'} karna hai?`)) return;
                   try { await api.patch(`/api/concierge-services/${s.id}`, { isActive: !s.isActive }); load(); }
                   catch (e) { setErr(e.message || 'Update nahi ho saka'); }
-                }} className="text-xs px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/15 text-slate-200">
+                }} className="text-xs px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-white/15 text-gray-800">
                   {s.isActive ? 'Deactivate' : 'Activate'}
                 </button>
               </div>
@@ -138,23 +138,23 @@ function ServiceModal({ service, providers, onClose, onSaved, onError }) {
   return (
     <Modal onClose={onClose} title={service ? 'Service Edit karein' : 'Nayi Service'}>
       <div className="space-y-3">
-        <Field label="Name"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200" /></Field>
+        <Field label="Name"><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" /></Field>
         <Field label="Category">
-          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200">
+          <select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
             {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
           </select>
         </Field>
-        <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200" /></Field>
-        <Field label="Base price (PKR, khali = on request)"><input type="number" min="0" value={form.basePrice} onChange={(e) => setForm({ ...form, basePrice: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200" /></Field>
+        <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" /></Field>
+        <Field label="Base price (PKR, khali = on request)"><input type="number" min="0" value={form.basePrice} onChange={(e) => setForm({ ...form, basePrice: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800" /></Field>
         <Field label="Provider">
-          <select value={form.providerId} onChange={(e) => setForm({ ...form, providerId: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200">
+          <select value={form.providerId} onChange={(e) => setForm({ ...form, providerId: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
             <option value="">No provider</option>
             {providers.map((p) => <option key={p.id} value={p.id}>{p.name}</option>)}
           </select>
         </Field>
         <div className="flex justify-end gap-2 pt-2">
-          <button onClick={onClose} className="px-4 py-2 rounded-lg bg-white/10 text-sm text-slate-200">Cancel</button>
-          <button onClick={save} className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">Save</button>
+          <button onClick={onClose} className="px-4 py-2 rounded-lg bg-gray-100 text-sm text-gray-800">Cancel</button>
+          <button onClick={save} className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">Save</button>
         </div>
       </div>
     </Modal>

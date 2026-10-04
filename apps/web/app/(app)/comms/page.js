@@ -22,10 +22,10 @@ function ChannelBars({ data }) {
         <div key={d.channel}>
           <div className="flex items-center justify-between text-sm mb-1">
             <span className="font-medium">{CHANNEL_LABELS[d.channel] || d.channel}</span>
-            <span className="text-slate-400">{d.count}</span>
+            <span className="text-gray-500">{d.count}</span>
           </div>
-          <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500" style={{ width: `${Math.round((d.count / max) * 100)}%` }} />
+          <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600" style={{ width: `${Math.round((d.count / max) * 100)}%` }} />
           </div>
         </div>
       ))}
@@ -91,7 +91,7 @@ export default function CommsDashboardPage() {
       </div>
 
       <div className="grid lg:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
           <h3 className="font-semibold mb-4">Channel Breakdown (30 din)</h3>
           <ChannelBars data={s.byChannel} />
           {s.failedCount > 0 && (
@@ -99,14 +99,14 @@ export default function CommsDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
           <h3 className="font-semibold mb-4">Top Active Members</h3>
           {!s.topMembers || !s.topMembers.length ? (
             <EmptyState title="Abhi koi activity nahi" />
           ) : (
             <div className="space-y-2">
               {s.topMembers.map((m) => (
-                <div key={m.memberId} className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2">
+                <div key={m.memberId} className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
                   <div className="min-w-0">
                     <div className="text-sm font-medium truncate">{m.name}</div>
                     {m.email && <div className="text-xs text-slate-500 truncate">{m.email}</div>}
@@ -119,7 +119,7 @@ export default function CommsDashboardPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-5">
+      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
         <h3 className="font-semibold mb-4">Quick Links</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
@@ -128,7 +128,7 @@ export default function CommsDashboardPage() {
             { href: '/comms/templates', label: '📝 Templates', desc: 'Cross-channel templates' },
             { href: '/members', label: '👥 Members', desc: 'Comms timeline per member' },
           ].map((l) => (
-            <Link key={l.href} href={l.href} className="rounded-xl border border-white/5 bg-white/[0.02] p-4 hover:border-[#8b5cf6]/40 hover:bg-[#8b5cf6]/5 transition-colors">
+            <Link key={l.href} href={l.href} className="rounded-xl border border-gray-200 bg-gray-50 p-4 hover:border-[#0f766e]/40 hover:bg-[#0f766e]/5 transition-colors">
               <div className="font-medium">{l.label}</div>
               <div className="text-xs text-slate-500 mt-1">{l.desc}</div>
             </Link>

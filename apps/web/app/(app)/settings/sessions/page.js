@@ -96,23 +96,23 @@ export default function SessionsPage() {
             <div
               key={s.id}
               className={`rounded-2xl border p-5 bg-gradient-to-br from-[#151527] to-[#0e0e1c] ${
-                s.current ? 'border-[#8b5cf6]/50 shadow-[0_0_24px_rgba(139,92,246,0.25)]' : 'border-white/10'
+                s.current ? 'border-[#0f766e]/50 shadow-[0_0_24px_rgba(15,118,110,0.25)]' : 'border-gray-200'
               }`}
             >
               <div className="flex items-start justify-between mb-3">
                 <div className="text-3xl">💻</div>
                 {s.current ? <Badge tone="blue">● Current device</Badge> : <Badge tone="slate">Active</Badge>}
               </div>
-              <div className="font-semibold text-white mb-1">{s.deviceName || 'Unknown device'}</div>
-              <div className="text-sm text-slate-400 space-y-1">
-                <div>🌐 IP: <span className="text-slate-200 font-mono">{s.ipAddress || '—'}</span></div>
-                <div>🕒 Last active: <span className="text-slate-200">{timeAgo(s.lastActiveAt)}</span></div>
-                <div>📅 Login: <span className="text-slate-200">{new Date(s.createdAt).toLocaleString()}</span></div>
+              <div className="font-semibold text-gray-900 mb-1">{s.deviceName || 'Unknown device'}</div>
+              <div className="text-sm text-gray-500 space-y-1">
+                <div>🌐 IP: <span className="text-gray-800 font-mono">{s.ipAddress || '—'}</span></div>
+                <div>🕒 Last active: <span className="text-gray-800">{timeAgo(s.lastActiveAt)}</span></div>
+                <div>📅 Login: <span className="text-gray-800">{new Date(s.createdAt).toLocaleString()}</span></div>
               </div>
               <button
                 onClick={() => revokeOne(s.id, s.current)}
                 disabled={revoking === s.id}
-                className="mt-4 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-white/5 text-red-300 border border-white/10 hover:bg-red-500/15 hover:border-red-500/30 disabled:opacity-40 transition"
+                className="mt-4 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-gray-100 text-red-300 border border-gray-200 hover:bg-red-500/15 hover:border-red-500/30 disabled:opacity-40 transition"
               >
                 {revoking === s.id ? 'Revoke ho raha…' : s.current ? 'Is device se logout' : 'Revoke session'}
               </button>

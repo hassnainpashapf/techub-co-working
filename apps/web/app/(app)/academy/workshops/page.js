@@ -163,7 +163,7 @@ export default function WorkshopsPage() {
         <div className="flex gap-2">
           {[['upcoming', 'Upcoming'], ['mine', 'My bookings']].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === k ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === k ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
               {l}
             </button>
           ))}
@@ -177,14 +177,14 @@ export default function WorkshopsPage() {
             <div key={w.id} className="card">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <h3 className="font-semibold text-white">{w.title}</h3>
-                  <p className="text-sm text-slate-300">{fmtDT(w.scheduledAt)} · {w.durationMin} min</p>
+                  <h3 className="font-semibold text-gray-900">{w.title}</h3>
+                  <p className="text-sm text-gray-600">{fmtDT(w.scheduledAt)} · {w.durationMin} min</p>
                 </div>
                 <Badge tone={STATUS_TONE[w.status]}>{w.status}</Badge>
               </div>
-              {w.description && <p className="text-sm text-slate-200 mt-2 line-clamp-2">{w.description}</p>}
+              {w.description && <p className="text-sm text-gray-800 mt-2 line-clamp-2">{w.description}</p>}
               <div className="flex items-center justify-between mt-3">
-                <span className="text-xs text-slate-200">
+                <span className="text-xs text-gray-800">
                   {w.seatsLeft === null ? 'Unlimited seats' : `${w.seatsLeft} / ${w.capacity} seats left`}
                 </span>
                 <div className="flex gap-2">
@@ -207,8 +207,8 @@ export default function WorkshopsPage() {
           {mine.map((b) => (
             <div key={b.id} className="card flex items-center justify-between">
               <div>
-                <h3 className="font-semibold text-white">{b.workshop?.title}</h3>
-                <p className="text-sm text-slate-300">{fmtDT(b.workshop?.scheduledAt)}</p>
+                <h3 className="font-semibold text-gray-900">{b.workshop?.title}</h3>
+                <p className="text-sm text-gray-600">{fmtDT(b.workshop?.scheduledAt)}</p>
               </div>
               <div className="flex items-center gap-2">
                 <Badge tone={b.status === 'attended' ? 'green' : 'blue'}>{b.status}</Badge>
@@ -240,9 +240,9 @@ export default function WorkshopsPage() {
               <tbody>
                 {all.map((w) => (
                   <tr key={w.id}>
-                    <td className="font-medium text-white">{w.title}</td>
-                    <td className="text-sm text-slate-300">{fmtDT(w.scheduledAt)} · {w.durationMin}m</td>
-                    <td className="text-sm text-slate-200">{w.bookedSeats}{w.capacity != null ? `/${w.capacity}` : ''}</td>
+                    <td className="font-medium text-gray-900">{w.title}</td>
+                    <td className="text-sm text-gray-600">{fmtDT(w.scheduledAt)} · {w.durationMin}m</td>
+                    <td className="text-sm text-gray-800">{w.bookedSeats}{w.capacity != null ? `/${w.capacity}` : ''}</td>
                     <td><Badge tone={STATUS_TONE[w.status]}>{w.status}</Badge></td>
                     <td className="text-right whitespace-nowrap">
                       <button className="btn btn-secondary btn-sm mr-2" onClick={() => openDetail(w.id)}>Attendees</button>
@@ -264,12 +264,12 @@ export default function WorkshopsPage() {
 
       <Modal open={!!detail} onClose={() => { setDetail(null); setBookings([]); }} title={detail?.title || 'Attendees'}>
         <div className="space-y-2">
-          <p className="text-sm text-slate-300">{detail && fmtDT(detail.scheduledAt)} · {detail?.bookedSeats}{detail?.capacity != null ? `/${detail.capacity}` : ''} booked</p>
+          <p className="text-sm text-gray-600">{detail && fmtDT(detail.scheduledAt)} · {detail?.bookedSeats}{detail?.capacity != null ? `/${detail.capacity}` : ''} booked</p>
           {bookings.map((b) => (
-            <div key={b.id} className="flex items-center justify-between rounded-lg bg-white/5 px-3 py-2">
+            <div key={b.id} className="flex items-center justify-between rounded-lg bg-gray-100 px-3 py-2">
               <div>
-                <div className="text-sm font-medium text-white">{b.member?.name || b.memberId}</div>
-                <div className="text-xs text-slate-300">{b.member?.email}</div>
+                <div className="text-sm font-medium text-gray-900">{b.member?.name || b.memberId}</div>
+                <div className="text-xs text-gray-600">{b.member?.email}</div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge tone={b.status === 'attended' ? 'green' : b.status === 'cancelled' ? 'red' : 'blue'}>{b.status}</Badge>

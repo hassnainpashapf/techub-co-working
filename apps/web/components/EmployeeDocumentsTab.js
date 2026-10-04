@@ -75,15 +75,15 @@ export default function EmployeeDocumentsTab({ employeeId }) {
         </div>
       )}
       <div>
-        <h4 className="font-semibold text-slate-200 mb-2">Documents ({docs.length})</h4>
+        <h4 className="font-semibold text-gray-800 mb-2">Documents ({docs.length})</h4>
         {docs.length === 0 ? (
           <EmptyState title="Koi document nahi" hint="Upar se upload karo." />
         ) : (
           <div className="space-y-2">
             {docs.map((d) => (
-              <div key={d.id} className="flex items-center justify-between gap-2 p-2 rounded-lg bg-slate-800/60 border border-slate-700/50">
+              <div key={d.id} className="flex items-center justify-between gap-2 p-2 rounded-lg bg-gray-100/60 border border-gray-200/50">
                 <div>
-                  <div className="text-slate-200 font-medium">{d.title || d.fileName}</div>
+                  <div className="text-gray-800 font-medium">{d.title || d.fileName}</div>
                   <div className="text-xs text-slate-500">{(d.category || '').replace('hr:', '')}{d.uploadedBy ? ` · ${d.uploadedBy.name}` : ''}</div>
                 </div>
                 {expiryBadge(d.expiry)}
@@ -92,21 +92,21 @@ export default function EmployeeDocumentsTab({ employeeId }) {
           </div>
         )}
       </div>
-      <div className="p-3 rounded-lg bg-slate-800/60 border border-slate-700/50">
-        <h4 className="font-semibold text-slate-200 mb-2">Upload document</h4>
+      <div className="p-3 rounded-lg bg-gray-100/60 border border-gray-200/50">
+        <h4 className="font-semibold text-gray-800 mb-2">Upload document</h4>
         <div className="flex flex-wrap gap-2 items-end">
           <div>
-            <label className="text-xs text-slate-400">Type</label>
+            <label className="text-xs text-gray-500">Type</label>
             <select className="input" value={type} onChange={(e) => setType(e.target.value)}>
               {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
             </select>
           </div>
           <div>
-            <label className="text-xs text-slate-400">Expires (optional)</label>
+            <label className="text-xs text-gray-500">Expires (optional)</label>
             <input type="date" className="input" value={expiresAt} onChange={(e) => setExpiresAt(e.target.value)} />
           </div>
           <div>
-            <label className="text-xs text-slate-400">File</label>
+            <label className="text-xs text-gray-500">File</label>
             <input type="file" ref={fileRef} className="input" />
           </div>
           <button className="btn-primary" onClick={upload} disabled={uploading}>

@@ -157,7 +157,7 @@ export default function TasksPage() {
           <button
             key={s}
             onClick={() => setStatusFilter(s)}
-            className={`chip ${statusFilter === s ? 'bg-violet-600 text-white' : 'bg-[#131322] text-slate-400 border border-white/10 hover:bg-white/5'}`}
+            className={`chip ${statusFilter === s ? 'bg-teal-700 text-white' : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-100'}`}
           >
             {s.replace(/_/g, ' ')}
           </button>
@@ -169,8 +169,8 @@ export default function TasksPage() {
           columns={[
             { key: 'title', label: 'Task', render: (r) => (
               <div>
-                <p className="font-medium text-white">{r.title}</p>
-                {r.description && <p className="text-xs text-slate-400 truncate max-w-xs">{r.description}</p>}
+                <p className="font-medium text-gray-900">{r.title}</p>
+                {r.description && <p className="text-xs text-gray-500 truncate max-w-xs">{r.description}</p>}
               </div>
             )},
             { key: 'assignee', label: 'Assignee', render: (r) => r.assignee?.name || r.assigneeName || '—' },

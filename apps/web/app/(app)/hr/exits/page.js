@@ -167,7 +167,7 @@ export default function ExitsPage() {
             <div className="flex items-center gap-3">
               <div>
                 <div className="font-semibold text-lg">{detail.exit.employee?.name}</div>
-                <div className="text-sm text-slate-400">{detail.exit.employee?.designation} · {detail.exit.employee?.department}</div>
+                <div className="text-sm text-gray-500">{detail.exit.employee?.designation} · {detail.exit.employee?.department}</div>
               </div>
               <div className="ml-auto flex gap-2">{typeBadge(detail.exit.type)}{statusBadge(detail.exit.status)}</div>
             </div>
@@ -182,21 +182,21 @@ export default function ExitsPage() {
             </div>
             <div className="space-y-2">
               {(Array.isArray(detail.exit.clearanceItems) ? detail.exit.clearanceItems : []).map((it, i) => (
-                <div key={i} className={`flex items-center gap-3 p-3 rounded-lg border ${it.done ? 'border-green-500/30 bg-green-500/5' : 'border-slate-700'}`}>
+                <div key={i} className={`flex items-center gap-3 p-3 rounded-lg border ${it.done ? 'border-green-500/30 bg-green-500/5' : 'border-gray-200'}`}>
                   <input type="checkbox" checked={!!it.done} disabled={!!it.done || detail.exit.status === 'completed'}
                     onChange={() => clearItem(i)} className="w-5 h-5" />
                   <div className="flex-1">
-                    <div className={it.done ? 'line-through text-slate-400' : ''}>{it.title}</div>
+                    <div className={it.done ? 'line-through text-gray-500' : ''}>{it.title}</div>
                     <div className="text-xs text-slate-500">{it.dept}{it.doneAt ? ` · ${new Date(it.doneAt).toLocaleDateString()}` : ''}</div>
                   </div>
                   <Badge tone="slate">{it.dept}</Badge>
                 </div>
               ))}
             </div>
-            <div className="p-4 rounded-lg bg-slate-800/60 border border-slate-700">
+            <div className="p-4 rounded-lg bg-gray-100/60 border border-gray-200">
               <div className="font-semibold mb-2">Final settlement</div>
               {detail.settlement && detail.settlement.advances.length === 0
-                ? <div className="text-sm text-slate-400">Koi pending advance/loan nahi.</div>
+                ? <div className="text-sm text-gray-500">Koi pending advance/loan nahi.</div>
                 : detail.settlement.advances.map((a) => (
                   <div key={a.id} className="flex justify-between text-sm py-1">
                     <span className="capitalize">{a.type}</span>

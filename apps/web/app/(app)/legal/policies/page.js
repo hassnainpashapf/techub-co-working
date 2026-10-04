@@ -22,9 +22,9 @@ function AckBar({ acked, total }) {
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
       <div className="flex-1 h-2 rounded-full bg-slate-700/60 overflow-hidden">
-        <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500" style={{ width: pct + '%' }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600" style={{ width: pct + '%' }} />
       </div>
-      <span className="text-xs text-slate-300 whitespace-nowrap">{acked}/{total}</span>
+      <span className="text-xs text-gray-600 whitespace-nowrap">{acked}/{total}</span>
     </div>
   );
 }
@@ -120,7 +120,7 @@ export default function PoliciesPage() {
 
       <DataTable
         columns={[
-          { key: 'title', label: 'Title', render: (p) => <div><div className="font-medium text-slate-100">{p.title}</div><div className="text-xs text-slate-400">v{p.version} · {CATEGORIES.find(c => c.value === p.category)?.label || p.category}</div></div> },
+          { key: 'title', label: 'Title', render: (p) => <div><div className="font-medium text-gray-900">{p.title}</div><div className="text-xs text-gray-500">v{p.version} · {CATEGORIES.find(c => c.value === p.category)?.label || p.category}</div></div> },
           { key: 'ack', label: 'Acknowledgments', render: (p) => p.requiresAck ? <AckBar acked={p.acked} total={p.totalMembers} /> : <span className="text-xs text-slate-500">n/a</span> },
           { key: 'status', label: 'Status', render: (p) => <Badge tone={p.isActive ? 'green' : 'slate'}>{p.isActive ? 'Active' : 'Inactive'}</Badge> },
           { key: 'actions', label: '', render: (p) => (
@@ -150,7 +150,7 @@ export default function PoliciesPage() {
             </div>
             <Field label="File URL (optional)"><input className="input-premium" placeholder="https://..." value={form.fileUrl} onChange={e => setForm({ ...form, fileUrl: e.target.value })} /></Field>
             <Field label="Policy Text (optional)"><textarea className="input-premium" rows={6} value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} /></Field>
-            <div className="flex gap-6 text-sm text-slate-200">
+            <div className="flex gap-6 text-sm text-gray-800">
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.requiresAck} onChange={e => setForm({ ...form, requiresAck: e.target.checked })} /> Ack lazmi</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.reAckOnUpdate} onChange={e => setForm({ ...form, reAckOnUpdate: e.target.checked })} /> Update par dobara ack</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} /> Active</label>
@@ -167,11 +167,11 @@ export default function PoliciesPage() {
       {acksModal && (
         <Modal title={`Acks — ${acksModal.title}`} onClose={() => setAcksModal(null)}>
           <div className="space-y-2 max-h-[60vh] overflow-auto">
-            {acks.length === 0 && <div className="text-sm text-slate-400">Abhi kisi ne ack nahi kiya.</div>}
+            {acks.length === 0 && <div className="text-sm text-gray-500">Abhi kisi ne ack nahi kiya.</div>}
             {acks.map(a => (
-              <div key={a.id} className="flex justify-between text-sm bg-slate-800/50 rounded-lg px-3 py-2">
-                <span className="text-slate-100">{a.member?.name || a.user?.name || '—'} <span className="text-slate-400 text-xs">{a.member?.email || a.user?.email || ''}</span></span>
-                <span className="text-slate-400 text-xs">{new Date(a.ackedAt).toLocaleString()}</span>
+              <div key={a.id} className="flex justify-between text-sm bg-gray-100/50 rounded-lg px-3 py-2">
+                <span className="text-gray-900">{a.member?.name || a.user?.name || '—'} <span className="text-gray-500 text-xs">{a.member?.email || a.user?.email || ''}</span></span>
+                <span className="text-gray-500 text-xs">{new Date(a.ackedAt).toLocaleString()}</span>
               </div>
             ))}
           </div>

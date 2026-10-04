@@ -83,10 +83,10 @@ export default function AdvancesPage() {
         const pct = Number(a.amount) > 0 ? Math.round((Number(a.deductedSoFar) / Number(a.amount)) * 100) : 0;
         return (
           <div className="min-w-[120px]">
-            <div className="h-2 rounded bg-white/10 overflow-hidden">
-              <div className="h-full rounded bg-gradient-to-r from-violet-500 to-[#8b5cf6]" style={{ width: pct + '%' }} />
+            <div className="h-2 rounded bg-gray-100 overflow-hidden">
+              <div className="h-full rounded bg-gradient-to-r from-teal-600 to-[#0f766e]" style={{ width: pct + '%' }} />
             </div>
-            <div className="text-xs text-slate-400 mt-1">{fmt(a.deductedSoFar)} / {fmt(a.amount)} ({pct}%)</div>
+            <div className="text-xs text-gray-500 mt-1">{fmt(a.deductedSoFar)} / {fmt(a.amount)} ({pct}%)</div>
           </div>
         );
       }
@@ -96,7 +96,7 @@ export default function AdvancesPage() {
     {
       key: 'actions', label: '', render: (a) => (
         <button onClick={() => { setDecideNote(''); setModal(a); }}
-          className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-sm text-slate-200 border border-white/10">
+          className="px-3 py-1.5 rounded-lg bg-gray-100 hover:bg-gray-100 text-sm text-gray-800 border border-gray-200">
           View
         </button>
       )
@@ -110,7 +110,7 @@ export default function AdvancesPage() {
         subtitle="Salary advance aur loan requests — payroll se auto-deduct"
         action={
           <button onClick={() => setModal('request')}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-[#7c3aed] text-white text-sm font-medium shadow-lg shadow-violet-500/30">
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-teal-700 to-[#0f766e] text-gray-900 text-sm font-medium shadow-lg shadow-teal-600/30">
             + New Request
           </button>
         }
@@ -120,7 +120,7 @@ export default function AdvancesPage() {
       <div className="flex gap-2 mt-4 mb-6">
         {[['mine', '📋 My Requests'], ['approvals', '⏳ Pending Approvals'], ['all', '📊 All']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === v ? 'bg-[#7c3aed] text-white shadow-lg shadow-blue-500/30' : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === v ? 'bg-[#0f766e] text-white shadow-lg shadow-blue-500/30' : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-100'}`}>
             {l}
           </button>
         ))}
@@ -146,11 +146,11 @@ export default function AdvancesPage() {
             <Field label="Amount (Rs)">
               <input type="number" min="1" required value={form.amount}
                 onChange={(e) => setForm({ ...form, amount: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white" placeholder="e.g. 50000" />
+                className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-900" placeholder="e.g. 50000" />
             </Field>
             <Field label="Type">
               <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value, installments: 1 })}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white">
+                className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-900">
                 <option value="advance">💵 Salary Advance (1 month)</option>
                 <option value="loan">🏦 Loan (installments)</option>
               </select>
@@ -159,17 +159,17 @@ export default function AdvancesPage() {
               <Field label="Installments (months)">
                 <input type="number" min="2" max="36" value={form.installments}
                   onChange={(e) => setForm({ ...form, installments: e.target.value })}
-                  className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white" />
+                  className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-900" />
               </Field>
             )}
             <Field label="Reason">
               <textarea value={form.reason} rows={3}
                 onChange={(e) => setForm({ ...form, reason: e.target.value })}
-                className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white" placeholder="Kyun chahiye?" />
+                className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-900" placeholder="Kyun chahiye?" />
             </Field>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 text-sm">Cancel</button>
-              <button disabled={saving} className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-[#7c3aed] text-white text-sm font-medium">
+              <button type="button" onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-600 text-sm">Cancel</button>
+              <button disabled={saving} className="px-4 py-2 rounded-lg bg-gradient-to-r from-teal-700 to-[#0f766e] text-gray-900 text-sm font-medium">
                 {saving ? 'Submitting…' : 'Submit Request'}
               </button>
             </div>
@@ -181,22 +181,22 @@ export default function AdvancesPage() {
       {modal && modal !== 'request' && (
         <Modal title={`Request — ${modal.employee?.name || ''}`} onClose={() => setModal(null)}>
           <div className="space-y-3 text-sm">
-            <div className="flex justify-between"><span className="text-slate-400">Type</span><span className="text-white">{modal.type === 'loan' ? '🏦 Loan' : '💵 Advance'}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Amount</span><span className="text-white font-semibold">{fmt(modal.amount)}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Schedule</span><span className="text-white">{modal.installments} × {fmt(modal.installmentAmount)}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Deducted so far</span><span className="text-white">{fmt(modal.deductedSoFar)}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Remaining</span><span className="text-white font-semibold">{fmt(Number(modal.amount) - Number(modal.deductedSoFar))}</span></div>
-            <div className="flex justify-between"><span className="text-slate-400">Status</span><Badge tone={STATUS_COLOR[modal.status]}>{STATUS_LABEL[modal.status]}</Badge></div>
-            {modal.reason && <div><span className="text-slate-400">Reason:</span><p className="text-slate-200 mt-1">{modal.reason}</p></div>}
-            {modal.decideNote && <div><span className="text-slate-400">Decision note:</span><p className="text-slate-200 mt-1">{modal.decideNote}</p></div>}
+            <div className="flex justify-between"><span className="text-gray-500">Type</span><span className="text-gray-900">{modal.type === 'loan' ? '🏦 Loan' : '💵 Advance'}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Amount</span><span className="text-gray-900 font-semibold">{fmt(modal.amount)}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Schedule</span><span className="text-gray-900">{modal.installments} × {fmt(modal.installmentAmount)}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Deducted so far</span><span className="text-gray-900">{fmt(modal.deductedSoFar)}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Remaining</span><span className="text-gray-900 font-semibold">{fmt(Number(modal.amount) - Number(modal.deductedSoFar))}</span></div>
+            <div className="flex justify-between"><span className="text-gray-500">Status</span><Badge tone={STATUS_COLOR[modal.status]}>{STATUS_LABEL[modal.status]}</Badge></div>
+            {modal.reason && <div><span className="text-gray-500">Reason:</span><p className="text-gray-800 mt-1">{modal.reason}</p></div>}
+            {modal.decideNote && <div><span className="text-gray-500">Decision note:</span><p className="text-gray-800 mt-1">{modal.decideNote}</p></div>}
             {(modal.deductions || []).length > 0 && (
               <div>
-                <div className="text-slate-400 mb-2">Deduction history</div>
+                <div className="text-gray-500 mb-2">Deduction history</div>
                 <div className="space-y-1">
                   {modal.deductions.map((d) => (
-                    <div key={d.id} className="flex justify-between bg-white/5 rounded-lg px-3 py-2">
-                      <span className="text-slate-300">{new Date(d.deductedAt).toLocaleDateString()}</span>
-                      <span className="text-white">{fmt(d.amount)}</span>
+                    <div key={d.id} className="flex justify-between bg-gray-100 rounded-lg px-3 py-2">
+                      <span className="text-gray-600">{new Date(d.deductedAt).toLocaleDateString()}</span>
+                      <span className="text-gray-900">{fmt(d.amount)}</span>
                     </div>
                   ))}
                 </div>
@@ -206,13 +206,13 @@ export default function AdvancesPage() {
               <div className="pt-2">
                 <Field label="Decision note (optional)">
                   <textarea value={decideNote} rows={2} onChange={(e) => setDecideNote(e.target.value)}
-                    className="w-full px-3 py-2 rounded-lg bg-white/5 border border-white/10 text-white" />
+                    className="w-full px-3 py-2 rounded-lg bg-gray-100 border border-gray-200 text-gray-900" />
                 </Field>
                 <div className="flex justify-end gap-2 mt-2">
                   <button disabled={saving} onClick={() => decide(modal.id, 'reject')}
                     className="px-4 py-2 rounded-lg bg-red-600/20 border border-red-500/30 text-red-300 text-sm">Reject</button>
                   <button disabled={saving} onClick={() => decide(modal.id, 'approve')}
-                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-600 text-white text-sm font-medium">Approve</button>
+                    className="px-4 py-2 rounded-lg bg-gradient-to-r from-emerald-600 to-green-600 text-gray-900 text-sm font-medium">Approve</button>
                 </div>
               </div>
             )}

@@ -89,12 +89,12 @@ export default function MaintenancePage() {
   };
 
   const columns = [
-    { key: 'orderNumber', label: '#', render: (o) => <span className="font-mono text-slate-300">#{o.orderNumber}</span> },
-    { key: 'title', label: 'Work Order', render: (o) => <div><div className="font-medium text-white">{o.title}</div><div className="text-xs text-slate-400">{labelOf(CATEGORIES, o.category)}{o.unit?.code ? ` · ${o.unit.code}` : ''}</div></div> },
+    { key: 'orderNumber', label: '#', render: (o) => <span className="font-mono text-gray-600">#{o.orderNumber}</span> },
+    { key: 'title', label: 'Work Order', render: (o) => <div><div className="font-medium text-gray-900">{o.title}</div><div className="text-xs text-gray-500">{labelOf(CATEGORIES, o.category)}{o.unit?.code ? ` · ${o.unit.code}` : ''}</div></div> },
     { key: 'priority', label: 'Priority', render: (o) => <Badge tone={toneOf(PRIORITIES, o.priority)}>{labelOf(PRIORITIES, o.priority)}</Badge> },
     { key: 'status', label: 'Status', render: (o) => <Badge tone={toneOf(STATUSES, o.status)}>{labelOf(STATUSES, o.status)}</Badge> },
-    { key: 'assigned', label: 'Assignee', render: (o) => <span className="text-sm text-slate-300">{o.assignedTo?.name || '—'}</span> },
-    { key: 'cost', label: 'Cost', render: (o) => <span className="text-sm text-slate-300">{o.cost ? money(o.cost) : '—'}</span> },
+    { key: 'assigned', label: 'Assignee', render: (o) => <span className="text-sm text-gray-600">{o.assignedTo?.name || '—'}</span> },
+    { key: 'cost', label: 'Cost', render: (o) => <span className="text-sm text-gray-600">{o.cost ? money(o.cost) : '—'}</span> },
     {
       key: 'action', label: '', render: (o) => (
         <div className="flex gap-1">
@@ -114,14 +114,14 @@ export default function MaintenancePage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       <div className="grid grid-cols-3 gap-4 mb-5">
-        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-300">{stats.pending}</div><div className="text-xs text-slate-400">Pending</div></div>
-        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-[#c4b5fd]">{stats.inProgress}</div><div className="text-xs text-slate-400">In Progress</div></div>
-        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-white">{money(stats.totalCost)}</div><div className="text-xs text-slate-400">Completed cost</div></div>
+        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-300">{stats.pending}</div><div className="text-xs text-gray-500">Pending</div></div>
+        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-teal-700">{stats.inProgress}</div><div className="text-xs text-gray-500">In Progress</div></div>
+        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-gray-900">{money(stats.totalCost)}</div><div className="text-xs text-gray-500">Completed cost</div></div>
       </div>
       <div className="flex gap-2 mb-4">
         {[{ v: '', l: 'All' }, ...STATUSES].map((s) => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${statusFilter === s.v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {s.l}
           </button>
         ))}

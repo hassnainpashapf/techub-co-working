@@ -8,9 +8,9 @@ import { PageHeader, Field, Spinner, ErrorBanner } from '../../../../components/
 
 function Section({ title, desc, children }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#16162a] to-[#10101c] p-5 shadow-lg">
-      <h2 className="text-base font-semibold text-white">{title}</h2>
-      {desc && <p className="text-xs text-slate-400 mt-1">{desc}</p>}
+    <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-[#16162a] to-[#10101c] p-5 shadow-lg">
+      <h2 className="text-base font-semibold text-gray-900">{title}</h2>
+      {desc && <p className="text-xs text-gray-500 mt-1">{desc}</p>}
       <div className="mt-4 space-y-4">{children}</div>
     </div>
   );
@@ -23,7 +23,7 @@ function Toggle({ on, onChange, label }) {
       role="switch"
       aria-checked={on}
       onClick={() => onChange(!on)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-[#7c3aed]' : 'bg-white/15'}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-[#0f766e]' : 'bg-white/15'}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
       <span className="sr-only">{label}</span>
@@ -231,10 +231,10 @@ export default function PortalProfilePage() {
               key={photoTick}
               src={photoUrl()}
               alt="Profile"
-              className="h-20 w-20 rounded-full object-cover border-2 border-[#8b5cf6]/50 bg-white/10"
+              className="h-20 w-20 rounded-full object-cover border-2 border-[#0f766e]/50 bg-gray-100"
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
-            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#7c3aed] to-violet-600 flex items-center justify-center text-xl font-bold text-white absolute inset-0 -z-10">
+            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#0f766e] to-teal-700 flex items-center justify-center text-xl font-bold text-gray-900 absolute inset-0 -z-10">
               {initials}
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function PortalProfilePage() {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition"
+              className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition"
             >
               {uploading ? 'Uploading…' : 'Photo badlein'}
             </button>
@@ -269,8 +269,8 @@ export default function PortalProfilePage() {
               <input className="input" value={form.emergencyContact} onChange={(e) => setForm({ ...form, emergencyContact: e.target.value })} placeholder="Naam + number" />
             </Field>
           </div>
-          <div className="text-xs text-slate-500">Email: <span className="text-slate-300">{member?.email || '—'}</span> · Status: <span className="text-slate-300">{member?.status}</span></div>
-          <button type="submit" disabled={saving} className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <div className="text-xs text-slate-500">Email: <span className="text-gray-600">{member?.email || '—'}</span> · Status: <span className="text-gray-600">{member?.status}</span></div>
+          <button type="submit" disabled={saving} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
             {saving ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>
@@ -287,16 +287,16 @@ export default function PortalProfilePage() {
           </Field>
           {pw.next && (
             <div>
-              <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+              <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
                 <div className={`h-full rounded-full transition-all ${STRENGTH_COLORS[Math.max(0, pwScore - 1)] || 'bg-red-500'}`} style={{ width: `${(pwScore / 5) * 100}%` }} />
               </div>
-              <p className="text-[11px] text-slate-400 mt-1">{STRENGTH_LABELS[Math.max(0, pwScore - 1)]}</p>
+              <p className="text-[11px] text-gray-500 mt-1">{STRENGTH_LABELS[Math.max(0, pwScore - 1)]}</p>
             </div>
           )}
           <Field label="Naya password dobara">
             <input type="password" className="input" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} required autoComplete="new-password" />
           </Field>
-          <button type="submit" disabled={pwBusy} className="rounded-xl bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={pwBusy} className="rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
             {pwBusy ? 'Change ho raha…' : 'Password change karein'}
           </button>
         </form>
@@ -307,8 +307,8 @@ export default function PortalProfilePage() {
         <Section title="Notifications" desc="Har channel ke liye tamam notifications on/off karein">
           <div className="space-y-3">
             {prefMeta.channels.map((ch) => (
-              <div key={ch} className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-                <span className="text-sm text-slate-200 capitalize">{prefMeta.channelLabels[ch] || ch}</span>
+              <div key={ch} className="flex items-center justify-between rounded-xl bg-gray-100 px-4 py-3">
+                <span className="text-sm text-gray-800 capitalize">{prefMeta.channelLabels[ch] || ch}</span>
                 <Toggle label={ch} on={channelState(ch)} onChange={(v) => toggleChannel(ch, v)} />
               </div>
             ))}
@@ -320,8 +320,8 @@ export default function PortalProfilePage() {
       {/* Directory */}
       <Section title="Member directory" desc="Directory me apni maujoodgi control karein">
         <form onSubmit={saveDirectory} className="space-y-3">
-          <div className="flex items-center justify-between rounded-xl bg-white/5 px-4 py-3">
-            <span className="text-sm text-slate-200">Directory me show hon</span>
+          <div className="flex items-center justify-between rounded-xl bg-gray-100 px-4 py-3">
+            <span className="text-sm text-gray-800">Directory me show hon</span>
             <Toggle label="directory opt-in" on={dir.directoryOptIn} onChange={(v) => setDir({ ...dir, directoryOptIn: v })} />
           </div>
           <Field label="Bio">
@@ -330,7 +330,7 @@ export default function PortalProfilePage() {
           <Field label="Tags (comma se alag)">
             <input className="input" value={dir.directoryTags} onChange={(e) => setDir({ ...dir, directoryTags: e.target.value })} placeholder="design, startup, marketing" />
           </Field>
-          <button type="submit" disabled={dirBusy} className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={dirBusy} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
             {dirBusy ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>
@@ -339,7 +339,7 @@ export default function PortalProfilePage() {
       {/* Account */}
       <Section title="Account" desc="Logout ya data deletion request">
         <div className="flex flex-col sm:flex-row gap-3">
-          <button type="button" onClick={doLogout} className="rounded-xl border border-white/15 text-slate-200 text-sm font-semibold px-5 py-2.5 hover:bg-white/5 transition">
+          <button type="button" onClick={doLogout} className="rounded-xl border border-white/15 text-gray-800 text-sm font-semibold px-5 py-2.5 hover:bg-gray-100 transition">
             Logout
           </button>
           <button type="button" onClick={requestDeletion} disabled={delBusy} className="rounded-xl border border-red-500/40 text-red-300 text-sm font-semibold px-5 py-2.5 hover:bg-red-500/10 disabled:opacity-50 transition">

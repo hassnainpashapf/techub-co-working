@@ -68,8 +68,8 @@ function TriggerCard({ trigger, templates, onChanged, saving, setSaving }) {
     <div className="card-premium p-5">
       <div className="flex items-start justify-between gap-3 mb-2">
         <div>
-          <h3 className="text-white font-bold">{trigger.label}</h3>
-          <p className="text-slate-400 text-sm mt-0.5">{trigger.description}</p>
+          <h3 className="text-gray-900 font-bold">{trigger.label}</h3>
+          <p className="text-gray-500 text-sm mt-0.5">{trigger.description}</p>
         </div>
         <Toggle
           on={!!rule?.isActive}
@@ -141,10 +141,10 @@ function TriggerCard({ trigger, templates, onChanged, saving, setSaving }) {
             {running ? 'Running…' : '▶ Run now'}
           </button>
         )}
-        {result && <span className="text-xs text-slate-400">{result}</span>}
+        {result && <span className="text-xs text-gray-500">{result}</span>}
       </div>
 
-      <p className="text-slate-600 text-xs mt-3">Each member is contacted at most once per 30 days per rule.</p>
+      <p className="text-gray-500 text-xs mt-3">Each member is contacted at most once per 30 days per rule.</p>
     </div>
   );
 }
@@ -211,7 +211,7 @@ export default function LifecyclePage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="mb-4 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 px-4 py-3 text-sm text-[#ddd6fe]">
+      <div className="mb-4 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30 px-4 py-3 text-sm text-teal-700">
         💡 Customize email content in{' '}
         <Link href="/settings/email-templates" className="underline font-semibold">Email Templates</Link>
         {' '}— rules can use any built-in or custom template.
@@ -223,14 +223,14 @@ export default function LifecyclePage() {
         ))}
       </div>
 
-      <h2 className="text-white font-bold mb-3">Recent sends</h2>
+      <h2 className="text-gray-900 font-bold mb-3">Recent sends</h2>
       {runs.length === 0 ? (
         <p className="text-slate-500 text-sm">No automated messages sent yet.</p>
       ) : (
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-slate-400 text-xs border-b border-white/10">
+              <tr className="text-left text-gray-500 text-xs border-b border-gray-200">
                 <th className="px-4 py-2.5">When</th>
                 <th className="px-4 py-2.5">Trigger</th>
                 <th className="px-4 py-2.5">Member</th>
@@ -240,7 +240,7 @@ export default function LifecyclePage() {
             </thead>
             <tbody>
               {runs.map((r) => (
-                <tr key={r.id} className="border-b border-white/5 text-slate-300">
+                <tr key={r.id} className="border-b border-gray-200 text-gray-600">
                   <td className="px-4 py-2.5 text-xs">{new Date(r.sentAt).toLocaleString()}</td>
                   <td className="px-4 py-2.5">{r.triggerLabel}</td>
                   <td className="px-4 py-2.5">{r.memberName}</td>

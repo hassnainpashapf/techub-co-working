@@ -75,7 +75,7 @@ export default function MobileQuickActionsPage() {
 
   if (allowed === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7]">
         <Spinner size="lg" />
       </div>
     );
@@ -120,33 +120,33 @@ export default function MobileQuickActionsPage() {
           </div>
 
           {/* Quick actions — bade touch buttons */}
-          <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide mb-3">Quick Actions</h2>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Quick Actions</h2>
           <div className="grid grid-cols-2 gap-3 mb-6">
             {ACTIONS.map((a) => (
               <Link
                 key={a.path + a.label}
                 href={a.path}
-                className="card p-5 flex flex-col items-center justify-center text-center min-h-[120px] active:scale-95 transition-transform hover:border-[#8b5cf6]/40"
+                className="card p-5 flex flex-col items-center justify-center text-center min-h-[120px] active:scale-95 transition-transform hover:border-[#0f766e]/40"
               >
                 <span className="text-3xl mb-2">{a.icon}</span>
-                <span className="text-white font-semibold text-sm">{a.label}</span>
-                <span className="text-slate-400 text-xs mt-1">{a.desc}</span>
+                <span className="text-gray-900 font-semibold text-sm">{a.label}</span>
+                <span className="text-gray-500 text-xs mt-1">{a.desc}</span>
               </Link>
             ))}
           </div>
 
           {/* Recent activity */}
-          <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide mb-3">Recent Activity</h2>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Recent Activity</h2>
           <div className="card p-2 mb-6">
             {activity.length === 0 ? (
               <EmptyState title="Koi activity nahi" hint="Abhi tak koi recent activity record nahi hui." />
             ) : (
-              <ul className="divide-y divide-slate-800">
+              <ul className="divide-y divide-gray-200">
                 {activity.slice(0, 10).map((log, i) => (
                   <li key={log.id || i} className="px-3 py-2.5 flex items-start gap-3">
                     <span className="text-lg">📝</span>
                     <div className="min-w-0 flex-1">
-                      <p className="text-sm text-slate-200 truncate">
+                      <p className="text-sm text-gray-800 truncate">
                         {log.action || log.event || 'Activity'}
                         {log.user?.name ? ` — ${log.user.name}` : ''}
                       </p>
@@ -159,7 +159,7 @@ export default function MobileQuickActionsPage() {
           </div>
 
           {/* Push notifications */}
-          <h2 className="text-sm font-semibold text-slate-300 uppercase tracking-wide mb-3">Push Notifications</h2>
+          <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Push Notifications</h2>
           <div className="card p-4">
             <PushToggle />
           </div>

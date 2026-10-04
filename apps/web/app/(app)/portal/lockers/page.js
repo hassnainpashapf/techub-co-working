@@ -49,7 +49,7 @@ function MaskedCode({ code }) {
     <button
       type="button"
       onClick={() => setShow((v) => !v)}
-      className="font-mono text-lg tracking-[0.3em] bg-slate-800 border border-slate-700 rounded px-4 py-2 text-cyan-300 hover:border-cyan-500 transition"
+      className="font-mono text-lg tracking-[0.3em] bg-gray-100 border border-gray-200 rounded px-4 py-2 text-cyan-300 hover:border-cyan-500 transition"
       title={show ? 'Chhupayein' : 'Dekhne ke liye tap karein'}
     >
       {show ? code : '••••'}
@@ -151,8 +151,8 @@ export default function PortalLockersPage() {
             onClick={() => setTab(t.k)}
             className={`px-4 py-2 rounded-lg text-sm font-medium transition ${
               tab === t.k
-                ? 'bg-cyan-600 text-white'
-                : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
+                ? 'bg-cyan-600 text-gray-900'
+                : 'bg-gray-100 text-gray-600 hover:bg-slate-700'
             }`}
           >
             {t.label}
@@ -171,11 +171,11 @@ export default function PortalLockersPage() {
               ) : (
                 <div className="grid md:grid-cols-2 gap-4">
                   {activeRentals.map((r) => (
-                    <div key={r.id} className="bg-slate-900 border border-slate-700 rounded-xl p-5">
+                    <div key={r.id} className="bg-white border border-gray-200 rounded-xl p-5">
                       <div className="flex items-center justify-between mb-3">
                         <div>
-                          <div className="text-xl font-bold text-white">{r.locker?.code || '—'}</div>
-                          <div className="text-sm text-slate-400">
+                          <div className="text-xl font-bold text-gray-900">{r.locker?.code || '—'}</div>
+                          <div className="text-sm text-gray-500">
                             {r.locker?.location || '—'} • {SIZE_LABEL[r.locker?.size] || r.locker?.size || ''}
                           </div>
                         </div>
@@ -188,19 +188,19 @@ export default function PortalLockersPage() {
                       </div>
 
                       <div className="grid grid-cols-2 gap-2 text-sm mb-4">
-                        <div className="text-slate-400">Start</div>
-                        <div className="text-white text-right">{fmtDate(r.startDate)}</div>
-                        <div className="text-slate-400">Khatam</div>
-                        <div className="text-white text-right">{fmtDate(r.endDate)}</div>
-                        <div className="text-slate-400">Mahana kiraya</div>
-                        <div className="text-white text-right">{fmtMoney(r.monthlyRate ?? r.locker?.monthlyRate)}</div>
-                        <div className="text-slate-400">Auto-renew</div>
+                        <div className="text-gray-500">Start</div>
+                        <div className="text-gray-900 text-right">{fmtDate(r.startDate)}</div>
+                        <div className="text-gray-500">Khatam</div>
+                        <div className="text-gray-900 text-right">{fmtDate(r.endDate)}</div>
+                        <div className="text-gray-500">Mahana kiraya</div>
+                        <div className="text-gray-900 text-right">{fmtMoney(r.monthlyRate ?? r.locker?.monthlyRate)}</div>
+                        <div className="text-gray-500">Auto-renew</div>
                         <div className="text-right">
                           <button
                             onClick={() => toggleAuto(r.id, r.autoRenew)}
                             disabled={busy === `auto-${r.id}`}
                             className={`text-sm px-3 py-1 rounded ${
-                              r.autoRenew ? 'bg-green-800 text-green-200' : 'bg-slate-700 text-slate-300'
+                              r.autoRenew ? 'bg-green-800 text-green-200' : 'bg-slate-700 text-gray-600'
                             }`}
                           >
                             {r.autoRenew ? 'ON' : 'OFF'}
@@ -224,10 +224,10 @@ export default function PortalLockersPage() {
                   ))}
 
                   {pastRentals.map((r) => (
-                    <div key={r.id} className="bg-slate-900/60 border border-slate-800 rounded-xl p-5 opacity-80">
+                    <div key={r.id} className="bg-white/60 border border-gray-200 rounded-xl p-5 opacity-80">
                       <div className="flex items-center justify-between">
                         <div>
-                          <div className="text-lg font-bold text-slate-300">{r.locker?.code || '—'}</div>
+                          <div className="text-lg font-bold text-gray-600">{r.locker?.code || '—'}</div>
                           <div className="text-xs text-slate-500">
                             {fmtDate(r.startDate)} → {fmtDate(r.endDate)}
                           </div>
@@ -249,7 +249,7 @@ export default function PortalLockersPage() {
                     key={s}
                     onClick={() => setSizeFilter(s)}
                     className={`px-3 py-1 rounded-full text-sm ${
-                      sizeFilter === s ? 'bg-cyan-600 text-white' : 'bg-slate-800 text-slate-300'
+                      sizeFilter === s ? 'bg-cyan-600 text-gray-900' : 'bg-gray-100 text-gray-600'
                     }`}
                   >
                     {s === 'all' ? 'Sab' : s}
@@ -265,13 +265,13 @@ export default function PortalLockersPage() {
               ) : (
                 <div className="grid md:grid-cols-3 gap-4">
                   {available.map((l) => (
-                    <div key={l.id} className="bg-slate-900 border border-slate-700 rounded-xl p-5">
+                    <div key={l.id} className="bg-white border border-gray-200 rounded-xl p-5">
                       <div className="flex items-center justify-between mb-2">
-                        <div className="text-xl font-bold text-white">{l.code}</div>
+                        <div className="text-xl font-bold text-gray-900">{l.code}</div>
                         <Badge tone="green">Khali</Badge>
                       </div>
-                      <div className="text-sm text-slate-400 mb-1">{l.location || '—'}</div>
-                      <div className="text-sm text-slate-400 mb-3">{SIZE_LABEL[l.size] || l.size}</div>
+                      <div className="text-sm text-gray-500 mb-1">{l.location || '—'}</div>
+                      <div className="text-sm text-gray-500 mb-3">{SIZE_LABEL[l.size] || l.size}</div>
                       <div className="text-cyan-300 font-semibold mb-4">{fmtMoney(l.monthlyRate)}</div>
                       <button
                         onClick={() => requestLocker(l.id)}
@@ -299,9 +299,9 @@ export default function PortalLockersPage() {
               ) : (
                 <div className="space-y-3">
                   {waitlist.map((w) => (
-                    <div key={w.id} className="bg-slate-900 border border-slate-700 rounded-xl p-4 flex items-center justify-between">
+                    <div key={w.id} className="bg-white border border-gray-200 rounded-xl p-4 flex items-center justify-between">
                       <div>
-                        <div className="text-white font-semibold">
+                        <div className="text-gray-900 font-semibold">
                           {w.lockerCode || w.lockerId || `Size: ${w.size || 'koi bhi'}`}
                         </div>
                         <div className="text-xs text-slate-500">

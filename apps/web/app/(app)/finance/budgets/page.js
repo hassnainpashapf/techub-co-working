@@ -10,7 +10,7 @@ function Bar({ pct }) {
   const p = pct == null ? 0 : Math.min(pct, 100);
   const over = pct != null && pct > 100;
   return (
-    <div className="h-2 rounded-full bg-white/5 overflow-hidden w-full">
+    <div className="h-2 rounded-full bg-gray-100 overflow-hidden w-full">
       <div
         className={`h-full rounded-full ${over ? 'bg-red-500' : 'bg-emerald-500'}`}
         style={{ width: `${p}%` }}
@@ -63,15 +63,15 @@ export default function BudgetsPage() {
     }
   };
 
-  if (roleLoading) return <div className="text-slate-400 p-6">Loading…</div>;
+  if (roleLoading) return <div className="text-gray-500 p-6">Loading…</div>;
   if (!allowed) return <AccessDenied />;
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Budgets</h1>
-          <p className="text-sm text-slate-400">Budget vs actual per expense category</p>
+          <h1 className="text-2xl font-extrabold text-gray-900">Budgets</h1>
+          <p className="text-sm text-gray-500">Budget vs actual per expense category</p>
         </div>
         <div className="flex items-center gap-3">
           <input
@@ -91,12 +91,12 @@ export default function BudgetsPage() {
       {totals && (
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-[#c4b5fd]' },
+            { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-teal-700' },
             { label: 'Total Actual', value: money(totals.actual), tone: 'text-amber-300' },
             { label: 'Variance', value: money(totals.variance), tone: totals.variance >= 0 ? 'text-emerald-300' : 'text-red-300' },
           ].map((s) => (
             <div key={s.label} className="card-premium p-4">
-              <div className="text-xs text-slate-400 mb-1">{s.label}</div>
+              <div className="text-xs text-gray-500 mb-1">{s.label}</div>
               <div className={`text-xl font-extrabold ${s.tone}`}>{s.value}</div>
             </div>
           ))}
@@ -106,7 +106,7 @@ export default function BudgetsPage() {
       <div className="card-premium overflow-hidden">
         <table className="w-full text-sm">
           <thead>
-            <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+            <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
               <th className="px-4 py-3 font-semibold">Category</th>
               <th className="px-4 py-3 font-semibold w-40">Budgeted</th>
               <th className="px-4 py-3 font-semibold">Actual</th>
@@ -118,8 +118,8 @@ export default function BudgetsPage() {
             {loading ? (
               <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-500">Loading…</td></tr>
             ) : rows.map((r) => (
-              <tr key={r.category} className="border-b border-white/5 hover:bg-white/[0.02]">
-                <td className="px-4 py-3 text-slate-200 font-medium capitalize">{r.category.replace(/_/g, ' ')}</td>
+              <tr key={r.category} className="border-b border-gray-200 hover:bg-gray-50">
+                <td className="px-4 py-3 text-gray-800 font-medium capitalize">{r.category.replace(/_/g, ' ')}</td>
                 <td className="px-4 py-3">
                   <input
                     type="number"
@@ -129,11 +129,11 @@ export default function BudgetsPage() {
                     onChange={(e) => setDraft((d) => ({ ...d, [r.category]: e.target.value }))}
                   />
                 </td>
-                <td className="px-4 py-3 text-slate-300">{money(r.actual)}</td>
+                <td className="px-4 py-3 text-gray-600">{money(r.actual)}</td>
                 <td className="px-4 py-3">
                   <div className="flex items-center gap-2">
                     <div className="flex-1"><Bar pct={r.pct} /></div>
-                    <span className={`text-xs font-semibold w-12 text-right ${r.pct != null && r.pct > 100 ? 'text-red-300' : 'text-slate-400'}`}>
+                    <span className={`text-xs font-semibold w-12 text-right ${r.pct != null && r.pct > 100 ? 'text-red-300' : 'text-gray-500'}`}>
                       {r.pct == null ? '—' : `${r.pct}%`}
                     </span>
                   </div>

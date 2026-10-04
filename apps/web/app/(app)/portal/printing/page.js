@@ -15,14 +15,14 @@ function QuotaBar({ used, included }) {
     <div>
       <div className="flex items-end justify-between mb-2">
         <div>
-          <div className="text-4xl font-extrabold text-white">{Math.max(0, included - used)}<span className="text-lg text-slate-400"> pages left</span></div>
-          <div className="text-sm text-slate-400 mt-1">{used} of {included} pages used this month</div>
+          <div className="text-4xl font-extrabold text-gray-900">{Math.max(0, included - used)}<span className="text-lg text-gray-500"> pages left</span></div>
+          <div className="text-sm text-gray-500 mt-1">{used} of {included} pages used this month</div>
         </div>
         {over && <Badge tone="red">Overage</Badge>}
       </div>
-      <div className="h-4 rounded-full bg-slate-800 overflow-hidden">
+      <div className="h-4 rounded-full bg-gray-100 overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${over ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-sky-500 to-[#8b5cf6]'}`}
+          className={`h-full rounded-full transition-all ${over ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-sky-500 to-[#0f766e]'}`}
           style={{ width: `${pct}%` }}
         />
       </div>
@@ -69,14 +69,14 @@ export default function PortalPrintingPage() {
               You printed {balance.overage} pages over your quota this month — overage is billed automatically.
             </div>
           )}
-          <h2 className="text-lg font-bold text-white mb-3">Print history</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Print history</h2>
           {history.length === 0 ? (
             <EmptyState title="No print jobs yet" />
           ) : (
             <div className="card-premium overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400 border-b border-slate-800">
+                  <tr className="text-left text-gray-500 border-b border-gray-200">
                     <th className="p-3">Date</th>
                     <th className="p-3">Pages</th>
                     <th className="p-3">Charge</th>
@@ -85,11 +85,11 @@ export default function PortalPrintingPage() {
                 </thead>
                 <tbody>
                   {history.map((j) => (
-                    <tr key={j.id} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                      <td className="p-3 text-slate-300">{fmtDate(j.createdAt)}</td>
-                      <td className="p-3 text-white font-semibold">{j.pages}</td>
+                    <tr key={j.id} className="border-b border-gray-200/50 hover:bg-gray-100/30">
+                      <td className="p-3 text-gray-600">{fmtDate(j.createdAt)}</td>
+                      <td className="p-3 text-gray-900 font-semibold">{j.pages}</td>
                       <td className="p-3">{j.cost != null ? <span className="text-amber-300">Rs {Number(j.cost).toLocaleString()}</span> : <span className="text-slate-500">Included</span>}</td>
-                      <td className="p-3 text-slate-400">{j.note || '—'}</td>
+                      <td className="p-3 text-gray-500">{j.note || '—'}</td>
                     </tr>
                   ))}
                 </tbody>

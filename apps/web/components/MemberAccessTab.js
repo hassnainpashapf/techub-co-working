@@ -56,9 +56,9 @@ export default function MemberAccessTab({ memberId }) {
     <div>
       {error && <ErrorBanner message={error} />}
       <div className="flex items-center justify-between mb-2">
-        <h3 className="font-semibold text-white">🔑 Access Credentials ({creds.length})</h3>
+        <h3 className="font-semibold text-gray-900">🔑 Access Credentials ({creds.length})</h3>
         <button onClick={issuePin} disabled={busy}
-          className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+          className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-gray-900 disabled:opacity-50">
           {busy ? '…' : '+ Issue PIN'}
         </button>
       </div>
@@ -79,13 +79,13 @@ export default function MemberAccessTab({ memberId }) {
             key: 'actions', label: 'Actions',
             render: (c) => c.isActive
               ? <button onClick={() => revoke(c.id)} className="text-xs font-semibold text-rose-300 hover:text-rose-200">Revoke</button>
-              : <span className="text-xs text-white/30">—</span>,
+              : <span className="text-xs text-gray-900/30">—</span>,
           },
         ]}
         rows={creds}
         empty={{ title: 'No credentials', hint: 'Issue a PIN to give this member door access.' }}
       />
-      <h3 className="font-semibold text-white mb-2 mt-5">🕐 Access Schedules ({schedules.length})</h3>
+      <h3 className="font-semibold text-gray-900 mb-2 mt-5">🕐 Access Schedules ({schedules.length})</h3>
       <DataTable
         columns={[
           { key: 'door', label: 'Door', render: (s) => s.door?.name || 'All doors' },

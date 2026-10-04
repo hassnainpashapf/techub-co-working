@@ -107,12 +107,12 @@ export default function SmsCampaignsPage() {
             <div key={it.id} className="card-premium p-4">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div>
-                  <div className="font-semibold text-white">{it.name}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="font-semibold text-gray-900">{it.name}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">
                     {new Date(it.createdAt).toLocaleString()} · {it.sentCount} sent
                     {it.failCount > 0 && <span className="text-red-300"> · {it.failCount} failed</span>}
                   </div>
-                  <div className="text-sm text-slate-300 mt-2 max-w-xl">{it.message}</div>
+                  <div className="text-sm text-gray-600 mt-2 max-w-xl">{it.message}</div>
                 </div>
                 <div className="flex items-center gap-2">
                   {statusBadge(it.status)}
@@ -127,7 +127,7 @@ export default function SmsCampaignsPage() {
                 </div>
               </div>
               {previewId === it.id && preview && (
-                <div className="mt-3 text-sm text-slate-300 border-t border-white/10 pt-3">
+                <div className="mt-3 text-sm text-gray-600 border-t border-gray-200 pt-3">
                   📩 <b>{preview.recipientCount}</b> recipients · {preview.counter.chars} chars · {preview.counter.segments} segment(s) ({preview.counter.encoding})
                   {preview.sample?.length > 0 && (
                     <div className="text-xs text-slate-500 mt-1">

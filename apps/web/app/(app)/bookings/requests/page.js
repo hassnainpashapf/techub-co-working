@@ -63,13 +63,13 @@ export default function BookingRequestsPage() {
 
   const columns = [
     { key: 'name', label: 'Name', render: (r) => (
-      <div><div className="font-medium text-white">{r.name}</div><div className="text-xs text-slate-400">{r.email} · {r.phone}</div></div>
+      <div><div className="font-medium text-gray-900">{r.name}</div><div className="text-xs text-gray-500">{r.email} · {r.phone}</div></div>
     )},
-    { key: 'unit', label: 'Space', render: (r) => <span className="text-slate-200">{r.unit?.code} <span className="text-slate-500">({r.unit?.type})</span></span> },
+    { key: 'unit', label: 'Space', render: (r) => <span className="text-gray-800">{r.unit?.code} <span className="text-slate-500">({r.unit?.type})</span></span> },
     { key: 'when', label: 'When', render: (r) => (
-      <div className="text-xs text-slate-300">{new Date(r.date).toLocaleDateString()}<br />{r.startTime} – {r.endTime}</div>
+      <div className="text-xs text-gray-600">{new Date(r.date).toLocaleDateString()}<br />{r.startTime} – {r.endTime}</div>
     )},
-    { key: 'notes', label: 'Notes', render: (r) => <span className="text-xs text-slate-400 max-w-[200px] block truncate">{r.notes || '—'}</span> },
+    { key: 'notes', label: 'Notes', render: (r) => <span className="text-xs text-gray-500 max-w-[200px] block truncate">{r.notes || '—'}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status}</Badge> },
     { key: 'actions', label: '', render: (r) => r.status === 'pending' ? (
       <div className="flex gap-2">
@@ -104,8 +104,8 @@ export default function BookingRequestsPage() {
                 onClick={() => setFilter(s)}
                 className={`rounded-lg px-3 py-1.5 text-xs font-semibold capitalize border ${
                   filter === s
-                    ? 'bg-violet-600/30 border-violet-500/50 text-violet-200'
-                    : 'border-white/10 text-slate-400 hover:text-white'
+                    ? 'bg-teal-700/30 border-teal-600/50 text-violet-200'
+                    : 'border-gray-200 text-gray-500 hover:text-gray-900'
                 }`}
               >
                 {s}

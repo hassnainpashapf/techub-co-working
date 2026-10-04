@@ -71,10 +71,10 @@ function CafeRoleTab({ employeeId }) {
     <div className="space-y-3 text-sm">
       {error && <ErrorBanner message={error} onRetry={load} />}
       {staff && staff.isActive ? (
-        <div className="flex items-center justify-between rounded-lg bg-slate-800/60 px-4 py-3">
+        <div className="flex items-center justify-between rounded-lg bg-gray-100/60 px-4 py-3">
           <div>
-            <div className="font-semibold text-slate-200 capitalize">🧑‍🍳 {staff.role}</div>
-            <div className="text-xs text-slate-400">Café staff — kitchen display access hai</div>
+            <div className="font-semibold text-gray-800 capitalize">🧑‍🍳 {staff.role}</div>
+            <div className="text-xs text-gray-500">Café staff — kitchen display access hai</div>
           </div>
           <button onClick={remove} disabled={busy} className="btn-ghost text-red-300 text-sm">Remove</button>
         </div>
@@ -188,9 +188,9 @@ export default function EmployeesPage() {
         {e.name}
       </button>
     ) },
-    { key: 'designation', label: 'Designation', render: (e) => <span className="text-slate-300">{e.designation}</span> },
+    { key: 'designation', label: 'Designation', render: (e) => <span className="text-gray-600">{e.designation}</span> },
     { key: 'department', label: 'Department', render: (e) => <Badge tone="blue">{deptLabel(e.department)}</Badge> },
-    { key: 'phone', label: 'Phone', render: (e) => <span className="text-slate-300">{e.phone || '—'}</span> },
+    { key: 'phone', label: 'Phone', render: (e) => <span className="text-gray-600">{e.phone || '—'}</span> },
     { key: 'status', label: 'Status', render: (e) => statusBadge(e.status) },
     { key: 'actions', label: '', render: (e) => (
       <div className="flex gap-2 justify-end">
@@ -283,16 +283,16 @@ export default function EmployeesPage() {
           </div>
           {ptab === 'info' && (
             <div className="space-y-2 text-sm">
-              <div className="flex justify-between"><span className="text-slate-400">Designation</span><span className="text-slate-200">{profile.designation}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Department</span><span className="text-slate-200">{deptLabel(profile.department)}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Status</span>{statusBadge(profile.status)}</div>
-              <div className="flex justify-between"><span className="text-slate-400">Employment</span><span className="text-slate-200">{(TYPES.find((t) => t.value === profile.employmentType) || {}).label}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Email</span><span className="text-slate-200">{profile.email || '—'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Phone</span><span className="text-slate-200">{profile.phone || '—'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Joining</span><span className="text-slate-200">{profile.joiningDate ? String(profile.joiningDate).slice(0, 10) : '—'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Emergency</span><span className="text-slate-200">{profile.emergencyContact || '—'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">CNIC</span><span className="text-slate-200">{profile.cnic || '—'}</span></div>
-              <div className="flex justify-between"><span className="text-slate-400">Address</span><span className="text-slate-200">{profile.address || '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Designation</span><span className="text-gray-800">{profile.designation}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Department</span><span className="text-gray-800">{deptLabel(profile.department)}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Status</span>{statusBadge(profile.status)}</div>
+              <div className="flex justify-between"><span className="text-gray-500">Employment</span><span className="text-gray-800">{(TYPES.find((t) => t.value === profile.employmentType) || {}).label}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Email</span><span className="text-gray-800">{profile.email || '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Phone</span><span className="text-gray-800">{profile.phone || '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Joining</span><span className="text-gray-800">{profile.joiningDate ? String(profile.joiningDate).slice(0, 10) : '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Emergency</span><span className="text-gray-800">{profile.emergencyContact || '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">CNIC</span><span className="text-gray-800">{profile.cnic || '—'}</span></div>
+              <div className="flex justify-between"><span className="text-gray-500">Address</span><span className="text-gray-800">{profile.address || '—'}</span></div>
             </div>
           )}
           {ptab === 'documents' && (

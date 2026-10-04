@@ -103,7 +103,7 @@ export default function LockerMapPage() {
       <div className="flex gap-2 mb-6">
         {['all', 'available', 'occupied', 'reserved', 'maintenance'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}>
             {f}
           </button>
         ))}
@@ -113,9 +113,9 @@ export default function LockerMapPage() {
       ) : (
         <div className="space-y-6">
           {Object.entries(groups).map(([loc, items]) => (
-            <div key={loc} className="rounded-2xl border border-slate-700/60 bg-slate-900/60 p-5">
+            <div key={loc} className="rounded-2xl border border-gray-200/60 bg-white/60 p-5">
               <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-bold text-white">📍 {loc}</h3>
+                <h3 className="text-lg font-bold text-gray-900">📍 {loc}</h3>
                 <Badge tone="blue">{items.length} lockers</Badge>
               </div>
               <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 gap-3">
@@ -124,9 +124,9 @@ export default function LockerMapPage() {
                     className={`rounded-xl border p-3 text-left transition cursor-pointer ${STATUS_STYLE[l.status] || STATUS_STYLE.maintenance}`}>
                     <div className="flex items-center justify-between mb-1.5">
                       <span className={`w-2.5 h-2.5 rounded-full ${STATUS_DOT[l.status] || STATUS_DOT.maintenance}`} />
-                      <span className="text-[10px] font-bold text-slate-400">{l.size || 'M'}</span>
+                      <span className="text-[10px] font-bold text-gray-500">{l.size || 'M'}</span>
                     </div>
-                    <div className="text-sm font-extrabold text-white truncate">{l.code}</div>
+                    <div className="text-sm font-extrabold text-gray-900 truncate">{l.code}</div>
                   </button>
                 ))}
               </div>
@@ -138,22 +138,22 @@ export default function LockerMapPage() {
         {selected && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Status</span>
+              <span className="text-sm text-gray-500">Status</span>
               <Badge tone={STATUS_TONE[selected.status] || 'slate'}>{selected.status}</Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Size</span>
-              <span className="text-sm font-semibold text-white">{SIZE_LABEL[selected.size] || selected.size || 'Medium'}</span>
+              <span className="text-sm text-gray-500">Size</span>
+              <span className="text-sm font-semibold text-gray-900">{SIZE_LABEL[selected.size] || selected.size || 'Medium'}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Location</span>
-              <span className="text-sm font-semibold text-white">{selected.location || 'General'}</span>
+              <span className="text-sm text-gray-500">Location</span>
+              <span className="text-sm font-semibold text-gray-900">{selected.location || 'General'}</span>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-slate-400">Monthly rate</span>
-              <span className="text-sm font-semibold text-white">{selected.monthlyRate != null ? Number(selected.monthlyRate) : '—'}</span>
+              <span className="text-sm text-gray-500">Monthly rate</span>
+              <span className="text-sm font-semibold text-gray-900">{selected.monthlyRate != null ? Number(selected.monthlyRate) : '—'}</span>
             </div>
-            {selected.notes && <p className="text-xs text-slate-400 bg-slate-800 rounded-lg p-2.5">{selected.notes}</p>}
+            {selected.notes && <p className="text-xs text-gray-500 bg-gray-100 rounded-lg p-2.5">{selected.notes}</p>}
             {selected.status === 'available' && (
               <button className="btn-primary w-full" onClick={() => setShowRent(true)}>🔑 Rent this locker</button>
             )}

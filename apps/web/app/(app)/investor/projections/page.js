@@ -10,7 +10,7 @@ function StackedBarChart({ data, height = 220 }) {
   const max = Math.max(...data.map((d) => d.total), 1);
   const barW = 100 / data.length;
   const segs = [
-    { key: 'contracts', color: '#8b5cf6', label: 'Contracts' },
+    { key: 'contracts', color: '#0f766e', label: 'Contracts' },
     { key: 'recurring', color: '#10b981', label: 'Recurring' },
     { key: 'pipeline', color: '#f59e0b', label: 'Pipeline' },
   ];
@@ -24,7 +24,7 @@ function StackedBarChart({ data, height = 220 }) {
           </filter>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.3" />
+          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
         ))}
         {data.map((d, i) => {
           const h = Math.max((d.total / max) * (height - 34), 2);
@@ -38,7 +38,7 @@ function StackedBarChart({ data, height = 220 }) {
                 y -= sh;
                 return <rect key={s.key} x={x} y={y} width={w} height={sh} fill={s.color} fillOpacity="0.9" />;
               })}
-              <text x={x + w / 2} y={height - 8} textAnchor="middle" fill="rgba(255,255,255,0.55)" fontSize="3" fontWeight="600">{d.label}</text>
+              <text x={x + w / 2} y={height - 8} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3" fontWeight="600">{d.label}</text>
             </g>
           );
         })}
@@ -75,7 +75,7 @@ export default function ProjectionsPage() {
   if (!allowed) return <AccessDenied />;
 
   const legend = [
-    { label: 'Contracts', color: '#8b5cf6' },
+    { label: 'Contracts', color: '#0f766e' },
     { label: 'Recurring invoices', color: '#10b981' },
     { label: 'Pipeline', color: '#f59e0b' },
   ];
@@ -108,17 +108,17 @@ export default function ProjectionsPage() {
 
           <div className="card-premium p-6 mb-6">
             <div className="flex items-center justify-between mb-1">
-              <h2 className="text-lg font-bold text-white">Monthly Projection</h2>
+              <h2 className="text-lg font-bold text-gray-900">Monthly Projection</h2>
               <div className="flex gap-4">
                 {legend.map((l) => (
-                  <span key={l.label} className="flex items-center gap-1.5 text-xs text-slate-300">
+                  <span key={l.label} className="flex items-center gap-1.5 text-xs text-gray-600">
                     <span className="inline-block w-3 h-3 rounded" style={{ background: l.color }} />
                     {l.label}
                   </span>
                 ))}
               </div>
             </div>
-            <p className="text-xs text-slate-400 mb-4">Projected revenue per month, stacked by source</p>
+            <p className="text-xs text-gray-500 mb-4">Projected revenue per month, stacked by source</p>
             {data.byMonth.length === 0 ? (
               <EmptyState title="No data" hint="No contracts, recurring invoices or leads found." />
             ) : (
@@ -127,8 +127,8 @@ export default function ProjectionsPage() {
           </div>
 
           <div className="card-premium p-6">
-            <h2 className="text-lg font-bold text-white mb-3">Assumptions</h2>
-            <ul className="list-disc list-inside text-sm text-slate-300 space-y-1.5">
+            <h2 className="text-lg font-bold text-gray-900 mb-3">Assumptions</h2>
+            <ul className="list-disc list-inside text-sm text-gray-600 space-y-1.5">
               {data.assumptions.map((a, i) => (
                 <li key={i}>{a}</li>
               ))}

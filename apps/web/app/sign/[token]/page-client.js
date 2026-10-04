@@ -162,39 +162,39 @@ export default function SignContractPage({ params }) {
   const pending = data && data.status === 'pending';
 
   return (
-    <div className="min-h-screen bg-[#0a0a14] flex items-center justify-center px-4 py-10">
-      <div className="w-full max-w-xl rounded-2xl border border-white/10 bg-white/[0.04] p-6 sm:p-8">
-        <h1 className="text-xl font-extrabold text-white mb-1">✍️ Contract Signature</h1>
-        <p className="text-sm text-slate-400 mb-6">Review the contract summary below, then sign.</p>
+    <div className="min-h-screen bg-[#f4f5f7] flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-xl rounded-2xl border border-gray-200 bg-gray-100 p-6 sm:p-8">
+        <h1 className="text-xl font-extrabold text-gray-900 mb-1">✍️ Contract Signature</h1>
+        <p className="text-sm text-gray-500 mb-6">Review the contract summary below, then sign.</p>
 
-        {loading && <p className="text-slate-400 text-sm">Loading…</p>}
+        {loading && <p className="text-gray-500 text-sm">Loading…</p>}
         {error && <p className="text-sm text-red-300 bg-red-500/10 border border-red-500/30 rounded-lg p-3 mb-4">{error}</p>}
 
         {done === 'signed' && (
           <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-5 text-center">
             <p className="text-2xl mb-2">✅</p>
             <p className="font-semibold text-emerald-200">Contract signed successfully.</p>
-            <p className="text-sm text-slate-400 mt-1">A confirmation has been recorded with timestamp and IP address.</p>
+            <p className="text-sm text-gray-500 mt-1">A confirmation has been recorded with timestamp and IP address.</p>
           </div>
         )}
         {done === 'declined' && (
           <div className="rounded-xl border border-amber-400/30 bg-amber-500/10 p-5 text-center">
             <p className="text-2xl mb-2">📝</p>
             <p className="font-semibold text-amber-200">You declined to sign.</p>
-            <p className="text-sm text-slate-400 mt-1">The coworking team has been notified.</p>
+            <p className="text-sm text-gray-500 mt-1">The coworking team has been notified.</p>
           </div>
         )}
 
         {data && !done && (
           <>
-            <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-5 text-sm">
+            <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 mb-5 text-sm">
               <div className="grid grid-cols-2 gap-2">
-                <div><p className="text-xs text-slate-500">Member</p><p className="text-white font-medium">{c.memberName || '—'}</p></div>
-                <div><p className="text-xs text-slate-500">Unit</p><p className="text-white font-medium">{c.unitCode || '—'}</p></div>
-                <div><p className="text-xs text-slate-500">Start</p><p className="text-white font-medium">{c.startDate ? String(c.startDate).slice(0, 10) : '—'}</p></div>
-                <div><p className="text-xs text-slate-500">End</p><p className="text-white font-medium">{c.endDate ? String(c.endDate).slice(0, 10) : '—'}</p></div>
-                <div><p className="text-xs text-slate-500">Monthly rent</p><p className="text-white font-medium">Rs {Number(c.rentAmount || 0).toLocaleString()}</p></div>
-                <div><p className="text-xs text-slate-500">Signer</p><p className="text-white font-medium">{data.signerName}</p></div>
+                <div><p className="text-xs text-slate-500">Member</p><p className="text-gray-900 font-medium">{c.memberName || '—'}</p></div>
+                <div><p className="text-xs text-slate-500">Unit</p><p className="text-gray-900 font-medium">{c.unitCode || '—'}</p></div>
+                <div><p className="text-xs text-slate-500">Start</p><p className="text-gray-900 font-medium">{c.startDate ? String(c.startDate).slice(0, 10) : '—'}</p></div>
+                <div><p className="text-xs text-slate-500">End</p><p className="text-gray-900 font-medium">{c.endDate ? String(c.endDate).slice(0, 10) : '—'}</p></div>
+                <div><p className="text-xs text-slate-500">Monthly rent</p><p className="text-gray-900 font-medium">Rs {Number(c.rentAmount || 0).toLocaleString()}</p></div>
+                <div><p className="text-xs text-slate-500">Signer</p><p className="text-gray-900 font-medium">{data.signerName}</p></div>
               </div>
             </div>
 
@@ -207,7 +207,7 @@ export default function SignContractPage({ params }) {
               <p className="text-sm text-amber-300 bg-amber-500/10 border border-amber-500/30 rounded-lg p-3">This request was declined.</p>
             )}
             {data.status === 'expired' && (
-              <p className="text-sm text-slate-300 bg-white/5 border border-white/10 rounded-lg p-3">This signing link has expired. Please ask the coworking team for a new one.</p>
+              <p className="text-sm text-gray-600 bg-gray-100 border border-gray-200 rounded-lg p-3">This signing link has expired. Please ask the coworking team for a new one.</p>
             )}
 
             {pending && (
@@ -215,12 +215,12 @@ export default function SignContractPage({ params }) {
                 <div className="flex gap-2 mb-3">
                   <button
                     onClick={() => setUseTyped(false)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${!useTyped ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${!useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500'}`}>
                     Draw signature
                   </button>
                   <button
                     onClick={() => setUseTyped(true)}
-                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${useTyped ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400'}`}>
+                    className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${useTyped ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500'}`}>
                     Type signature
                   </button>
                 </div>
@@ -234,11 +234,11 @@ export default function SignContractPage({ params }) {
                   />
                 ) : null}
 
-                <div className="rounded-xl border border-dashed border-white/20 bg-black/30 mb-2 overflow-hidden">
+                <div className="rounded-xl border border-dashed border-gray-300 bg-black/30 mb-2 overflow-hidden">
                   <canvas ref={canvasRef} className="w-full h-44 touch-none cursor-crosshair" />
                 </div>
                 {!useTyped && (
-                  <button onClick={clearPad} className="text-xs text-slate-400 hover:text-white mb-4">Clear</button>
+                  <button onClick={clearPad} className="text-xs text-gray-500 hover:text-gray-900 mb-4">Clear</button>
                 )}
 
                 <div className="flex gap-3 mt-2">
@@ -247,7 +247,7 @@ export default function SignContractPage({ params }) {
                   </button>
                 </div>
                 <details className="mt-4">
-                  <summary className="text-xs text-slate-500 cursor-pointer hover:text-slate-300">Decline instead</summary>
+                  <summary className="text-xs text-slate-500 cursor-pointer hover:text-gray-600">Decline instead</summary>
                   <div className="mt-2">
                     <input
                       className="input w-full mb-2"

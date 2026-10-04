@@ -23,13 +23,13 @@ function LiveFeed({ events }) {
   return (
     <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
       {events.map((e) => (
-        <div key={e.id} className="flex items-center gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2">
+        <div key={e.id} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
           <span className={`inline-flex h-8 w-8 items-center justify-center rounded-full text-sm ${e.result === 'granted' ? 'bg-green-500/15 text-green-300' : 'bg-red-500/15 text-red-300'}`}>
             {e.direction === 'in' ? '→' : '←'}
           </span>
           <div className="flex-1 min-w-0">
             <div className="text-sm font-medium truncate">{e.member || 'Unknown visitor'}</div>
-            <div className="text-xs text-slate-400 truncate">{e.door || '—'} • {e.credentialType || ''} {e.reason ? `• ${e.reason}` : ''}</div>
+            <div className="text-xs text-gray-500 truncate">{e.door || '—'} • {e.credentialType || ''} {e.reason ? `• ${e.reason}` : ''}</div>
           </div>
           <Badge tone={e.result === 'granted' ? 'green' : 'red'}>{e.result === 'granted' ? 'Granted' : 'Denied'}</Badge>
           <span className="text-xs text-slate-500 whitespace-nowrap">{timeAgo(e.createdAt)}</span>
@@ -97,21 +97,21 @@ export default function AccessDashboardPage() {
       </div>
 
       <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-        <div className="xl:col-span-2 rounded-2xl border border-white/5 bg-[#15151f] p-5">
+        <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-lg font-semibold mb-4">📡 Live Feed</h3>
           <LiveFeed events={live.events} />
         </div>
-        <div className="rounded-2xl border border-white/5 bg-[#15151f] p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-lg font-semibold mb-4">🏢 Who's In ({live.inside.length})</h3>
           {!live.inside.length ? (
             <EmptyState title="Abhi koi andar nahi" />
           ) : (
             <div className="space-y-2 max-h-[420px] overflow-y-auto pr-1">
               {live.inside.map((m) => (
-                <div key={m.id} className="flex items-center justify-between rounded-xl border border-white/5 bg-white/[0.02] px-3 py-2">
+                <div key={m.id} className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-50 px-3 py-2">
                   <div>
                     <div className="text-sm font-medium">{m.name}</div>
-                    <div className="text-xs text-slate-400">{m.phone || ''}</div>
+                    <div className="text-xs text-gray-500">{m.phone || ''}</div>
                   </div>
                   <span className="text-xs text-slate-500">{m.enteredAt ? timeAgo(m.enteredAt) + ' se' : ''}</span>
                 </div>
@@ -121,7 +121,7 @@ export default function AccessDashboardPage() {
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/5 bg-[#15151f] p-5">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <h3 className="text-lg font-semibold mb-4">⚡ Quick Links</h3>
         <div className="flex flex-wrap gap-3">
           <a href="/access/doors" className="btn-secondary">🚪 Doors</a>

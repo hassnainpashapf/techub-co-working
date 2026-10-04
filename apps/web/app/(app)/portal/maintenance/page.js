@@ -64,12 +64,12 @@ export default function PortalMaintenancePage() {
           {rows.map((r) => (
             <div key={r.id} className="card-premium p-5">
               <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-bold text-white">{r.title}</h3>
+                <h3 className="font-bold text-gray-900">{r.title}</h3>
                 <Badge tone={PRIORITY_TONE[r.priority] || 'slate'}>{r.priority}</Badge>
               </div>
-              {r.description && <p className="text-sm text-slate-300 whitespace-pre-wrap mb-3">{r.description}</p>}
+              {r.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-3">{r.description}</p>}
               <div className="flex items-center justify-between text-xs">
-                <span className="text-slate-400">{r.location || ''} {r.location ? '· ' : ''}{fmtDate(r.createdAt)}</span>
+                <span className="text-gray-500">{r.location || ''} {r.location ? '· ' : ''}{fmtDate(r.createdAt)}</span>
                 <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status.replace('_', ' ')}</Badge>
               </div>
               {r.assignedTo?.name && <p className="text-xs text-slate-500 mt-2">Assigned to {r.assignedTo.name}</p>}

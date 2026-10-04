@@ -28,7 +28,7 @@ function PoliciesBanner() {
       <div className="space-y-2">
         {pending.map((p) => (
           <div key={p.id} className="flex items-center justify-between gap-3 text-sm">
-            <span className="text-slate-200">{p.title} <span className="text-slate-500">(v{p.version})</span></span>
+            <span className="text-gray-800">{p.title} <span className="text-slate-500">(v{p.version})</span></span>
             <div className="flex gap-2">
               {p.fileUrl && <a href={p.fileUrl} target="_blank" rel="noreferrer" className="btn-ghost text-xs">📄 Parhein</a>}
               <button onClick={() => ack(p.id)} className="btn-primary text-xs">✅ Acknowledge</button>
@@ -158,8 +158,8 @@ function VisitorInviteModal({ onClose, onDone }) {
       {code ? (
         <div className="text-center py-4">
           <p className="text-emerald-300 font-bold text-lg mb-2">✓ Invite created</p>
-          <p className="text-slate-400 text-sm mb-3">Share this code with your visitor for fast check-in at reception:</p>
-          <p className="text-3xl font-mono font-bold tracking-widest text-white bg-white/[0.04] border border-white/10 rounded-xl py-4 mb-4">{code}</p>
+          <p className="text-gray-500 text-sm mb-3">Share this code with your visitor for fast check-in at reception:</p>
+          <p className="text-3xl font-mono font-bold tracking-widest text-gray-900 bg-gray-100 border border-gray-200 rounded-xl py-4 mb-4">{code}</p>
           <button onClick={onDone} className="btn-primary">Done</button>
         </div>
       ) : (
@@ -232,11 +232,11 @@ function AnnouncementsFeed() {
   return (
     <div className="card-premium p-5 mt-6" id="announcements">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-white font-bold">📢 Announcements</h2>
-        {unread > 0 && <span className="text-xs font-bold bg-[#8b5cf6]/20 border border-[#8b5cf6]/40 text-[#ddd6fe] rounded-full px-2.5 py-0.5">{unread} new</span>}
+        <h2 className="text-gray-900 font-bold">📢 Announcements</h2>
+        {unread > 0 && <span className="text-xs font-bold bg-[#0f766e]/20 border border-[#0f766e]/40 text-teal-700 rounded-full px-2.5 py-0.5">{unread} new</span>}
       </div>
       {loading ? <Spinner /> : items.length === 0 ? (
-        <p className="text-slate-400 text-sm">No announcements right now.</p>
+        <p className="text-gray-500 text-sm">No announcements right now.</p>
       ) : (
         <>
           <div className="space-y-3">
@@ -246,18 +246,18 @@ function AnnouncementsFeed() {
                 onClick={() => toggle(a.id)}
                 className={`w-full text-left rounded-xl px-4 py-3 border transition ${
                   a.pinned
-                    ? 'bg-violet-500/[0.08] border-violet-400/40 shadow-[0_0_20px_rgba(139,92,246,0.12)]'
-                    : 'bg-white/[0.03] border-white/[0.06] hover:border-white/15'
+                    ? 'bg-teal-600/[0.08] border-teal-500/40 shadow-[0_0_20px_rgba(15,118,110,0.12)]'
+                    : 'bg-gray-50 border-gray-200 hover:border-white/15'
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  {!a.read && <span className="w-2 h-2 rounded-full bg-[#8b5cf6] shrink-0" />}
+                  {!a.read && <span className="w-2 h-2 rounded-full bg-[#0f766e] shrink-0" />}
                   {a.pinned && <span className="text-xs">📌</span>}
-                  <p className="text-white font-medium text-sm flex-1">{a.title}</p>
+                  <p className="text-gray-900 font-medium text-sm flex-1">{a.title}</p>
                   <span className="text-slate-500 text-xs shrink-0">{new Date(a.createdAt).toLocaleDateString()}</span>
                 </div>
                 {expanded[a.id] && (
-                  <p className="text-slate-300 text-sm mt-2 whitespace-pre-wrap">{a.body}</p>
+                  <p className="text-gray-600 text-sm mt-2 whitespace-pre-wrap">{a.body}</p>
                 )}
                 {a.senderName && (
                   <p className="text-slate-500 text-xs mt-1">— {a.senderName}</p>
@@ -266,7 +266,7 @@ function AnnouncementsFeed() {
             ))}
           </div>
           {items.length > 3 && (
-            <button onClick={() => setShowAll(!showAll)} className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] underline mt-3">
+            <button onClick={() => setShowAll(!showAll)} className="text-sm text-teal-700 hover:text-teal-700 underline mt-3">
               {showAll ? 'Show less' : `View all ${items.length} →`}
             </button>
           )}
@@ -316,24 +316,24 @@ function DirectoryProfileSection() {
 
   return (
     <div className="card-premium p-5 mt-6">
-      <h2 className="text-white font-bold mb-1">Directory Profile 🤝</h2>
-      <p className="text-slate-400 text-xs mb-4">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
+      <h2 className="text-gray-900 font-bold mb-1">Directory Profile 🤝</h2>
+      <p className="text-gray-500 text-xs mb-4">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
       <label className="flex items-center gap-3 mb-4 cursor-pointer">
         <button
           type="button"
           role="switch"
           aria-checked={optIn}
           onClick={() => setOptIn(!optIn)}
-          className={`w-11 h-6 rounded-full relative transition-colors ${optIn ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}
+          className={`w-11 h-6 rounded-full relative transition-colors ${optIn ? 'bg-[#0f766e]' : 'bg-gray-100'}`}
         >
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${optIn ? 'left-[22px]' : 'left-0.5'}`} />
         </button>
-        <span className="text-sm text-white font-medium">Show me in the member directory</span>
+        <span className="text-sm text-gray-900 font-medium">Show me in the member directory</span>
       </label>
       {optIn && (
         <>
           <div className="mb-3">
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Bio</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Bio</label>
             <textarea
               className="input"
               rows={2}
@@ -344,7 +344,7 @@ function DirectoryProfileSection() {
             />
           </div>
           <div className="mb-4">
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Tags (comma separated)</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Tags (comma separated)</label>
             <input
               className="input"
               value={tagsInput}
@@ -358,7 +358,7 @@ function DirectoryProfileSection() {
       {saved && <p className="text-sm text-emerald-300 mb-3">Saved ✓</p>}
       <div className="flex items-center gap-3">
         <button onClick={save} disabled={saving} className="btn-primary text-sm">{saving ? 'Saving…' : 'Save'}</button>
-        <a href="/portal/directory" className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] underline">View directory →</a>
+        <a href="/portal/directory" className="text-sm text-teal-700 hover:text-teal-700 underline">View directory →</a>
       </div>
     </div>
   );
@@ -409,24 +409,24 @@ function CalendarFeedSection() {
 
   return (
     <div className="card-premium p-5 mt-6">
-      <h2 className="text-white font-bold mb-1">📅 Add to Calendar</h2>
-      <p className="text-slate-400 text-sm mb-4">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
+      <h2 className="text-gray-900 font-bold mb-1">📅 Add to Calendar</h2>
+      <p className="text-gray-500 text-sm mb-4">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
       {loading ? (
         <p className="text-slate-500 text-sm">Loading…</p>
       ) : !feed ? (
         <p className="text-slate-500 text-sm">Calendar feed unavailable.</p>
       ) : (
         <div className="space-y-3">
-          <div className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
-            <code className="flex-1 text-xs text-slate-300 truncate">{feedUrl}</code>
-            <button onClick={copy} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] border border-[#8b5cf6]/30 rounded-lg px-3 py-1.5 whitespace-nowrap">
+          <div className="flex items-center gap-2 bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
+            <code className="flex-1 text-xs text-gray-600 truncate">{feedUrl}</code>
+            <button onClick={copy} className="text-xs text-teal-700 hover:text-teal-700 border border-[#0f766e]/30 rounded-lg px-3 py-1.5 whitespace-nowrap">
               {copied ? '✓ Copied' : 'Copy link'}
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-3 py-1.5">Add to Google Calendar</a>
-            <a href={webcalUrl} className="text-xs text-white bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
-            <button onClick={regenerate} disabled={regen} className="text-xs text-slate-400 hover:text-slate-200 underline">
+            <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-[#0f766e]/80 hover:bg-[#0f766e] rounded-lg px-3 py-1.5">Add to Google Calendar</a>
+            <a href={webcalUrl} className="text-xs text-gray-900 bg-gray-100 hover:bg-white/15 border border-gray-200 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
+            <button onClick={regenerate} disabled={regen} className="text-xs text-gray-500 hover:text-gray-800 underline">
               {regen ? '…' : 'Get new link'}
             </button>
           </div>
@@ -442,19 +442,19 @@ function NextBookingCard({ booking, onCheckIn, checkingIn }) {
   if (!booking) {
     return (
       <div className="card-premium p-5">
-        <h2 className="text-white font-bold mb-2">📅 Next Booking</h2>
-        <p className="text-slate-400 text-sm">No upcoming bookings.</p>
+        <h2 className="text-gray-900 font-bold mb-2">📅 Next Booking</h2>
+        <p className="text-gray-500 text-sm">No upcoming bookings.</p>
       </div>
     );
   }
   const checkedIn = booking.status === 'checked_in';
   return (
     <div className="card-premium p-5 relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#8b5cf6] via-violet-500 to-[#8b5cf6]" />
-      <p className="text-xs font-semibold text-[#c4b5fd] uppercase tracking-wider mb-1">Next booking</p>
-      <h2 className="text-white font-bold text-lg">{booking.title}</h2>
-      <p className="text-slate-300 text-sm mt-1">{booking.unit?.code} • {booking.unit?.type}</p>
-      <p className="text-slate-400 text-sm">🕙 {fmtDateTime(booking.startAt)} → {new Date(booking.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#0f766e] via-teal-600 to-[#0f766e]" />
+      <p className="text-xs font-semibold text-teal-700 uppercase tracking-wider mb-1">Next booking</p>
+      <h2 className="text-gray-900 font-bold text-lg">{booking.title}</h2>
+      <p className="text-gray-600 text-sm mt-1">{booking.unit?.code} • {booking.unit?.type}</p>
+      <p className="text-gray-500 text-sm">🕙 {fmtDateTime(booking.startAt)} → {new Date(booking.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
       <div className="mt-4">
         {checkedIn ? (
           <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-300 bg-emerald-500/15 border border-emerald-400/40 rounded-lg px-4 py-2">
@@ -491,8 +491,8 @@ function InvoicesSection({ reloadKey }) {
 
   return (
     <div className="card-premium p-5 mt-6" id="invoices">
-      <h2 className="text-white font-bold mb-1">🧾 My Invoices</h2>
-      <p className="text-slate-400 text-sm mb-4">
+      <h2 className="text-gray-900 font-bold mb-1">🧾 My Invoices</h2>
+      <p className="text-gray-500 text-sm mb-4">
         {open.length === 0 ? 'All clear — no unpaid invoices. 🎉' : `${open.length} unpaid — pay at the front desk or via bank transfer.`}
       </p>
       {loading ? <Spinner /> : open.length === 0 ? null : (
@@ -501,10 +501,10 @@ function InvoicesSection({ reloadKey }) {
             const due = Number(inv.amount) - Number(inv.amountPaid || 0);
             const overdue = inv.dueDate && new Date(inv.dueDate) < new Date();
             return (
-              <div key={inv.id} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+              <div key={inv.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                 <div>
-                  <p className="text-white font-medium text-sm">{inv.number || inv.id.slice(0, 8)}</p>
-                  <p className="text-slate-400 text-xs">Due {inv.dueDate ? fmtDate(inv.dueDate) : '—'} {overdue && <span className="text-red-300 font-bold">• overdue</span>}</p>
+                  <p className="text-gray-900 font-medium text-sm">{inv.number || inv.id.slice(0, 8)}</p>
+                  <p className="text-gray-500 text-xs">Due {inv.dueDate ? fmtDate(inv.dueDate) : '—'} {overdue && <span className="text-red-300 font-bold">• overdue</span>}</p>
                 </div>
                 <p className={`font-bold ${overdue ? 'text-red-300' : 'text-amber-200'}`}>{fmtMoney(due)}</p>
               </div>
@@ -596,22 +596,22 @@ export default function PortalPage() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* HERO */}
-      <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-gradient-to-br from-[#1c1c30] via-[#151524] to-[#0e0e1a] border border-violet-400/20 shadow-[0_0_40px_rgba(139,92,246,0.15)]">
-        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#8b5cf6]/20 blur-3xl" />
-        <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-violet-500/20 blur-3xl" />
+      <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-gradient-to-br from-[#1c1c30] via-[#151524] to-[#0e0e1a] border border-teal-500/20 shadow-[0_0_40px_rgba(15,118,110,0.15)]">
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#0f766e]/20 blur-3xl" />
+        <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-teal-600/20 blur-3xl" />
         <div className="relative">
-          <p className="text-slate-300 text-sm">Assalam-o-Alaikum,</p>
-          <h1 className="text-2xl md:text-3xl font-extrabold text-white">{firstName} 👋</h1>
+          <p className="text-gray-600 text-sm">Assalam-o-Alaikum,</p>
+          <h1 className="text-2xl md:text-3xl font-extrabold text-gray-900">{firstName} 👋</h1>
           <div className="flex flex-wrap items-center gap-2 mt-3">
             <Badge tone={memberActive ? 'green' : 'slate'}>{memberActive ? '● Active member' : member.status || 'Member'}</Badge>
             {contract && (
-              <span className="text-xs text-slate-300 bg-white/[0.05] border border-white/10 rounded-full px-3 py-1">
+              <span className="text-xs text-gray-600 bg-gray-100 border border-gray-200 rounded-full px-3 py-1">
                 📦 {contract.unit?.code} • {contract.unit?.type}
                 {contract.endDate ? ` • till ${fmtDate(contract.endDate)}` : ' • ongoing'}
               </span>
             )}
           </div>
-          {member.companyName && <p className="text-slate-400 text-sm mt-2">🏢 {member.companyName}</p>}
+          {member.companyName && <p className="text-gray-500 text-sm mt-2">🏢 {member.companyName}</p>}
         </div>
       </div>
 
@@ -628,7 +628,7 @@ export default function PortalPage() {
             <p className={`text-3xl font-extrabold ${unpaidTotal > 0 ? 'text-amber-200' : 'text-emerald-300'}`}>
               {fmtMoney(unpaidTotal)}
             </p>
-            <p className="text-slate-400 text-xs mt-1">
+            <p className="text-gray-500 text-xs mt-1">
               {unpaidTotal > 0 ? 'Pay at the front desk or via bank transfer.' : 'All invoices are settled. 🎉'}
             </p>
           </div>
@@ -644,16 +644,16 @@ export default function PortalPage() {
       </div>
 
       {/* QUICK ACTIONS */}
-      <h2 className="text-white font-bold mb-3">⚡ Quick Actions</h2>
+      <h2 className="text-gray-900 font-bold mb-3">⚡ Quick Actions</h2>
       <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
         {QUICK_ACTIONS.map((a) => (
           <button
             key={a.key}
             onClick={() => quickAction(a.action)}
-            className="card-premium p-4 flex flex-col items-center gap-2 hover:border-[#8b5cf6]/40 transition group"
+            className="card-premium p-4 flex flex-col items-center gap-2 hover:border-[#0f766e]/40 transition group"
           >
             <span className="text-2xl group-hover:scale-110 transition">{a.icon}</span>
-            <span className="text-xs text-slate-200 font-medium text-center leading-tight">{a.label}</span>
+            <span className="text-xs text-gray-800 font-medium text-center leading-tight">{a.label}</span>
           </button>
         ))}
       </div>
@@ -667,10 +667,10 @@ export default function PortalPage() {
       </div>
 
       {loyalty && Number(loyalty.balance || 0) > 0 && (
-        <a href="/portal/loyalty" className="block card-premium p-4 mb-6 hover:border-violet-400/40 transition">
+        <a href="/portal/loyalty" className="block card-premium p-4 mb-6 hover:border-teal-500/40 transition">
           <div className="flex items-center justify-between">
-            <p className="text-sm text-white">⭐ You have <span className="font-bold text-violet-300">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
-            <span className="text-sm text-[#c4b5fd] underline shrink-0">View →</span>
+            <p className="text-sm text-gray-900">⭐ You have <span className="font-bold text-teal-300">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
+            <span className="text-sm text-teal-700 underline shrink-0">View →</span>
           </div>
         </a>
       )}
@@ -678,18 +678,18 @@ export default function PortalPage() {
       {/* MY BOOKINGS */}
       <div className="card-premium p-5" id="bookings">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white font-bold">My Upcoming Bookings</h2>
-          <button onClick={() => setShowBook(true)} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">+ Book new</button>
+          <h2 className="text-gray-900 font-bold">My Upcoming Bookings</h2>
+          <button onClick={() => setShowBook(true)} className="text-xs text-teal-700 hover:text-teal-700 underline">+ Book new</button>
         </div>
         {upcomingBookings.length === 0 ? (
-          <p className="text-slate-400 text-sm">No upcoming bookings. <button onClick={() => setShowBook(true)} className="text-[#c4b5fd] underline">Book one now</button></p>
+          <p className="text-gray-500 text-sm">No upcoming bookings. <button onClick={() => setShowBook(true)} className="text-teal-700 underline">Book one now</button></p>
         ) : (
           <div className="space-y-3">
             {upcomingBookings.map((b) => (
-              <div key={b.id} className="flex items-center justify-between gap-3 bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+              <div key={b.id} className="flex items-center justify-between gap-3 bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                 <div className="min-w-0">
-                  <p className="text-white font-medium text-sm truncate">{b.title}</p>
-                  <p className="text-slate-400 text-xs">{b.unit?.code} • {fmtDateTime(b.startAt)}</p>
+                  <p className="text-gray-900 font-medium text-sm truncate">{b.title}</p>
+                  <p className="text-gray-500 text-xs">{b.unit?.code} • {fmtDateTime(b.startAt)}</p>
                   {b.status === 'checked_in' && <p className="text-emerald-300 text-xs font-bold mt-0.5">✓ Checked in</p>}
                 </div>
                 <div className="flex gap-2 shrink-0">
@@ -721,20 +721,20 @@ export default function PortalPage() {
       {/* OPEN TICKETS */}
       <div className="card-premium p-5 mt-6">
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-white font-bold">My Open Tickets</h2>
-          <a href="/tickets" className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">View all →</a>
+          <h2 className="text-gray-900 font-bold">My Open Tickets</h2>
+          <a href="/tickets" className="text-xs text-teal-700 hover:text-teal-700 underline">View all →</a>
         </div>
         {openTickets.length === 0 ? (
-          <p className="text-slate-400 text-sm">No open tickets. 🎉</p>
+          <p className="text-gray-500 text-sm">No open tickets. 🎉</p>
         ) : (
           <div className="space-y-3">
             {openTickets.map((t) => (
-              <div key={t.id} className="flex items-center justify-between bg-white/[0.03] border border-white/[0.06] rounded-xl px-4 py-3">
+              <div key={t.id} className="flex items-center justify-between bg-gray-50 border border-gray-200 rounded-xl px-4 py-3">
                 <div>
-                  <p className="text-white font-medium text-sm">#{t.ticketNumber} — {t.title}</p>
-                  <p className="text-slate-400 text-xs capitalize">{t.status.replace('_', ' ')} • {t.priority}</p>
+                  <p className="text-gray-900 font-medium text-sm">#{t.ticketNumber} — {t.title}</p>
+                  <p className="text-gray-500 text-xs capitalize">{t.status.replace('_', ' ')} • {t.priority}</p>
                 </div>
-                <a href="/tickets" className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">View</a>
+                <a href="/tickets" className="text-xs text-teal-700 hover:text-teal-700 underline">View</a>
               </div>
             ))}
           </div>
@@ -748,12 +748,12 @@ export default function PortalPage() {
 
       {/* Profile */}
       <div className="card-premium p-5 mt-6">
-        <h2 className="text-white font-bold mb-4">My Profile</h2>
+        <h2 className="text-gray-900 font-bold mb-4">My Profile</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
-          <div><p className="text-slate-500 text-xs">Name</p><p className="text-white">{member.name}</p></div>
-          <div><p className="text-slate-500 text-xs">Email</p><p className="text-white break-all">{member.email || '—'}</p></div>
-          <div><p className="text-slate-500 text-xs">Phone</p><p className="text-white">{member.phone}</p></div>
-          <div><p className="text-slate-500 text-xs">Company</p><p className="text-white">{member.companyName || '—'}</p></div>
+          <div><p className="text-slate-500 text-xs">Name</p><p className="text-gray-900">{member.name}</p></div>
+          <div><p className="text-slate-500 text-xs">Email</p><p className="text-gray-900 break-all">{member.email || '—'}</p></div>
+          <div><p className="text-slate-500 text-xs">Phone</p><p className="text-gray-900">{member.phone}</p></div>
+          <div><p className="text-slate-500 text-xs">Company</p><p className="text-gray-900">{member.companyName || '—'}</p></div>
         </div>
       </div>
 

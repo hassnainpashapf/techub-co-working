@@ -81,40 +81,40 @@ function InvoiceDetailModal({ invoiceId, onClose }) {
             {isOverdue(inv) && <Badge tone="red">Overdue</Badge>}
           </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-              <div className="text-slate-400 text-xs mb-1">Period</div>
-              <div className="text-white font-medium">{fmtDate(inv.periodStart)} → {fmtDate(inv.periodEnd)}</div>
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <div className="text-gray-500 text-xs mb-1">Period</div>
+              <div className="text-gray-900 font-medium">{fmtDate(inv.periodStart)} → {fmtDate(inv.periodEnd)}</div>
             </div>
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-              <div className="text-slate-400 text-xs mb-1">Due date</div>
-              <div className="text-white font-medium">{fmtDate(inv.dueDate)}</div>
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <div className="text-gray-500 text-xs mb-1">Due date</div>
+              <div className="text-gray-900 font-medium">{fmtDate(inv.dueDate)}</div>
             </div>
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-              <div className="text-slate-400 text-xs mb-1">Total</div>
-              <div className="text-white font-bold">{fmtMoney(inv.amount)}</div>
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <div className="text-gray-500 text-xs mb-1">Total</div>
+              <div className="text-gray-900 font-bold">{fmtMoney(inv.amount)}</div>
             </div>
-            <div className="bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-              <div className="text-slate-400 text-xs mb-1">Remaining</div>
+            <div className="bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <div className="text-gray-500 text-xs mb-1">Remaining</div>
               <div className="text-amber-300 font-bold">{fmtMoney(remaining(inv))}</div>
             </div>
           </div>
           {inv.notes && (
-            <div className="text-sm text-slate-300 bg-white/[0.03] border border-white/[0.06] rounded-xl p-3">
-              <div className="text-slate-400 text-xs mb-1">Notes</div>
+            <div className="text-sm text-gray-600 bg-gray-50 border border-gray-200 rounded-xl p-3">
+              <div className="text-gray-500 text-xs mb-1">Notes</div>
               {inv.notes}
             </div>
           )}
           <div>
-            <div className="text-slate-300 font-semibold text-sm mb-2">Payments ({inv.payments?.length || 0})</div>
+            <div className="text-gray-600 font-semibold text-sm mb-2">Payments ({inv.payments?.length || 0})</div>
             {!inv.payments?.length ? (
               <p className="text-slate-500 text-sm">No payments recorded yet.</p>
             ) : (
               <div className="space-y-2">
                 {inv.payments.map((p) => (
-                  <div key={p.id} className="flex items-center justify-between text-sm bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
+                  <div key={p.id} className="flex items-center justify-between text-sm bg-gray-50 border border-gray-200 rounded-xl px-3 py-2">
                     <div>
-                      <div className="text-white font-medium">{fmtMoney(p.amount)}</div>
-                      <div className="text-slate-400 text-xs">{fmtDate(p.paidAt)} · {p.method?.replace(/_/g, ' ')}{p.receiptNo ? ` · ${p.receiptNo}` : ''}</div>
+                      <div className="text-gray-900 font-medium">{fmtMoney(p.amount)}</div>
+                      <div className="text-gray-500 text-xs">{fmtDate(p.paidAt)} · {p.method?.replace(/_/g, ' ')}{p.receiptNo ? ` · ${p.receiptNo}` : ''}</div>
                     </div>
                     <Badge tone="green">received</Badge>
                   </div>
@@ -125,7 +125,7 @@ function InvoiceDetailModal({ invoiceId, onClose }) {
           <button
             onClick={download}
             disabled={downloading}
-            className="w-full rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white font-semibold py-2.5 transition"
+            className="w-full rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white font-semibold py-2.5 transition"
           >
             {downloading ? 'Downloading…' : '⬇ Download PDF'}
           </button>
@@ -180,10 +180,10 @@ function PayClaimModal({ invoice, onClose, onDone }) {
 
   return (
     <Modal title={`Pay ${invoice.number}`} onClose={onClose}>
-      <div className="bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 rounded-xl p-4 text-sm text-slate-300 mb-4">
-        <div className="font-semibold text-[#ddd6fe] mb-1">How to pay</div>
-        <ol className="list-decimal list-inside space-y-1 text-slate-300">
-          <li>Transfer <strong className="text-white">{fmtMoney(remaining(invoice))}</strong> via bank transfer, JazzCash or Easypaisa — or pay cash at reception.</li>
+      <div className="bg-[#0f766e]/10 border border-[#0f766e]/30 rounded-xl p-4 text-sm text-gray-600 mb-4">
+        <div className="font-semibold text-teal-700 mb-1">How to pay</div>
+        <ol className="list-decimal list-inside space-y-1 text-gray-600">
+          <li>Transfer <strong className="text-gray-900">{fmtMoney(remaining(invoice))}</strong> via bank transfer, JazzCash or Easypaisa — or pay cash at reception.</li>
           <li>Fill the form below with your payment details.</li>
           <li>Our finance team will verify and record your payment.</li>
         </ol>
@@ -224,8 +224,8 @@ function InvoiceCard({ inv, onView, onPay, onPdf }) {
     <div className="card-premium p-4 sm:p-5">
       <div className="flex items-start justify-between gap-3 mb-3">
         <div>
-          <div className="text-white font-bold">{inv.number}</div>
-          <div className="text-slate-400 text-xs mt-0.5">{fmtDate(inv.periodStart)} → {fmtDate(inv.periodEnd)}</div>
+          <div className="text-gray-900 font-bold">{inv.number}</div>
+          <div className="text-gray-500 text-xs mt-0.5">{fmtDate(inv.periodStart)} → {fmtDate(inv.periodEnd)}</div>
         </div>
         <div className="flex gap-2">
           <Badge tone={STATUS_TONE[inv.status] || 'slate'}>{inv.status}</Badge>
@@ -234,23 +234,23 @@ function InvoiceCard({ inv, onView, onPay, onPdf }) {
       </div>
       <div className="flex items-end justify-between mb-4">
         <div>
-          <div className="text-slate-400 text-xs">Total</div>
-          <div className="text-white font-bold text-lg">{fmtMoney(inv.amount)}</div>
+          <div className="text-gray-500 text-xs">Total</div>
+          <div className="text-gray-900 font-bold text-lg">{fmtMoney(inv.amount)}</div>
         </div>
         <div className="text-right">
-          <div className="text-slate-400 text-xs">Remaining</div>
+          <div className="text-gray-500 text-xs">Remaining</div>
           <div className={`font-bold text-lg ${remaining(inv) > 0 ? 'text-amber-300' : 'text-emerald-300'}`}>{fmtMoney(remaining(inv))}</div>
         </div>
         <div className="text-right">
-          <div className="text-slate-400 text-xs">Due</div>
-          <div className={`text-sm font-medium ${overdue ? 'text-red-300' : 'text-slate-200'}`}>{fmtDate(inv.dueDate)}</div>
+          <div className="text-gray-500 text-xs">Due</div>
+          <div className={`text-sm font-medium ${overdue ? 'text-red-300' : 'text-gray-800'}`}>{fmtDate(inv.dueDate)}</div>
         </div>
       </div>
       <div className="flex flex-wrap gap-2">
-        <button onClick={() => onView(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-slate-200 text-sm font-medium py-2 hover:bg-white/5 transition">View</button>
-        <button onClick={() => onPdf(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-slate-200 text-sm font-medium py-2 hover:bg-white/5 transition">PDF</button>
+        <button onClick={() => onView(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">View</button>
+        <button onClick={() => onPdf(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-gray-800 text-sm font-medium py-2 hover:bg-gray-100 transition">PDF</button>
         {remaining(inv) > 0 && inv.status !== 'cancelled' && (
-          <button onClick={() => onPay(inv)} className="flex-1 min-w-[90px] rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-semibold py-2 transition">Pay now</button>
+          <button onClick={() => onPay(inv)} className="flex-1 min-w-[90px] rounded-xl bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-semibold py-2 transition">Pay now</button>
         )}
       </div>
     </div>
@@ -384,8 +384,8 @@ export default function PortalInvoicesPage() {
                 onClick={() => setTab(t.id)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition ${
                   tab === t.id
-                    ? 'bg-[#7c3aed] text-white shadow-[0_0_16px_rgba(139,92,246,0.45)]'
-                    : 'bg-white/[0.04] border border-white/10 text-slate-300 hover:bg-white/[0.08]'
+                    ? 'bg-[#0f766e] text-white shadow-[0_0_16px_rgba(15,118,110,0.45)]'
+                    : 'bg-gray-100 border border-gray-200 text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 {t.label}
@@ -420,8 +420,8 @@ export default function PortalInvoicesPage() {
                 {payments.map((p) => (
                   <div key={p.id} className="card-premium p-4 flex items-center justify-between gap-3">
                     <div>
-                      <div className="text-white font-semibold">{fmtMoney(p.amount)}</div>
-                      <div className="text-slate-400 text-xs mt-0.5">
+                      <div className="text-gray-900 font-semibold">{fmtMoney(p.amount)}</div>
+                      <div className="text-gray-500 text-xs mt-0.5">
                         {p.invoiceNumber} · {fmtDate(p.paidAt)} · {String(p.method || '').replace(/_/g, ' ')}{p.receiptNo ? ` · ${p.receiptNo}` : ''}
                       </div>
                       {p.note && <div className="text-slate-500 text-xs mt-0.5">{p.note}</div>}

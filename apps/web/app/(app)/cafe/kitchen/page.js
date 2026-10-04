@@ -48,18 +48,18 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
     <div className={`rounded-2xl border p-5 shadow-lg transition ${
       late ? 'border-red-500/60 bg-gradient-to-br from-red-950/60 to-[#15151f] shadow-red-900/30'
            : order.status === 'preparing' ? 'border-amber-400/40 bg-gradient-to-br from-amber-950/40 to-[#15151f]'
-           : 'border-violet-400/30 bg-gradient-to-br from-[#1c1c30] to-[#12121f]'
+           : 'border-teal-500/30 bg-white'
     }`}>
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-2xl font-bold text-white">{shortId(order.id)}</div>
-          <div className="text-sm text-slate-300">{order.member ? order.member.name : '—'}</div>
+          <div className="text-2xl font-bold text-gray-900">{shortId(order.id)}</div>
+          <div className="text-sm text-gray-600">{order.member ? order.member.name : '—'}</div>
           {order.member && order.member.phone && (
-            <div className="text-xs text-slate-400">{order.member.phone}</div>
+            <div className="text-xs text-gray-500">{order.member.phone}</div>
           )}
         </div>
         <div className="text-right">
-          <div className={`text-3xl font-extrabold tabular-nums ${late ? 'text-red-400' : 'text-white'}`}>
+          <div className={`text-3xl font-extrabold tabular-nums ${late ? 'text-red-400' : 'text-gray-900'}`}>
             {fmtElapsed(order.elapsedMin)}
           </div>
           <div className="mt-1 flex gap-1 justify-end">
@@ -75,20 +75,20 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
       <div className="mt-4 space-y-1.5">
         {items.map((it, i) => (
           <div key={i} className="flex justify-between text-base">
-            <span className="text-slate-200">
-              <span className="inline-block min-w-[2.2rem] font-bold text-[#c4b5fd]">{it.qty}×</span>
+            <span className="text-gray-800">
+              <span className="inline-block min-w-[2.2rem] font-bold text-teal-700">{it.qty}×</span>
               {it.name}
             </span>
-            <span className="text-slate-400">Rs {Number(it.price || 0).toLocaleString()}</span>
+            <span className="text-gray-500">Rs {Number(it.price || 0).toLocaleString()}</span>
           </div>
         ))}
         {items.length === 0 && <div className="text-slate-500 text-sm">No items</div>}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-2 text-xs text-slate-400">
+      <div className="mt-3 flex flex-wrap gap-2 text-xs text-gray-500">
         <span>{totalQty} items</span>
         {order.deliveryZone && <span>· Zone: {order.deliveryZone}</span>}
-        {order.subtotal != null && <span>· <b className="text-slate-200">Rs {Number(order.subtotal).toLocaleString()}</b></span>}
+        {order.subtotal != null && <span>· <b className="text-gray-800">Rs {Number(order.subtotal).toLocaleString()}</b></span>}
       </div>
       {order.note && (
         <div className="mt-2 rounded-lg bg-yellow-400/10 border border-yellow-400/30 px-3 py-2 text-sm text-yellow-200">
@@ -110,7 +110,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onStart(order.id)}
             disabled={busy}
-            className="flex-1 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 px-4 py-3 text-lg font-bold text-white shadow-lg shadow-blue-900/40 hover:brightness-110 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-gradient-to-r from-[#0f766e] to-teal-700 px-4 py-3 text-lg font-bold text-gray-900 shadow-lg shadow-blue-900/40 hover:brightness-110 disabled:opacity-50"
           >
             {busy ? '…' : '▶ Start Cooking'}
           </button>
@@ -119,7 +119,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onReady(order.id)}
             disabled={busy}
-            className="flex-1 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 text-lg font-bold text-white shadow-lg shadow-emerald-900/40 hover:brightness-110 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-4 py-3 text-lg font-bold text-gray-900 shadow-lg shadow-emerald-900/40 hover:brightness-110 disabled:opacity-50"
           >
             {busy ? '…' : '✅ Mark Ready'}
           </button>
@@ -229,7 +229,7 @@ export default function KitchenPage() {
             <button
               onClick={() => setSoundOn((s) => !s)}
               className={`rounded-xl border px-4 py-2 text-sm font-semibold ${
-                soundOn ? 'border-emerald-400/40 text-emerald-300' : 'border-slate-600 text-slate-400'
+                soundOn ? 'border-emerald-400/40 text-emerald-300' : 'border-gray-300 text-gray-500'
               }`}
             >
               {soundOn ? '🔔 Sound ON' : '🔕 Sound OFF'}
@@ -254,7 +254,7 @@ export default function KitchenPage() {
       ) : (
         <div className="grid md:grid-cols-2 gap-6">
           <div>
-            <h2 className="text-lg font-bold text-white mb-3">🆕 New ({pending.length})</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">🆕 New ({pending.length})</h2>
             <div className="space-y-4">
               {pending.map((o) => (
                 <OrderCard key={o.id} order={o} onStart={(id) => act(id, 'start')} onPay={(o2) => setPayOrder(o2)} busy={busyId === o.id} />
@@ -263,7 +263,7 @@ export default function KitchenPage() {
             </div>
           </div>
           <div>
-            <h2 className="text-lg font-bold text-white mb-3">🍳 Preparing ({preparing.length})</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">🍳 Preparing ({preparing.length})</h2>
             <div className="space-y-4">
               {preparing.map((o) => (
                 <OrderCard key={o.id} order={o} onReady={(id) => act(id, 'ready')} onPay={(o2) => setPayOrder(o2)} busy={busyId === o.id} />
@@ -277,9 +277,9 @@ export default function KitchenPage() {
       {payOrder && (
         <Modal onClose={() => setPayOrder(null)} title={`💰 Payment — Rs ${Number(payOrder.subtotal || 0).toLocaleString()}`}>
           <div className="space-y-4">
-            <div className="text-sm text-slate-400">{payOrder.member ? payOrder.member.name : ''} ka order</div>
+            <div className="text-sm text-gray-500">{payOrder.member ? payOrder.member.name : ''} ka order</div>
             <div>
-              <label className="text-sm text-slate-300">Payment method</label>
+              <label className="text-sm text-gray-600">Payment method</label>
               <select value={payMethod} onChange={(e) => setPayMethod(e.target.value)} className="input w-full mt-1">
                 <option value="cash">Cash</option>
                 <option value="card">Card</option>
@@ -288,7 +288,7 @@ export default function KitchenPage() {
             </div>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setPayOrder(null)} className="btn-ghost px-4 py-2 rounded-xl">Cancel</button>
-              <button onClick={doPay} disabled={busyId === payOrder.id} className="rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-6 py-2 font-bold text-white disabled:opacity-50">
+              <button onClick={doPay} disabled={busyId === payOrder.id} className="rounded-xl bg-gradient-to-r from-emerald-600 to-green-600 px-6 py-2 font-bold text-gray-900 disabled:opacity-50">
                 {busyId === payOrder.id ? '…' : 'Confirm payment'}
               </button>
             </div>
@@ -300,21 +300,21 @@ export default function KitchenPage() {
         <Modal onClose={() => setShowWaste(false)} title="🗑 Log food waste">
           <div className="space-y-4">
             <div>
-              <label className="text-sm text-slate-300">Kya waste hua?</label>
+              <label className="text-sm text-gray-600">Kya waste hua?</label>
               <input value={waste.description} onChange={(e) => setWaste((w) => ({ ...w, description: e.target.value }))} placeholder="e.g. 5x chicken biryani" className="input w-full mt-1" />
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm text-slate-300">Quantity</label>
+                <label className="text-sm text-gray-600">Quantity</label>
                 <input type="number" min="1" value={waste.quantity} onChange={(e) => setWaste((w) => ({ ...w, quantity: e.target.value }))} className="input w-full mt-1" />
               </div>
               <div>
-                <label className="text-sm text-slate-300">Est. cost (Rs)</label>
+                <label className="text-sm text-gray-600">Est. cost (Rs)</label>
                 <input type="number" min="0" value={waste.costEstimate} onChange={(e) => setWaste((w) => ({ ...w, costEstimate: e.target.value }))} placeholder="optional" className="input w-full mt-1" />
               </div>
             </div>
             <div>
-              <label className="text-sm text-slate-300">Reason</label>
+              <label className="text-sm text-gray-600">Reason</label>
               <select value={waste.reason} onChange={(e) => setWaste((w) => ({ ...w, reason: e.target.value }))} className="input w-full mt-1">
                 <option value="spoiled">Spoiled</option>
                 <option value="overcooked">Overcooked</option>
@@ -324,7 +324,7 @@ export default function KitchenPage() {
             </div>
             <div className="flex gap-2 justify-end">
               <button onClick={() => setShowWaste(false)} className="btn-ghost px-4 py-2 rounded-xl">Cancel</button>
-              <button onClick={doLogWaste} disabled={!waste.description.trim()} className="rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 px-6 py-2 font-bold text-white disabled:opacity-50">
+              <button onClick={doLogWaste} disabled={!waste.description.trim()} className="rounded-xl bg-gradient-to-r from-amber-600 to-orange-600 px-6 py-2 font-bold text-gray-900 disabled:opacity-50">
                 Log waste
               </button>
             </div>

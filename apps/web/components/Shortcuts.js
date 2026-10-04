@@ -9,7 +9,7 @@ const GO_TARGETS = { d: '/dashboard', b: '/bookings', m: '/members', i: '/billin
 
 function Kbd({ children }) {
   return (
-    <kbd className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded-md bg-white/[0.07] border border-white/10 text-[12px] font-mono font-medium text-slate-200 shadow-[0_1px_0_rgba(255,255,255,0.06)_inset]">
+    <kbd className="inline-flex items-center justify-center min-w-[26px] px-1.5 py-0.5 rounded-md bg-gray-100 border border-gray-200 text-[12px] font-mono font-medium text-gray-800 shadow-[0_1px_0_rgba(0,0,0,0.06)_inset]">
       {children}
     </kbd>
   );
@@ -18,7 +18,7 @@ function Kbd({ children }) {
 function Row({ keys, label }) {
   return (
     <div className="flex items-center justify-between gap-4 py-1.5">
-      <span className="text-[13.5px] text-slate-300">{label}</span>
+      <span className="text-[13.5px] text-gray-600">{label}</span>
       <span className="flex items-center gap-1">{keys}</span>
     </div>
   );
@@ -33,8 +33,8 @@ function ShortcutsHelp({ onClose }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-extrabold text-white">Keyboard shortcuts</h2>
-          <button onClick={onClose} className="text-slate-400 hover:text-white text-xl leading-none px-2" aria-label="Close">×</button>
+          <h2 className="text-lg font-extrabold text-gray-900">Keyboard shortcuts</h2>
+          <button onClick={onClose} className="text-gray-500 hover:text-gray-900 text-xl leading-none px-2" aria-label="Close">×</button>
         </div>
 
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Navigate</p>
@@ -143,8 +143,8 @@ export default function Shortcuts() {
   return (
     <>
       {gArmed && !helpOpen && (
-        <div className="fixed bottom-5 right-5 z-[90] px-3 py-1.5 rounded-lg bg-[#12121f] border border-blue-500/40 shadow-lg shadow-blue-500/20 text-[13px] text-slate-200">
-          <Kbd>g</Kbd> <span className="text-slate-400">… then d / b / m / i / t</span>
+        <div className="fixed bottom-5 right-5 z-[90] px-3 py-1.5 rounded-lg bg-white border border-blue-500/40 shadow-lg shadow-blue-500/20 text-[13px] text-gray-800">
+          <Kbd>g</Kbd> <span className="text-gray-500">… then d / b / m / i / t</span>
         </div>
       )}
       {helpOpen && <ShortcutsHelp onClose={() => setHelpOpen(false)} />}

@@ -114,7 +114,7 @@ export default function PayrollPage() {
       </div>
       <div className="flex gap-2 mb-4">
         {['runs', 'structures'].map((t) => (
-          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === t ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+          <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === t ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
             {t === 'runs' ? 'Payroll Runs' : 'Salary Structures'}
           </button>
         ))}
@@ -123,7 +123,7 @@ export default function PayrollPage() {
         <DataTable
           columns={['Month', 'Status', 'Payslips', 'Total', '']}
           rows={runs.map((r) => ([
-            <span key="m" className="font-semibold text-white">{r.month}</span>,
+            <span key="m" className="font-semibold text-gray-900">{r.month}</span>,
             <Badge key="s" tone={STATUS_TONE[r.status]}>{r.status}</Badge>,
             r._count?.payslips ?? '—',
             <span key="t" className="font-semibold">{fmt(r.totalAmount)}</span>,
@@ -135,7 +135,7 @@ export default function PayrollPage() {
         <DataTable
           columns={['Staff', 'Role', 'Basic', 'Allowances', 'Deductions', 'Effective from']}
           rows={structures.map((s) => ([
-            <span key="n" className="font-semibold text-white">{s.user?.name}</span>,
+            <span key="n" className="font-semibold text-gray-900">{s.user?.name}</span>,
             s.user?.role,
             fmt(s.basicSalary),
             fmt(Object.values(s.allowances || {}).reduce((a, v) => a + Number(v), 0)),
@@ -150,7 +150,7 @@ export default function PayrollPage() {
         <Modal title={`Payroll ${runDetail.month}`} onClose={() => setRunDetail(null)}>
           <div className="flex items-center gap-3 mb-4">
             <Badge tone={STATUS_TONE[runDetail.status]}>{runDetail.status}</Badge>
-            <span className="text-slate-300 font-semibold">{fmt(runDetail.totalAmount)}</span>
+            <span className="text-gray-600 font-semibold">{fmt(runDetail.totalAmount)}</span>
             <span className="flex-1" />
             {runDetail.status === 'draft' && <button className="btn-sm btn-primary" disabled={saving} onClick={() => runAction(runDetail.id, 'finalize')}>Finalize</button>}
             {runDetail.status === 'finalized' && <button className="btn-sm btn-primary" disabled={saving} onClick={() => { if (confirm('Mark as paid? Salary expense entries will be created.')) runAction(runDetail.id, 'mark-paid'); }}>Mark paid</button>}
@@ -158,7 +158,7 @@ export default function PayrollPage() {
           <DataTable
             columns={['Staff', 'Gross', 'Deductions', 'Net pay', 'Status']}
             rows={(runDetail.payslips || []).map((p) => ([
-              <span key="n" className="font-semibold text-white">{p.user?.name}</span>,
+              <span key="n" className="font-semibold text-gray-900">{p.user?.name}</span>,
               fmt(p.grossSalary),
               fmt(p.totalDeductions),
               <span key="np" className="font-bold text-emerald-300">{fmt(p.netPay)}</span>,

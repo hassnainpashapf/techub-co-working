@@ -7,7 +7,7 @@ const GRADE_STYLES = {
   A: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
   B: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
   C: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  D: 'bg-slate-500/15 text-slate-400 border-slate-500/30',
+  D: 'bg-slate-500/15 text-gray-500 border-slate-500/30',
 };
 
 // Phase 39 Track 6: Lead score badge — grade color + breakdown tooltip (explainable scoring).
@@ -49,8 +49,8 @@ export function ScoreBadge({ leadId, score, grade }) {
         <span className="opacity-80">{score ?? '–'}</span>
       </button>
       {open && (
-        <div className="absolute z-30 right-0 mt-1 w-64 rounded-xl border border-white/10 bg-[#14141f] p-3 shadow-xl shadow-black/50">
-          <p className="text-xs font-semibold text-slate-200 mb-2">
+        <div className="absolute z-30 right-0 mt-1 w-64 rounded-xl border border-gray-200 bg-white p-3 shadow-xl shadow-black/50">
+          <p className="text-xs font-semibold text-gray-800 mb-2">
             Score {detail?.score ?? score} <span className="text-slate-500">({detail?.grade || grade})</span>
           </p>
           {loading && <p className="text-xs text-slate-500">Load ho raha hai…</p>}
@@ -58,7 +58,7 @@ export function ScoreBadge({ leadId, score, grade }) {
             <ul className="space-y-1 max-h-56 overflow-auto">
               {(detail.breakdown || []).map((b, i) => (
                 <li key={i} className="flex items-center justify-between text-[11px]">
-                  <span className="text-slate-400 truncate mr-2">{b.label}</span>
+                  <span className="text-gray-500 truncate mr-2">{b.label}</span>
                   <span className={b.points < 0 ? 'text-red-400' : 'text-emerald-300'}>
                     {b.points > 0 ? `+${b.points}` : b.points}
                   </span>
@@ -69,7 +69,7 @@ export function ScoreBadge({ leadId, score, grade }) {
               )}
             </ul>
           )}
-          <p className="mt-2 text-[10px] text-slate-600">Simple heuristic — ML nahi</p>
+          <p className="mt-2 text-[10px] text-gray-500">Simple heuristic — ML nahi</p>
         </div>
       )}
     </div>

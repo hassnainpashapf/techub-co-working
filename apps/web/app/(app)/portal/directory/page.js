@@ -17,29 +17,29 @@ function initials(name) {
 }
 
 const AVATAR_GRADIENTS = [
-  'from-[#8b5cf6]/30 to-violet-500/30',
+  'from-[#0f766e]/30 to-teal-600/30',
   'from-emerald-500/30 to-teal-500/30',
   'from-amber-500/30 to-orange-500/30',
   'from-rose-500/30 to-pink-500/30',
-  'from-cyan-500/30 to-[#8b5cf6]/30',
+  'from-cyan-500/30 to-[#0f766e]/30',
 ];
 
 function MemberCard({ member, index }) {
   const grad = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
   const company = member.company?.name || member.companyName;
   return (
-    <div className="card-premium p-5 hover:border-[#8b5cf6]/30 transition-colors">
+    <div className="card-premium p-5 hover:border-[#0f766e]/30 transition-colors">
       <div className="flex items-center gap-4 mb-3">
-        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${grad} border border-white/10 flex items-center justify-center text-white font-bold`}>
+        <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${grad} border border-gray-200 flex items-center justify-center text-gray-900 font-bold`}>
           {initials(member.name)}
         </div>
         <div className="min-w-0">
-          <p className="text-white font-semibold truncate">{member.name}</p>
-          {company && <p className="text-slate-400 text-sm truncate">{company}</p>}
+          <p className="text-gray-900 font-semibold truncate">{member.name}</p>
+          {company && <p className="text-gray-500 text-sm truncate">{company}</p>}
         </div>
       </div>
       {member.directoryBio && (
-        <p className="text-slate-300 text-sm mb-3 line-clamp-3">{member.directoryBio}</p>
+        <p className="text-gray-600 text-sm mb-3 line-clamp-3">{member.directoryBio}</p>
       )}
       {(member.directoryTags || []).length > 0 && (
         <div className="flex flex-wrap gap-1.5">
@@ -106,8 +106,8 @@ export default function DirectoryPage() {
             onClick={() => setActiveTag('')}
             className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
               !activeTag
-                ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
-                : 'border-white/10 text-slate-400 hover:text-white'
+                ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
+                : 'border-gray-200 text-gray-500 hover:text-gray-900'
             }`}
           >
             All
@@ -118,8 +118,8 @@ export default function DirectoryPage() {
               onClick={() => setActiveTag(activeTag === t ? '' : t)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                 activeTag === t
-                  ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
-                  : 'border-white/10 text-slate-400 hover:text-white'
+                  ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
+                  : 'border-gray-200 text-gray-500 hover:text-gray-900'
               }`}
             >
               {t}

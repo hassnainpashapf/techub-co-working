@@ -14,10 +14,10 @@ function UsageBar({ label, used, limit }) {
   return (
     <div className="mb-4">
       <div className="flex justify-between text-sm mb-1.5">
-        <span className="text-slate-300 font-medium">{label}</span>
-        <span className="text-slate-400">{used} / {limit}</span>
+        <span className="text-gray-600 font-medium">{label}</span>
+        <span className="text-gray-500">{used} / {limit}</span>
       </div>
-      <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
+      <div className="h-2.5 rounded-full bg-gray-100 overflow-hidden">
         <div className={`h-full rounded-full ${tone} transition-all`} style={{ width: `${pct}%` }} />
       </div>
     </div>
@@ -68,42 +68,42 @@ export default function SubscriptionPage() {
           <div className="card-premium p-6 mb-6">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
-                <div className="text-xs text-slate-400 uppercase tracking-wide mb-1">Current Plan</div>
-                <div className="text-2xl font-bold text-white">{sub?.plan?.name || '—'}</div>
+                <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Current Plan</div>
+                <div className="text-2xl font-bold text-gray-900">{sub?.plan?.name || '—'}</div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge tone={statusTone}>{sub?.status}</Badge>
-                <span className="text-lg font-semibold text-white">{money(sub?.plan?.priceMonthly)}<span className="text-xs text-slate-400 font-normal">/mo</span></span>
+                <span className="text-lg font-semibold text-gray-900">{money(sub?.plan?.priceMonthly)}<span className="text-xs text-gray-500 font-normal">/mo</span></span>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-4 text-sm">
-              <div><div className="text-xs text-slate-400 mb-0.5">Billing period</div><div className="text-slate-200">{sub ? `${new Date(sub.currentPeriodStart).toLocaleDateString()} → ${new Date(sub.currentPeriodEnd).toLocaleDateString()}` : '—'}</div></div>
-              {sub?.trialEndsAt && <div><div className="text-xs text-slate-400 mb-0.5">Trial ends</div><div className="text-slate-200">{new Date(sub.trialEndsAt).toLocaleDateString()}</div></div>}
+              <div><div className="text-xs text-gray-500 mb-0.5">Billing period</div><div className="text-gray-800">{sub ? `${new Date(sub.currentPeriodStart).toLocaleDateString()} → ${new Date(sub.currentPeriodEnd).toLocaleDateString()}` : '—'}</div></div>
+              {sub?.trialEndsAt && <div><div className="text-xs text-gray-500 mb-0.5">Trial ends</div><div className="text-gray-800">{new Date(sub.trialEndsAt).toLocaleDateString()}</div></div>}
             </div>
           </div>
 
           <div className="card-premium p-6 mb-6">
-            <h2 className="text-lg font-semibold text-white mb-4">Usage vs Limits</h2>
+            <h2 className="text-lg font-semibold text-gray-900 mb-4">Usage vs Limits</h2>
             {usage ? (
               <>
                 <UsageBar label="Users" used={usage.users.used} limit={usage.users.limit} />
                 <UsageBar label="Members" used={usage.members.used} limit={usage.members.limit} />
                 <UsageBar label="Units" used={usage.units.used} limit={usage.units.limit} />
               </>
-            ) : <p className="text-sm text-slate-400">No usage data.</p>}
+            ) : <p className="text-sm text-gray-500">No usage data.</p>}
           </div>
 
           {canChange && (
             <div className="card-premium p-6">
-              <h2 className="text-lg font-semibold text-white mb-4">Change Plan</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">Change Plan</h2>
               <div className="grid md:grid-cols-3 gap-4">
                 {plans.map((p) => {
                   const isCurrent = sub?.plan?.slug === p.slug;
                   return (
-                    <div key={p.id} className={`rounded-xl border p-5 ${isCurrent ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-white/10 bg-white/[0.02]'}`}>
-                      <div className="font-bold text-white text-lg">{p.name}</div>
-                      <div className="text-slate-300 mt-1">{money(p.priceMonthly)}<span className="text-xs text-slate-500">/month</span></div>
-                      <ul className="text-xs text-slate-400 mt-3 space-y-1">
+                    <div key={p.id} className={`rounded-xl border p-5 ${isCurrent ? 'border-emerald-500/50 bg-emerald-500/5' : 'border-gray-200 bg-gray-50'}`}>
+                      <div className="font-bold text-gray-900 text-lg">{p.name}</div>
+                      <div className="text-gray-600 mt-1">{money(p.priceMonthly)}<span className="text-xs text-slate-500">/month</span></div>
+                      <ul className="text-xs text-gray-500 mt-3 space-y-1">
                         <li>{p.maxUsers} users · {p.maxMembers} members · {p.maxUnits} units</li>
                         {(p.features || []).slice(0, 4).map((f) => <li key={f}>✓ {f}</li>)}
                       </ul>

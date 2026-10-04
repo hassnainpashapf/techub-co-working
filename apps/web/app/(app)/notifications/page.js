@@ -66,8 +66,8 @@ export default function NotificationsPage() {
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-extrabold text-white">Notifications</h1>
-          <p className="text-sm text-slate-400 mt-1">Your alerts and reminders.</p>
+          <h1 className="text-2xl font-extrabold text-gray-900">Notifications</h1>
+          <p className="text-sm text-gray-500 mt-1">Your alerts and reminders.</p>
         </div>
         <button onClick={markAllRead} className="btn-secondary">Mark all read</button>
       </div>
@@ -75,13 +75,13 @@ export default function NotificationsPage() {
       <div className="flex flex-wrap items-center gap-2 mb-5">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'all' ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'all' ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-500 hover:text-gray-800'}`}
         >
           All
         </button>
         <button
           onClick={() => setFilter('unread')}
-          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'unread' ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'unread' ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-500 hover:text-gray-800'}`}
         >
           Unread
         </button>
@@ -95,24 +95,24 @@ export default function NotificationsPage() {
 
       <div className="card-premium p-2">
         {loading ? (
-          <p className="text-slate-400 text-sm p-6 text-center">Loading…</p>
+          <p className="text-gray-500 text-sm p-6 text-center">Loading…</p>
         ) : items.length === 0 ? (
-          <p className="text-slate-400 text-sm p-6 text-center">No notifications.</p>
+          <p className="text-gray-500 text-sm p-6 text-center">No notifications.</p>
         ) : (
           items.map((n) => (
             <div
               key={n.id}
-              className={`flex items-start gap-3 px-4 py-3.5 rounded-xl transition-colors ${n.isRead ? '' : 'bg-[#8b5cf6]/[0.07] border border-[#8b5cf6]/20'}`}
+              className={`flex items-start gap-3 px-4 py-3.5 rounded-xl transition-colors ${n.isRead ? '' : 'bg-[#0f766e]/[0.07] border border-[#0f766e]/20'}`}
             >
               <span className="text-xl mt-0.5">{TYPE_ICONS[n.type] || '🔔'}</span>
               <div className="flex-1 min-w-0">
-                <p className={`text-[13.5px] ${n.isRead ? 'text-slate-400' : 'text-white font-medium'}`}>{n.message}</p>
-                <p className="text-[11px] text-slate-600 mt-1">
+                <p className={`text-[13.5px] ${n.isRead ? 'text-gray-500' : 'text-gray-900 font-medium'}`}>{n.message}</p>
+                <p className="text-[11px] text-gray-500 mt-1">
                   {TYPE_LABELS[n.type] || n.type} · {new Date(n.createdAt).toLocaleString()}
                 </p>
               </div>
               {!n.isRead && (
-                <button onClick={() => markRead(n.id)} className="text-[12px] text-[#c4b5fd] hover:text-[#c4b5fd] shrink-0 mt-1">
+                <button onClick={() => markRead(n.id)} className="text-[12px] text-teal-700 hover:text-teal-700 shrink-0 mt-1">
                   Mark read
                 </button>
               )}
@@ -124,7 +124,7 @@ export default function NotificationsPage() {
       {pages > 1 && (
         <div className="flex items-center justify-center gap-2 mt-5">
           <button disabled={page <= 1} onClick={() => load(page - 1)} className="btn-secondary disabled:opacity-40">Prev</button>
-          <span className="text-[13px] text-slate-400">Page {page} of {pages}</span>
+          <span className="text-[13px] text-gray-500">Page {page} of {pages}</span>
           <button disabled={page >= pages} onClick={() => load(page + 1)} className="btn-secondary disabled:opacity-40">Next</button>
         </div>
       )}

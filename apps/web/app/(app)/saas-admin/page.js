@@ -33,11 +33,11 @@ export default function SaasAdminPage() {
   };
 
   const columns = [
-    { key: 'name', label: 'Organization', render: (t) => <div><div className="font-medium text-white">{t.name}</div><div className="text-xs text-slate-400">{t.slug}</div></div> },
+    { key: 'name', label: 'Organization', render: (t) => <div><div className="font-medium text-gray-900">{t.name}</div><div className="text-xs text-gray-500">{t.slug}</div></div> },
     { key: 'plan', label: 'Plan', render: (t) => <Badge tone={t.plan === 'enterprise' ? 'amber' : t.plan === 'growth' ? 'blue' : 'slate'}>{t.plan}</Badge> },
-    { key: 'users', label: 'Users', render: (t) => <span className="text-slate-300">{t._count?.users || 0}</span> },
-    { key: 'members', label: 'Members', render: (t) => <span className="text-slate-300">{t._count?.members || 0}</span> },
-    { key: 'units', label: 'Units', render: (t) => <span className="text-slate-300">{t._count?.units || 0}</span> },
+    { key: 'users', label: 'Users', render: (t) => <span className="text-gray-600">{t._count?.users || 0}</span> },
+    { key: 'members', label: 'Members', render: (t) => <span className="text-gray-600">{t._count?.members || 0}</span> },
+    { key: 'units', label: 'Units', render: (t) => <span className="text-gray-600">{t._count?.units || 0}</span> },
     { key: 'status', label: 'Status', render: (t) => <Badge tone={t.isActive ? 'green' : 'red'}>{t.isActive ? 'Active' : 'Suspended'}</Badge> },
     { key: 'action', label: '', render: (t) => <button className="btn-secondary text-xs px-2 py-1" onClick={() => toggleActive(t)}>{t.isActive ? 'Suspend' : 'Activate'}</button> },
   ];
@@ -57,24 +57,24 @@ export default function SaasAdminPage() {
               ['Platform Revenue', money(overview?.totalRevenue)],
             ].map(([l, v]) => (
               <div key={l} className="card-premium p-4">
-                <div className="text-2xl font-extrabold text-white">{v}</div>
-                <div className="text-xs text-slate-400">{l}</div>
+                <div className="text-2xl font-extrabold text-gray-900">{v}</div>
+                <div className="text-xs text-gray-500">{l}</div>
               </div>
             ))}
           </div>
           {overview?.byPlan && Object.keys(overview.byPlan).length > 0 && (
             <div className="card-premium p-4 mb-6">
-              <h3 className="font-bold text-white mb-2 text-sm">Tenants by Plan</h3>
+              <h3 className="font-bold text-gray-900 mb-2 text-sm">Tenants by Plan</h3>
               <div className="flex gap-2 flex-wrap">
                 {Object.entries(overview.byPlan).map(([plan, count]) => (
-                  <span key={plan} className="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-sm text-slate-200 capitalize">
-                    {plan}: <span className="font-bold text-white">{count}</span>
+                  <span key={plan} className="px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800 capitalize">
+                    {plan}: <span className="font-bold text-gray-900">{count}</span>
                   </span>
                 ))}
               </div>
             </div>
           )}
-          <h2 className="font-bold text-white mb-3">All Organizations</h2>
+          <h2 className="font-bold text-gray-900 mb-3">All Organizations</h2>
           <DataTable columns={columns} rows={tenants} emptyText="No organizations." />
         </>
       )}

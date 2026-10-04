@@ -6,7 +6,7 @@ import { api } from '../../../../lib/api';
 import { PageHeader, StatCard, ErrorBanner, Spinner, EmptyState } from '../../../../components/ui';
 
 const DEPT_COLORS = {
-  ops: '#3b82f6', finance: '#22c55e', sales: '#f59e0b', admin: '#a78bfa', support: '#ec4899',
+  ops: '#3b82f6', finance: '#22c55e', sales: '#f59e0b', admin: '#2dd4bf', support: '#ec4899',
 };
 
 function AttritionChart({ series }) {
@@ -76,8 +76,8 @@ function Donut({ data, total }) {
         {segs.map((d, i) => (
           <div key={i} className="flex items-center gap-2 text-sm">
             <span className="w-3 h-3 rounded-full" style={{ background: DEPT_COLORS[d.department] || '#64748b' }} />
-            <span className="text-slate-300 capitalize">{d.department}</span>
-            <span className="text-white font-bold ml-auto pl-6">{d.count}</span>
+            <span className="text-gray-600 capitalize">{d.department}</span>
+            <span className="text-gray-900 font-bold ml-auto pl-6">{d.count}</span>
           </div>
         ))}
       </div>
@@ -128,10 +128,10 @@ export default function HrDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white font-bold">Attrition — joins vs exits</h3>
-            <div className="flex gap-3 text-xs text-slate-400">
+            <h3 className="text-gray-900 font-bold">Attrition — joins vs exits</h3>
+            <div className="flex gap-3 text-xs text-gray-500">
               <span><span className="inline-block w-2.5 h-2.5 rounded bg-green-500 mr-1" />Joins</span>
               <span><span className="inline-block w-2.5 h-2.5 rounded bg-red-500 mr-1" />Exits</span>
             </div>
@@ -146,8 +146,8 @@ export default function HrDashboardPage() {
           ) : <EmptyState title="No trend data" />}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
-          <h3 className="text-white font-bold mb-3">Department breakdown</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+          <h3 className="text-gray-900 font-bold mb-3">Department breakdown</h3>
           {stats.departments.length > 0 ? (
             <Donut data={stats.departments} total={stats.departments.reduce((a, d) => a + d.count, 0)} />
           ) : <EmptyState title="No departments" hint="Employees add hote hi yahan dikhenge" />}
@@ -155,14 +155,14 @@ export default function HrDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-4">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
-          <h3 className="text-white font-bold mb-3">📥 Pending approvals inbox</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+          <h3 className="text-gray-900 font-bold mb-3">📥 Pending approvals inbox</h3>
           {inboxItems.length > 0 ? (
             <div className="space-y-2">
               {inboxItems.map((i) => (
                 <Link key={i.key} href={i.path}
-                  className="flex items-center justify-between rounded-xl border border-white/10 bg-white/5 px-4 py-3 hover:bg-white/10 transition">
-                  <span className="text-slate-200 text-sm">{i.icon} {i.label}</span>
+                  className="flex items-center justify-between rounded-xl border border-gray-200 bg-gray-100 px-4 py-3 hover:bg-gray-100 transition">
+                  <span className="text-gray-800 text-sm">{i.icon} {i.label}</span>
                   <span className="text-xl font-extrabold text-amber-300">{stats.pending[i.key]}</span>
                 </Link>
               ))}
@@ -170,10 +170,10 @@ export default function HrDashboardPage() {
           ) : <EmptyState title="All clear 🎉" hint="Koi pending approval nahi" />}
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
+        <div className="rounded-2xl border border-gray-200 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
           <div className="flex items-center justify-between mb-3">
-            <h3 className="text-white font-bold">🕐 Aaj ki attendance</h3>
-            <Link href="/hr/attendance" className="text-xs text-[#c4b5fd] hover:underline">Details →</Link>
+            <h3 className="text-gray-900 font-bold">🕐 Aaj ki attendance</h3>
+            <Link href="/hr/attendance" className="text-xs text-teal-700 hover:underline">Details →</Link>
           </div>
           {attTotal > 0 ? (
             <div className="space-y-3">
@@ -181,15 +181,15 @@ export default function HrDashboardPage() {
                 ['Present', ta.present, '#22c55e'],
                 ['Late', ta.late, '#f59e0b'],
                 ['Absent', ta.absent, '#ef4444'],
-                ['On leave', ta.onLeave, '#a78bfa'],
+                ['On leave', ta.onLeave, '#2dd4bf'],
                 ['No record', ta.noRecord, '#64748b'],
               ].map(([label, n, color]) => (
                 <div key={label} className="flex items-center gap-3">
-                  <span className="text-sm text-slate-300 w-20">{label}</span>
-                  <div className="flex-1 h-2.5 rounded-full bg-white/10 overflow-hidden">
+                  <span className="text-sm text-gray-600 w-20">{label}</span>
+                  <div className="flex-1 h-2.5 rounded-full bg-gray-100 overflow-hidden">
                     <div className="h-full rounded-full" style={{ width: `${attTotal ? (n / attTotal) * 100 : 0}%`, background: color }} />
                   </div>
-                  <span className="text-sm font-bold text-white w-8 text-right">{n}</span>
+                  <span className="text-sm font-bold text-gray-900 w-8 text-right">{n}</span>
                 </div>
               ))}
             </div>

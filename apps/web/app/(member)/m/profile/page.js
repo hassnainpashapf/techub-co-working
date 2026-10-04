@@ -20,17 +20,17 @@ export default function MemberProfile() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-extrabold text-white">My Profile</h1>
+      <h1 className="text-xl font-extrabold text-gray-900">My Profile</h1>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <div className="card-premium p-5 space-y-3">
           <div className="flex items-center gap-4">
-            <div className="w-16 h-16 rounded-full bg-violet-500/20 border border-violet-400/40 flex items-center justify-center text-2xl font-bold text-violet-200">
+            <div className="w-16 h-16 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-2xl font-bold text-violet-200">
               {(member?.name || user?.name || '?')[0].toUpperCase()}
             </div>
             <div>
-              <div className="text-lg font-bold text-white">{member?.name || user?.name}</div>
-              <div className="text-sm text-slate-400">{user?.email}</div>
+              <div className="text-lg font-bold text-gray-900">{member?.name || user?.name}</div>
+              <div className="text-sm text-gray-500">{user?.email}</div>
             </div>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm pt-2">
@@ -42,9 +42,9 @@ export default function MemberProfile() {
               ['Status', member?.status],
               ['Member since', member?.createdAt?.slice(0, 10)],
             ].map(([l, v]) => (
-              <div key={l} className="p-3 rounded-lg bg-white/[0.03] border border-white/10">
-                <div className="text-xs text-slate-400">{l}</div>
-                <div className="text-white font-medium">{v || '—'}</div>
+              <div key={l} className="p-3 rounded-lg bg-gray-50 border border-gray-200">
+                <div className="text-xs text-gray-500">{l}</div>
+                <div className="text-gray-900 font-medium">{v || '—'}</div>
               </div>
             ))}
           </div>

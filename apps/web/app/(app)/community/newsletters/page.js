@@ -26,7 +26,7 @@ function renderBlockPreview(s) {
   if (s.type === 'text') return <p className="whitespace-pre-wrap text-sm">{s.text || 'Text…'}</p>;
   if (s.type === 'image') return s.imageUrl
     ? <img src={s.imageUrl} alt={s.imageAlt} className="max-w-full rounded-lg" />
-    : <div className="rounded-lg border border-dashed p-6 text-center text-sm text-slate-400">Image URL…</div>;
+    : <div className="rounded-lg border border-dashed p-6 text-center text-sm text-gray-500">Image URL…</div>;
   if (s.type === 'event') return <div className="rounded-lg border p-3 text-sm">📅 Event: {s.eventTitle || 'Event title…'}</div>;
   return null;
 }
@@ -84,12 +84,12 @@ function NewsletterForm({ initial, onSave, saving }) {
         </div>
       </div>
 
-      {f.sections.length === 0 && <p className="mb-3 text-sm text-slate-400">No blocks yet — add one above.</p>}
+      {f.sections.length === 0 && <p className="mb-3 text-sm text-gray-500">No blocks yet — add one above.</p>}
       <div className="space-y-3">
         {f.sections.map((s, i) => (
-          <div key={s.id} className="rounded-xl border border-white/10 bg-white/5 p-3">
+          <div key={s.id} className="rounded-xl border border-gray-200 bg-gray-100 p-3">
             <div className="mb-2 flex items-center justify-between">
-              <span className="text-xs font-semibold uppercase tracking-wide text-slate-400">{BLOCK_TYPES.find((t) => t.value === s.type)?.label} #{i + 1}</span>
+              <span className="text-xs font-semibold uppercase tracking-wide text-gray-500">{BLOCK_TYPES.find((t) => t.value === s.type)?.label} #{i + 1}</span>
               <div className="flex gap-1">
                 <button type="button" className="btn-outline btn-sm" onClick={() => moveBlock(s.id, -1)}>↑</button>
                 <button type="button" className="btn-outline btn-sm" onClick={() => moveBlock(s.id, 1)}>↓</button>
@@ -201,16 +201,16 @@ export default function NewslettersPage() {
       {loading ? <Spinner /> : rows.length === 0 ? (
         <EmptyState title="No newsletters yet" subtitle="Create your first member newsletter." action={{ label: 'New newsletter', onClick: () => setShowForm(true) }} />
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-white/10">
+        <div className="overflow-x-auto rounded-xl border border-gray-200">
           <table className="w-full text-sm">
-            <thead><tr className="text-left text-xs uppercase text-slate-400">
+            <thead><tr className="text-left text-xs uppercase text-gray-500">
               <th className="p-3">Title</th><th className="p-3">Segment</th><th className="p-3">Status</th>
               <th className="p-3">Recipients</th><th className="p-3">Sent</th><th className="p-3">Actions</th>
             </tr></thead>
             <tbody>
               {rows.map((r) => (
-                <tr key={r.id} className="border-t border-white/5">
-                  <td className="p-3 font-semibold">{r.title}<div className="text-xs font-normal text-slate-400">{r.subject}</div></td>
+                <tr key={r.id} className="border-t border-gray-200">
+                  <td className="p-3 font-semibold">{r.title}<div className="text-xs font-normal text-gray-500">{r.subject}</div></td>
                   <td className="p-3">{SEGMENTS.find((s) => s.value === r.segment)?.label || r.segment}</td>
                   <td className="p-3"><Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status}</Badge></td>
                   <td className="p-3">{r.recipientCount}</td>
@@ -253,7 +253,7 @@ export default function NewslettersPage() {
             <StatCard title="Sent" value={stats.sent} />
             <StatCard title="Unsubscribed (tenant)" value={stats.unsubscribed} />
           </div>
-          <p className="mt-3 text-xs text-slate-400">Open tracking not collected. {stats.openRateEstimate}</p>
+          <p className="mt-3 text-xs text-gray-500">Open tracking not collected. {stats.openRateEstimate}</p>
         </Modal>
       )}
     </div>

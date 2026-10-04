@@ -46,15 +46,15 @@ export default function PrintInvoicePage() {
   const paid = Number(inv.amountPaid || 0);
   const balance = Math.max(amount - paid, 0);
   const logoUrl = branding?.hasLogo && branding?.slug ? `${API_BASE}/branding/${branding.slug}/logo` : null;
-  const accent = branding?.primaryColor || '#7c3aed';
+  const accent = branding?.primaryColor || '#0f766e';
 
   return (
     <>
       <style>{`
         .print-sheet { max-width: 800px; margin: 24px auto; background: #fff; color: #111; font-family: ui-sans-serif, system-ui, sans-serif; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
         .print-loading { min-height: 100vh; display: flex; flex-direction: column; gap: 12px; align-items: center; justify-content: center; background: #0a0a14; color: #fff; }
-        .print-btn { background: #7c3aed; color: #fff; border: 0; border-radius: 8px; padding: 10px 22px; font-weight: 600; cursor: pointer; }
-        .print-btn:hover { background: #6d28d9; }
+        .print-btn { background: #0f766e; color: #fff; border: 0; border-radius: 8px; padding: 10px 22px; font-weight: 600; cursor: pointer; }
+        .print-btn:hover { background: #115e59; }
         @media print {
           body { background: #fff !important; }
           .no-print { display: none !important; }

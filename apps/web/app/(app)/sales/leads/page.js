@@ -199,19 +199,19 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
 
   return (
     <div className="fixed inset-0 z-50">
-      <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-[#141422] border-l border-white/10 p-6 overflow-y-auto">
+      <div className="absolute inset-0 bg-gray-900/50" onClick={onClose} />
+      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white border-l border-gray-200 p-6 overflow-y-auto">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 className="text-lg font-semibold">{lead.name}</h2>
-            <p className="text-sm text-slate-400">{lead.company || 'No company'}</p>
+            <p className="text-sm text-gray-500">{lead.company || 'No company'}</p>
             <div className="mt-2 flex items-center gap-2 text-sm">
               <Badge tone={meta.tone}>{meta.label}</Badge>
               <Badge tone="slate">{sourceLabel(lead.source)}</Badge>
-              {assignee && <span className="text-slate-400">· {assignee.name}</span>}
+              {assignee && <span className="text-gray-500">· {assignee.name}</span>}
             </div>
             {(lead.phone || lead.email) && (
-              <p className="mt-2 text-sm text-slate-300">
+              <p className="mt-2 text-sm text-gray-600">
                 {[lead.phone, lead.email].filter(Boolean).join(' · ')}
               </p>
             )}
@@ -219,7 +219,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           <button className="btn-ghost" onClick={onClose}>✕</button>
         </div>
 
-        <div className="mb-6 rounded-lg border border-white/10 p-4">
+        <div className="mb-6 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Change stage</p>
           <select
             className="input w-full"
@@ -231,9 +231,9 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           </select>
         </div>
 
-        <div className="mb-6 flex gap-2 border-b border-white/10">
-          <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-[#8b5cf6] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
-          <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-[#8b5cf6] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
+        <div className="mb-6 flex gap-2 border-b border-gray-200">
+          <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
+          <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
         </div>
 
         {tab === 'followups' ? (
@@ -241,7 +241,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         ) : (
         <>
 
-        <div className="mb-6 rounded-lg border border-white/10 p-4">
+        <div className="mb-6 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Log activity</p>
           <form onSubmit={addActivity} className="space-y-3">
             <select className="input w-full" value={type} onChange={(e) => setType(e.target.value)}>
@@ -267,12 +267,12 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
             {activities.map((a) => {
               const am = activityMeta(a.type);
               return (
-                <div key={a.id} className="rounded-lg border border-white/10 p-3">
+                <div key={a.id} className="rounded-lg border border-gray-200 p-3">
                   <div className="flex items-center gap-2 mb-1">
                     <Badge tone={am.tone}>{am.label}</Badge>
                     <span className="text-xs text-slate-500">{fmtDateTime(a.createdAt)}</span>
                   </div>
-                  <p className="text-sm text-slate-200 whitespace-pre-wrap">{a.body}</p>
+                  <p className="text-sm text-gray-800 whitespace-pre-wrap">{a.body}</p>
                   {a.creator?.name && <p className="mt-1 text-xs text-slate-500">by {a.creator.name}</p>}
                 </div>
               );
@@ -459,7 +459,7 @@ export default function LeadsPage() {
         <StatCard label="Won" value={stats.won} accent="green" />
       </div>
 
-      <form onSubmit={applyFilters} className="flex flex-wrap items-end gap-3 rounded-xl border border-white/10 bg-[#16161f] p-4">
+      <form onSubmit={applyFilters} className="flex flex-wrap items-end gap-3 rounded-xl border border-gray-200 bg-white p-4">
         <Field label="Search">
           <input className="input w-48" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Name, company, phone…" />
         </Field>

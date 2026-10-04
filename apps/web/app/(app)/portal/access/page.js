@@ -101,7 +101,7 @@ export default function MyAccessPage() {
 
       {/* Credentials + Schedules */}
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1c1c30] to-[#12121f] p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-semibold mb-3">🔑 Meri Credentials</h3>
           {creds.length === 0 ? (
             <EmptyState title="Koi credential nahi" hint="Reception se PIN/RFID issue karwayein" />
@@ -110,8 +110,8 @@ export default function MyAccessPage() {
               {creds.map((c) => (
                 <div key={c.id} className="flex items-center justify-between rounded-xl bg-black/30 p-3">
                   <div>
-                    <div className="font-medium">{CRED_LABEL[c.type] || c.type} <span className="text-slate-400 tracking-widest">{c.masked}</span></div>
-                    <div className="text-xs text-slate-400">
+                    <div className="font-medium">{CRED_LABEL[c.type] || c.type} <span className="text-gray-500 tracking-widest">{c.masked}</span></div>
+                    <div className="text-xs text-gray-500">
                       Last used: {fmtDateTime(c.lastUsedAt)}{c.expiresAt ? ` · Expires: ${fmtDateTime(c.expiresAt)}` : ''}
                     </div>
                   </div>
@@ -123,7 +123,7 @@ export default function MyAccessPage() {
           <p className="text-xs text-slate-500 mt-3">PIN kabhi yahan nahi dikhta — bhool jayein to reception se naya issue karwayein.</p>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1c1c30] to-[#12121f] p-5">
+        <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-semibold mb-3">🕒 Meri Entry Timings</h3>
           {schedules.length === 0 ? (
             <EmptyState title="Koi schedule nahi" hint="Default timings apply hon gi" />
@@ -132,7 +132,7 @@ export default function MyAccessPage() {
               {schedules.map((s) => (
                 <div key={s.id} className="rounded-xl bg-black/30 p-3">
                   <div className="font-medium text-sm">{s.label}</div>
-                  <div className="text-xs text-slate-400">{s.door} · {s.scope === 'personal' ? 'Mere liye' : 'Default'}</div>
+                  <div className="text-xs text-gray-500">{s.door} · {s.scope === 'personal' ? 'Mere liye' : 'Default'}</div>
                 </div>
               ))}
             </div>
@@ -141,9 +141,9 @@ export default function MyAccessPage() {
       </div>
 
       {/* Request visitor pass */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1c1c30] to-[#12121f] p-5">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <h3 className="font-semibold mb-1">🎫 Visitor Day Pass Request</h3>
-        <p className="text-sm text-slate-400 mb-4">Mehmaan ke liye pass mangwayein — reception approve karegi to QR pass milega.</p>
+        <p className="text-sm text-gray-500 mb-4">Mehmaan ke liye pass mangwayein — reception approve karegi to QR pass milega.</p>
         <form onSubmit={submitRequest} className="grid md:grid-cols-2 gap-4">
           <Field label="Visitor ka naam *">
             <input className="input" value={form.visitorName} onChange={(e) => setForm({ ...form, visitorName: e.target.value })} required minLength={2} maxLength={120} />
@@ -163,7 +163,7 @@ export default function MyAccessPage() {
             </Field>
           </div>
           <div className="md:col-span-2">
-            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 px-5 py-2.5 font-medium disabled:opacity-50">
+            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-[#0f766e] to-teal-700 px-5 py-2.5 font-medium disabled:opacity-50">
               {submitting ? 'Bhej rahe hain…' : 'Request bhejein'}
             </button>
             {formMsg && (
@@ -174,12 +174,12 @@ export default function MyAccessPage() {
 
         {passes.length > 0 && (
           <div className="mt-5 space-y-2">
-            <h4 className="text-sm font-medium text-slate-300">Meri requests</h4>
+            <h4 className="text-sm font-medium text-gray-600">Meri requests</h4>
             {passes.map((p) => (
               <div key={p.id} className="flex items-center justify-between rounded-xl bg-black/30 p-3 text-sm">
                 <div>
                   <span className="font-medium">{p.visitorName}</span>
-                  <span className="text-slate-400"> · {fmtDateTime(p.validFrom)} → {fmtDateTime(p.validUntil)}</span>
+                  <span className="text-gray-500"> · {fmtDateTime(p.validFrom)} → {fmtDateTime(p.validUntil)}</span>
                 </div>
                 <Badge tone={PASS_TONE[p.status] || 'slate'}>{p.status}</Badge>
               </div>
@@ -189,7 +189,7 @@ export default function MyAccessPage() {
       </div>
 
       {/* Entry history */}
-      <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-[#1c1c30] to-[#12121f] p-5">
+      <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <h3 className="font-semibold mb-3">🚪 Meri Entry History (30 din)</h3>
         {entries.length === 0 ? (
           <EmptyState title="Koi entry record nahi" hint="Pichhle 30 din me koi entry log nahi hui" />
@@ -199,10 +199,10 @@ export default function MyAccessPage() {
               <div key={en.id} className="flex items-center justify-between rounded-xl bg-black/30 p-3 text-sm">
                 <div>
                   <span className="font-medium">{en.door}</span>
-                  <span className="text-slate-400"> · {DIR_LABEL[en.direction] || en.direction}{en.credentialType ? ` · ${en.credentialType}` : ''}</span>
+                  <span className="text-gray-500"> · {DIR_LABEL[en.direction] || en.direction}{en.credentialType ? ` · ${en.credentialType}` : ''}</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-slate-400">{fmtDateTime(en.at)}</span>
+                  <span className="text-xs text-gray-500">{fmtDateTime(en.at)}</span>
                   <Badge tone={RESULT_TONE[en.result] || 'slate'}>{en.result}</Badge>
                 </div>
               </div>

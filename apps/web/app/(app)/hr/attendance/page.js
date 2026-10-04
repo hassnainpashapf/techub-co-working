@@ -10,8 +10,8 @@ const STATUS_META = {
   present: { label: 'P', color: '#22c55e', title: 'Present' },
   late: { label: 'L', color: '#f59e0b', title: 'Late' },
   absent: { label: 'A', color: '#ef4444', title: 'Absent' },
-  half_day: { label: 'H', color: '#8b5cf6', title: 'Half day' },
-  on_leave: { label: 'O', color: '#8b5cf6', title: 'On leave' },
+  half_day: { label: 'H', color: '#0f766e', title: 'Half day' },
+  on_leave: { label: 'O', color: '#0f766e', title: 'On leave' },
 };
 
 function monthDays(monthStr) {
@@ -241,8 +241,8 @@ export default function StaffAttendancePage() {
                     <td style={{ color: '#22c55e' }}>{s.present}</td>
                     <td style={{ color: '#f59e0b' }}>{s.late}</td>
                     <td style={{ color: '#ef4444' }}>{s.absent}</td>
-                    <td style={{ color: '#8b5cf6' }}>{s.half_day}</td>
-                    <td style={{ color: '#8b5cf6' }}>{s.on_leave}</td>
+                    <td style={{ color: '#0f766e' }}>{s.half_day}</td>
+                    <td style={{ color: '#0f766e' }}>{s.on_leave}</td>
                     <td>{s.totalLateMinutes}</td>
                   </tr>
                 ))}

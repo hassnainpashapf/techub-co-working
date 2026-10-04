@@ -69,22 +69,22 @@ export default function AccountingExportPage() {
 
       <div className="card-premium p-5 mb-6 flex flex-wrap items-end gap-4">
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5">From</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
         </div>
         <div>
-          <label className="block text-xs font-semibold text-slate-300 mb-1.5">To</label>
+          <label className="block text-xs font-semibold text-gray-600 mb-1.5">To</label>
           <input type="date" className="input" value={to} onChange={(e) => setTo(e.target.value)} />
         </div>
-        <p className="text-xs text-slate-400">Dates optional — blank means all records.</p>
+        <p className="text-xs text-gray-500">Dates optional — blank means all records.</p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
         {FORMATS.map((f) => (
           <div key={f.key} className="card-premium p-5 flex flex-col">
             <div className="text-3xl mb-3">{f.icon}</div>
-            <h3 className="text-lg font-bold text-white mb-1">{f.title}</h3>
-            <p className="text-xs text-slate-400 mb-4 flex-1">{f.desc}</p>
+            <h3 className="text-lg font-bold text-gray-900 mb-1">{f.title}</h3>
+            <p className="text-xs text-gray-500 mb-4 flex-1">{f.desc}</p>
             <button
               className="btn-primary w-full"
               disabled={busy === f.key}
@@ -97,8 +97,8 @@ export default function AccountingExportPage() {
       </div>
 
       <div className="card-premium p-5">
-        <h3 className="text-sm font-bold text-white mb-3">📘 Format guide — Xero import</h3>
-        <ul className="text-xs text-slate-300 space-y-2 list-disc list-inside">
+        <h3 className="text-sm font-bold text-gray-900 mb-3">📘 Format guide — Xero import</h3>
+        <ul className="text-xs text-gray-600 space-y-2 list-disc list-inside">
           <li><b>Invoices:</b> Xero → Business → Invoices → Import. Columns: InvoiceNumber, Reference, ContactName, InvoiceDate, DueDate, Description, Quantity, UnitAmount, Discount, AccountCode, TaxType, TaxAmount, Currency.</li>
           <li><b>Bills:</b> Xero → Business → Bills to pay → Import. Same column layout; AccountCode defaults to 310 (cost of sales).</li>
           <li><b>Payments:</b> Xero → Accounting → Bank accounts → Manage account → Import a statement. Bank-statement format: Date, Amount, Description, Reference.</li>

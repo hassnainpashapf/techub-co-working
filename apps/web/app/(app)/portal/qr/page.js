@@ -28,8 +28,8 @@ export default function MyQrPage() {
     <div className="p-6 max-w-lg mx-auto">
       <PageHeader title="My QR Code" sub="Show this at reception for instant check-in" />
       <div className="card-premium p-8 mt-4 flex flex-col items-center text-center">
-        <div className="text-lg font-bold text-white mb-1">{data.member?.name}</div>
-        <div className="text-xs text-slate-400 mb-6">
+        <div className="text-lg font-bold text-gray-900 mb-1">{data.member?.name}</div>
+        <div className="text-xs text-gray-500 mb-6">
           Valid until {new Date(data.expiresAt).toLocaleDateString([], { year: 'numeric', month: 'long', day: 'numeric' })}
         </div>
         {!imgFailed ? (
@@ -44,7 +44,7 @@ export default function MyQrPage() {
         ) : (
           <div className="w-full">
             <div className="text-xs text-amber-300 mb-2">QR image unavailable offline — reception can type this code:</div>
-            <div className="bg-[#0d0d1a] border border-slate-700 rounded-lg p-3 text-[11px] text-slate-300 break-all font-mono max-h-40 overflow-auto">
+            <div className="bg-white border border-gray-200 rounded-lg p-3 text-[11px] text-gray-600 break-all font-mono max-h-40 overflow-auto">
               {data.token}
             </div>
           </div>

@@ -31,7 +31,7 @@ function VarChips({ vars }) {
   return (
     <div className="flex flex-wrap gap-1.5">
       {vars.map((v) => (
-        <code key={v} className="text-[11px] px-2 py-0.5 rounded-full bg-violet-500/10 text-violet-300 border border-violet-500/30">
+        <code key={v} className="text-[11px] px-2 py-0.5 rounded-full bg-teal-600/10 text-teal-300 border border-teal-600/30">
           {`{{${v}}}`}
         </code>
       ))}
@@ -196,10 +196,10 @@ export default function LegalTemplatesPage() {
         <DataTable
           columns={['Naam', 'Category', 'Version', 'Variables', 'Status', 'Actions']}
           rows={templates.map((t) => [
-            <span key="n" className="font-medium text-white">{t.name}</span>,
+            <span key="n" className="font-medium text-gray-900">{t.name}</span>,
             <Badge key="c" tone={CAT_TONE[t.category] || 'slate'}>{CAT_LABEL[t.category] || t.category}</Badge>,
             <Badge key="v" tone="slate">v{t.version}</Badge>,
-            <span key="vars" className="text-xs text-slate-400">{(t.variables || []).length} vars</span>,
+            <span key="vars" className="text-xs text-gray-500">{(t.variables || []).length} vars</span>,
             t.isActive ? <Badge key="s" tone="green">Active</Badge> : <Badge key="s" tone="slate">Inactive</Badge>,
             <div key="a" className="flex gap-2">
               <button onClick={() => openEdit(t.id)} className="btn-ghost text-xs">✏️ Edit</button>
@@ -241,7 +241,7 @@ export default function LegalTemplatesPage() {
               </div>
               {versions.length > 0 && (
                 <div className="mt-2">
-                  <div className="text-xs text-slate-400 mb-1">🕘 Purani versions (archive):</div>
+                  <div className="text-xs text-gray-500 mb-1">🕘 Purani versions (archive):</div>
                   <div className="flex flex-wrap gap-1.5">
                     {versions.map((v) => <Badge key={v.id} tone="slate">v{v.version}</Badge>)}
                   </div>
@@ -249,17 +249,17 @@ export default function LegalTemplatesPage() {
               )}
             </div>
             <div className="space-y-3">
-              <div className="text-sm font-medium text-white">Variable hints</div>
+              <div className="text-sm font-medium text-gray-900">Variable hints</div>
               <VarChips vars={editing ? (editing.variables || []) : (form.body.match(/\{\{\s*([\w.]+)\s*\}\}/g) || []).map((m) => m.replace(/[{}]/g, '').trim())} />
-              <div className="text-sm font-medium text-white mt-2">Preview (sample data)</div>
+              <div className="text-sm font-medium text-gray-900 mt-2">Preview (sample data)</div>
               {preview ? (
-                <div className="rounded-xl border border-white/10 bg-black/30 p-4 text-sm text-slate-200 whitespace-pre-wrap max-h-[480px] overflow-y-auto">{preview}</div>
+                <div className="rounded-xl border border-gray-200 bg-black/30 p-4 text-sm text-gray-800 whitespace-pre-wrap max-h-[480px] overflow-y-auto">{preview}</div>
               ) : (
                 <div className="text-xs text-slate-500">Save ke baad 👁️ Preview dabayein — sample data se render hoga.</div>
               )}
               {previewVars.length > 0 && (
                 <div>
-                  <div className="text-xs text-slate-400 mb-1">Detected variables:</div>
+                  <div className="text-xs text-gray-500 mb-1">Detected variables:</div>
                   <VarChips vars={previewVars} />
                 </div>
               )}
@@ -274,8 +274,8 @@ export default function LegalTemplatesPage() {
             {signResult ? (
               <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-4">
                 <div className="text-emerald-300 font-medium mb-2">✅ Signing request bhej di gayi</div>
-                <div className="text-xs text-slate-300 break-all">Sign link: <span className="text-white">{signResult.signUrl}</span></div>
-                <div className="text-xs text-slate-400 mt-1">Signer ko ye link bhej dein. Sign hone par document Legal Vault me auto-save hoga.</div>
+                <div className="text-xs text-gray-600 break-all">Sign link: <span className="text-gray-900">{signResult.signUrl}</span></div>
+                <div className="text-xs text-gray-500 mt-1">Signer ko ye link bhej dein. Sign hone par document Legal Vault me auto-save hoga.</div>
                 <button onClick={() => setSignT(null)} className="btn-primary mt-3">Band karein</button>
               </div>
             ) : (
@@ -298,7 +298,7 @@ export default function LegalTemplatesPage() {
                 </div>
                 {(signT.variables || []).length > 0 && (
                   <div className="space-y-2">
-                    <div className="text-sm font-medium text-white">Variables bhar dein</div>
+                    <div className="text-sm font-medium text-gray-900">Variables bhar dein</div>
                     {(signT.variables || []).map((v) => (
                       <Field key={v} label={`{{${v}}}`}>
                         <input className="input-premium w-full" value={signForm.data[v] || ''} onChange={(e) => setSignForm({ ...signForm, data: { ...signForm.data, [v]: e.target.value } })} />

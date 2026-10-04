@@ -135,7 +135,7 @@ export default function DayPassesPage() {
 
       {/* Validate / scan */}
       <div className="card p-5 max-w-xl space-y-3">
-        <h3 className="font-semibold text-white">🔍 Pass validate karo (scan flow)</h3>
+        <h3 className="font-semibold text-gray-900">🔍 Pass validate karo (scan flow)</h3>
         <form onSubmit={validateScan} className="flex gap-2">
           <input
             className="input flex-1 font-mono"
@@ -153,7 +153,7 @@ export default function DayPassesPage() {
               {scanResult.ok ? '✅ Entry allowed' : `⛔ ${scanResult.message || 'Invalid'}`}
             </div>
             {scanResult.pass && (
-              <div className="mt-2 text-sm text-slate-300 space-y-1">
+              <div className="mt-2 text-sm text-gray-600 space-y-1">
                 <div>Visitor: <b>{scanResult.pass.visitorName}</b></div>
                 <div>Code: <span className="font-mono">{scanResult.pass.code}</span></div>
                 <div>Status: {scanResult.pass.status}</div>
@@ -167,7 +167,7 @@ export default function DayPassesPage() {
       {/* Passes list */}
       <div className="card p-5 space-y-4">
         <div className="flex items-center gap-3">
-          <h3 className="font-semibold text-white">Passes</h3>
+          <h3 className="font-semibold text-gray-900">Passes</h3>
           <select className="input w-44" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
             <option value="">Sab statuses</option>
             <option value="active">Active</option>
@@ -189,10 +189,10 @@ export default function DayPassesPage() {
               { key: 'actions', label: '' },
             ]}
             rows={passes.map((p) => ({
-              visitorName: <div><b>{p.visitorName}</b>{p.visitorPhone && <div className="text-xs text-slate-400">{p.visitorPhone}</div>}</div>,
+              visitorName: <div><b>{p.visitorName}</b>{p.visitorPhone && <div className="text-xs text-gray-500">{p.visitorPhone}</div>}</div>,
               code: <span className="font-mono text-sm">{p.code}</span>,
               host: p.hostMember?.name || '—',
-              validity: <span className="text-xs text-slate-300">{new Date(p.validFrom).toLocaleString()} →<br />{new Date(p.validUntil).toLocaleString()}</span>,
+              validity: <span className="text-xs text-gray-600">{new Date(p.validFrom).toLocaleString()} →<br />{new Date(p.validUntil).toLocaleString()}</span>,
               status: <Badge tone={tone(p.status)}>{p.status}</Badge>,
               actions: p.status === 'active' ? (
                 <button className="btn btn-sm btn-danger" onClick={() => revoke(p.id)}>Revoke</button>
@@ -240,12 +240,12 @@ export default function DayPassesPage() {
       {created && (
         <Modal title="Day Pass tayyar ✅" onClose={() => setCreated(null)}>
           <div className="space-y-4 text-center">
-            <div className="text-lg font-bold text-white">{created.visitorName}</div>
-            <div className="font-mono text-2xl tracking-widest text-[#c4b5fd]">{created.code}</div>
+            <div className="text-lg font-bold text-gray-900">{created.visitorName}</div>
+            <div className="font-mono text-2xl tracking-widest text-teal-700">{created.code}</div>
             {created.qrToken && (
-              <img src={qrImageUrl(created.qrToken)} alt="Day pass QR" className="mx-auto rounded-lg border border-slate-700" width={180} height={180} />
+              <img src={qrImageUrl(created.qrToken)} alt="Day pass QR" className="mx-auto rounded-lg border border-gray-200" width={180} height={180} />
             )}
-            <div className="text-sm text-slate-400">
+            <div className="text-sm text-gray-500">
               {new Date(created.validFrom).toLocaleString()} → {new Date(created.validUntil).toLocaleString()}
             </div>
             <a href={created.whatsappShare} target="_blank" rel="noreferrer" className="btn btn-primary w-full">

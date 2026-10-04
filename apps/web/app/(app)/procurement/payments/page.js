@@ -19,10 +19,10 @@ const BUCKETS = [
 
 const fmt = (n) => 'Rs ' + Number(n || 0).toLocaleString('en-PK', { maximumFractionDigits: 0 });
 
-const inputCls = 'w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8b5cf6]/60';
-const btnPrimary = 'px-4 py-2 rounded-lg text-sm font-semibold bg-[#7c3aed] hover:bg-[#8b5cf6] text-white transition-all';
-const btnGhost = 'px-4 py-2 rounded-lg text-sm font-medium bg-white/5 hover:bg-white/10 text-slate-300 border border-white/10';
-const btnSm = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#7c3aed] hover:bg-[#8b5cf6] text-white';
+const inputCls = 'w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-900 focus:outline-none focus:border-[#0f766e]/60';
+const btnPrimary = 'px-4 py-2 rounded-lg text-sm font-semibold bg-[#0f766e] hover:bg-[#0f766e] text-white transition-all';
+const btnGhost = 'px-4 py-2 rounded-lg text-sm font-medium bg-gray-100 hover:bg-gray-100 text-gray-600 border border-gray-200';
+const btnSm = 'px-3 py-1.5 rounded-lg text-xs font-semibold bg-[#0f766e] hover:bg-[#0f766e] text-white';
 
 export default function VendorPaymentsPage() {
   const [tab, setTab] = useState('aging');
@@ -89,7 +89,7 @@ export default function VendorPaymentsPage() {
       <div className="flex gap-2">
         {[{ k: 'aging', l: 'AP Aging' }, { k: 'pay', l: 'Pay Bills' }, { k: 'history', l: 'History' }].map((t) => (
           <button key={t.k} onClick={() => setTab(t.k)}
-            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === t.k ? 'bg-[#7c3aed] text-white shadow-[0_0_16px_rgba(139,92,246,0.4)]' : 'bg-white/5 text-slate-300 hover:bg-white/10 border border-white/10'}`}>
+            className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${tab === t.k ? 'bg-[#0f766e] text-white shadow-[0_0_16px_rgba(15,118,110,0.4)]' : 'bg-gray-100 text-gray-600 hover:bg-gray-100 border border-gray-200'}`}>
             {t.l}
           </button>
         ))}
@@ -105,8 +105,8 @@ export default function VendorPaymentsPage() {
               <StatCard key={b.key} label={b.label} value={fmt(aging.totals[b.key])} accent={b.accent} />
             ))}
           </div>
-          <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
-            <h3 className="text-white font-semibold mb-3">Vendor-wise aging</h3>
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+            <h3 className="text-gray-900 font-semibold mb-3">Vendor-wise aging</h3>
             {aging.vendors.length === 0 ? <EmptyState title="Koi outstanding nahi" hint="Sab bills paid hain" /> : (
               <DataTable
                 columns={[
@@ -116,7 +116,7 @@ export default function VendorPaymentsPage() {
                   { key: 'd1_30', label: '1–30 days', render: (r) => fmt(r.d1_30) },
                   { key: 'd31_60', label: '31–60 days', render: (r) => fmt(r.d31_60) },
                   { key: 'd60plus', label: '60+ days', render: (r) => <span className="text-red-400 font-semibold">{fmt(r.d60plus)}</span> },
-                  { key: 'total', label: 'Total', render: (r) => <strong className="text-white">{fmt(r.total)}</strong> },
+                  { key: 'total', label: 'Total', render: (r) => <strong className="text-gray-900">{fmt(r.total)}</strong> },
                 ]}
                 rows={aging.vendors}
               />
@@ -126,8 +126,8 @@ export default function VendorPaymentsPage() {
       )}
 
       {tab === 'pay' && !loading && (
-        <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
-          <h3 className="text-white font-semibold mb-3">Unpaid / partially paid bills</h3>
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+          <h3 className="text-gray-900 font-semibold mb-3">Unpaid / partially paid bills</h3>
           {unpaidBills.length === 0 ? <EmptyState title="Koi unpaid bill nahi" hint="Bills list me naye bills add karein" /> : (
             <DataTable
               columns={[
@@ -135,7 +135,7 @@ export default function VendorPaymentsPage() {
                 { key: 'vendor', label: 'Vendor', render: (r) => r.vendor?.name || '—' },
                 { key: 'amount', label: 'Amount', render: (r) => fmt(r.amount) },
                 { key: 'paidAmount', label: 'Paid', render: (r) => fmt(r.paidAmount) },
-                { key: 'outstanding', label: 'Outstanding', render: (r) => <strong className="text-white">{fmt(Number(r.amount) - Number(r.paidAmount || 0))}</strong> },
+                { key: 'outstanding', label: 'Outstanding', render: (r) => <strong className="text-gray-900">{fmt(Number(r.amount) - Number(r.paidAmount || 0))}</strong> },
                 { key: 'dueDate', label: 'Due', render: (r) => r.dueDate ? new Date(r.dueDate).toLocaleDateString() : '—' },
                 { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'overdue' ? 'red' : 'amber'}>{r.status}</Badge> },
                 { key: 'actions', label: '', render: (r) => (
@@ -151,8 +151,8 @@ export default function VendorPaymentsPage() {
       )}
 
       {tab === 'history' && !loading && (
-        <div className="bg-white/[0.03] border border-white/10 rounded-2xl p-4">
-          <h3 className="text-white font-semibold mb-3">Payment history</h3>
+        <div className="bg-gray-50 border border-gray-200 rounded-2xl p-4">
+          <h3 className="text-gray-900 font-semibold mb-3">Payment history</h3>
           {payments.length === 0 ? <EmptyState title="Koi payment nahi" hint="Abhi tak koi payment record nahi hui" /> : (
             <DataTable
               columns={[
@@ -184,7 +184,7 @@ export default function VendorPaymentsPage() {
                 ))}
               </select>
             </Field>
-            {selectedBill && <div className="text-sm text-slate-400">Outstanding: <strong className="text-white">{fmt(outstanding)}</strong></div>}
+            {selectedBill && <div className="text-sm text-gray-500">Outstanding: <strong className="text-gray-900">{fmt(outstanding)}</strong></div>}
             <Field label="Amount (Rs)">
               <input className={inputCls} type="number" min="1" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
             </Field>

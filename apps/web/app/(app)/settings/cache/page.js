@@ -57,13 +57,13 @@ export default function CacheSettingsPage() {
         <StatCard label="Misses" value={stats?.misses ?? 0} sub="computed fresh" accent="amber" />
       </div>
 
-      <div className="card-premium p-5 text-sm text-slate-400">
-        <h3 className="text-white font-semibold mb-2">How it works</h3>
+      <div className="card-premium p-5 text-sm text-gray-500">
+        <h3 className="text-gray-900 font-semibold mb-2">How it works</h3>
         <ul className="list-disc pl-5 space-y-1">
           <li>Dashboard responses are cached for 30s, report responses for 120s.</li>
           <li>Cache keys always include the tenant — one tenant can never see another's data.</li>
           <li>Any booking, member, invoice or payment change clears the tenant's cache instantly.</li>
-          <li>Look for the <code className="text-slate-200">X-Cache: HIT/MISS</code> response header.</li>
+          <li>Look for the <code className="text-gray-800">X-Cache: HIT/MISS</code> response header.</li>
         </ul>
       </div>
     </div>

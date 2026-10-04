@@ -26,10 +26,10 @@ function CodeBlock({ title, code }) {
     try { await navigator.clipboard.writeText(code); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {}
   };
   return (
-    <div className="rounded-xl border border-white/10 bg-black/40 overflow-hidden">
-      <div className="flex items-center justify-between px-4 py-2 border-b border-white/10">
-        <span className="text-xs font-semibold text-slate-300">{title}</span>
-        <button onClick={copy} className="text-xs text-violet-300 hover:text-violet-200">{copied ? '✓ Copied' : 'Copy'}</button>
+    <div className="rounded-xl border border-gray-200 bg-black/40 overflow-hidden">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-gray-200">
+        <span className="text-xs font-semibold text-gray-600">{title}</span>
+        <button onClick={copy} className="text-xs text-teal-300 hover:text-violet-200">{copied ? '✓ Copied' : 'Copy'}</button>
       </div>
       <pre className="p-4 text-xs font-mono text-emerald-200/90 overflow-x-auto whitespace-pre">{code}</pre>
     </div>
@@ -39,10 +39,10 @@ function CodeBlock({ title, code }) {
 function Step({ n, title, children }) {
   return (
     <div className="flex gap-4">
-      <div className="shrink-0 w-8 h-8 rounded-full bg-violet-500/20 border border-violet-400/40 flex items-center justify-center text-sm font-bold text-violet-200">{n}</div>
+      <div className="shrink-0 w-8 h-8 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-sm font-bold text-violet-200">{n}</div>
       <div className="flex-1">
-        <h3 className="font-semibold text-white mb-2">{title}</h3>
-        <div className="text-sm text-slate-300 space-y-3">{children}</div>
+        <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
+        <div className="text-sm text-gray-600 space-y-3">{children}</div>
       </div>
     </div>
   );
@@ -72,7 +72,7 @@ export default function ApiDocsPage() {
           <button
             key={t.key}
             onClick={() => setTab(t.key)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${tab === t.key ? 'border-violet-400/60 bg-violet-500/20 text-violet-100' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}
+            className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${tab === t.key ? 'border-teal-500/60 bg-teal-600/20 text-violet-100' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}
           >
             {t.label}
           </button>
@@ -81,12 +81,12 @@ export default function ApiDocsPage() {
 
       {tab === 'docs' && (
         <div className="space-y-4">
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 flex flex-wrap items-center gap-3">
-            <span className="text-sm text-slate-300">Swagger UI isi page me embedded hai. Nayi tab me kholna ho to:</span>
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 flex flex-wrap items-center gap-3">
+            <span className="text-sm text-gray-600">Swagger UI isi page me embedded hai. Nayi tab me kholna ho to:</span>
             <a href={docsUrl} target="_blank" rel="noreferrer" className="btn-primary text-sm">Open in new tab ↗</a>
-            <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-sm text-violet-300 hover:text-violet-200 underline">openapi.json</a>
+            <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-sm text-teal-300 hover:text-violet-200 underline">openapi.json</a>
           </div>
-          <div className="rounded-2xl border border-white/10 overflow-hidden bg-white">
+          <div className="rounded-2xl border border-gray-200 overflow-hidden bg-white">
             <iframe src={docsUrl} title="CoworkOS API Docs" className="w-full bg-white" style={{ height: '75vh' }} />
           </div>
           <p className="text-xs text-slate-500">Tip: Swagger UI me "Authorize" button se apna JWT ya API key set karo, phir "Try it out" se live test kar sakte ho.</p>
@@ -97,8 +97,8 @@ export default function ApiDocsPage() {
         <div className="space-y-8 card-premium p-6">
           <div className="space-y-6">
             <Step n="1" title="API key banao">
-              <p><span className="text-white font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-300 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-200">cwk_...</code> hota hai.</p>
-              <p className="text-slate-400">Har request me ye header bhejo:</p>
+              <p><span className="text-gray-900 font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-300 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-200">cwk_...</code> hota hai.</p>
+              <p className="text-gray-500">Har request me ye header bhejo:</p>
               <CodeBlock title="Auth header" code={`X-API-Key: cwk_YOUR_KEY`} />
             </Step>
 
@@ -117,13 +117,13 @@ export default function ApiDocsPage() {
             </Step>
           </div>
 
-          <div className="border-t border-white/10 pt-6">
-            <h3 className="font-semibold text-white mb-3">📌 Zaroori notes</h3>
-            <ul className="text-sm text-slate-300 space-y-2 list-disc pl-5">
+          <div className="border-t border-gray-200 pt-6">
+            <h3 className="font-semibold text-gray-900 mb-3">📌 Zaroori notes</h3>
+            <ul className="text-sm text-gray-600 space-y-2 list-disc pl-5">
               <li>Sab tenant-scoped endpoints JWT/API key ke tenant par auto-filter hote hain.</li>
               <li>Rate limits: auth endpoints par strict limits hain (login 5/min, password reset 5/hour).</li>
               <li>Webhook receivers ke liye <code className="font-mono text-violet-200">X-CoworkOS-Signature</code> HMAC header verify karo (docs me Webhooks section).</li>
-              <li>Poori endpoint list: <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-violet-300 underline">openapi.json</a> ya <a href={`${docsUrl}/index`} target="_blank" rel="noreferrer" className="text-violet-300 underline">/api/docs/index</a>.</li>
+              <li>Poori endpoint list: <a href={`${docsUrl}/openapi.json`} target="_blank" rel="noreferrer" className="text-teal-300 underline">openapi.json</a> ya <a href={`${docsUrl}/index`} target="_blank" rel="noreferrer" className="text-teal-300 underline">/api/docs/index</a>.</li>
             </ul>
           </div>
         </div>

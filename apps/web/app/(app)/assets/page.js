@@ -178,7 +178,7 @@ export default function AssetsPage() {
             const od = oc && oc.dueAt ? daysOverdue(oc.dueAt) : 0;
             return {
               id: a.id,
-              name: <div><div className="font-semibold text-white">{a.name}</div>{a.serialNumber && <div className="text-xs text-slate-400">SN: {a.serialNumber}</div>}</div>,
+              name: <div><div className="font-semibold text-gray-900">{a.name}</div>{a.serialNumber && <div className="text-xs text-gray-500">SN: {a.serialNumber}</div>}</div>,
               category: CATEGORIES.find((c) => c.v === a.category)?.label || a.category,
               status: (
                 <span className="flex items-center gap-2">
@@ -188,8 +188,8 @@ export default function AssetsPage() {
               ),
               holder: oc ? (
                 <div className="text-sm">
-                  <div className="text-white">{oc.member?.name || oc.user?.name || '—'}</div>
-                  {oc.dueAt && <div className={od > 0 ? 'text-red-300 text-xs' : 'text-xs text-slate-400'}>Due {new Date(oc.dueAt).toLocaleDateString()}</div>}
+                  <div className="text-gray-900">{oc.member?.name || oc.user?.name || '—'}</div>
+                  {oc.dueAt && <div className={od > 0 ? 'text-red-300 text-xs' : 'text-xs text-gray-500'}>Due {new Date(oc.dueAt).toLocaleDateString()}</div>}
                 </div>
               ) : <span className="text-slate-500">—</span>,
               location: a.location || '—',

@@ -59,11 +59,11 @@ export default function RefundsPage() {
   };
 
   const columns = [
-    { key: 'number', label: 'Number', render: (r) => <span className="font-mono text-sm text-slate-300">{r.number}</span> },
-    { key: 'member', label: 'Member', render: (r) => <span className="text-sm text-white">{r.member?.name}</span> },
-    { key: 'amount', label: 'Amount', render: (r) => <span className="text-white font-medium">{money(r.amount)}</span> },
+    { key: 'number', label: 'Number', render: (r) => <span className="font-mono text-sm text-gray-600">{r.number}</span> },
+    { key: 'member', label: 'Member', render: (r) => <span className="text-sm text-gray-900">{r.member?.name}</span> },
+    { key: 'amount', label: 'Amount', render: (r) => <span className="text-gray-900 font-medium">{money(r.amount)}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={TONES[r.status]}>{r.status}</Badge> },
-    { key: 'reason', label: 'Reason', render: (r) => <span className="text-xs text-slate-400">{r.reason || '—'}</span> },
+    { key: 'reason', label: 'Reason', render: (r) => <span className="text-xs text-gray-500">{r.reason || '—'}</span> },
     {
       key: 'action', label: '', render: (r) => (
         <div className="flex gap-1">
@@ -88,7 +88,7 @@ export default function RefundsPage() {
       <div className="flex gap-2 mb-4">
         {[{ v: '', l: 'All' }, ...Object.keys(TONES).map((s) => ({ v: s, l: s[0].toUpperCase() + s.slice(1) }))].map((s) => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${statusFilter === s.v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
             {s.l}
           </button>
         ))}

@@ -185,7 +185,7 @@ export default function WaitingListPage() {
         <div className="card-premium overflow-x-auto">
           <table className="w-full text-sm min-w-[760px]">
             <thead>
-              <tr className="text-left text-slate-400 text-xs uppercase tracking-wider border-b border-white/10">
+              <tr className="text-left text-gray-500 text-xs uppercase tracking-wider border-b border-gray-200">
                 <th className="px-4 py-3">Name</th>
                 <th className="px-4 py-3">Contact</th>
                 <th className="px-4 py-3">Wants</th>
@@ -197,16 +197,16 @@ export default function WaitingListPage() {
             </thead>
             <tbody>
               {entries.map((e) => (
-                <tr key={e.id} className="border-b border-white/5 hover:bg-white/[0.02]">
+                <tr key={e.id} className="border-b border-gray-200 hover:bg-gray-50">
                   <td className="px-4 py-3">
-                    <div className="font-semibold text-white">{e.name}</div>
+                    <div className="font-semibold text-gray-900">{e.name}</div>
                     {e.notes && <div className="text-xs text-slate-500 truncate max-w-[220px]">{e.notes}</div>}
                   </td>
-                  <td className="px-4 py-3 text-slate-300 text-xs">
+                  <td className="px-4 py-3 text-gray-600 text-xs">
                     {e.phone && <div>📞 {e.phone}</div>}
                     {e.email && <div className="truncate max-w-[200px]">✉️ {e.email}</div>}
                   </td>
-                  <td className="px-4 py-3 text-slate-300 text-xs">
+                  <td className="px-4 py-3 text-gray-600 text-xs">
                     {e.desiredType && <div>{e.desiredType}</div>}
                     {e.desiredDate && <div className="text-slate-500">from {fmtDate(e.desiredDate)}</div>}
                   </td>
@@ -219,19 +219,19 @@ export default function WaitingListPage() {
                       <div className="text-[11px] text-slate-500 mt-1">offered {fmtDate(e.offeredAt)}</div>
                     )}
                   </td>
-                  <td className="px-4 py-3 text-slate-400 text-xs">{fmtDate(e.createdAt)}</td>
+                  <td className="px-4 py-3 text-gray-500 text-xs">{fmtDate(e.createdAt)}</td>
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1.5 flex-wrap">
                       {(e.status === 'waiting' || e.status === 'expired') && (
-                        <button onClick={() => setOfferEntry(e)} disabled={busy === e.id} className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-2.5 py-1.5">Offer</button>
+                        <button onClick={() => setOfferEntry(e)} disabled={busy === e.id} className="text-xs text-white bg-[#0f766e]/80 hover:bg-[#0f766e] rounded-lg px-2.5 py-1.5">Offer</button>
                       )}
                       {e.status !== 'converted' && (
                         <button onClick={() => { setConvertEntry(e); setConvertPhone(e.phone || ''); }} disabled={busy === e.id} className="text-xs text-white bg-emerald-600/80 hover:bg-emerald-600 rounded-lg px-2.5 py-1.5">Convert</button>
                       )}
                       {(e.status === 'waiting' || e.status === 'offered') && (
-                        <button onClick={() => doExpire(e)} disabled={busy === e.id} className="text-xs text-slate-300 border border-white/15 rounded-lg px-2.5 py-1.5 hover:bg-white/5">Expire</button>
+                        <button onClick={() => doExpire(e)} disabled={busy === e.id} className="text-xs text-gray-600 border border-white/15 rounded-lg px-2.5 py-1.5 hover:bg-gray-100">Expire</button>
                       )}
-                      <button onClick={() => setEditing(e)} className="text-xs text-slate-300 hover:text-white underline">Edit</button>
+                      <button onClick={() => setEditing(e)} className="text-xs text-gray-600 hover:text-gray-900 underline">Edit</button>
                       <button onClick={() => doDelete(e)} disabled={busy === e.id} className="text-xs text-red-300 hover:text-red-200 underline">Delete</button>
                     </div>
                   </td>
@@ -254,7 +254,7 @@ export default function WaitingListPage() {
       )}
       {offerEntry && (
         <Modal title={`Offer space to ${offerEntry.name}`} onClose={() => setOfferEntry(null)}>
-          <p className="text-sm text-slate-400 mb-4">An email{offerEntry.phone ? ' + SMS' : ''} will be sent. They get <b className="text-white">48 hours</b> to claim, then the offer lapses automatically.</p>
+          <p className="text-sm text-gray-500 mb-4">An email{offerEntry.phone ? ' + SMS' : ''} will be sent. They get <b className="text-gray-900">48 hours</b> to claim, then the offer lapses automatically.</p>
           <Field label="Unit code (optional)"><input className="input" value={unitCode} onChange={(e) => setUnitCode(e.target.value)} placeholder="e.g. PO-204" /></Field>
           <div className="flex justify-end gap-2">
             <button onClick={() => setOfferEntry(null)} className="btn-secondary">Cancel</button>
@@ -264,7 +264,7 @@ export default function WaitingListPage() {
       )}
       {convertEntry && (
         <Modal title={`Convert ${convertEntry.name} to Member`} onClose={() => setConvertEntry(null)}>
-          <p className="text-sm text-slate-400 mb-4">A member record will be created from this entry.</p>
+          <p className="text-sm text-gray-500 mb-4">A member record will be created from this entry.</p>
           <Field label="Phone *"><input className="input" value={convertPhone} onChange={(e) => setConvertPhone(e.target.value)} required placeholder="0300-1234567" /></Field>
           <div className="flex justify-end gap-2">
             <button onClick={() => setConvertEntry(null)} className="btn-secondary">Cancel</button>

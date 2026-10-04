@@ -194,8 +194,8 @@ export default function KpiDashboardsPage() {
                 onClick={() => setSelectedId(d.id)}
                 className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${
                   d.id === selectedId
-                    ? 'bg-[#7c3aed]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
-                    : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
+                    ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700'
+                    : 'bg-gray-100 border-gray-200 text-gray-600 hover:bg-gray-100'
                 }`}
               >
                 {d.name}
@@ -238,7 +238,7 @@ export default function KpiDashboardsPage() {
                     </>
                   ) : (
                     <>
-                      <span className="text-white font-bold mr-2">{selected.name}</span>
+                      <span className="text-gray-900 font-bold mr-2">{selected.name}</span>
                       <button className="btn-secondary" onClick={() => { setRenaming(true); setName(selected.name); }}>
                         ✏ Rename
                       </button>
@@ -274,17 +274,17 @@ export default function KpiDashboardsPage() {
                       />
                       <div className="absolute top-2 right-2 flex gap-1">
                         <button
-                          className="w-6 h-6 rounded bg-white/10 text-xs text-slate-300 hover:bg-white/20"
+                          className="w-6 h-6 rounded bg-gray-100 text-xs text-gray-600 hover:bg-white/20"
                           onClick={() => move(w.id, -1)}
                           title="Move left"
                         >←</button>
                         <button
-                          className="w-6 h-6 rounded bg-white/10 text-xs text-slate-300 hover:bg-white/20"
+                          className="w-6 h-6 rounded bg-gray-100 text-xs text-gray-600 hover:bg-white/20"
                           onClick={() => move(w.id, 1)}
                           title="Move right"
                         >→</button>
                         <button
-                          className="w-6 h-6 rounded bg-white/10 text-xs text-red-300 hover:bg-white/20"
+                          className="w-6 h-6 rounded bg-gray-100 text-xs text-red-300 hover:bg-white/20"
                           onClick={() => removeWidget(w.id)}
                           title="Remove"
                         >✕</button>

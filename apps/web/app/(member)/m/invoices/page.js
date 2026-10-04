@@ -36,7 +36,7 @@ export default function MemberInvoices() {
 
   return (
     <div className="space-y-4">
-      <h1 className="text-xl font-extrabold text-white">My Invoices</h1>
+      <h1 className="text-xl font-extrabold text-gray-900">My Invoices</h1>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <div className="space-y-2">
@@ -45,13 +45,13 @@ export default function MemberInvoices() {
             return (
               <div key={inv.id} className="card-premium p-4">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-mono text-sm text-slate-300">{inv.number}</span>
+                  <span className="font-mono text-sm text-gray-600">{inv.number}</span>
                   <Badge tone={inv.status === 'paid' ? 'green' : inv.status === 'overdue' ? 'red' : 'amber'}>{inv.status}</Badge>
                 </div>
-                <div className="text-xs text-slate-400 mb-2">Due: {inv.dueDate?.slice(0, 10)}</div>
+                <div className="text-xs text-gray-500 mb-2">Due: {inv.dueDate?.slice(0, 10)}</div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <span className="text-lg font-bold text-white">{money(inv.amount)}</span>
+                    <span className="text-lg font-bold text-gray-900">{money(inv.amount)}</span>
                     {balance > 0 && <span className="text-sm text-red-300 ml-2">({money(balance)} due)</span>}
                   </div>
                   <button className="btn-secondary text-xs px-3 py-1.5" onClick={() => downloadPdf(inv)}>⬇ PDF</button>

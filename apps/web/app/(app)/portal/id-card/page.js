@@ -29,7 +29,7 @@ export default function IdCardPage() {
   if (error) return <div className="p-6"><ErrorBanner message={error} onRetry={() => window.location.reload()} /></div>;
 
   const brandName = brand?.brandName || 'Techub Co-Working';
-  const primary = brand?.primaryColor || '#8b5cf6';
+  const primary = brand?.primaryColor || '#0f766e';
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=10&data=${encodeURIComponent(data.qrPayload)}`;
   const fmt = (d) => (d ? new Date(d).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
   const statusTone = data.status === 'active' ? 'green' : data.status === 'on_hold' ? 'amber' : 'red';
@@ -40,40 +40,40 @@ export default function IdCardPage() {
 
       {/* Card */}
       <div
-        className="mt-6 rounded-3xl overflow-hidden shadow-2xl border border-white/10"
+        className="mt-6 rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
         style={{ background: `linear-gradient(135deg, #141428 0%, #0d0d1f 60%, ${primary}33 100%)` }}
       >
         <div className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <div className="text-lg font-extrabold text-white tracking-wide">{brandName}</div>
-              <div className="text-[11px] text-slate-400 uppercase tracking-[0.2em]">Member ID Card</div>
+              <div className="text-lg font-extrabold text-gray-900 tracking-wide">{brandName}</div>
+              <div className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Member ID Card</div>
             </div>
             <Badge tone={statusTone}>{String(data.status).replace('_', ' ').toUpperCase()}</Badge>
           </div>
 
           <div className="flex items-center gap-4">
             <div
-              className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-extrabold text-white shrink-0"
-              style={{ background: `linear-gradient(135deg, ${primary}, #7c3aed)` }}
+              className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-extrabold text-gray-900 shrink-0"
+              style={{ background: `linear-gradient(135deg, ${primary}, #0f766e)` }}
             >
               {data.name?.charAt(0)?.toUpperCase() || 'M'}
             </div>
             <div className="min-w-0">
-              <div className="text-xl font-bold text-white truncate">{data.name}</div>
-              <div className="text-xs text-slate-400 font-mono">ID {data.memberCode}</div>
-              {data.companyName && <div className="text-xs text-slate-300 truncate">{data.companyName}</div>}
+              <div className="text-xl font-bold text-gray-900 truncate">{data.name}</div>
+              <div className="text-xs text-gray-500 font-mono">ID {data.memberCode}</div>
+              {data.companyName && <div className="text-xs text-gray-600 truncate">{data.companyName}</div>}
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3 mt-6 text-sm">
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-              <div className="text-[10px] uppercase tracking-wider text-slate-400">Plan</div>
-              <div className="text-white font-semibold truncate">{data.plan || '—'}</div>
+            <div className="rounded-xl bg-gray-100 border border-gray-200 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-gray-500">Plan</div>
+              <div className="text-gray-900 font-semibold truncate">{data.plan || '—'}</div>
             </div>
-            <div className="rounded-xl bg-white/5 border border-white/10 p-3">
-              <div className="text-[10px] uppercase tracking-wider text-slate-400">Valid till</div>
-              <div className="text-white font-semibold">{fmt(data.validTill)}</div>
+            <div className="rounded-xl bg-gray-100 border border-gray-200 p-3">
+              <div className="text-[10px] uppercase tracking-wider text-gray-500">Valid till</div>
+              <div className="text-gray-900 font-semibold">{fmt(data.validTill)}</div>
             </div>
           </div>
         </div>

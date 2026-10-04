@@ -109,7 +109,7 @@ export default function AdminFeedbackPage() {
             <button
               key={t.v}
               onClick={() => setView(t.v)}
-              className={`text-sm rounded-lg px-3 py-1.5 border ${view === t.v ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]' : 'bg-white/5 border-white/10 text-slate-400'}`}
+              className={`text-sm rounded-lg px-3 py-1.5 border ${view === t.v ? 'bg-[#0f766e]/20 border-[#0f766e]/40 text-teal-700' : 'bg-gray-100 border-gray-200 text-gray-500'}`}
             >
               {t.l}
             </button>
@@ -122,20 +122,20 @@ export default function AdminFeedbackPage() {
       ) : view === 'kanban' ? (
         <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-4">
           {COLUMNS.map((col) => (
-            <div key={col.v} className="rounded-xl bg-white/[0.02] border border-white/[0.06] p-3 min-h-40">
-              <p className="text-sm font-bold text-white mb-3">{col.l} <span className="text-slate-500">({byStatus[col.v].length})</span></p>
+            <div key={col.v} className="rounded-xl bg-gray-50 border border-gray-200 p-3 min-h-40">
+              <p className="text-sm font-bold text-gray-900 mb-3">{col.l} <span className="text-slate-500">({byStatus[col.v].length})</span></p>
               <div className="space-y-2">
                 {byStatus[col.v].map((f) => (
-                  <div key={f.id} className="rounded-lg bg-white/[0.04] border border-white/[0.08] p-3">
+                  <div key={f.id} className="rounded-lg bg-gray-100 border border-gray-200 p-3">
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-xs text-slate-500">{f.category}</span>
-                      <span className="text-xs text-slate-400">👍 {f.upvotes || 0}</span>
+                      <span className="text-xs text-gray-500">👍 {f.upvotes || 0}</span>
                     </div>
-                    {f.title && <p className="text-sm font-semibold text-white">{f.title}</p>}
-                    <p className="text-xs text-slate-300 line-clamp-3">{f.body}</p>
+                    {f.title && <p className="text-sm font-semibold text-gray-900">{f.title}</p>}
+                    <p className="text-xs text-gray-600 line-clamp-3">{f.body}</p>
                     <p className="text-xs text-slate-500 mt-1">{who(f)}</p>
                     <div className="flex gap-1 mt-2">
-                      <button className="text-xs text-[#c4b5fd] underline" onClick={() => openReply(f)}>Reply</button>
+                      <button className="text-xs text-teal-700 underline" onClick={() => openReply(f)}>Reply</button>
                       {col.v !== 'done' && (
                         <button className="text-xs text-emerald-300 underline" onClick={() => setStatus(f.id, 'done')}>Done</button>
                       )}
@@ -150,7 +150,7 @@ export default function AdminFeedbackPage() {
         <div className="card-premium overflow-hidden">
           <table className="w-full text-sm">
             <thead>
-              <tr className="text-left text-xs text-slate-400 border-b border-white/10">
+              <tr className="text-left text-xs text-gray-500 border-b border-gray-200">
                 <th className="p-3">Member</th>
                 <th className="p-3">Category</th>
                 <th className="p-3">Title / Message</th>
@@ -161,13 +161,13 @@ export default function AdminFeedbackPage() {
             </thead>
             <tbody>
               {items.map((f) => (
-                <tr key={f.id} className="border-b border-white/5 hover:bg-white/5">
-                  <td className="p-3 text-white">{who(f)}</td>
-                  <td className="p-3 text-slate-300">{f.category}</td>
-                  <td className="p-3 text-slate-300 max-w-xs truncate" title={f.body}>
-                    {f.title ? <span className="font-semibold text-white">{f.title} — </span> : ''}{f.body}
+                <tr key={f.id} className="border-b border-gray-200 hover:bg-gray-100">
+                  <td className="p-3 text-gray-900">{who(f)}</td>
+                  <td className="p-3 text-gray-600">{f.category}</td>
+                  <td className="p-3 text-gray-600 max-w-xs truncate" title={f.body}>
+                    {f.title ? <span className="font-semibold text-gray-900">{f.title} — </span> : ''}{f.body}
                   </td>
-                  <td className="p-3 text-slate-300">{f.upvotes || 0}</td>
+                  <td className="p-3 text-gray-600">{f.upvotes || 0}</td>
                   <td className="p-3"><Badge color={STATUS_COLOR[f.status] || 'slate'}>{f.status}</Badge></td>
                   <td className="p-3 flex gap-2">
                     <button className="btn-secondary text-xs" onClick={() => openReply(f)}>Reply</button>
@@ -184,8 +184,8 @@ export default function AdminFeedbackPage() {
 
       {replyFor && (
         <Modal title={`Reply — ${who(replyFor)}`} onClose={() => setReplyFor(null)}>
-          {replyFor.title && <p className="text-sm font-semibold text-white mb-2">{replyFor.title}</p>}
-          <p className="text-sm text-slate-300 mb-4 p-3 rounded-lg bg-white/5">"{replyFor.body}"</p>
+          {replyFor.title && <p className="text-sm font-semibold text-gray-900 mb-2">{replyFor.title}</p>}
+          <p className="text-sm text-gray-600 mb-4 p-3 rounded-lg bg-gray-100">"{replyFor.body}"</p>
           <Field label="Status">
             <select className="input" value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}

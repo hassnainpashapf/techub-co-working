@@ -30,13 +30,13 @@ const emptyForm = {
 
 function ProgressBar({ value }) {
   if (value === null || value === undefined) return <span className="text-slate-500 text-xs">—</span>;
-  const color = value >= 100 ? 'bg-emerald-500' : value >= 60 ? 'bg-[#8b5cf6]' : value >= 30 ? 'bg-amber-500' : 'bg-rose-500';
+  const color = value >= 100 ? 'bg-emerald-500' : value >= 60 ? 'bg-[#0f766e]' : value >= 30 ? 'bg-amber-500' : 'bg-rose-500';
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
       <div className="flex-1 h-2 rounded-full bg-slate-700/60 overflow-hidden">
         <div className={`h-full rounded-full ${color} transition-all`} style={{ width: `${Math.min(100, value)}%` }} />
       </div>
-      <span className="text-xs text-slate-300 w-10 text-right">{value}%</span>
+      <span className="text-xs text-gray-600 w-10 text-right">{value}%</span>
     </div>
   );
 }
@@ -157,8 +157,8 @@ export default function GreenInitiativesPage() {
         <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
           {stats.map((s) => (
             <div key={s.label} className="card-premium p-4">
-              <div className="text-xs text-slate-400">{s.label}</div>
-              <div className="text-2xl font-bold text-white mt-1">{s.value}</div>
+              <div className="text-xs text-gray-500">{s.label}</div>
+              <div className="text-2xl font-bold text-gray-900 mt-1">{s.value}</div>
             </div>
           ))}
         </div>
@@ -187,14 +187,14 @@ export default function GreenInitiativesPage() {
           rows={items.map((it) => ({
             title: (
               <div>
-                <div className="font-medium text-white">{it.title}</div>
-                <div className="text-xs text-slate-400">
+                <div className="font-medium text-gray-900">{it.title}</div>
+                <div className="text-xs text-gray-500">
                   {it.currentValue ?? 0}{it.unit ? ` ${it.unit}` : ''}
                   {it.targetValue ? ` / ${it.targetValue}${it.unit ? ` ${it.unit}` : ''}` : ''}
                 </div>
               </div>
             ),
-            category: <span className="text-slate-300">{catLabel(it.category)}</span>,
+            category: <span className="text-gray-600">{catLabel(it.category)}</span>,
             progress: <ProgressBar value={it.progress} />,
             status: <Badge tone={statusTone(it.status)}>{statusLabel(it.status)}</Badge>,
             actions: (
@@ -267,7 +267,7 @@ export default function GreenInitiativesPage() {
       {modal?.mode === 'progress' && (
         <Modal title={`📈 Progress — ${modal.item?.title}`} onClose={() => setModal(null)}>
           <div className="space-y-4">
-            <div className="text-sm text-slate-400">
+            <div className="text-sm text-gray-500">
               Target: {modal.item?.targetValue ?? '—'}{modal.item?.unit ? ` ${modal.item.unit}` : ''}
             </div>
             <Field label="Current value *">

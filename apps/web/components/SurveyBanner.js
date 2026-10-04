@@ -41,16 +41,16 @@ export default function SurveyBanner() {
   const scoreColor = (s) => (s >= 9 ? '#34d399' : s >= 7 ? '#fbbf24' : '#f87171');
 
   return (
-    <div className="card-premium p-5 mb-6 border !border-violet-400/30" style={{ boxShadow: '0 0 24px rgba(139,92,246,0.15)' }}>
+    <div className="card-premium p-5 mb-6 border !border-teal-500/30" style={{ boxShadow: '0 0 24px rgba(15,118,110,0.15)' }}>
       <div className="flex items-start justify-between gap-4 mb-3">
         <div>
-          <h2 className="text-white font-bold">📋 {survey.title}</h2>
-          <p className="text-slate-400 text-sm mt-1">
+          <h2 className="text-gray-900 font-bold">📋 {survey.title}</h2>
+          <p className="text-gray-500 text-sm mt-1">
             How likely are you to recommend us to a friend or colleague? (0 = not at all, 10 = extremely likely)
           </p>
         </div>
         {pending.length > 1 && (
-          <span className="text-xs text-slate-400 whitespace-nowrap">+{pending.length - 1} more</span>
+          <span className="text-xs text-gray-500 whitespace-nowrap">+{pending.length - 1} more</span>
         )}
       </div>
       <form onSubmit={submit}>

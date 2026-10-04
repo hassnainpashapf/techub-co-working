@@ -94,7 +94,7 @@ export default function PerksManagePage() {
       <PageHeader
         title="Perks & Benefits"
         sub="Partner discounts for your members"
-        actions={<button onClick={openAdd} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6]">+ New perk</button>}
+        actions={<button onClick={openAdd} className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-medium text-white hover:bg-[#0f766e]">+ New perk</button>}
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
@@ -107,7 +107,7 @@ export default function PerksManagePage() {
       <div className="flex gap-2 text-sm">
         {['all', 'active', 'inactive'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-1.5 font-medium ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+            className={`rounded-full px-4 py-1.5 font-medium ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
             {f[0].toUpperCase() + f.slice(1)}
           </button>
         ))}
@@ -119,16 +119,16 @@ export default function PerksManagePage() {
         <DataTable
           columns={['Partner', 'Perk', 'Discount', 'Category', 'Code', 'Expiry', 'Claims', 'Status', 'Actions']}
           rows={visible.map((p) => ([
-            <span key="pn" className="font-medium text-white">{p.partnerName}</span>,
-            <span key="t" className="text-slate-200">{p.title}</span>,
+            <span key="pn" className="font-medium text-gray-900">{p.partnerName}</span>,
+            <span key="t" className="text-gray-800">{p.title}</span>,
             <Badge key="d" tone="blue">{p.discountText}</Badge>,
-            <span key="c" className="text-slate-300">{catLabel(p.category)}</span>,
+            <span key="c" className="text-gray-600">{catLabel(p.category)}</span>,
             <code key="cd" className="text-xs text-amber-300">{p.code || '—'}</code>,
-            <span key="e" className="text-slate-400">{fmtDate(p.expiryDate)}</span>,
-            <span key="cl" className="text-slate-200">{p.claimsCount || 0}</span>,
+            <span key="e" className="text-gray-500">{fmtDate(p.expiryDate)}</span>,
+            <span key="cl" className="text-gray-800">{p.claimsCount || 0}</span>,
             p.isActive ? <Badge key="s" tone="green">Active</Badge> : <Badge key="s" tone="slate">Inactive</Badge>,
             <div key="a" className="flex gap-2">
-              <button onClick={() => openEdit(p)} className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">Edit</button>
+              <button onClick={() => openEdit(p)} className="text-sm text-teal-700 hover:text-teal-700">Edit</button>
               <button onClick={() => remove(p)} className="text-sm text-red-400 hover:text-red-300">Delete</button>
             </div>,
           ]))}
@@ -139,22 +139,22 @@ export default function PerksManagePage() {
         <Modal title={modal === 'add' ? 'New perk' : `Edit — ${modal.title}`} onClose={() => setModal(null)}>
           <form onSubmit={save} className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Partner name *"><input value={form.partnerName} onChange={(e) => setForm({ ...form, partnerName: e.target.value })} required maxLength={120} className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
-              <Field label="Category"><select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg bg-white/5 px-3 py-2 text-white">{CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}</select></Field>
+              <Field label="Partner name *"><input value={form.partnerName} onChange={(e) => setForm({ ...form, partnerName: e.target.value })} required maxLength={120} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
+              <Field label="Category"><select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900">{CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}</select></Field>
             </div>
-            <Field label="Title *"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={160} placeholder="Free protein shake every week" className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
-            <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
+            <Field label="Title *"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={160} placeholder="Free protein shake every week" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
+            <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Discount text *"><input value={form.discountText} onChange={(e) => setForm({ ...form, discountText: e.target.value })} required maxLength={80} placeholder="20% off" className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
-              <Field label="Redeem code"><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} maxLength={120} placeholder="TECHUB20" className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
+              <Field label="Discount text *"><input value={form.discountText} onChange={(e) => setForm({ ...form, discountText: e.target.value })} required maxLength={80} placeholder="20% off" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
+              <Field label="Redeem code"><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} maxLength={120} placeholder="TECHUB20" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
             </div>
             <div className="grid grid-cols-2 gap-4">
-              <Field label="Expiry date"><input type="date" value={form.expiryDate} onChange={(e) => setForm({ ...form, expiryDate: e.target.value })} className="w-full rounded-lg bg-white/5 px-3 py-2 text-white" /></Field>
-              <Field label="Status"><label className="flex items-center gap-2 text-sm text-slate-300"><input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} /> Active</label></Field>
+              <Field label="Expiry date"><input type="date" value={form.expiryDate} onChange={(e) => setForm({ ...form, expiryDate: e.target.value })} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
+              <Field label="Status"><label className="flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} /> Active</label></Field>
             </div>
             <div className="flex justify-end gap-2">
-              <button type="button" onClick={() => setModal(null)} className="rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/10">Cancel</button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6] disabled:opacity-50">{saving ? 'Saving…' : 'Save perk'}</button>
+              <button type="button" onClick={() => setModal(null)} className="rounded-lg px-4 py-2 text-sm text-gray-600 hover:bg-gray-100">Cancel</button>
+              <button type="submit" disabled={saving} className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-medium text-white hover:bg-[#0f766e] disabled:opacity-50">{saving ? 'Saving…' : 'Save perk'}</button>
             </div>
           </form>
         </Modal>

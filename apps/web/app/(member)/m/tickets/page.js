@@ -54,20 +54,20 @@ export default function MemberTickets() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-extrabold text-white">My Tickets</h1>
+        <h1 className="text-xl font-extrabold text-gray-900">My Tickets</h1>
         <button className="btn-primary text-sm" onClick={() => setShowForm(true)}>+ Raise Ticket</button>
       </div>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <div className="space-y-2">
           {tickets.map((t) => (
-            <button key={t.id} onClick={() => openDetail(t)} className="w-full text-left card-premium p-4 hover:border-violet-400/40 transition-colors">
+            <button key={t.id} onClick={() => openDetail(t)} className="w-full text-left card-premium p-4 hover:border-teal-500/40 transition-colors">
               <div className="flex items-center justify-between mb-1">
-                <span className="font-mono text-xs text-slate-400">#{t.ticketNumber}</span>
+                <span className="font-mono text-xs text-gray-500">#{t.ticketNumber}</span>
                 <Badge tone={t.status === 'open' ? 'blue' : t.status === 'resolved' ? 'green' : 'amber'}>{t.status.replace('_', ' ')}</Badge>
               </div>
-              <div className="font-medium text-white">{t.title}</div>
-              <div className="text-xs text-slate-400 mt-1 capitalize">{t.category} · {t.priority} priority</div>
+              <div className="font-medium text-gray-900">{t.title}</div>
+              <div className="text-xs text-gray-500 mt-1 capitalize">{t.category} · {t.priority} priority</div>
             </button>
           ))}
           {tickets.length === 0 && <p className="text-sm text-slate-500 text-center py-8">No tickets yet.</p>}
@@ -97,16 +97,16 @@ export default function MemberTickets() {
       {detail && (
         <Modal title={`Ticket #${detail.ticketNumber}`} onClose={() => setDetail(null)}>
           <div className="space-y-3">
-            <div className="font-medium text-white">{detail.title}</div>
-            {detail.description && <p className="text-sm text-slate-300">{detail.description}</p>}
+            <div className="font-medium text-gray-900">{detail.title}</div>
+            {detail.description && <p className="text-sm text-gray-600">{detail.description}</p>}
             <Badge tone={detail.status === 'open' ? 'blue' : 'amber'}>{detail.status.replace('_', ' ')}</Badge>
             <div>
-              <h4 className="text-sm font-semibold text-white mb-2">Comments</h4>
+              <h4 className="text-sm font-semibold text-gray-900 mb-2">Comments</h4>
               <div className="space-y-2 max-h-48 overflow-y-auto">
                 {(detail.comments || []).map((c) => (
-                  <div key={c.id} className="p-2.5 rounded-lg bg-white/[0.03] border border-white/10">
-                    <div className="text-xs text-slate-400 mb-0.5">{c.author?.name} · {new Date(c.createdAt).toLocaleString()}</div>
-                    <div className="text-sm text-slate-200">{c.body}</div>
+                  <div key={c.id} className="p-2.5 rounded-lg bg-gray-50 border border-gray-200">
+                    <div className="text-xs text-gray-500 mb-0.5">{c.author?.name} · {new Date(c.createdAt).toLocaleString()}</div>
+                    <div className="text-sm text-gray-800">{c.body}</div>
                   </div>
                 ))}
                 {(detail.comments || []).length === 0 && <p className="text-xs text-slate-500">No comments yet.</p>}

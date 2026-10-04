@@ -57,8 +57,8 @@ export default function EmailSettingsPage() {
       {loading ? <Spinner /> : (
         <form onSubmit={save} className="card-premium p-6 space-y-4">
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="w-4 h-4 accent-violet-500" />
-            <span className="text-sm font-medium text-white">Enable email notifications</span>
+            <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="w-4 h-4 accent-teal-600" />
+            <span className="text-sm font-medium text-gray-900">Enable email notifications</span>
           </label>
           <div className="grid grid-cols-2 gap-4">
             <Field label="SMTP host"><input className="input" placeholder="smtp.gmail.com" {...f('host')} /></Field>
@@ -69,13 +69,13 @@ export default function EmailSettingsPage() {
             <Field label="From email"><input type="email" className="input" placeholder="noreply@techub.co" {...f('fromEmail')} /></Field>
           </div>
           <label className="flex items-center gap-3 cursor-pointer">
-            <input type="checkbox" checked={form.secure} onChange={(e) => setForm({ ...form, secure: e.target.checked })} className="w-4 h-4 accent-violet-500" />
-            <span className="text-sm text-slate-300">Use SSL/TLS (port 465)</span>
+            <input type="checkbox" checked={form.secure} onChange={(e) => setForm({ ...form, secure: e.target.checked })} className="w-4 h-4 accent-teal-600" />
+            <span className="text-sm text-gray-600">Use SSL/TLS (port 465)</span>
           </label>
           <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save settings'}</button>
 
-          <div className="pt-4 border-t border-white/10">
-            <h3 className="text-sm font-semibold text-white mb-2">Send test email</h3>
+          <div className="pt-4 border-t border-gray-200">
+            <h3 className="text-sm font-semibold text-gray-900 mb-2">Send test email</h3>
             <div className="flex gap-2">
               <input type="email" className="input flex-1" placeholder="test@example.com" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
               <button type="button" className="btn-secondary" onClick={sendTest} disabled={testing}>{testing ? 'Sending…' : 'Send test'}</button>

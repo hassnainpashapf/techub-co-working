@@ -82,17 +82,17 @@ export default function OnboardingPage() {
         <PageHeader title="🎉 Tenant tayyar hai" sub={`${result.tenant.name} onboard ho gaya`} />
         <div className="card-premium p-6 mt-4">
           <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-            <div><span className="text-slate-400">Tenant:</span> <b className="text-white">{result.tenant.name}</b></div>
-            <div><span className="text-slate-400">Slug:</span> <b className="text-white">{result.tenant.slug}</b></div>
-            <div><span className="text-slate-400">Admin:</span> <b className="text-white">{result.admin.name}</b></div>
-            <div><span className="text-slate-400">Email:</span> <b className="text-white">{result.admin.email}</b></div>
-            <div><span className="text-slate-400">Plan:</span> <Badge tone="blue">{result.subscription.plan} (trial)</Badge></div>
-            <div><span className="text-slate-400">Trial ends:</span> <b className="text-white">{new Date(result.subscription.trialEndsAt).toLocaleDateString()}</b></div>
+            <div><span className="text-gray-500">Tenant:</span> <b className="text-gray-900">{result.tenant.name}</b></div>
+            <div><span className="text-gray-500">Slug:</span> <b className="text-gray-900">{result.tenant.slug}</b></div>
+            <div><span className="text-gray-500">Admin:</span> <b className="text-gray-900">{result.admin.name}</b></div>
+            <div><span className="text-gray-500">Email:</span> <b className="text-gray-900">{result.admin.email}</b></div>
+            <div><span className="text-gray-500">Plan:</span> <Badge tone="blue">{result.subscription.plan} (trial)</Badge></div>
+            <div><span className="text-gray-500">Trial ends:</span> <b className="text-gray-900">{new Date(result.subscription.trialEndsAt).toLocaleDateString()}</b></div>
           </div>
           <div className="rounded-xl border border-amber-400/40 bg-amber-500/10 p-4 mb-4">
             <p className="text-xs text-amber-200/80 mb-1">⚠️ Temporary password — sirf ek dafa dikhega. Copy kar ke admin ko de dein:</p>
             <div className="flex items-center gap-3">
-              <code className="text-2xl font-mono font-bold text-white tracking-wider">{result.tempPassword}</code>
+              <code className="text-2xl font-mono font-bold text-gray-900 tracking-wider">{result.tempPassword}</code>
               <button onClick={copyPw} className="btn-secondary btn-sm">{copied ? '✓ Copied' : 'Copy'}</button>
             </div>
           </div>
@@ -103,7 +103,7 @@ export default function OnboardingPage() {
                 : `Demo seed nahi ho saka: ${seeded.error || 'unknown error'}`}
             </div>
           )}
-          <p className="text-xs text-slate-400">Welcome email admin ko bhej di gayi hai (temp password ke sath). Pehle login par password change lazmi hoga.</p>
+          <p className="text-xs text-gray-500">Welcome email admin ko bhej di gayi hai (temp password ke sath). Pehle login par password change lazmi hoga.</p>
           <button
             onClick={() => { setResult(null); setSeeded(null); setStep(0); setForm({ name: '', slug: '', plan: 'starter', adminName: '', adminEmail: '', seedDemo: true }); }}
             className="btn-primary mt-4"
@@ -123,8 +123,8 @@ export default function OnboardingPage() {
       <div className="flex items-center gap-2 mt-6 mb-6">
         {STEPS.map((label, i) => (
           <div key={label} className="flex items-center gap-2 flex-1">
-            <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-[#7c3aed] text-white' : 'bg-slate-700 text-slate-400'}`}>{i + 1}</div>
-            <span className={`text-sm ${i <= step ? 'text-white font-semibold' : 'text-slate-500'}`}>{label}</span>
+            <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-[#0f766e] text-white' : 'bg-slate-700 text-gray-500'}`}>{i + 1}</div>
+            <span className={`text-sm ${i <= step ? 'text-gray-900 font-semibold' : 'text-slate-500'}`}>{label}</span>
             {i < STEPS.length - 1 && <div className="flex-1 h-px bg-slate-700 mx-1" />}
           </div>
         ))}
@@ -145,7 +145,7 @@ export default function OnboardingPage() {
               <div className="grid grid-cols-3 gap-2">
                 {PLANS.map((p) => (
                   <button key={p.slug} type="button" onClick={() => set('plan', p.slug)}
-                    className={`rounded-xl border p-3 text-sm font-semibold ${form.plan === p.slug ? 'border-[#8b5cf6] bg-[#8b5cf6]/15 text-white' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+                    className={`rounded-xl border p-3 text-sm font-semibold ${form.plan === p.slug ? 'border-[#0f766e] bg-[#0f766e]/15 text-white' : 'border-gray-200 text-gray-500 hover:border-slate-500'}`}>
                     {p.name}
                   </button>
                 ))}
@@ -162,22 +162,22 @@ export default function OnboardingPage() {
             <Field label="Admin ka email">
               <input className="input" type="email" value={form.adminEmail} onChange={(e) => set('adminEmail', e.target.value)} placeholder="admin@company.com" />
             </Field>
-            <p className="text-xs text-slate-400">🔑 Temporary password khud-bakhud banega aur yahin ek dafa dikhega + email me jayega. Pehle login par change lazmi hoga.</p>
+            <p className="text-xs text-gray-500">🔑 Temporary password khud-bakhud banega aur yahin ek dafa dikhega + email me jayega. Pehle login par change lazmi hoga.</p>
           </div>
         )}
 
         {step === 2 && (
           <div className="space-y-4">
-            <div className="rounded-xl bg-slate-800/60 p-4 text-sm space-y-1.5">
-              <p><span className="text-slate-400">Tenant:</span> <b className="text-white">{form.name}</b> <span className="text-slate-500 font-mono">({form.slug})</span></p>
-              <p><span className="text-slate-400">Plan:</span> <b className="text-white capitalize">{form.plan}</b> — 14 din trial</p>
-              <p><span className="text-slate-400">Admin:</span> <b className="text-white">{form.adminName}</b> ({form.adminEmail})</p>
+            <div className="rounded-xl bg-gray-100/60 p-4 text-sm space-y-1.5">
+              <p><span className="text-gray-500">Tenant:</span> <b className="text-gray-900">{form.name}</b> <span className="text-slate-500 font-mono">({form.slug})</span></p>
+              <p><span className="text-gray-500">Plan:</span> <b className="text-gray-900 capitalize">{form.plan}</b> — 14 din trial</p>
+              <p><span className="text-gray-500">Admin:</span> <b className="text-gray-900">{form.adminName}</b> ({form.adminEmail})</p>
             </div>
-            <label className="flex items-center gap-3 text-sm text-slate-200 cursor-pointer">
+            <label className="flex items-center gap-3 text-sm text-gray-800 cursor-pointer">
               <input type="checkbox" checked={form.seedDemo} onChange={(e) => set('seedDemo', e.target.checked)} className="h-4 w-4 accent-blue-600" />
               Demo data seed karo (6 units + 5 members)
             </label>
-            <div className="text-xs text-slate-400 space-y-1">
+            <div className="text-xs text-gray-500 space-y-1">
               <p>✓ Default building ("Main Building") banegi</p>
               <p>✓ Trial subscription activate hogi</p>
               <p>✓ Welcome email temp password ke sath jayegi</p>

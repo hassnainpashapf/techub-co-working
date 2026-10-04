@@ -49,10 +49,10 @@ function CancelModal({ booking, onClose, onDone }) {
   return (
     <Modal title="Cancel booking?" onClose={onClose}>
       {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
-      <p className="text-slate-300 text-sm mb-2">
-        <span className="text-white font-semibold">{booking.unit?.code}</span> — {fmtRange(booking)}
+      <p className="text-gray-600 text-sm mb-2">
+        <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> — {fmtRange(booking)}
       </p>
-      <p className="text-slate-400 text-xs mb-4">
+      <p className="text-gray-500 text-xs mb-4">
         Policy: bookings can be cancelled any time before they start. The slot is released immediately for other members.
       </p>
       <div className="flex justify-end gap-2">
@@ -91,8 +91,8 @@ function RescheduleModal({ booking, onClose, onDone }) {
     <Modal title="Reschedule booking" onClose={onClose}>
       <form onSubmit={submit}>
         {error && <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
-        <p className="text-slate-300 text-sm mb-4">
-          <span className="text-white font-semibold">{booking.unit?.code}</span> · {booking.unit?.type}
+        <p className="text-gray-600 text-sm mb-4">
+          <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> · {booking.unit?.type}
         </p>
         <div className="grid grid-cols-3 gap-3">
           <Field label="Date">
@@ -128,14 +128,14 @@ function BookingCard({ booking, onCancel, onReschedule, past }) {
           <Badge tone={statusTone}>{booking.status}</Badge>
         </div>
         <div className="absolute bottom-3 left-4 right-4">
-          <div className="text-white font-bold text-lg leading-tight">{booking.unit?.code}</div>
-          <div className="text-slate-300 text-xs capitalize">{booking.unit?.type?.replace(/_/g, ' ')}</div>
+          <div className="text-gray-900 font-bold text-lg leading-tight">{booking.unit?.code}</div>
+          <div className="text-gray-600 text-xs capitalize">{booking.unit?.type?.replace(/_/g, ' ')}</div>
         </div>
       </div>
       <div className="p-4">
-        <div className="text-white font-semibold text-sm mb-1">{booking.title}</div>
-        <div className="text-slate-300 text-sm">📅 {fmtRange(booking)}</div>
-        <div className="text-slate-400 text-xs mt-1">⏱ Duration: {durationHrs(booking)}</div>
+        <div className="text-gray-900 font-semibold text-sm mb-1">{booking.title}</div>
+        <div className="text-gray-600 text-sm">📅 {fmtRange(booking)}</div>
+        <div className="text-gray-500 text-xs mt-1">⏱ Duration: {durationHrs(booking)}</div>
         {!past && booking.status === 'confirmed' && (
           <div className="flex gap-2 mt-4">
             <button className="btn-secondary flex-1 text-sm" onClick={() => onReschedule(booking)}>Reschedule</button>
@@ -211,8 +211,8 @@ export default function PortalBookingsPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
               tab === t.key
-                ? 'bg-[#7c3aed] text-white shadow-[0_0_18px_rgba(37,99,235,0.5)]'
-                : 'bg-slate-800/70 text-slate-300 border border-slate-700 hover:border-[#8b5cf6]/50'
+                ? 'bg-[#0f766e] text-white shadow-[0_0_18px_rgba(37,99,235,0.5)]'
+                : 'bg-gray-100/70 text-gray-600 border border-gray-200 hover:border-[#0f766e]/50'
             }`}
           >
             {t.label}

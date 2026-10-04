@@ -60,7 +60,7 @@ export default function SmsSettingsPage() {
       {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm">{msg}</div>}
 
       <div className="card-premium p-6 mb-6">
-        <h2 className="text-lg font-bold text-white mb-4">Send SMS</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Send SMS</h2>
         <form onSubmit={send}>
           <Field label="To (phone number)">
             <input className="input" value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} placeholder="+92 300 1234567" required />
@@ -73,14 +73,14 @@ export default function SmsSettingsPage() {
       </div>
 
       <div className="card-premium p-6">
-        <h2 className="text-lg font-bold text-white mb-4">Recent messages</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-4">Recent messages</h2>
         {logs.length === 0 ? (
-          <p className="text-sm text-slate-400">No messages yet.</p>
+          <p className="text-sm text-gray-500">No messages yet.</p>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-slate-400 border-b border-white/10">
+                <tr className="text-left text-gray-500 border-b border-gray-200">
                   <th className="py-2 pr-4">To</th>
                   <th className="py-2 pr-4">Message</th>
                   <th className="py-2 pr-4">Provider</th>
@@ -90,12 +90,12 @@ export default function SmsSettingsPage() {
               </thead>
               <tbody>
                 {logs.map((l) => (
-                  <tr key={l.id} className="border-b border-white/5 text-slate-300">
-                    <td className="py-2 pr-4 font-medium text-white">{l.to}</td>
+                  <tr key={l.id} className="border-b border-gray-200 text-gray-600">
+                    <td className="py-2 pr-4 font-medium text-gray-900">{l.to}</td>
                     <td className="py-2 pr-4 max-w-[280px] truncate" title={l.body}>{l.body}</td>
-                    <td className="py-2 pr-4 text-slate-400">{l.provider}</td>
+                    <td className="py-2 pr-4 text-gray-500">{l.provider}</td>
                     <td className="py-2 pr-4"><StatusBadge status={l.status} /></td>
-                    <td className="py-2 text-slate-400">{new Date(l.createdAt).toLocaleString()}</td>
+                    <td className="py-2 text-gray-500">{new Date(l.createdAt).toLocaleString()}</td>
                   </tr>
                 ))}
               </tbody>

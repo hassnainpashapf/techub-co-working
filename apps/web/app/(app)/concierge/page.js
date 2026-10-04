@@ -78,13 +78,13 @@ export default function ConciergeDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <h3 className="font-bold text-white mb-4">🔥 Top Services (30d)</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+          <h3 className="font-bold text-gray-900 mb-4">🔥 Top Services (30d)</h3>
           {s.topServices?.length ? (
             <div className="space-y-3">
               {s.topServices.map((t, i) => (
                 <div key={i} className="flex items-center justify-between">
-                  <span className="text-slate-200 text-sm">{i + 1}. {t.name}</span>
+                  <span className="text-gray-800 text-sm">{i + 1}. {t.name}</span>
                   <Badge tone="blue">{t.count} requests</Badge>
                 </div>
               ))}
@@ -93,26 +93,26 @@ export default function ConciergeDashboardPage() {
             <EmptyState title="Abhi koi data nahi" />
           )}
         </div>
-        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-          <h3 className="font-bold text-white mb-4">🔗 Quick Links</h3>
+        <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+          <h3 className="font-bold text-gray-900 mb-4">🔗 Quick Links</h3>
           <div className="grid grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
-              <a key={q.href} href={q.href} className="rounded-xl border border-white/10 bg-white/[0.04] p-4 hover:border-indigo-400/40 hover:bg-white/[0.06] transition-all">
-                <div className="font-semibold text-white text-sm">{q.label}</div>
-                <div className="text-xs text-slate-400 mt-1">{q.desc}</div>
+              <a key={q.href} href={q.href} className="rounded-xl border border-gray-200 bg-gray-100 p-4 hover:border-indigo-400/40 hover:bg-gray-100 transition-all">
+                <div className="font-semibold text-gray-900 text-sm">{q.label}</div>
+                <div className="text-xs text-gray-500 mt-1">{q.desc}</div>
               </a>
             ))}
           </div>
         </div>
       </div>
 
-      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-        <h3 className="font-bold text-white mb-4">📋 Open Requests (preview)</h3>
+      <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+        <h3 className="font-bold text-gray-900 mb-4">📋 Open Requests (preview)</h3>
         {open.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
-                <tr className="text-left text-slate-400 text-xs uppercase tracking-wider">
+                <tr className="text-left text-gray-500 text-xs uppercase tracking-wider">
                   <th className="py-2 pr-4">Request</th>
                   <th className="py-2 pr-4">Member</th>
                   <th className="py-2 pr-4">Service</th>
@@ -123,10 +123,10 @@ export default function ConciergeDashboardPage() {
               </thead>
               <tbody>
                 {open.map((r) => (
-                  <tr key={r.id} className="border-t border-white/5 hover:bg-white/[0.03]">
-                    <td className="py-2 pr-4 text-slate-100">{r.title}</td>
-                    <td className="py-2 pr-4 text-slate-300">{r.member}</td>
-                    <td className="py-2 pr-4 text-slate-300">{r.service}</td>
+                  <tr key={r.id} className="border-t border-gray-200 hover:bg-gray-50">
+                    <td className="py-2 pr-4 text-gray-900">{r.title}</td>
+                    <td className="py-2 pr-4 text-gray-600">{r.member}</td>
+                    <td className="py-2 pr-4 text-gray-600">{r.service}</td>
                     <td className="py-2 pr-4"><Badge tone="blue">{r.status}</Badge></td>
                     <td className="py-2 pr-4">{prioBadge(r.priority)}</td>
                     <td className="py-2">{slaBadge(r)}</td>

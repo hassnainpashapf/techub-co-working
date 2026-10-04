@@ -57,21 +57,21 @@ export default function MemberVisitors() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-extrabold text-white">My Visitors</h1>
+        <h1 className="text-xl font-extrabold text-gray-900">My Visitors</h1>
         <button className="btn-primary text-sm" onClick={() => setShowForm(true)}>+ Invite Visitor</button>
       </div>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : invites.length === 0 ? (
-        <div className="card-premium p-8 text-center text-sm text-slate-400">No visitor invites yet. Invite someone and they'll get a check-in code.</div>
+        <div className="card-premium p-8 text-center text-sm text-gray-500">No visitor invites yet. Invite someone and they'll get a check-in code.</div>
       ) : (
         <div className="grid gap-3">
           {invites.map((i) => (
             <div key={i.id} className="card-premium p-4 flex items-center justify-between gap-3">
               <div>
-                <div className="font-semibold text-white">{i.visitorName}</div>
-                <div className="text-xs text-slate-400">
+                <div className="font-semibold text-gray-900">{i.visitorName}</div>
+                <div className="text-xs text-gray-500">
                   {new Date(i.expectedAt).toLocaleString()} · {purposeLabel(i.purpose)} · Code{' '}
-                  <span className="font-mono font-bold text-violet-300 tracking-widest">{i.code}</span>
+                  <span className="font-mono font-bold text-teal-300 tracking-widest">{i.code}</span>
                 </div>
                 {i.notes && <div className="text-xs text-slate-500 mt-1">{i.notes}</div>}
               </div>

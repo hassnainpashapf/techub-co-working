@@ -16,14 +16,14 @@ const QUICK_LINKS = [
 function AlertRow({ title, items, renderItem }) {
   if (!items || !items.length) return null;
   return (
-    <div className="rounded-2xl border border-white/5 bg-white/[0.02] p-4">
+    <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4">
       <div className="mb-2 flex items-center justify-between">
         <h3 className="text-sm font-semibold">{title}</h3>
         <Badge tone="red">{items.length}</Badge>
       </div>
       <div className="space-y-1.5">
         {items.map((it) => (
-          <div key={it.id} className="flex items-center justify-between gap-2 rounded-lg bg-white/[0.02] px-3 py-2 text-sm">
+          <div key={it.id} className="flex items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 text-sm">
             {renderItem(it)}
           </div>
         ))}
@@ -98,12 +98,12 @@ export default function LegalDashboardPage() {
       </div>
 
       <div>
-        <h3 className="mb-3 text-sm font-semibold text-slate-300">Quick Links</h3>
+        <h3 className="mb-3 text-sm font-semibold text-gray-600">Quick Links</h3>
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q) => (
-            <a key={q.path} href={q.path} className="block rounded-2xl border border-white/5 bg-white/[0.02] p-4 transition hover:border-violet-400/30 hover:bg-white/[0.04]">
+            <a key={q.path} href={q.path} className="block rounded-2xl border border-gray-200 bg-gray-50 p-4 transition hover:border-teal-500/30 hover:bg-gray-100">
               <div className="text-sm font-semibold">{q.label}</div>
-              <div className="mt-1 text-xs text-slate-400">{q.desc}</div>
+              <div className="mt-1 text-xs text-gray-500">{q.desc}</div>
             </a>
           ))}
         </div>

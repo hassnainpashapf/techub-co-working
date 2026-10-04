@@ -128,12 +128,12 @@ export default function EventsPage() {
             <div key={ev.id} className="card-premium p-5">
               {ev.imageUrl && <img src={ev.imageUrl} alt="" className="rounded-xl h-36 w-full object-cover mb-3" />}
               <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-bold text-white">{ev.title}</h3>
+                <h3 className="font-bold text-gray-900">{ev.title}</h3>
                 <Badge tone={STATUS_TONE[ev.status] || 'slate'}>{ev.status}</Badge>
               </div>
-              <p className="text-sm text-slate-400 mb-2">📅 {fmtDate(ev.startsAt)} → {fmtDate(ev.endsAt)}</p>
-              {ev.location && <p className="text-sm text-slate-400 mb-2">📍 {ev.location}</p>}
-              <p className="text-sm text-slate-300 mb-3">✅ {ev.counts?.going || 0} going · 👀 {ev.counts?.interested || 0} interested{ev.capacity ? ` · 🎟️ ${ev.capacity} seats` : ''}</p>
+              <p className="text-sm text-gray-500 mb-2">📅 {fmtDate(ev.startsAt)} → {fmtDate(ev.endsAt)}</p>
+              {ev.location && <p className="text-sm text-gray-500 mb-2">📍 {ev.location}</p>}
+              <p className="text-sm text-gray-600 mb-3">✅ {ev.counts?.going || 0} going · 👀 {ev.counts?.interested || 0} interested{ev.capacity ? ` · 🎟️ ${ev.capacity} seats` : ''}</p>
               <div className="flex gap-2">
                 <button className="btn-secondary text-sm" onClick={() => viewRsvps(ev)}>RSVPs</button>
                 <button className="btn-secondary text-sm" onClick={() => setAttendEvent(ev)}>Attendees</button>
@@ -157,8 +157,8 @@ export default function EventsPage() {
           ) : (
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {rsvps.map((r) => (
-                <div key={r.id} className="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
-                  <span className="text-sm text-white">{r.member?.name || '—'}</span>
+                <div key={r.id} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2">
+                  <span className="text-sm text-gray-900">{r.member?.name || '—'}</span>
                   <Badge tone={r.status === 'going' ? 'green' : r.status === 'interested' ? 'blue' : 'slate'}>{r.status}</Badge>
                 </div>
               ))}

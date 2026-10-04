@@ -6,7 +6,7 @@ import { PageHeader, StatCard, ErrorBanner, Spinner, EmptyState, DataTable, Moda
 
 const TIER_META = {
   champion: { label: 'Champions', color: '#22c55e', bg: 'bg-green-500/15 text-green-300 border-green-500/30' },
-  active: { label: 'Active', color: '#8b5cf6', bg: 'bg-[#8b5cf6]/15 text-[#c4b5fd] border-[#8b5cf6]/30' },
+  active: { label: 'Active', color: '#0f766e', bg: 'bg-[#0f766e]/15 text-teal-700 border-[#0f766e]/30' },
   casual: { label: 'Casual', color: '#f59e0b', bg: 'bg-amber-500/15 text-amber-300 border-amber-500/30' },
   'at-risk': { label: 'At-risk', color: '#ef4444', bg: 'bg-red-500/15 text-red-300 border-red-500/30' },
 };
@@ -14,7 +14,7 @@ const TIER_META = {
 function TierPill({ tier }) {
   const m = TIER_META[tier] || {};
   return (
-    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${m.bg || 'bg-slate-500/15 text-slate-300'}`}>
+    <span className={`inline-block px-2.5 py-1 rounded-full text-xs font-semibold border ${m.bg || 'bg-slate-500/15 text-gray-600'}`}>
       {m.label || tier}
     </span>
   );
@@ -24,10 +24,10 @@ function ScoreBar({ score }) {
   const color = score >= 80 ? '#22c55e' : score >= 60 ? '#3b82f6' : score >= 40 ? '#f59e0b' : '#ef4444';
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
-      <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+      <div className="flex-1 h-2 rounded-full bg-gray-100 overflow-hidden">
         <div className="h-full rounded-full" style={{ width: `${score}%`, background: color }} />
       </div>
-      <span className="text-sm font-bold text-white w-8 text-right">{score}</span>
+      <span className="text-sm font-bold text-gray-900 w-8 text-right">{score}</span>
     </div>
   );
 }
@@ -39,7 +39,7 @@ function Donut({ distribution, total }) {
   return (
     <div className="flex items-center gap-6">
       <svg width="180" height="180" viewBox="0 0 180 180">
-        <circle cx="90" cy="90" r={R} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="22" />
+        <circle cx="90" cy="90" r={R} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="22" />
         {segs.map(([tier, v]) => {
           const frac = v / Math.max(1, total);
           const el = (
@@ -57,15 +57,15 @@ function Donut({ distribution, total }) {
           acc += frac;
           return el;
         })}
-        <text x="90" y="84" textAnchor="middle" fill="#fff" fontSize="28" fontWeight="800">{total}</text>
-        <text x="90" y="106" textAnchor="middle" fill="rgba(255,255,255,0.6)" fontSize="12">members</text>
+        <text x="90" y="84" textAnchor="middle" fill="#111827" fontSize="28" fontWeight="800">{total}</text>
+        <text x="90" y="106" textAnchor="middle" fill="rgba(0,0,0,0.6)" fontSize="12">members</text>
       </svg>
       <div className="space-y-2">
         {segs.map(([tier, v]) => (
           <div key={tier} className="flex items-center gap-2 text-sm">
             <span className="w-3 h-3 rounded-full" style={{ background: TIER_META[tier].color }} />
-            <span className="text-white/80">{TIER_META[tier].label}</span>
-            <span className="text-white font-bold ml-auto pl-4">{v}</span>
+            <span className="text-gray-700">{TIER_META[tier].label}</span>
+            <span className="text-gray-900 font-bold ml-auto pl-4">{v}</span>
           </div>
         ))}
       </div>
@@ -120,13 +120,13 @@ export default function EngagementPage() {
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setTier('')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${!tier ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${!tier ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}
             >All</button>
             {Object.entries(TIER_META).map(([k, m]) => (
               <button
                 key={k}
                 onClick={() => setTier(k)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${tier === k ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${tier === k ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}
               >{m.label}</button>
             ))}
           </div>
@@ -153,22 +153,22 @@ export default function EngagementPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
-              <h3 className="text-white font-bold mb-4">Tier Distribution</h3>
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <h3 className="text-gray-900 font-bold mb-4">Tier Distribution</h3>
               <Donut distribution={summary.distribution} total={summary.total} />
             </div>
-            <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
-              <h3 className="text-white font-bold mb-4">Top Champions 🏆</h3>
+            <div className="rounded-2xl border border-gray-200 bg-white p-6">
+              <h3 className="text-gray-900 font-bold mb-4">Top Champions 🏆</h3>
               {champions.length === 0 ? (
                 <EmptyState title="Koi champion nahi" hint="80+ score wale members yahan dikhenge" />
               ) : (
                 <div className="space-y-3">
                   {champions.map((m, i) => (
                     <div key={m.id} className="flex items-center gap-3">
-                      <span className="text-lg font-extrabold text-white/40 w-6">{i + 1}</span>
+                      <span className="text-lg font-extrabold text-gray-900/40 w-6">{i + 1}</span>
                       <div className="flex-1 min-w-0">
-                        <div className="text-white font-semibold truncate">{m.name}</div>
-                        <div className="text-xs text-white/50 truncate">{m.companyName || m.email || ''}</div>
+                        <div className="text-gray-900 font-semibold truncate">{m.name}</div>
+                        <div className="text-xs text-gray-900/50 truncate">{m.companyName || m.email || ''}</div>
                       </div>
                       <ScoreBar score={m.score} />
                     </div>
@@ -179,24 +179,24 @@ export default function EngagementPage() {
           </div>
 
           <div>
-            <h3 className="text-white font-bold mb-3">At-risk Members <span className="text-red-400">({atRisk.length})</span></h3>
+            <h3 className="text-gray-900 font-bold mb-3">At-risk Members <span className="text-red-400">({atRisk.length})</span></h3>
             <DataTable
               columns={[
                 { key: 'name', label: 'Member', render: (r) => (
-                  <div><div className="font-semibold">{r.name}</div><div className="text-xs text-white/50">{r.email || r.phone || ''}</div></div>
+                  <div><div className="font-semibold">{r.name}</div><div className="text-xs text-gray-900/50">{r.email || r.phone || ''}</div></div>
                 )},
                 { key: 'score', label: 'Score', render: (r) => <ScoreBar score={r.score} /> },
                 { key: 'tier', label: 'Tier', render: (r) => <TierPill tier={r.tier} /> },
                 { key: 'lastActivityAt', label: 'Last Activity', render: (r) => (
-                  <span className="text-white/70 text-sm">{r.lastActivityAt ? new Date(r.lastActivityAt).toLocaleDateString() : '—'}</span>
+                  <span className="text-gray-600 text-sm">{r.lastActivityAt ? new Date(r.lastActivityAt).toLocaleDateString() : '—'}</span>
                 )},
                 { key: 'breakdown', label: 'Why', render: (r) => (
-                  <span className="text-white/60 text-xs">{(r.breakdown || []).filter((b) => b.points > 0).slice(0, 2).map((b) => b.label).join(' • ') || 'Koi engagement signal nahi'}</span>
+                  <span className="text-gray-500 text-xs">{(r.breakdown || []).filter((b) => b.points > 0).slice(0, 2).map((b) => b.label).join(' • ') || 'Koi engagement signal nahi'}</span>
                 )},
                 { key: 'action', label: 'Action', render: (r) => (
                   <button
                     onClick={() => setMailFor(r)}
-                    className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#7c3aed] text-white hover:bg-[#8b5cf6] shadow-[0_0_12px_rgba(37,99,235,0.4)]"
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#0f766e] text-white hover:bg-[#0f766e] shadow-[0_0_12px_rgba(37,99,235,0.4)]"
                   >Send retention email</button>
                 )},
               ]}
@@ -215,15 +215,15 @@ export default function EngagementPage() {
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
               placeholder="e.g. Hum ne apke liye 20% loyalty bonus rakha hai..."
-              className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#8b5cf6]"
+              className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-[#0f766e]"
             />
           </Field>
           <div className="flex justify-end gap-2 mt-4">
-            <button onClick={() => setMailFor(null)} className="px-4 py-2 rounded-full text-sm bg-slate-800 text-slate-300 hover:bg-slate-700">Cancel</button>
+            <button onClick={() => setMailFor(null)} className="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-slate-700">Cancel</button>
             <button
               onClick={sendRetention}
               disabled={sending}
-              className="px-4 py-2 rounded-full text-sm bg-[#7c3aed] text-white font-semibold hover:bg-[#8b5cf6] disabled:opacity-50"
+              className="px-4 py-2 rounded-full text-sm bg-[#0f766e] text-white font-semibold hover:bg-[#0f766e] disabled:opacity-50"
             >{sending ? 'Bhej raha...' : 'Send email'}</button>
           </div>
         </Modal>

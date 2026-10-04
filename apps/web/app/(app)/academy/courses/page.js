@@ -172,17 +172,17 @@ export default function CoursesPage() {
           {builderLoading ? <Spinner /> : (
             <div className="grid lg:grid-cols-3 gap-4">
               <div className="card p-5">
-                <h3 className="font-semibold text-white mb-3">Course Details</h3>
+                <h3 className="font-semibold text-gray-900 mb-3">Course Details</h3>
                 <div className="space-y-2 text-sm">
-                  <div><div className="text-slate-400 text-xs">Title</div><div className="text-white font-medium">{selected.title}</div></div>
-                  <div><div className="text-slate-400 text-xs">Slug</div><div className="text-slate-300">/{selected.slug}</div></div>
+                  <div><div className="text-gray-500 text-xs">Title</div><div className="text-gray-900 font-medium">{selected.title}</div></div>
+                  <div><div className="text-gray-500 text-xs">Slug</div><div className="text-gray-600">/{selected.slug}</div></div>
                   <div className="flex gap-2">
                     <Badge tone={LEVEL_TONES[selected.level] || 'slate'}>{LEVEL_LABELS[selected.level] || selected.level}</Badge>
                     <Badge tone={selected.isPublished ? 'green' : 'amber'}>{selected.isPublished ? 'Published' : 'Draft'}</Badge>
                     {selected.price != null && <Badge tone="blue">PKR {selected.price}</Badge>}
                   </div>
-                  <p className="text-slate-400 text-xs">{selected.description || '—'}</p>
-                  <div className="text-xs text-slate-400">{lessons.length} lessons {selected.durationMin ? `• ~${selected.durationMin} min` : ''}</div>
+                  <p className="text-gray-500 text-xs">{selected.description || '—'}</p>
+                  <div className="text-xs text-gray-500">{lessons.length} lessons {selected.durationMin ? `• ~${selected.durationMin} min` : ''}</div>
                 </div>
                 <div className="flex flex-wrap gap-2 mt-4">
                   {selected.isPublished ? (
@@ -195,7 +195,7 @@ export default function CoursesPage() {
               </div>
               <div className="lg:col-span-2 card p-5">
                 <div className="flex items-center justify-between mb-3">
-                  <h3 className="font-semibold text-white">Lessons ({lessons.length})</h3>
+                  <h3 className="font-semibold text-gray-900">Lessons ({lessons.length})</h3>
                   <button onClick={() => openLessonModal()} className="btn-primary text-xs">+ Lesson joro</button>
                 </div>
                 {lessons.length === 0 ? (
@@ -203,15 +203,15 @@ export default function CoursesPage() {
                 ) : (
                   <div className="space-y-2">
                     {lessons.map((l, i) => (
-                      <div key={l.id} className="flex items-center gap-3 p-3 rounded-lg bg-white/5 border border-white/10">
+                      <div key={l.id} className="flex items-center gap-3 p-3 rounded-lg bg-gray-100 border border-gray-200">
                         <div className="flex flex-col gap-1">
-                          <button onClick={() => moveLesson(i, -1)} disabled={i === 0} className="text-slate-400 hover:text-white disabled:opacity-30 text-sm">▲</button>
-                          <button onClick={() => moveLesson(i, 1)} disabled={i === lessons.length - 1} className="text-slate-400 hover:text-white disabled:opacity-30 text-sm">▼</button>
+                          <button onClick={() => moveLesson(i, -1)} disabled={i === 0} className="text-gray-500 hover:text-gray-900 disabled:opacity-30 text-sm">▲</button>
+                          <button onClick={() => moveLesson(i, 1)} disabled={i === lessons.length - 1} className="text-gray-500 hover:text-gray-900 disabled:opacity-30 text-sm">▼</button>
                         </div>
                         <div className="text-xl">{TYPE_ICONS[l.type] || '📝'}</div>
                         <div className="flex-1 min-w-0">
-                          <div className="text-white text-sm font-medium truncate">{l.title}</div>
-                          <div className="text-xs text-slate-400">{TYPE_LABELS[l.type] || l.type}{l.durationMin ? ` • ${l.durationMin} min` : ''}{l.isFree ? ' • 🆓 Free preview' : ''}</div>
+                          <div className="text-gray-900 text-sm font-medium truncate">{l.title}</div>
+                          <div className="text-xs text-gray-500">{TYPE_LABELS[l.type] || l.type}{l.durationMin ? ` • ${l.durationMin} min` : ''}{l.isFree ? ' • 🆓 Free preview' : ''}</div>
                         </div>
                         <button onClick={() => openLessonModal(l)} className="btn-secondary text-xs">✏️</button>
                         <button onClick={() => handleDeleteLesson(l.id)} className="btn-secondary text-xs text-red-300">🗑</button>
@@ -232,15 +232,15 @@ export default function CoursesPage() {
             <div key={c.id} className="card p-5">
               <div className="flex items-start justify-between gap-2">
                 <div className="min-w-0">
-                  <h3 className="font-semibold text-white truncate">{c.title}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">/{c.slug} • {c.category} • {c.lessonCount || 0} lessons</p>
+                  <h3 className="font-semibold text-gray-900 truncate">{c.title}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">/{c.slug} • {c.category} • {c.lessonCount || 0} lessons</p>
                 </div>
                 <div className="flex flex-col items-end gap-1">
                   <Badge tone={c.isPublished ? 'green' : 'amber'}>{c.isPublished ? 'Published' : 'Draft'}</Badge>
                   <Badge tone={LEVEL_TONES[c.level] || 'slate'}>{LEVEL_LABELS[c.level] || c.level}</Badge>
                 </div>
               </div>
-              <p className="text-sm text-slate-400 mt-2 line-clamp-2">{c.description || '—'}</p>
+              <p className="text-sm text-gray-500 mt-2 line-clamp-2">{c.description || '—'}</p>
               <div className="flex flex-wrap gap-2 mt-4">
                 <button onClick={() => openBuilder(c.id)} className="btn-secondary text-xs">✏️ Builder</button>
                 {c.isPublished ? (
@@ -311,7 +311,7 @@ export default function CoursesPage() {
             ) : (
               <Field label="Content URL"><input value={lessonForm.contentUrl} onChange={(e) => setLessonForm({ ...lessonForm, contentUrl: e.target.value })} placeholder="https://... (video/file link)" className="input-premium w-full" /></Field>
             )}
-            <label className="flex items-center gap-2 text-sm text-slate-300">
+            <label className="flex items-center gap-2 text-sm text-gray-600">
               <input type="checkbox" checked={lessonForm.isFree} onChange={(e) => setLessonForm({ ...lessonForm, isFree: e.target.checked })} />
               Free preview (bina enroll dekha ja sakta hai)
             </label>

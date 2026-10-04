@@ -121,7 +121,7 @@ export default function MetersPage() {
       key: 'actions', label: 'Actions', render: (m) => (
         <div className="flex gap-2">
           <button className="text-xs text-emerald-300 hover:text-emerald-200" onClick={() => openReadings(m)}>📊 Readings</button>
-          <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe]" onClick={() => openEdit(m)}>Edit</button>
+          <button className="text-xs text-teal-700 hover:text-teal-700" onClick={() => openEdit(m)}>Edit</button>
           <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => toggle(m)}>{m.isActive ? 'Deactivate' : 'Activate'}</button>
           <button className="text-xs text-red-400 hover:text-red-300" onClick={() => remove(m)}>Delete</button>
         </div>
@@ -134,7 +134,7 @@ export default function MetersPage() {
       <PageHeader
         title="🔌 Utility Meters"
         sub="Bijli, pani, gas aur internet meters — units ya building level par"
-        actions={<button onClick={openAdd} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-semibold text-white hover:bg-[#8b5cf6]">+ Naya Meter</button>}
+        actions={<button onClick={openAdd} className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0f766e]">+ Naya Meter</button>}
       />
       {error && <ErrorBanner message={error} />}
       {loading ? <Spinner /> : <DataTable columns={columns} rows={meters} emptyText="Koi meter nahi — pehla meter add karein." />}
@@ -151,7 +151,7 @@ export default function MetersPage() {
                 <button onClick={saveReading} className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-semibold text-white hover:bg-emerald-500">Save</button>
               </div>
             </div>
-            {readingMsg && <div className="text-sm text-slate-300">{readingMsg}</div>}
+            {readingMsg && <div className="text-sm text-gray-600">{readingMsg}</div>}
             {readingsLoading ? <Spinner /> : (
               <DataTable
                 columns={[
@@ -195,8 +195,8 @@ export default function MetersPage() {
               <input className="input-premium w-full" value={form.meterNumber} onChange={(e) => setForm({ ...form, meterNumber: e.target.value })} placeholder="Physical meter serial" />
             </Field>
             <div className="flex justify-end gap-3 pt-2">
-              <button onClick={() => setModal(null)} className="rounded-lg border border-white/10 px-4 py-2 text-sm text-slate-300">Cancel</button>
-              <button onClick={save} disabled={saving} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-semibold text-white hover:bg-[#8b5cf6] disabled:opacity-50">
+              <button onClick={() => setModal(null)} className="rounded-lg border border-gray-200 px-4 py-2 text-sm text-gray-600">Cancel</button>
+              <button onClick={save} disabled={saving} className="rounded-lg bg-[#0f766e] px-4 py-2 text-sm font-semibold text-white hover:bg-[#0f766e] disabled:opacity-50">
                 {saving ? 'Saving...' : modal.mode === 'add' ? 'Add Meter' : 'Save'}
               </button>
             </div>

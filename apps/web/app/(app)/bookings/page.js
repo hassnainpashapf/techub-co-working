@@ -58,7 +58,7 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
         <Field label="Ends"><input type="datetime-local" className="input" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required /></Field>
       </div>
       {rules && (
-        <p className="text-xs text-slate-400 mb-4">
+        <p className="text-xs text-gray-500 mb-4">
           ℹ️ Max {rules.bookingMaxHours}h per booking · {rules.bookingBufferMinutes} min gap between bookings · book up to {rules.bookingAdvanceDays} days ahead · {rules.bookingMinNoticeMinutes} min notice required.
         </p>
       )}
@@ -174,7 +174,7 @@ export default function BookingsPage() {
       <div className="card">
         <DataTable
           columns={[
-            { key: 'title', label: 'Title', render: (r) => <span className="font-medium text-white">{r.title || '—'}</span> },
+            { key: 'title', label: 'Title', render: (r) => <span className="font-medium text-gray-900">{r.title || '—'}</span> },
             { key: 'room', label: 'Room', render: (r) => r.roomName || r.unitCode || r.unit?.code || '—' },
             { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
             {

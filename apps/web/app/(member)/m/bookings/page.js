@@ -48,7 +48,7 @@ export default function MemberBookings() {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-extrabold text-white">My Bookings</h1>
+        <h1 className="text-xl font-extrabold text-gray-900">My Bookings</h1>
         <button className="btn-primary text-sm" onClick={() => setShowForm(true)}>+ New Booking</button>
       </div>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
@@ -57,8 +57,8 @@ export default function MemberBookings() {
           {bookings.map((b) => (
             <div key={b.id} className="card-premium p-4 flex items-center justify-between">
               <div>
-                <div className="font-medium text-white">{b.title}</div>
-                <div className="text-xs text-slate-400">{b.unit?.code} · {new Date(b.startAt).toLocaleString()} → {new Date(b.endAt).toLocaleTimeString()}</div>
+                <div className="font-medium text-gray-900">{b.title}</div>
+                <div className="text-xs text-gray-500">{b.unit?.code} · {new Date(b.startAt).toLocaleString()} → {new Date(b.endAt).toLocaleTimeString()}</div>
               </div>
               <div className="flex items-center gap-2">
                 <Badge tone={b.status === 'confirmed' ? 'green' : 'red'}>{b.status}</Badge>

@@ -14,7 +14,7 @@ function KeyForm({ scopes, onSave, saving }) {
       <Field label="Scopes">
         <div className="flex flex-wrap gap-2">
           {scopes.map((s) => (
-            <label key={s} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.scopes.includes(s) ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            <label key={s} className={`px-3 py-1.5 rounded-lg text-xs font-mono border cursor-pointer ${f.scopes.includes(s) ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
               <input type="checkbox" className="hidden" checked={f.scopes.includes(s)} onChange={() => toggle(s)} />
               {s}
             </label>
@@ -86,12 +86,12 @@ export default function ApiKeysPage() {
   if (loading) return <Spinner />;
 
   const cols = [
-    { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-white">{r.name}</span> },
-    { key: 'prefix', label: 'Key', render: (r) => <span className="font-mono text-xs text-slate-300">cwk_{r.keyPrefix}…</span> },
-    { key: 'scopes', label: 'Scopes', render: (r) => <span className="font-mono text-[11px] text-slate-400">{(r.scopes || []).join(', ')}</span> },
-    { key: 'lastUsed', label: 'Last used', render: (r) => <span className="text-xs text-slate-400">{r.lastUsedAt ? new Date(r.lastUsedAt).toLocaleString() : 'Never'}</span> },
-    { key: 'expires', label: 'Expires', render: (r) => <span className="text-xs text-slate-400">{r.expiresAt ? new Date(r.expiresAt).toLocaleDateString() : 'Never'}</span> },
-    { key: 'rateLimit', label: 'Rate limit', render: (r) => <span className="text-xs text-slate-400">{r.rateLimitPerMin ? `${r.rateLimitPerMin}/min` : 'Unlimited'}</span> },
+    { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
+    { key: 'prefix', label: 'Key', render: (r) => <span className="font-mono text-xs text-gray-600">cwk_{r.keyPrefix}…</span> },
+    { key: 'scopes', label: 'Scopes', render: (r) => <span className="font-mono text-[11px] text-gray-500">{(r.scopes || []).join(', ')}</span> },
+    { key: 'lastUsed', label: 'Last used', render: (r) => <span className="text-xs text-gray-500">{r.lastUsedAt ? new Date(r.lastUsedAt).toLocaleString() : 'Never'}</span> },
+    { key: 'expires', label: 'Expires', render: (r) => <span className="text-xs text-gray-500">{r.expiresAt ? new Date(r.expiresAt).toLocaleDateString() : 'Never'}</span> },
+    { key: 'rateLimit', label: 'Rate limit', render: (r) => <span className="text-xs text-gray-500">{r.rateLimitPerMin ? `${r.rateLimitPerMin}/min` : 'Unlimited'}</span> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.status === 'active' ? 'green' : r.status === 'expired' ? 'amber' : 'red'}>{r.status}</Badge> },
     { key: 'actions', label: '', render: (r) => r.status === 'active' ? (
       <span className="flex gap-3">
@@ -121,10 +121,10 @@ export default function ApiKeysPage() {
         <Modal title="API Key Created" onClose={() => setNewKey(null)}>
           <p className="text-sm text-amber-200 mb-3">⚠️ Copy this key now — it will never be shown again.</p>
           <div className="flex items-center gap-2 mb-4">
-            <code className="flex-1 font-mono text-xs bg-black/40 border border-white/10 rounded-lg px-3 py-2.5 text-emerald-300 break-all">{newKey}</code>
+            <code className="flex-1 font-mono text-xs bg-black/40 border border-gray-200 rounded-lg px-3 py-2.5 text-emerald-300 break-all">{newKey}</code>
             <button onClick={copy} className="btn-secondary text-xs whitespace-nowrap">{copied ? 'Copied ✓' : 'Copy'}</button>
           </div>
-          <p className="text-xs text-slate-400 mb-4">Use as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">Authorization: Bearer</code> token.</p>
+          <p className="text-xs text-gray-500 mb-4">Use as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">Authorization: Bearer</code> token.</p>
           <button onClick={() => setNewKey(null)} className="btn-primary w-full">Done</button>
         </Modal>
       )}

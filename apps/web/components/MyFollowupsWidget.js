@@ -39,12 +39,12 @@ export default function MyFollowupsWidget() {
       {rows.length === 0 && <EmptyState title="Aaj koi follow-up due nahi 🎉" />}
       <div className="space-y-2">
         {rows.map((r) => (
-          <a key={r.id} href="/sales/leads" className="block rounded-lg border border-white/5 p-2.5 hover:border-blue-500/40 transition text-sm">
+          <a key={r.id} href="/sales/leads" className="block rounded-lg border border-gray-200 p-2.5 hover:border-blue-500/40 transition text-sm">
             <div className="flex items-center justify-between gap-2">
               <span className="font-medium">{r.lead?.name}</span>
               <Badge tone={r.overdue ? 'red' : toneFor(r.type)}>{r.overdue ? 'OVERDUE' : labelFor(r.type)}</Badge>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-gray-500 mt-1">
               {new Date(r.dueAt).toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
               {r.lead?.phone ? ` • ☎ ${r.lead.phone}` : ''}
             </p>

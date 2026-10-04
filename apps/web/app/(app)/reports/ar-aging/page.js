@@ -114,7 +114,7 @@ export default function ARAgingPage() {
     {
       key: 'total',
       label: 'Total Outstanding',
-      render: (row) => <span className="font-bold text-white">{money(row.total)}</span>,
+      render: (row) => <span className="font-bold text-gray-900">{money(row.total)}</span>,
     },
   ];
 
@@ -142,12 +142,12 @@ export default function ARAgingPage() {
           </div>
 
           <div className="card-premium p-5 mb-6">
-            <h3 className="text-sm font-semibold text-slate-200 mb-3">Outstanding by aging bucket</h3>
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">Outstanding by aging bucket</h3>
             <BucketChart totals={totals} />
           </div>
 
           <div className="card-premium p-5">
-            <h3 className="text-sm font-semibold text-slate-200 mb-3">Aging by member</h3>
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">Aging by member</h3>
             {rows.length ? (
               <DataTable columns={columns} rows={rows} />
             ) : (

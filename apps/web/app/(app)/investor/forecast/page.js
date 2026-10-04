@@ -22,23 +22,23 @@ function ForecastChart({ history, forecast, height = 240 }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="fcArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#0f766e" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#0f766e" stopOpacity="0" />
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75, 1].map((f) => (
           <g key={f}>
             <line x1="0" y1={y(f)} x2={W} y2={y(f)} stroke="rgba(255,255,255,0.07)" strokeWidth="0.25" />
-            <text x={W - 1} y={y(f) - 1.5} textAnchor="end" fill="rgba(255,255,255,0.4)" fontSize="2.8">{Math.round(f * 100)}%</text>
+            <text x={W - 1} y={y(f) - 1.5} textAnchor="end" fill="rgba(0,0,0,0.4)" fontSize="2.8">{Math.round(f * 100)}%</text>
           </g>
         ))}
         {/* history area */}
         <polygon points={`2,${y(0)} ${pts(history, 0)} ${x(split - 1)},${y(0)}`} fill="url(#fcArea)" />
         {/* split line */}
         <line x1={x(split - 0.5)} y1={6} x2={x(split - 0.5)} y2={H - padB} stroke="rgba(255,255,255,0.25)" strokeWidth="0.25" strokeDasharray="1.2,1" />
-        <text x={x(split - 0.5)} y={4.5} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="2.6">today</text>
+        <text x={x(split - 0.5)} y={4.5} textAnchor="middle" fill="rgba(0,0,0,0.45)" fontSize="2.6">today</text>
         {/* history line */}
-        <polyline points={pts(history, 0)} fill="none" stroke="#8b5cf6" strokeWidth="1" strokeLinecap="round" />
+        <polyline points={pts(history, 0)} fill="none" stroke="#0f766e" strokeWidth="1" strokeLinecap="round" />
         {/* forecast line (dashed) */}
         <polyline points={`${x(split - 1)},${y(history[history.length - 1]?.rate || 0)} ${pts(forecast, split)}`} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="2,1.4" strokeLinecap="round" />
         {all.map((d, i) => (
@@ -48,7 +48,7 @@ function ForecastChart({ history, forecast, height = 240 }) {
         ))}
         {all.map((d, i) => (
           i % 2 === 0 ? (
-            <text key={i} x={x(i)} y={H - 8} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="2.8">{d.label}</text>
+            <text key={i} x={x(i)} y={H - 8} textAnchor="middle" fill="rgba(0,0,0,0.5)" fontSize="2.8">{d.label}</text>
           ) : null
         ))}
       </svg>
@@ -116,7 +116,7 @@ export default function ForecastPage() {
             <StatCard label={`Forecast (${months} mo)`} value={`${(a.forecastOccupancy * 100).toFixed(1)}%`} sub={`trend ${(data.trendPerMonth * 100).toFixed(2)} pts/mo`} accent="amber" />
             <div className="card-premium p-5 flex items-center justify-between">
               <div>
-                <p className="text-xs text-slate-400 mb-1">Trend</p>
+                <p className="text-xs text-gray-500 mb-1">Trend</p>
                 <span className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border text-sm font-semibold ${t.cls}`}>
                   {t.emoji} {t.label}
                 </span>
@@ -125,8 +125,8 @@ export default function ForecastPage() {
           </div>
 
           <div className="card-premium p-6">
-            <div className="flex items-center gap-5 mb-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1.5"><span className="w-6 h-0.5 bg-[#8b5cf6] rounded" /> History</span>
+            <div className="flex items-center gap-5 mb-4 text-xs text-gray-500">
+              <span className="flex items-center gap-1.5"><span className="w-6 h-0.5 bg-[#0f766e] rounded" /> History</span>
               <span className="flex items-center gap-1.5"><span className="w-6 border-t-2 border-dashed border-amber-500" /> Forecast</span>
             </div>
             {data.history.length === 0 ? (
@@ -138,8 +138,8 @@ export default function ForecastPage() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             <div className="card-premium p-6">
-              <h3 className="font-bold text-white mb-3">📋 How this is calculated</h3>
-              <ul className="text-sm text-slate-300 space-y-2 list-disc pl-5">
+              <h3 className="font-bold text-gray-900 mb-3">📋 How this is calculated</h3>
+              <ul className="text-sm text-gray-600 space-y-2 list-disc pl-5">
                 <li>History: % of units with an <b>active contract</b> overlapping each month.</li>
                 <li>Trend: linear fit (least squares) over {months} months of history.</li>
                 <li>Churn: known contract expiries per future month × (1 − renewal rate).</li>
@@ -148,12 +148,12 @@ export default function ForecastPage() {
               </ul>
             </div>
             <div className="card-premium p-6">
-              <h3 className="font-bold text-white mb-3">📅 Monthly breakdown</h3>
+              <h3 className="font-bold text-gray-900 mb-3">📅 Monthly breakdown</h3>
               <div className="space-y-2 max-h-64 overflow-y-auto">
                 {data.forecast.map((f) => (
-                  <div key={f.month} className="flex items-center justify-between text-sm border-b border-white/5 pb-2">
-                    <span className="text-slate-300">{f.label}</span>
-                    <span className="text-slate-400">{f.expiring} expiring{f.expiring ? ` (−${f.expectedChurn})` : ''}</span>
+                  <div key={f.month} className="flex items-center justify-between text-sm border-b border-gray-200 pb-2">
+                    <span className="text-gray-600">{f.label}</span>
+                    <span className="text-gray-500">{f.expiring} expiring{f.expiring ? ` (−${f.expectedChurn})` : ''}</span>
                     <span className="font-semibold text-amber-200">{(f.rate * 100).toFixed(1)}%</span>
                   </div>
                 ))}

@@ -5,7 +5,7 @@ import { api } from '../../../../lib/api';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
 import { useRequireRoles } from '../../../../components/Protected';
 
-const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#a78bfa'];
+const COLORS = ['#0f766e', '#10b981', '#f59e0b', '#ef4444', '#2dd4bf'];
 const fmt = (v) => `Rs ${Number(v || 0).toLocaleString()}`;
 
 // Multi-line SVG chart (top categories)
@@ -26,7 +26,7 @@ function TrendChart({ data }) {
           </filter>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={H * f} x2="100" y2={H * f} stroke="rgba(255,255,255,0.06)" strokeWidth="0.25" />
+          <line key={f} x1="0" y1={H * f} x2="100" y2={H * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.25" />
         ))}
         {top.map((cat, ci) => (
           <g key={cat}>
@@ -41,7 +41,7 @@ function TrendChart({ data }) {
           </g>
         ))}
         {months.map((_, i) => (
-          <text key={i} x={px(i)} y={H - 8} textAnchor="middle" fill="rgba(255,255,255,0.5)" fontSize="3" fontWeight="600">
+          <text key={i} x={px(i)} y={H - 8} textAnchor="middle" fill="rgba(0,0,0,0.5)" fontSize="3" fontWeight="600">
             {monthLabels[i]}
           </text>
         ))}
@@ -51,10 +51,10 @@ function TrendChart({ data }) {
 }
 
 function TrendArrow({ pct }) {
-  if (pct === null || pct === undefined) return <span className="text-slate-400 text-xs">—</span>;
+  if (pct === null || pct === undefined) return <span className="text-gray-500 text-xs">—</span>;
   const up = pct > 0.5;
   const down = pct < -0.5;
-  const cls = up ? 'text-red-300' : down ? 'text-emerald-300' : 'text-slate-300';
+  const cls = up ? 'text-red-300' : down ? 'text-emerald-300' : 'text-gray-600';
   const arrow = up ? '▲' : down ? '▼' : '▬';
   return <span className={`${cls} text-xs font-bold`}>{arrow} {Math.abs(pct).toFixed(1)}%</span>;
 }
@@ -92,7 +92,7 @@ export default function ExpenseTrendsPage() {
         <div className="flex gap-2">
           {[6, 12].map((m) => (
             <button key={m} onClick={() => setMonths(m)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold ${months === m ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-semibold ${months === m ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
               {m} months
             </button>
           ))}
@@ -114,10 +114,10 @@ export default function ExpenseTrendsPage() {
 
           <div className="card-premium p-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-white font-bold">Top 5 categories</h3>
+              <h3 className="text-gray-900 font-bold">Top 5 categories</h3>
               <div className="flex gap-3 flex-wrap">
                 {top5.map((c, i) => (
-                  <span key={c} className="text-xs text-slate-300 flex items-center gap-1.5">
+                  <span key={c} className="text-xs text-gray-600 flex items-center gap-1.5">
                     <span className="inline-block w-3 h-1 rounded" style={{ background: COLORS[i % COLORS.length] }} />
                     {c.replace(/_/g, ' ')}
                   </span>
@@ -129,12 +129,12 @@ export default function ExpenseTrendsPage() {
 
           {data.anomalies.length > 0 && (
             <div className="space-y-2">
-              <h3 className="text-white font-bold">⚠️ Spike alerts</h3>
+              <h3 className="text-gray-900 font-bold">⚠️ Spike alerts</h3>
               {data.anomalies.map((a, i) => (
                 <div key={i} className="card-premium p-4 border-l-4 border-amber-400 flex justify-between items-center">
                   <div>
-                    <p className="text-white font-semibold capitalize">{a.category.replace(/_/g, ' ')} — {a.month}</p>
-                    <p className="text-xs text-slate-400">{fmt(a.amount)} vs {fmt(a.priorAvg)} avg (prior 3 months)</p>
+                    <p className="text-gray-900 font-semibold capitalize">{a.category.replace(/_/g, ' ')} — {a.month}</p>
+                    <p className="text-xs text-gray-500">{fmt(a.amount)} vs {fmt(a.priorAvg)} avg (prior 3 months)</p>
                   </div>
                   <span className="text-amber-300 font-extrabold text-lg">{a.spike}x</span>
                 </div>
@@ -143,11 +143,11 @@ export default function ExpenseTrendsPage() {
           )}
 
           <div className="card-premium p-6">
-            <h3 className="text-white font-bold mb-4">Category breakdown</h3>
+            <h3 className="text-gray-900 font-bold mb-4">Category breakdown</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-slate-400 text-xs uppercase">
+                  <tr className="text-left text-gray-500 text-xs uppercase">
                     <th className="pb-3">Category</th>
                     <th className="pb-3 text-right">Total</th>
                     <th className="pb-3 text-right">Avg / month</th>
@@ -157,14 +157,14 @@ export default function ExpenseTrendsPage() {
                 </thead>
                 <tbody>
                   {[...data.categories].sort((a, b) => data.totals[b] - data.totals[a]).map((c, ci) => (
-                    <tr key={c} className="border-t border-white/5">
-                      <td className="py-3 flex items-center gap-2 text-white font-medium capitalize">
+                    <tr key={c} className="border-t border-gray-200">
+                      <td className="py-3 flex items-center gap-2 text-gray-900 font-medium capitalize">
                         <span className="inline-block w-2.5 h-2.5 rounded-full" style={{ background: COLORS[ci % COLORS.length] }} />
                         {c.replace(/_/g, ' ')}
                       </td>
-                      <td className="py-3 text-right text-slate-200">{fmt(data.totals[c])}</td>
-                      <td className="py-3 text-right text-slate-400">{fmt(data.totals[c] / months)}</td>
-                      <td className="py-3 text-right text-slate-200">{fmt(data.matrix[c][months - 1])}</td>
+                      <td className="py-3 text-right text-gray-800">{fmt(data.totals[c])}</td>
+                      <td className="py-3 text-right text-gray-500">{fmt(data.totals[c] / months)}</td>
+                      <td className="py-3 text-right text-gray-800">{fmt(data.matrix[c][months - 1])}</td>
                       <td className="py-3 text-right"><TrendArrow pct={data.mom[c]} /></td>
                     </tr>
                   ))}

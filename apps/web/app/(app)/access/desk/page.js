@@ -167,7 +167,7 @@ export default function AccessDeskPage() {
       {msg && <div className="rounded-lg border border-emerald-500/30 bg-emerald-500/10 px-4 py-2 text-emerald-200 text-sm">{msg}</div>}
 
       {/* Member search */}
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
         <div className="flex gap-2">
           <Field label="Member search (naam / email / phone)">
             <input
@@ -183,9 +183,9 @@ export default function AccessDeskPage() {
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {results.slice(0, 9).map((m) => (
               <button key={m.id} onClick={() => pick(m)}
-                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-[#8b5cf6]/50 bg-[#8b5cf6]/10' : 'border-white/10 hover:border-white/25'}`}>
-                <div className="font-medium text-white">{m.name}</div>
-                <div className="text-xs text-slate-400">{m.email || m.phone || ''}</div>
+                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-[#0f766e]/50 bg-[#0f766e]/10' : 'border-gray-200 hover:border-white/25'}`}>
+                <div className="font-medium text-gray-900">{m.name}</div>
+                <div className="text-xs text-gray-500">{m.email || m.phone || ''}</div>
                 <Badge tone={m.status === 'active' ? 'green' : 'red'}>{m.status || 'unknown'}</Badge>
               </button>
             ))}
@@ -198,9 +198,9 @@ export default function AccessDeskPage() {
       {member && !loading && (
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Access status + credentials */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-4">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-semibold text-white">{member.name} — access status</h3>
+              <h3 className="font-semibold text-gray-900">{member.name} — access status</h3>
               {blocked
                 ? <Badge tone="red">🚫 Blocked</Badge>
                 : <Badge tone="green">✅ Active</Badge>}
@@ -209,7 +209,7 @@ export default function AccessDeskPage() {
 
             <div>
               <div className="flex items-center justify-between mb-2">
-                <span className="text-sm text-slate-300 font-medium">🔑 Credentials</span>
+                <span className="text-sm text-gray-600 font-medium">🔑 Credentials</span>
                 <button className="btn-secondary text-sm" onClick={issuePin}>+ PIN issue karein</button>
               </div>
               {creds.length === 0
@@ -217,10 +217,10 @@ export default function AccessDeskPage() {
                 : (
                   <div className="space-y-2">
                     {creds.map((c) => (
-                      <div key={c.id} className="flex items-center justify-between rounded-lg border border-white/10 px-3 py-2">
+                      <div key={c.id} className="flex items-center justify-between rounded-lg border border-gray-200 px-3 py-2">
                         <div className="text-sm">
-                          <span className="text-white font-medium uppercase">{c.type}</span>
-                          <span className="text-slate-400 text-xs ml-2">
+                          <span className="text-gray-900 font-medium uppercase">{c.type}</span>
+                          <span className="text-gray-500 text-xs ml-2">
                             {c.lastUsedAt ? `last used ${new Date(c.lastUsedAt).toLocaleString()}` : 'kabhi use nahi hua'}
                           </span>
                         </div>
@@ -237,8 +237,8 @@ export default function AccessDeskPage() {
             </div>
 
             {/* Manual entry */}
-            <div className="border-t border-white/10 pt-4">
-              <h4 className="text-sm font-medium text-slate-300 mb-2">📝 Manual entry log</h4>
+            <div className="border-t border-gray-200 pt-4">
+              <h4 className="text-sm font-medium text-gray-600 mb-2">📝 Manual entry log</h4>
               <div className="flex gap-2">
                 <Field label="Door">
                   <select className="input-premium" value={entryForm.doorId} onChange={(e) => setEntryForm({ ...entryForm, doorId: e.target.value })}>
@@ -260,12 +260,12 @@ export default function AccessDeskPage() {
           </div>
 
           {/* Schedule */}
-          <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 space-y-4">
-            <h3 className="font-semibold text-white">🕒 Access schedule</h3>
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-4">
+            <h3 className="font-semibold text-gray-900">🕒 Access schedule</h3>
             {schedules.length > 0 && (
               <div className="space-y-2">
                 {schedules.map((s) => (
-                  <div key={s.id} className="rounded-lg border border-white/10 px-3 py-2 text-sm text-slate-300">
+                  <div key={s.id} className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-600">
                     {(s.doorName || 'All doors')} — {(s.daysOfWeek || []).join(', ')} {s.startTime}–{s.endTime}
                     {!s.isActive && <Badge tone="slate" className="ml-2">off</Badge>}
                   </div>
@@ -280,11 +280,11 @@ export default function AccessDeskPage() {
                 </select>
               </Field>
               <div>
-                <div className="text-sm text-slate-400 mb-1">Din</div>
+                <div className="text-sm text-gray-500 mb-1">Din</div>
                 <div className="flex gap-1 flex-wrap">
                   {DAYS.map((d) => (
                     <button key={d.v} onClick={() => toggleDay(d.v)}
-                      className={`px-3 py-1.5 rounded-lg border text-sm ${schedForm.days.includes(d.v) ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/20 text-blue-100' : 'border-white/10 text-slate-400'}`}>
+                      className={`px-3 py-1.5 rounded-lg border text-sm ${schedForm.days.includes(d.v) ? 'border-[#0f766e]/60 bg-[#0f766e]/20 text-blue-100' : 'border-gray-200 text-gray-500'}`}>
                       {d.l}
                     </button>
                   ))}
@@ -301,10 +301,10 @@ export default function AccessDeskPage() {
       )}
 
       {/* Pending visitor passes */}
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4">
         <div className="flex items-center justify-between mb-3">
-          <h3 className="font-semibold text-white">🎫 Pending visitor passes {passes.length > 0 && <Badge tone="amber">{passes.length}</Badge>}</h3>
-          <button className="text-sm text-slate-300 hover:text-white" onClick={loadPasses}>↻ Refresh</button>
+          <h3 className="font-semibold text-gray-900">🎫 Pending visitor passes {passes.length > 0 && <Badge tone="amber">{passes.length}</Badge>}</h3>
+          <button className="text-sm text-gray-600 hover:text-gray-900" onClick={loadPasses}>↻ Refresh</button>
         </div>
         {passes.length === 0
           ? <div className="text-sm text-slate-500">Koi pending request nahi.</div>
@@ -330,8 +330,8 @@ export default function AccessDeskPage() {
 
       {pinModal && (
         <Modal title="🔑 Naya PIN" onClose={() => setPinModal(null)}>
-          <p className="text-sm text-slate-300 mb-3">
-            {pinModal.memberName} ka PIN <b className="text-white">sirf ek dafa</b> dikhaya ja raha hai — abhi note kar lein:
+          <p className="text-sm text-gray-600 mb-3">
+            {pinModal.memberName} ka PIN <b className="text-gray-900">sirf ek dafa</b> dikhaya ja raha hai — abhi note kar lein:
           </p>
           <div className="text-center text-4xl font-mono tracking-[0.5em] text-emerald-300 bg-black/40 rounded-lg py-4">
             {pinModal.pin}

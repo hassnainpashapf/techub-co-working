@@ -93,8 +93,8 @@ export default function WhatsappPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       <div className="card-premium p-6 mb-6 max-w-xl">
-        <h3 className="text-white font-bold mb-1">Business Settings</h3>
-        <p className="text-xs text-slate-400 mb-4">Meta Cloud API credentials (Meta developer dashboard se). Tokens write-only hain — dobara nahi dikhenge.</p>
+        <h3 className="text-gray-900 font-bold mb-1">Business Settings</h3>
+        <p className="text-xs text-gray-500 mb-4">Meta Cloud API credentials (Meta developer dashboard se). Tokens write-only hain — dobara nahi dikhenge.</p>
         {cfgInfo && (
           <div className="flex gap-2 mb-4 text-xs">
             <Badge tone={cfgInfo.isActive ? 'success' : 'warning'}>{cfgInfo.isActive ? 'Active' : 'Inactive'}</Badge>
@@ -119,14 +119,14 @@ export default function WhatsappPage() {
           <Field label="Business Number (display)">
             <input className="input" value={cfg.businessNumber} onChange={(e) => setCfg({ ...cfg, businessNumber: e.target.value })} placeholder="923001234567" />
           </Field>
-          <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
+          <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
             <input type="checkbox" checked={cfg.isActive} onChange={(e) => setCfg({ ...cfg, isActive: e.target.checked })} />
             Active (bhejna on karein)
           </label>
           <button type="submit" className="btn-primary" disabled={cfgBusy}>{cfgBusy ? 'Saving…' : 'Save Settings'}</button>
-          {cfgMsg && <p className="text-sm text-slate-300 mt-3">{cfgMsg}</p>}
+          {cfgMsg && <p className="text-sm text-gray-600 mt-3">{cfgMsg}</p>}
         </form>
-        <div className="mt-4 pt-4 border-t border-white/10">
+        <div className="mt-4 pt-4 border-t border-gray-200">
           <Field label="Test number (country code ke sath)">
             <div className="flex gap-2">
               <input className="input flex-1" value={testTo} onChange={(e) => setTestTo(e.target.value)} placeholder="923001234567" />
@@ -137,7 +137,7 @@ export default function WhatsappPage() {
       </div>
 
       <div className="card-premium p-6 mb-6 max-w-xl">
-        <h3 className="text-white font-bold mb-4">Send message</h3>
+        <h3 className="text-gray-900 font-bold mb-4">Send message</h3>
         <form onSubmit={send}>
           <Field label="To (phone with country code, e.g. 923001234567)">
             <input className="input" value={f.to} onChange={(e) => setF({ ...f, to: e.target.value })} required placeholder="923001234567" />
@@ -149,13 +149,13 @@ export default function WhatsappPage() {
             <textarea className="input font-mono text-xs" rows={3} value={f.params} onChange={(e) => setF({ ...f, params: e.target.value })} placeholder='{"name": "Ahmed"}' />
           </Field>
           <button type="submit" className="btn-primary" disabled={sending}>{sending ? 'Sending…' : 'Send WhatsApp'}</button>
-          {result && <p className="text-sm text-slate-300 mt-3">{result}</p>}
+          {result && <p className="text-sm text-gray-600 mt-3">{result}</p>}
         </form>
         <p className="text-xs text-slate-500 mt-4">Set WHATSAPP_TOKEN + WHATSAPP_PHONE_NUMBER_ID on the API server for real delivery. Without them, messages are logged to console.</p>
       </div>
 
       <div className="card-premium p-6">
-        <h3 className="text-white font-bold mb-4">Send logs</h3>
+        <h3 className="text-gray-900 font-bold mb-4">Send logs</h3>
         {loading ? <Spinner /> : (
           <DataTable
             columns={['To', 'Template', 'Status', 'Provider', 'Created']}

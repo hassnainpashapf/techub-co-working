@@ -35,7 +35,7 @@ export default function EventAttendeesTab({ eventId, api }) {
   }, [eventId]);
 
   if (err) return <div className="text-red-400 text-sm p-4">{err}</div>;
-  if (!data) return <div className="text-slate-400 text-sm p-4">Loading…</div>;
+  if (!data) return <div className="text-gray-500 text-sm p-4">Loading…</div>;
 
   const pct = data.going > 0 ? Math.round((data.checkedIn / data.going) * 100) : 0;
 
@@ -49,18 +49,18 @@ export default function EventAttendeesTab({ eventId, api }) {
           { label: 'Checked-in', value: data.checkedIn },
           { label: 'No-show', value: data.noShowCount },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-4">
-            <div className="text-2xl font-bold text-white">{s.value}</div>
-            <div className="text-xs text-slate-400">{s.label}</div>
+          <div key={s.label} className="rounded-xl bg-gray-100/60 border border-gray-200/60 p-4">
+            <div className="text-2xl font-bold text-gray-900">{s.value}</div>
+            <div className="text-xs text-gray-500">{s.label}</div>
           </div>
         ))}
       </div>
 
       {/* Check-in progress bar */}
-      <div className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-4">
-        <div className="flex justify-between text-xs text-slate-400 mb-2">
+      <div className="rounded-xl bg-gray-100/60 border border-gray-200/60 p-4">
+        <div className="flex justify-between text-xs text-gray-500 mb-2">
           <span>Check-in rate (vs RSVP going)</span>
-          <span className="text-white font-semibold">{pct}%</span>
+          <span className="text-gray-900 font-semibold">{pct}%</span>
         </div>
         <div className="h-3 rounded-full bg-slate-700/60 overflow-hidden">
           <div
@@ -71,15 +71,15 @@ export default function EventAttendeesTab({ eventId, api }) {
       </div>
 
       {/* Checked-in list */}
-      <div className="rounded-xl bg-slate-800/60 border border-slate-700/60 p-4">
-        <h3 className="text-white font-semibold mb-3">Checked-in ({data.checkins.length})</h3>
+      <div className="rounded-xl bg-gray-100/60 border border-gray-200/60 p-4">
+        <h3 className="text-gray-900 font-semibold mb-3">Checked-in ({data.checkins.length})</h3>
         {data.checkins.length === 0 ? (
           <p className="text-slate-500 text-sm">Abhi koi check-in nahi hua.</p>
         ) : (
           <div className="max-h-64 overflow-y-auto space-y-2">
             {data.checkins.map((c) => (
               <div key={c.memberId} className="flex justify-between text-sm">
-                <span className="text-slate-200">{c.name}</span>
+                <span className="text-gray-800">{c.name}</span>
                 <span className="text-slate-500 text-xs">
                   {new Date(c.checkedInAt).toLocaleString()} · {c.method}
                 </span>

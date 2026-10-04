@@ -77,10 +77,10 @@ export default function FormsListPage() {
       {err && <ErrorBanner message={err} onRetry={() => { setErr(''); load(); }} />}
       {stats && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-white">{stats.totalForms ?? '—'}</div><div className="text-xs text-slate-400">Total Forms</div></div>
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-green-300">{stats.publishedForms ?? '—'}</div><div className="text-xs text-slate-400">Published</div></div>
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-[#c4b5fd]">{stats.submissions30d ?? '—'}</div><div className="text-xs text-slate-400">Responses (30d)</div></div>
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-amber-300">{stats.newInbox ?? '—'}</div><div className="text-xs text-slate-400">New Inbox</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-gray-900">{stats.totalForms ?? '—'}</div><div className="text-xs text-gray-500">Total Forms</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-green-300">{stats.publishedForms ?? '—'}</div><div className="text-xs text-gray-500">Published</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-teal-700">{stats.submissions30d ?? '—'}</div><div className="text-xs text-gray-500">Responses (30d)</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-amber-300">{stats.newInbox ?? '—'}</div><div className="text-xs text-gray-500">New Inbox</div></div>
         </div>
       )}
       {loading ? <Spinner /> : forms.length === 0 ? (
@@ -91,12 +91,12 @@ export default function FormsListPage() {
             <div key={f.id} className="card p-5">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h3 className="font-semibold text-white">{f.title}</h3>
-                  <p className="text-xs text-slate-400 mt-0.5">/{f.slug} • {(f.fields || []).length} fields • {f.submissionCount || 0} responses</p>
+                  <h3 className="font-semibold text-gray-900">{f.title}</h3>
+                  <p className="text-xs text-gray-500 mt-0.5">/{f.slug} • {(f.fields || []).length} fields • {f.submissionCount || 0} responses</p>
                 </div>
                 <Badge tone={STATUS_TONES[f.status] || 'slate'}>{STATUS_LABELS[f.status] || f.status}</Badge>
               </div>
-              <p className="text-sm text-slate-400 mt-2 line-clamp-2">{f.description || '—'}</p>
+              <p className="text-sm text-gray-500 mt-2 line-clamp-2">{f.description || '—'}</p>
               <div className="flex flex-wrap gap-2 mt-4">
                 <Link href={`/forms/${f.id}`} className="btn-secondary text-xs">✏️ Builder</Link>
                 <Link href={`/forms/${f.id}/responses`} className="btn-secondary text-xs">📥 Responses</Link>

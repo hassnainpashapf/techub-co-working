@@ -209,10 +209,10 @@ export default function VendorsPage() {
           <Field label="Address"><textarea className="input" rows={2} value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></Field>
           <Field label="Notes"><textarea className="input" rows={2} value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} /></Field>
           {modal !== 'add' && (
-            <div className="rounded-xl border border-white/10 bg-black/20 p-3 mt-3">
-              <div className="text-sm font-semibold text-white mb-2">🛡️ Compliance</div>
+            <div className="rounded-xl border border-gray-200 bg-black/20 p-3 mt-3">
+              <div className="text-sm font-semibold text-gray-900 mb-2">🛡️ Compliance</div>
               <div className="flex items-center gap-3">
-                <span className="text-sm text-slate-300">
+                <span className="text-sm text-gray-600">
                   <Badge tone={COMP_TONE[complianceMap[modal.id] || 'pending'] || 'slate'}>{COMP_LABEL[complianceMap[modal.id] || 'pending']}</Badge>
                 </span>
                 <button className="btn-sm" onClick={async () => {

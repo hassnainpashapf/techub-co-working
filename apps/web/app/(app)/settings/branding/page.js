@@ -5,7 +5,7 @@ import { api, apiUpload, API_BASE } from '../../../../lib/api';
 import { PageHeader, Field, Spinner, ErrorBanner } from '../../../../components/ui';
 import { useRequireRoles, AccessDenied } from '../../../../components/Protected';
 
-const COLORS = ['#7c3aed', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#8b5cf6'];
+const COLORS = ['#0f766e', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899', '#06b6d4', '#0f766e'];
 
 export default function BrandingPage() {
   const { allowed } = useRequireRoles(['ceo', 'admin']);
@@ -14,7 +14,7 @@ export default function BrandingPage() {
   const [msg, setMsg] = useState('');
   const [saving, setSaving] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [f, setF] = useState({ name: '', tagline: '', primaryColor: '#7c3aed', email: '', phone: '', address: '' });
+  const [f, setF] = useState({ name: '', tagline: '', primaryColor: '#0f766e', email: '', phone: '', address: '' });
   const [hasLogo, setHasLogo] = useState(false);
   const [logoTick, setLogoTick] = useState(0);
   const [slug, setSlug] = useState('');
@@ -27,7 +27,7 @@ export default function BrandingPage() {
         setF({
           name: b.name || '',
           tagline: b.tagline || '',
-          primaryColor: b.primaryColor || '#7c3aed',
+          primaryColor: b.primaryColor || '#0f766e',
           email: b.email || '',
           phone: b.phone || '',
           address: b.address || '',
@@ -87,8 +87,8 @@ export default function BrandingPage() {
       {loading ? <Spinner /> : (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           <div className="card-premium p-6">
-            <h3 className="font-semibold text-white mb-4">Logo</h3>
-            <div className="w-32 h-32 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center overflow-hidden mb-4">
+            <h3 className="font-semibold text-gray-900 mb-4">Logo</h3>
+            <div className="w-32 h-32 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden mb-4">
               {hasLogo && slug ? (
                 <img src={`${API_BASE}/branding/${slug}/logo?t=${logoTick}`} alt="Logo" className="max-w-full max-h-full object-contain" />
               ) : (
@@ -103,7 +103,7 @@ export default function BrandingPage() {
             <p className="text-[11px] text-slate-500 mt-2">PNG, JPG, WebP or SVG — max 5MB</p>
           </div>
           <div className="card-premium p-6 lg:col-span-2">
-            <h3 className="font-semibold text-white mb-4">Organization Details</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">Organization Details</h3>
             <form onSubmit={save}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
                 <Field label="Organization name"><input className="input" value={f.name} onChange={set('name')} /></Field>
@@ -120,7 +120,7 @@ export default function BrandingPage() {
                       style={{ background: c }} title={c} />
                   ))}
                   <input type="color" value={f.primaryColor} onChange={set('primaryColor')} className="w-9 h-9 rounded-full cursor-pointer bg-transparent" />
-                  <span className="text-xs text-slate-400 font-mono">{f.primaryColor}</span>
+                  <span className="text-xs text-gray-500 font-mono">{f.primaryColor}</span>
                 </div>
               </Field>
               <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save Branding'}</button>

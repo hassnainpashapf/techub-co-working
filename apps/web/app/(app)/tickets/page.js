@@ -112,12 +112,12 @@ function TicketDetail({ ticket, onClose, onUpdate, canWrite }) {
             <Badge tone={toneOf(PRIORITIES, detail.priority)}>{labelOf(PRIORITIES, detail.priority)} priority</Badge>
             <Badge tone="slate">{labelOf(CATEGORIES, detail.category)}</Badge>
           </div>
-          {detail.description && <p className="text-sm text-slate-200 whitespace-pre-wrap">{detail.description}</p>}
+          {detail.description && <p className="text-sm text-gray-800 whitespace-pre-wrap">{detail.description}</p>}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
-            <div><div className="text-xs text-slate-400">Reported by</div><div className="text-white">{detail.reportedBy?.name || detail.member?.name || '—'}</div></div>
-            <div><div className="text-xs text-slate-400">Assigned to</div><div className="text-white">{detail.assignedTo?.name || 'Unassigned'}</div></div>
-            <div><div className="text-xs text-slate-400">Unit</div><div className="text-white">{detail.unit?.code || '—'}</div></div>
-            <div><div className="text-xs text-slate-400">Created</div><div className="text-white">{new Date(detail.createdAt).toLocaleDateString()}</div></div>
+            <div><div className="text-xs text-gray-500">Reported by</div><div className="text-gray-900">{detail.reportedBy?.name || detail.member?.name || '—'}</div></div>
+            <div><div className="text-xs text-gray-500">Assigned to</div><div className="text-gray-900">{detail.assignedTo?.name || 'Unassigned'}</div></div>
+            <div><div className="text-xs text-gray-500">Unit</div><div className="text-gray-900">{detail.unit?.code || '—'}</div></div>
+            <div><div className="text-xs text-gray-500">Created</div><div className="text-gray-900">{new Date(detail.createdAt).toLocaleDateString()}</div></div>
           </div>
 
           {canWrite && (
@@ -131,15 +131,15 @@ function TicketDetail({ ticket, onClose, onUpdate, canWrite }) {
           )}
 
           <div>
-            <h4 className="font-semibold text-white mb-2">Comments ({detail.comments?.length || 0})</h4>
+            <h4 className="font-semibold text-gray-900 mb-2">Comments ({detail.comments?.length || 0})</h4>
             <div className="space-y-2 max-h-64 overflow-y-auto">
               {(detail.comments || []).map((c) => (
-                <div key={c.id} className={`p-3 rounded-lg border ${c.isInternal ? 'border-amber-400/30 bg-amber-500/5' : 'border-white/10 bg-white/[0.03]'}`}>
+                <div key={c.id} className={`p-3 rounded-lg border ${c.isInternal ? 'border-amber-400/30 bg-amber-500/5' : 'border-gray-200 bg-gray-50'}`}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-semibold text-slate-200">{c.author?.name || 'System'}</span>
+                    <span className="text-xs font-semibold text-gray-800">{c.author?.name || 'System'}</span>
                     <span className="text-[11px] text-slate-500">{new Date(c.createdAt).toLocaleString()}</span>
                   </div>
-                  <p className="text-sm text-slate-200 whitespace-pre-wrap">{c.body}</p>
+                  <p className="text-sm text-gray-800 whitespace-pre-wrap">{c.body}</p>
                   {c.isInternal && <div className="mt-1"><Badge tone="amber">Internal note</Badge></div>}
                 </div>
               ))}
@@ -192,13 +192,13 @@ export default function TicketsPage() {
   };
 
   const columns = [
-    { key: 'ticketNumber', label: '#', render: (t) => <span className="font-mono text-slate-300">#{t.ticketNumber}</span> },
-    { key: 'title', label: 'Title', render: (t) => <button className="text-left text-white hover:text-violet-300 font-medium" onClick={() => setSelected(t)}>{t.title}</button> },
-    { key: 'category', label: 'Category', render: (t) => <span className="text-slate-300 text-sm">{labelOf(CATEGORIES, t.category)}</span> },
+    { key: 'ticketNumber', label: '#', render: (t) => <span className="font-mono text-gray-600">#{t.ticketNumber}</span> },
+    { key: 'title', label: 'Title', render: (t) => <button className="text-left text-gray-900 hover:text-teal-300 font-medium" onClick={() => setSelected(t)}>{t.title}</button> },
+    { key: 'category', label: 'Category', render: (t) => <span className="text-gray-600 text-sm">{labelOf(CATEGORIES, t.category)}</span> },
     { key: 'priority', label: 'Priority', render: (t) => <Badge tone={toneOf(PRIORITIES, t.priority)}>{labelOf(PRIORITIES, t.priority)}</Badge> },
     { key: 'status', label: 'Status', render: (t) => <Badge tone={toneOf(STATUSES, t.status)}>{labelOf(STATUSES, t.status)}</Badge> },
-    { key: 'assignedTo', label: 'Assignee', render: (t) => <span className="text-slate-300 text-sm">{t.assignedTo?.name || '—'}</span> },
-    { key: 'createdAt', label: 'Created', render: (t) => <span className="text-slate-400 text-sm">{new Date(t.createdAt).toLocaleDateString()}</span> },
+    { key: 'assignedTo', label: 'Assignee', render: (t) => <span className="text-gray-600 text-sm">{t.assignedTo?.name || '—'}</span> },
+    { key: 'createdAt', label: 'Created', render: (t) => <span className="text-gray-500 text-sm">{new Date(t.createdAt).toLocaleDateString()}</span> },
   ];
 
   return (
@@ -217,8 +217,8 @@ export default function TicketsPage() {
           { l: 'Urgent', v: stats.urgent, tone: 'red' },
         ].map((s) => (
           <div key={s.l} className="card-premium p-4">
-            <div className="text-2xl font-extrabold text-white">{s.v}</div>
-            <div className="text-xs text-slate-400">{s.l} tickets</div>
+            <div className="text-2xl font-extrabold text-gray-900">{s.v}</div>
+            <div className="text-xs text-gray-500">{s.l} tickets</div>
           </div>
         ))}
       </div>
@@ -228,7 +228,7 @@ export default function TicketsPage() {
           <button
             key={s.v}
             onClick={() => setStatusFilter(s.v)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${statusFilter === s.v ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 bg-white/[0.03] text-slate-300 hover:bg-white/[0.07]'}`}
+            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-colors ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 bg-gray-50 text-gray-600 hover:bg-gray-100'}`}
           >
             {s.l}
           </button>

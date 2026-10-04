@@ -131,18 +131,15 @@ export default function Topbar() {
   const parent = path.startsWith('/discover') || path.startsWith('/bookings') || path.startsWith('/rides') || path.startsWith('/spaces') ? 'Workspace' : 'Main';
 
   return (
-    <header className="bg-[#08080f]/95 backdrop-blur-xl border-b border-white/[0.06] px-7 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_4px_24px_rgba(0,0,0,0.3)]">
+    <header className="bg-white border-b border-gray-200 px-7 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
       <div className="flex items-center gap-3 text-[14px] whitespace-nowrap">
-        <span className="icon-tile w-8 h-8 !rounded-[10px] text-[#c4b5fd]">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
-        </span>
-        <span className="text-slate-500 font-medium">{parent}</span>
-        <span className="text-slate-700">/</span>
-        <span className="text-white font-semibold ">{title}</span>
+        <span className="text-gray-900 font-bold text-[20px] tracking-tight">{title}</span>
+        
+        
       </div>
       <div className="flex items-center gap-2.5">
         <div ref={boxRef} className="relative">
-          <div className="flex items-center gap-2.5 glass rounded-xl px-3.5 py-2 w-[240px] text-slate-500 focus-within:border-[#8b5cf6]/50 transition-all duration-200">
+          <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3.5 py-2 w-[240px] text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               id="topbar-search"
@@ -151,30 +148,30 @@ export default function Topbar() {
               onChange={(e) => setQuery(e.target.value)}
               onFocus={() => { if (totalHits > 0) setDropOpen(true); }}
               onKeyDown={(e) => { if (e.key === 'Escape') { setDropOpen(false); setQuery(''); } }}
-              className="bg-transparent outline-none text-[13.5px] text-slate-200 placeholder-slate-600 flex-1 w-full"
+              className="bg-transparent outline-none text-[13.5px] text-gray-900 placeholder-gray-400 flex-1 w-full"
             />
             {searching ? (
-              <span className="animate-spin w-3.5 h-3.5 border-2 border-[#8b5cf6] border-t-transparent rounded-full" />
+              <span className="animate-spin w-3.5 h-3.5 border-2 border-teal-600 border-t-transparent rounded-full" />
             ) : (
-              <kbd className="text-[11px] text-slate-600 font-medium px-1.5 py-0.5 rounded bg-white/[0.05] border border-white/[0.07]">⌘/</kbd>
+              <kbd className="text-[11px] text-gray-400 font-medium px-1.5 py-0.5 rounded bg-white border border-gray-200">⌘/</kbd>
             )}
           </div>
           {dropOpen && results && (
-            <div className="absolute right-0 top-full mt-2 w-[340px] max-h-[420px] overflow-y-auto rounded-xl border border-white/10 bg-[#12121f] shadow-2xl shadow-black/60 z-50">
+            <div className="absolute right-0 top-full mt-2 w-[340px] max-h-[420px] overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60 z-50">
               {totalHits === 0 ? (
-                <div className="px-4 py-6 text-center text-[13px] text-slate-500">No results for “{query.trim()}”</div>
+                <div className="px-4 py-6 text-center text-[13px] text-gray-500">No results for “{query.trim()}”</div>
               ) : (
                 groups.map((g) => (
                   <div key={g.key} className="py-1.5">
-                    <div className="px-4 py-1 text-[10.5px] font-bold uppercase tracking-wider text-slate-500">{g.label}</div>
+                    <div className="px-4 py-1 text-[10.5px] font-bold uppercase tracking-wider text-gray-400">{g.label}</div>
                     {g.items.map((item) => (
                       <button
                         key={`${g.key}-${item.id}`}
                         onClick={() => go(item.path)}
-                        className="w-full text-left px-4 py-2 hover:bg-white/[0.05] transition-colors"
+                        className="w-full text-left px-4 py-2 hover:bg-gray-50 transition-colors"
                       >
-                        <div className="text-[13px] font-medium text-slate-100 truncate">{item.title}</div>
-                        {item.subtitle && <div className="text-[11.5px] text-slate-500 truncate">{item.subtitle}</div>}
+                        <div className="text-[13px] font-medium text-gray-900 truncate">{item.title}</div>
+                        {item.subtitle && <div className="text-[11.5px] text-gray-500 truncate">{item.subtitle}</div>}
                       </button>
                     ))}
                   </div>
@@ -183,20 +180,20 @@ export default function Topbar() {
             </div>
           )}
         </div>
-        <button className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#c4b5fd] hover:bg-[#8b5cf6]/10 transition-all duration-200 active:scale-95">
+        <button className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M3 3v5h5"/><path d="M3.05 13A9 9 0 1 0 6 5.3L3 8"/><polyline points="12 7 12 12 15 15"/></svg>
         </button>
         <button
           onClick={startTour}
           title="Take a tour"
-          className="w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#c4b5fd] hover:bg-[#8b5cf6]/10 transition-all duration-200 active:scale-95"
+          className="w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95"
         >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
         </button>
-        <a href="/notifications" className="relative w-9 h-9 rounded-xl flex items-center justify-center text-slate-500 hover:text-[#c4b5fd] hover:bg-[#8b5cf6]/10 transition-all duration-200 active:scale-95">
+        <a href="/notifications" className="relative w-9 h-9 rounded-xl flex items-center justify-center text-gray-400 hover:text-teal-700 hover:bg-teal-50 transition-all duration-200 active:scale-95">
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
           {unread > 0 && (
-            <span className="absolute top-0.5 right-0.5 bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] text-white text-[9px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center shadow-[0_0_10px_rgba(139,92,246,0.6)] ring-2 ring-[#08080f]">
+            <span className="absolute top-0.5 right-0.5 bg-gradient-to-br from-[#ef4444] to-[#dc2626] text-white text-[9px] font-bold rounded-full h-4 min-w-4 px-1 flex items-center justify-center ring-2 ring-white">
               {unread > 99 ? '99+' : unread}
             </span>
           )}

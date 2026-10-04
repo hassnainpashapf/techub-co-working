@@ -174,7 +174,7 @@ export default function ReceptionCheckinPage() {
 
   if (allowed === null) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0a0a14]">
+      <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7]">
         <Spinner size="lg" />
       </div>
     );
@@ -195,8 +195,8 @@ export default function ReceptionCheckinPage() {
       <div className="grid gap-4 lg:grid-cols-2">
         {/* Member search + check-in/out */}
         <div className="card">
-          <h3 className="text-base font-semibold text-white mb-1">Member check-in</h3>
-          <p className="text-sm text-slate-400 mb-4">Search by name or phone, then tap a button.</p>
+          <h3 className="text-base font-semibold text-gray-900 mb-1">Member check-in</h3>
+          <p className="text-sm text-gray-500 mb-4">Search by name or phone, then tap a button.</p>
           <form onSubmit={searchMembers} className="flex gap-2 mb-4">
             <input
               className="input flex-1 text-lg py-3"
@@ -217,11 +217,11 @@ export default function ReceptionCheckinPage() {
               return (
                 <div
                   key={m.id}
-                  className="rounded-xl border border-slate-700/60 bg-slate-800/40 p-4 flex items-center justify-between gap-3"
+                  className="rounded-xl border border-gray-200/60 bg-gray-100/40 p-4 flex items-center justify-between gap-3"
                 >
                   <div className="min-w-0">
-                    <div className="font-semibold text-white truncate">{m.name}</div>
-                    <div className="text-sm text-slate-400 truncate">
+                    <div className="font-semibold text-gray-900 truncate">{m.name}</div>
+                    <div className="text-sm text-gray-500 truncate">
                       {[m.phone, m.companyName].filter(Boolean).join(' · ')}
                     </div>
                     {inNow === true && <Badge tone="green">Checked in</Badge>}
@@ -252,8 +252,8 @@ export default function ReceptionCheckinPage() {
         {/* QR + visitor walk-in */}
         <div className="space-y-4">
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-1">Scan member QR</h3>
-            <p className="text-sm text-slate-400 mb-4">
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Scan member QR</h3>
+            <p className="text-sm text-gray-500 mb-4">
               Paste the token from the member's digital ID card (camera scan coming soon).
             </p>
             <form onSubmit={scanQr} className="flex gap-2">
@@ -270,8 +270,8 @@ export default function ReceptionCheckinPage() {
           </div>
 
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-1">Visitor walk-in</h3>
-            <p className="text-sm text-slate-400 mb-4">Quick check-in for visitors without an invite.</p>
+            <h3 className="text-base font-semibold text-gray-900 mb-1">Visitor walk-in</h3>
+            <p className="text-sm text-gray-500 mb-4">Quick check-in for visitors without an invite.</p>
             <form onSubmit={walkInVisitor} className="space-y-3">
               <Field label="Name *">
                 <input
@@ -333,7 +333,7 @@ export default function ReceptionCheckinPage() {
         <div className="grid gap-4 lg:grid-cols-2">
           <div className="card">
             <div className="flex items-center justify-between mb-3">
-              <h3 className="text-base font-semibold text-white">Members inside</h3>
+              <h3 className="text-base font-semibold text-gray-900">Members inside</h3>
               <button className="btn btn-ghost btn-sm" onClick={loadBoard}>
                 Refresh
               </button>
@@ -347,10 +347,10 @@ export default function ReceptionCheckinPage() {
                 {insideMembers.map((r) => (
                   <li
                     key={r.id}
-                    className="flex items-center justify-between rounded-lg border border-slate-700/60 bg-slate-800/40 px-3 py-2"
+                    className="flex items-center justify-between rounded-lg border border-gray-200/60 bg-gray-100/40 px-3 py-2"
                   >
-                    <span className="text-sm text-white font-medium">{r.user?.name || '—'}</span>
-                    <span className="text-xs text-slate-400">
+                    <span className="text-sm text-gray-900 font-medium">{r.user?.name || '—'}</span>
+                    <span className="text-xs text-gray-500">
                       in {r.checkIn ? new Date(r.checkIn).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '—'}
                     </span>
                   </li>
@@ -359,7 +359,7 @@ export default function ReceptionCheckinPage() {
             )}
           </div>
           <div className="card">
-            <h3 className="text-base font-semibold text-white mb-3">Visitors inside</h3>
+            <h3 className="text-base font-semibold text-gray-900 mb-3">Visitors inside</h3>
             {boardLoading ? (
               <Spinner />
             ) : insideVisitors.length === 0 ? (
@@ -369,11 +369,11 @@ export default function ReceptionCheckinPage() {
                 {insideVisitors.map((v) => (
                   <li
                     key={v.id}
-                    className="flex items-center justify-between rounded-lg border border-slate-700/60 bg-slate-800/40 px-3 py-2"
+                    className="flex items-center justify-between rounded-lg border border-gray-200/60 bg-gray-100/40 px-3 py-2"
                   >
                     <div>
-                      <div className="text-sm text-white font-medium">{v.name}</div>
-                      <div className="text-xs text-slate-400">
+                      <div className="text-sm text-gray-900 font-medium">{v.name}</div>
+                      <div className="text-xs text-gray-500">
                         {[v.purpose, v.hostName || v.hostMember?.name].filter(Boolean).join(' · ')}
                       </div>
                     </div>

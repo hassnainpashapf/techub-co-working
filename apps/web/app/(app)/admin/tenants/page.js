@@ -83,18 +83,18 @@ export default function AdminTenantsPage() {
 
   const cols = [
     { key: 'name', label: 'Tenant', render: (r) => (
-      <div><div className="font-medium text-white">{r.name}</div>
+      <div><div className="font-medium text-gray-900">{r.name}</div>
       <div className="text-xs text-slate-500 font-mono">{r.slug}</div></div>
     )},
     { key: 'plan', label: 'Plan', render: (r) => <Badge>{r.plan || 'starter'}</Badge> },
-    { key: 'users', label: 'Users', render: (r) => <span className="text-slate-300">{r.counts.users ?? '—'}</span> },
-    { key: 'members', label: 'Members', render: (r) => <span className="text-slate-300">{r.counts.members ?? '—'}</span> },
-    { key: 'docs', label: 'Documents', render: (r) => <span className="text-slate-300">{r.counts.documents ?? '—'}</span> },
+    { key: 'users', label: 'Users', render: (r) => <span className="text-gray-600">{r.counts.users ?? '—'}</span> },
+    { key: 'members', label: 'Members', render: (r) => <span className="text-gray-600">{r.counts.members ?? '—'}</span> },
+    { key: 'docs', label: 'Documents', render: (r) => <span className="text-gray-600">{r.counts.documents ?? '—'}</span> },
     { key: 'status', label: 'Status', render: (r) => r.suspended
       ? <Badge tone="red">Suspended</Badge>
       : <Badge tone="green">Active</Badge> },
     { key: 'createdAt', label: 'Created', render: (r) => (
-      <span className="text-xs text-slate-400">{r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '—'}</span>
+      <span className="text-xs text-gray-500">{r.createdAt ? new Date(r.createdAt).toLocaleDateString() : '—'}</span>
     )},
     { key: 'actions', label: 'Actions', render: (r) => (
       <div className="flex gap-2 justify-end">

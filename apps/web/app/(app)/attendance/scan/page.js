@@ -88,27 +88,27 @@ export default function QrScanPage() {
                 {result.alreadyCheckedIn ? 'Already checked in' : 'Checked in'}
               </Badge>
             </div>
-            <div className="text-lg font-bold text-white">{result.member?.name}</div>
-            <div className="text-sm text-slate-300 mt-1">
+            <div className="text-lg font-bold text-gray-900">{result.member?.name}</div>
+            <div className="text-sm text-gray-600 mt-1">
               {result.alreadyCheckedIn ? 'Checked in at' : 'Check-in time'}: {fmtTime(result.checkedInAt)}
             </div>
           </div>
         )}
         {verified && (
-          <div className="mt-4 rounded-xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/10 p-4">
+          <div className="mt-4 rounded-xl border border-[#0f766e]/30 bg-[#0f766e]/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <Badge tone="blue">Identity verified</Badge>
               <Badge tone={verified.status === 'active' ? 'green' : 'amber'}>
                 {String(verified.status).replace('_', ' ').toUpperCase()}
               </Badge>
             </div>
-            <div className="text-lg font-bold text-white">{verified.name}</div>
-            <div className="text-xs text-slate-400 font-mono mt-0.5">ID {verified.memberCode}</div>
+            <div className="text-lg font-bold text-gray-900">{verified.name}</div>
+            <div className="text-xs text-gray-500 font-mono mt-0.5">ID {verified.memberCode}</div>
             <div className="grid grid-cols-2 gap-2 mt-3 text-sm">
-              <div><div className="text-[10px] uppercase text-slate-400">Plan</div><div className="text-white">{verified.plan || '—'}</div></div>
-              <div><div className="text-[10px] uppercase text-slate-400">Valid till</div><div className="text-white">{fmtDate(verified.validTill)}</div></div>
-              <div><div className="text-[10px] uppercase text-slate-400">Phone</div><div className="text-white">{verified.phone || '—'}</div></div>
-              <div><div className="text-[10px] uppercase text-slate-400">Company</div><div className="text-white">{verified.companyName || '—'}</div></div>
+              <div><div className="text-[10px] uppercase text-gray-500">Plan</div><div className="text-gray-900">{verified.plan || '—'}</div></div>
+              <div><div className="text-[10px] uppercase text-gray-500">Valid till</div><div className="text-gray-900">{fmtDate(verified.validTill)}</div></div>
+              <div><div className="text-[10px] uppercase text-gray-500">Phone</div><div className="text-gray-900">{verified.phone || '—'}</div></div>
+              <div><div className="text-[10px] uppercase text-gray-500">Company</div><div className="text-gray-900">{verified.companyName || '—'}</div></div>
             </div>
           </div>
         )}

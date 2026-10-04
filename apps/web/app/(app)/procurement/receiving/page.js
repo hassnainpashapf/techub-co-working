@@ -124,7 +124,7 @@ export default function ReceivingPage() {
           <button
             key={t.key}
             onClick={() => setFilter(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm ${filter === t.key ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+            className={`px-3 py-1.5 rounded-full text-sm ${filter === t.key ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}
           >
             {t.label}
           </button>
@@ -139,10 +139,10 @@ export default function ReceivingPage() {
         ) : (
           <div className="space-y-3">
             {pending.map((po) => (
-              <div key={po.id} className="p-4 rounded-xl bg-white/5 border border-white/10 flex flex-wrap items-center gap-3">
+              <div key={po.id} className="p-4 rounded-xl bg-gray-100 border border-gray-200 flex flex-wrap items-center gap-3">
                 <div className="flex-1 min-w-[200px]">
-                  <div className="font-medium text-white">{po.number}</div>
-                  <div className="text-sm text-slate-400">
+                  <div className="font-medium text-gray-900">{po.number}</div>
+                  <div className="text-sm text-gray-500">
                     {po.vendor?.name || '—'} · {fmtMoney(po.total)} · {po.goodsReceipts?.length || 0} GRN{(po.goodsReceipts?.length || 0) === 1 ? '' : 's'}
                   </div>
                   <div className="text-xs text-slate-500 mt-1">
@@ -152,7 +152,7 @@ export default function ReceivingPage() {
                 <Badge tone="blue">{po.status}</Badge>
                 <button
                   onClick={() => openReceive(po)}
-                  className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium"
+                  className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium"
                 >
                   Receive goods
                 </button>
@@ -165,10 +165,10 @@ export default function ReceivingPage() {
       ) : (
         <div className="space-y-3">
           {grns.map((g) => (
-            <div key={g.id} className={`p-4 rounded-xl border ${g.status === 'partial' ? 'bg-amber-500/5 border-amber-500/30' : 'bg-white/5 border-white/10'}`}>
+            <div key={g.id} className={`p-4 rounded-xl border ${g.status === 'partial' ? 'bg-amber-500/5 border-amber-500/30' : 'bg-gray-100 border-gray-200'}`}>
               <div className="flex flex-wrap items-center gap-3">
                 <div className="flex-1 min-w-[200px]">
-                  <div className="font-medium text-white">
+                  <div className="font-medium text-gray-900">
                     {g.purchaseOrder?.number || '—'} <span className="text-slate-500 text-sm">· {g.purchaseOrder?.vendor?.name || '—'}</span>
                   </div>
                   <div className="text-xs text-slate-500 mt-1">
@@ -191,29 +191,29 @@ export default function ReceivingPage() {
 
       <Modal open={!!selected} onClose={() => setSelected(null)} title={`Receive goods — ${selected?.number || ''}`} wide>
         <div className="space-y-3">
-          <div className="text-sm text-slate-400">
-            Vendor: <span className="text-slate-200">{selected?.vendor?.name || '—'}</span> · PO total: <span className="text-slate-200">{fmtMoney(selected?.total)}</span>
+          <div className="text-sm text-gray-500">
+            Vendor: <span className="text-gray-800">{selected?.vendor?.name || '—'}</span> · PO total: <span className="text-gray-800">{fmtMoney(selected?.total)}</span>
           </div>
           <div className="space-y-2">
             {rows.map((r, i) => (
-              <div key={i} className={`p-3 rounded-lg border ${r.receivedQty < r.orderedQty || r.condition !== 'good' ? 'border-amber-500/40 bg-amber-500/5' : 'border-white/10 bg-white/5'}`}>
-                <div className="font-medium text-white text-sm mb-2">{r.desc}</div>
+              <div key={i} className={`p-3 rounded-lg border ${r.receivedQty < r.orderedQty || r.condition !== 'good' ? 'border-amber-500/40 bg-amber-500/5' : 'border-gray-200 bg-gray-100'}`}>
+                <div className="font-medium text-gray-900 text-sm mb-2">{r.desc}</div>
                 <div className="grid grid-cols-3 gap-2 items-end">
                   <Field label="Ordered">
-                    <input type="number" value={r.orderedQty} disabled className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-white/10 text-slate-400 text-sm" />
+                    <input type="number" value={r.orderedQty} disabled className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-gray-200 text-gray-500 text-sm" />
                   </Field>
                   <Field label="Received">
                     <input
                       type="number" min="0" value={r.receivedQty}
                       onChange={(e) => setRow(i, { receivedQty: Math.max(0, parseInt(e.target.value || '0', 10)) })}
-                      className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-white/10 text-white text-sm"
+                      className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-gray-200 text-white text-sm"
                     />
                   </Field>
                   <Field label="Condition">
                     <select
                       value={r.condition}
                       onChange={(e) => setRow(i, { condition: e.target.value })}
-                      className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-white/10 text-white text-sm"
+                      className="w-full px-2 py-1.5 rounded-lg bg-black/30 border border-gray-200 text-white text-sm"
                     >
                       {CONDITIONS.map((c) => <option key={c.key} value={c.key}>{c.label}</option>)}
                     </select>
@@ -237,14 +237,14 @@ export default function ReceivingPage() {
             <textarea
               value={note} onChange={(e) => setNote(e.target.value)} rows={2}
               placeholder="e.g. 2 chairs arrived damaged, supplier notified…"
-              className="w-full px-3 py-2 rounded-lg bg-black/30 border border-white/10 text-white text-sm"
+              className="w-full px-3 py-2 rounded-lg bg-black/30 border border-gray-200 text-white text-sm"
             />
           </Field>
           <div className="flex justify-end gap-2">
-            <button onClick={() => setSelected(null)} className="px-4 py-2 rounded-lg bg-white/10 text-slate-200 text-sm">Cancel</button>
+            <button onClick={() => setSelected(null)} className="px-4 py-2 rounded-lg bg-gray-100 text-gray-800 text-sm">Cancel</button>
             <button
               onClick={submit} disabled={saving}
-              className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium disabled:opacity-50"
             >
               {saving ? 'Saving…' : problems.length ? 'Save partial receipt' : 'Save receipt'}
             </button>

@@ -144,7 +144,7 @@ export default function VendorContractsPage() {
           <div className="flex flex-col gap-2">
             {timeline.map((c) => {
               const pct = Math.min(100, Math.max(4, (Math.max(c.daysLeft, 0) / maxSpan) * 100));
-              const barColor = c.daysLeft <= 30 ? 'bg-amber-500' : c.daysLeft <= 90 ? 'bg-[#8b5cf6]' : 'bg-green-600';
+              const barColor = c.daysLeft <= 30 ? 'bg-amber-500' : c.daysLeft <= 90 ? 'bg-[#0f766e]' : 'bg-green-600';
               return (
                 <div key={c.id} className="flex items-center gap-3">
                   <div className="w-56 truncate text-sm" title={c.title}>{c.vendor?.name} — {c.title}</div>

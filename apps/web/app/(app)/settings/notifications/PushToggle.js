@@ -101,8 +101,8 @@ export default function PushToggle() {
   if (!supported) {
     return (
       <div className="card-premium p-5 mb-6">
-        <h3 className="text-white font-semibold mb-1">🔔 Push Notifications</h3>
-        <p className="text-sm text-slate-400">Is browser/device me web push supported nahi hai.</p>
+        <h3 className="text-gray-900 font-semibold mb-1">🔔 Push Notifications</h3>
+        <p className="text-sm text-gray-500">Is browser/device me web push supported nahi hai.</p>
       </div>
     );
   }
@@ -111,8 +111,8 @@ export default function PushToggle() {
     <div className="card-premium p-5 mb-6">
       <div className="flex items-center justify-between flex-wrap gap-3">
         <div>
-          <h3 className="text-white font-semibold">🔔 Push Notifications</h3>
-          <p className="text-sm text-slate-400 mt-1">
+          <h3 className="text-gray-900 font-semibold">🔔 Push Notifications</h3>
+          <p className="text-sm text-gray-500 mt-1">
             Is device par browser notifications — {permission === 'granted' ? 'permission granted' : permission === 'denied' ? 'permission blocked (browser settings se allow karein)' : 'permission abhi nahi mili'}.
             {subscribed ? ' Status: ON' : ' Status: OFF'}
           </p>
@@ -134,7 +134,7 @@ export default function PushToggle() {
           )}
         </div>
       </div>
-      {msg && <p className="text-sm text-slate-300 mt-3">{msg}</p>}
+      {msg && <p className="text-sm text-gray-600 mt-3">{msg}</p>}
     </div>
   );
 }

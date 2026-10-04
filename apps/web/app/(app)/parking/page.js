@@ -149,7 +149,7 @@ export default function ParkingPage() {
       <div className="flex gap-2 mb-4">
         {['all', 'free', 'occupied', 'reserved'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}>
             {f}
           </button>
         ))}
@@ -166,11 +166,11 @@ export default function ParkingPage() {
                   <span className="text-2xl">{TYPE_ICON[s.type] || '🚗'}</span>
                   <span className={`w-2.5 h-2.5 rounded-full ${STATUS_DOT[s.status]}`} />
                 </div>
-                <div className="text-lg font-extrabold text-white">{s.label}</div>
+                <div className="text-lg font-extrabold text-gray-900">{s.label}</div>
                 <div className="mb-3"><Badge tone={STATUS_TONE[s.status]}>{s.status}</Badge></div>
                 {active ? (
-                  <div className="text-xs text-slate-300 mb-3">
-                    <div className="font-semibold text-white truncate">{active.member?.name}</div>
+                  <div className="text-xs text-gray-600 mb-3">
+                    <div className="font-semibold text-gray-900 truncate">{active.member?.name}</div>
                     <div className="truncate opacity-70">{active.vehicleNumber || '—'}</div>
                   </div>
                 ) : (

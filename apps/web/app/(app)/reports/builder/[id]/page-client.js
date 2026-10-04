@@ -67,7 +67,7 @@ function BarSvg({ points }) {
         const x = pad + i * ((w - pad * 2) / points.length) + ((w - pad * 2) / points.length - bw) / 2;
         return (
           <g key={i}>
-            <rect x={x} y={h - pad - bh} width={bw} height={bh} rx={4} className="fill-[#8b5cf6]-500/80" />
+            <rect x={x} y={h - pad - bh} width={bw} height={bh} rx={4} className="fill-[#0f766e]-500/80" />
             <text x={x + bw / 2} y={h - pad + 14} fontSize={10} textAnchor="middle" className="fill-slate-400">
               {String(p.label).slice(0, 10)}
             </text>
@@ -87,10 +87,10 @@ function LineSvg({ points }) {
   const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${X(i)},${Y(p.value)}`).join(' ');
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-64">
-      <path d={d} fill="none" strokeWidth={2.5} className="stroke-[#8b5cf6]-400" />
+      <path d={d} fill="none" strokeWidth={2.5} className="stroke-[#0f766e]-400" />
       {points.map((p, i) => (
         <g key={i}>
-          <circle cx={X(i)} cy={Y(p.value)} r={3.5} className="fill-[#8b5cf6]-400" />
+          <circle cx={X(i)} cy={Y(p.value)} r={3.5} className="fill-[#0f766e]-400" />
           {i % Math.ceil(points.length / 8) === 0 && (
             <text x={X(i)} y={h - 12} fontSize={10} textAnchor="middle" className="fill-slate-400">{String(p.label).slice(0, 10)}</text>
           )}
@@ -101,7 +101,7 @@ function LineSvg({ points }) {
 }
 function PieSvg({ points }) {
   const total = points.reduce((s, p) => s + p.value, 0) || 1;
-  const colors = ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#a78bfa', '#22d3ee', '#f472b6', '#a3e635', '#fb923c', '#94a3b8', '#e879f9', '#2dd4bf', '#64748b'];
+  const colors = ['#60a5fa', '#34d399', '#fbbf24', '#f87171', '#2dd4bf', '#22d3ee', '#f472b6', '#a3e635', '#fb923c', '#94a3b8', '#e879f9', '#2dd4bf', '#64748b'];
   let ang = 0;
   const cx = 130, cy = 130, r = 110;
   const slices = points.map((p, i) => {
@@ -122,7 +122,7 @@ function PieSvg({ points }) {
         {slices.map((s) => (
           <div key={s.i} className="flex items-center gap-2">
             <span className="w-3 h-3 rounded-sm" style={{ background: s.color }} />
-            <span className="text-slate-300">{String(s.p.label).slice(0, 24)}</span>
+            <span className="text-gray-600">{String(s.p.label).slice(0, 24)}</span>
             <span className="text-slate-500">{s.p.value} ({((s.p.value / total) * 100).toFixed(1)}%)</span>
           </div>
         ))}
@@ -265,7 +265,7 @@ export default function ReportBuilder() {
             {t.label}
           </button>
         ))}
-        {locked && <span className="text-xs text-slate-400 self-center ml-1">Pivot/Chart/Export/Alerts/Schedule ke liye pehle Save karo</span>}
+        {locked && <span className="text-xs text-gray-500 self-center ml-1">Pivot/Chart/Export/Alerts/Schedule ke liye pehle Save karo</span>}
       </div>
 
       {tab === 'build' && <BuilderTab />}
@@ -278,7 +278,7 @@ export default function ReportBuilder() {
   );
 
   function LockedHint() {
-    return <div className="card p-6 text-center text-slate-400 text-sm">Pehle report Save karo, phir ye feature khulega.</div>;
+    return <div className="card p-6 text-center text-gray-500 text-sm">Pehle report Save karo, phir ye feature khulega.</div>;
   }
 
   function BuilderTab() {
@@ -364,7 +364,7 @@ export default function ReportBuilder() {
           </div>
           {preview?.error ? <ErrorBanner message={preview.error} /> :
             preview?.rows ? <DataTable columns={previewCols} rows={preview.rows} empty="Koi row nahi" /> :
-            <p className="text-sm text-slate-400">Columns select karte hi preview yahan aayega</p>}
+            <p className="text-sm text-gray-500">Columns select karte hi preview yahan aayega</p>}
         </div>
       </>
     );
@@ -407,23 +407,23 @@ function PivotTab({ id, columns }) {
         <div className="overflow-auto">
           <table className="min-w-full text-sm">
             <thead><tr>
-              <th className="p-2 text-left text-slate-400">{result.rowField}</th>
-              {(result.cols || []).map((c) => <th key={c} className="p-2 text-right text-slate-400">{String(c).slice(0, 18)}</th>)}
-              <th className="p-2 text-right text-slate-200">Total</th>
+              <th className="p-2 text-left text-gray-500">{result.rowField}</th>
+              {(result.cols || []).map((c) => <th key={c} className="p-2 text-right text-gray-500">{String(c).slice(0, 18)}</th>)}
+              <th className="p-2 text-right text-gray-800">Total</th>
             </tr></thead>
             <tbody>
               {(result.rows || []).map((r, i) => (
-                <tr key={i} className="border-t border-slate-700/50">
-                  <td className="p-2 text-slate-200">{String(r.label).slice(0, 30)}</td>
-                  {(result.cols || []).map((c) => <td key={c} className="p-2 text-right text-slate-300">{r.cells?.[c] ?? 0}</td>)}
-                  <td className="p-2 text-right font-semibold text-slate-100">{r.total}</td>
+                <tr key={i} className="border-t border-gray-200/50">
+                  <td className="p-2 text-gray-800">{String(r.label).slice(0, 30)}</td>
+                  {(result.cols || []).map((c) => <td key={c} className="p-2 text-right text-gray-600">{r.cells?.[c] ?? 0}</td>)}
+                  <td className="p-2 text-right font-semibold text-gray-900">{r.total}</td>
                 </tr>
               ))}
             </tbody>
-            <tfoot><tr className="border-t border-slate-600">
-              <td className="p-2 font-semibold text-slate-200">Total</td>
-              {(result.cols || []).map((c) => <td key={c} className="p-2 text-right font-semibold text-slate-100">{result.colTotals?.[c] ?? 0}</td>)}
-              <td className="p-2 text-right font-bold text-[#c4b5fd]">{result.grandTotal}</td>
+            <tfoot><tr className="border-t border-gray-300">
+              <td className="p-2 font-semibold text-gray-800">Total</td>
+              {(result.cols || []).map((c) => <td key={c} className="p-2 text-right font-semibold text-gray-900">{result.colTotals?.[c] ?? 0}</td>)}
+              <td className="p-2 text-right font-bold text-teal-700">{result.grandTotal}</td>
             </tr></tfoot>
           </table>
         </div>
@@ -462,7 +462,7 @@ function ChartTab({ id, columns }) {
       {err && <ErrorBanner message={err} />}
       {chart?.points?.length > 0 ? (
         <div>
-          <p className="text-xs text-slate-400 mb-2">Aggregation: {chart.aggregation} · Total: {chart.total}{chart.truncated ? ' · (top categories)' : ''}</p>
+          <p className="text-xs text-gray-500 mb-2">Aggregation: {chart.aggregation} · Total: {chart.total}{chart.truncated ? ' · (top categories)' : ''}</p>
           {chart.type === 'bar' && <BarSvg points={chart.points} />}
           {chart.type === 'line' && <LineSvg points={chart.points} />}
           {chart.type === 'pie' && <PieSvg points={chart.points} />}
@@ -486,7 +486,7 @@ function ExportTab({ id, name }) {
   return (
     <div className="card p-4 space-y-3">
       <h3 className="font-semibold">⬇️ Export</h3>
-      <p className="text-sm text-slate-400">Poori report (5000 rows tak) download karo:</p>
+      <p className="text-sm text-gray-500">Poori report (5000 rows tak) download karo:</p>
       {err && <ErrorBanner message={err} />}
       <div className="flex gap-2 flex-wrap">
         <button className="btn-primary" onClick={() => dl('csv')} disabled={!!busy}>{busy === 'csv' ? '…' : '📄 CSV'}</button>

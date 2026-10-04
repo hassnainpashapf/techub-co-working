@@ -187,7 +187,7 @@ export default function FinancePage() {
 
       <div className="card">
         <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
-          <h2 className="font-semibold text-white">
+          <h2 className="font-semibold text-gray-900">
             Expenses — {month}
             {pendingCount > 0 && <Badge tone="amber" className="ml-2">{pendingCount} pending</Badge>}
           </h2>
@@ -199,8 +199,8 @@ export default function FinancePage() {
                   onClick={() => setStatusFilter(s)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition ${
                     statusFilter === s
-                      ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(139,92,246,0.5)]'
-                      : 'bg-white/5 text-slate-400 hover:text-white'
+                      ? 'bg-[#0f766e] text-white shadow-[0_0_12px_rgba(15,118,110,0.5)]'
+                      : 'bg-gray-100 text-gray-500 hover:text-gray-900'
                   }`}
                 >
                   {s}

@@ -121,7 +121,7 @@ export default function HousekeepingPage() {
       <div className="flex gap-2 mb-4">
         {[['today', "Today's checklist"], ['all', 'All pending'], ['done', 'Completed']].map(([k, label]) => (
           <button key={k} onClick={() => setFilter(k)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold ${filter === k ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 border border-white/10'}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-semibold ${filter === k ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 border border-gray-200'}`}>
             {label}
           </button>
         ))}
@@ -138,16 +138,16 @@ export default function HousekeepingPage() {
                 onClick={() => t.status === 'pending' && complete(t.id)}
                 disabled={t.status !== 'pending' || completing === t.id}
                 className={`shrink-0 w-9 h-9 rounded-full border-2 flex items-center justify-center text-lg transition
-                  ${t.status === 'done' ? 'bg-emerald-500 border-emerald-500 text-white'
+                  ${t.status === 'done' ? 'bg-emerald-500 border-emerald-500 text-gray-900'
                     : isOverdue(t) ? 'border-red-500 text-red-400 hover:bg-red-500/10'
-                    : 'border-white/20 text-transparent hover:border-emerald-400'}`}>
+                    : 'border-gray-300 text-transparent hover:border-emerald-400'}`}>
                 ✓
               </button>
               <div className="flex-1 min-w-0">
-                <div className={`font-semibold ${t.status === 'done' ? 'line-through text-slate-400' : 'text-white'}`}>
+                <div className={`font-semibold ${t.status === 'done' ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                   {t.title}
                 </div>
-                <div className="text-xs text-slate-400 mt-0.5">
+                <div className="text-xs text-gray-500 mt-0.5">
                   {t.area || t.unit?.code || 'General'} · {FREQ_LABEL[t.frequency] || t.frequency} · {fmtDue(t.dueDate)}
                   {t.assignedTo ? ` · 👷 ${t.assignedTo.name}` : ''}
                 </div>

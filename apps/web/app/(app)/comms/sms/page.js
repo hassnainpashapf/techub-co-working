@@ -126,13 +126,13 @@ export default function CommsSmsPage() {
     const pct = total ? Math.min(100, Math.round((done / total) * 100)) : null;
     return (
       <div className="mt-3">
-        <div className="flex justify-between text-xs text-slate-400 mb-1">
+        <div className="flex justify-between text-xs text-gray-500 mb-1">
           <span>📤 Bhej rahe hain… {done}{total ? ` / ${total}` : ''}</span>
           <span>{pct !== null ? `${pct}%` : 'live'}</span>
         </div>
-        <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+        <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all ${pct !== null ? 'bg-[#8b5cf6]' : 'bg-[#8b5cf6] animate-pulse'}`}
+            className={`h-full rounded-full transition-all ${pct !== null ? 'bg-[#0f766e]' : 'bg-[#0f766e] animate-pulse'}`}
             style={{ width: pct !== null ? `${pct}%` : '40%' }}
           />
         </div>
@@ -167,12 +167,12 @@ export default function CommsSmsPage() {
             <div key={it.id} className="card-premium p-4">
               <div className="flex items-center justify-between gap-3 flex-wrap">
                 <div className="min-w-0">
-                  <div className="font-semibold text-white">{it.name}</div>
-                  <div className="text-xs text-slate-400 mt-0.5">
+                  <div className="font-semibold text-gray-900">{it.name}</div>
+                  <div className="text-xs text-gray-500 mt-0.5">
                     {new Date(it.createdAt).toLocaleString()} · {SEGMENTS.find((s) => s.v === it.segment?.type)?.l || it.segment?.type}
                   </div>
-                  <div className="text-sm text-slate-300 mt-2 max-w-xl line-clamp-2">{it.message}</div>
-                  <div className="text-xs text-slate-400 mt-1">
+                  <div className="text-sm text-gray-600 mt-2 max-w-xl line-clamp-2">{it.message}</div>
+                  <div className="text-xs text-gray-500 mt-1">
                     ✅ {it.sentCount || 0} sent
                     {it.failCount > 0 && <span className="text-red-300"> · ❌ {it.failCount} failed</span>}
                   </div>
@@ -193,7 +193,7 @@ export default function CommsSmsPage() {
               </div>
               {progressBar(it)}
               {previewId === it.id && preview && (
-                <div className="mt-3 text-sm text-slate-300 border-t border-white/10 pt-3">
+                <div className="mt-3 text-sm text-gray-600 border-t border-gray-200 pt-3">
                   📩 <b>{preview.recipientCount}</b> recipients · {preview.counter.chars} chars · {preview.counter.segments} segment(s) ({preview.counter.encoding})
                   {preview.sample?.length > 0 && (
                     <div className="text-xs text-slate-500 mt-1">

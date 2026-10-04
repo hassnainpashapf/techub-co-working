@@ -83,7 +83,7 @@ export default function ImportPage() {
           <button
             key={t.key}
             onClick={() => { setTab(t.key); setFile(null); setPreview([]); setResult(null); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium border ${tab === t.key ? 'bg-[#7c3aed]/20 text-[#c4b5fd] border-[#8b5cf6]/40' : 'text-slate-400 border-white/10 hover:text-white'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium border ${tab === t.key ? 'bg-[#0f766e]/20 text-teal-700 border-[#0f766e]/40' : 'text-gray-500 border-gray-200 hover:text-gray-900'}`}
           >
             {t.label}
           </button>
@@ -93,30 +93,30 @@ export default function ImportPage() {
       {error && <div className="mb-4"><ErrorBanner message={error} /></div>}
 
       <div className="card-premium p-6 mb-6">
-        <h3 className="text-white font-semibold mb-2">1. Download template</h3>
-        <p className="text-sm text-slate-400 mb-4">Use the template so columns match. First row must be the header row.</p>
+        <h3 className="text-gray-900 font-semibold mb-2">1. Download template</h3>
+        <p className="text-sm text-gray-500 mb-4">Use the template so columns match. First row must be the header row.</p>
         <button onClick={downloadTemplate} className="btn-secondary">⬇ Download {active.label} template</button>
       </div>
 
       <div className="card-premium p-6 mb-6">
-        <h3 className="text-white font-semibold mb-2">2. Choose CSV file</h3>
+        <h3 className="text-gray-900 font-semibold mb-2">2. Choose CSV file</h3>
         <input
           type="file"
           accept=".csv,text/csv"
           onChange={(e) => onFile(e.target.files?.[0] || null)}
-          className="text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#7c3aed]/20 file:text-[#c4b5fd] hover:file:bg-[#7c3aed]/30"
+          className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#0f766e]/20 file:text-teal-700 hover:file:bg-[#0f766e]/30"
         />
         {preview.length > 0 && (
           <div className="mt-4 overflow-x-auto">
-            <p className="text-xs text-slate-400 mb-2">Preview (first {preview.length - 1} data rows):</p>
+            <p className="text-xs text-gray-500 mb-2">Preview (first {preview.length - 1} data rows):</p>
             <table className="w-full text-sm">
               <thead>
-                <tr>{preview[0].map((h, i) => <th key={i} className="text-left text-xs text-slate-400 font-semibold px-2 py-1 border-b border-white/10">{h}</th>)}</tr>
+                <tr>{preview[0].map((h, i) => <th key={i} className="text-left text-xs text-gray-500 font-semibold px-2 py-1 border-b border-gray-200">{h}</th>)}</tr>
               </thead>
               <tbody>
                 {preview.slice(1).map((r, i) => (
-                  <tr key={i} className="border-b border-white/5">
-                    {r.map((c, j) => <td key={j} className="px-2 py-1.5 text-slate-300">{c}</td>)}
+                  <tr key={i} className="border-b border-gray-200">
+                    {r.map((c, j) => <td key={j} className="px-2 py-1.5 text-gray-600">{c}</td>)}
                   </tr>
                 ))}
               </tbody>
@@ -126,7 +126,7 @@ export default function ImportPage() {
       </div>
 
       <div className="card-premium p-6">
-        <h3 className="text-white font-semibold mb-2">3. Import</h3>
+        <h3 className="text-gray-900 font-semibold mb-2">3. Import</h3>
         <button onClick={doImport} disabled={busy || !file} className="btn-primary disabled:opacity-50">
           {busy ? 'Importing…' : `Import ${active.label}`}
         </button>

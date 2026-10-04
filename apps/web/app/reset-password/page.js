@@ -30,23 +30,23 @@ function ResetForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a14] px-4">
+    <div className="min-h-screen flex items-center justify-center bg-[#f4f5f7] px-4">
       <div className="card-premium w-full max-w-sm p-8">
-        <h1 className="text-2xl font-extrabold text-white mb-2">New password</h1>
-        <p className="text-sm text-slate-400 mb-6">Choose a strong password for your account.</p>
+        <h1 className="text-2xl font-extrabold text-gray-900 mb-2">New password</h1>
+        <p className="text-sm text-gray-500 mb-6">Choose a strong password for your account.</p>
         <form onSubmit={submit}>
           <div className="mb-4">
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">New password</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">New password</label>
             <input type="password" className="input" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
           <div className="mb-4">
-            <label className="block text-xs font-semibold text-slate-300 mb-1.5">Confirm password</label>
+            <label className="block text-xs font-semibold text-gray-600 mb-1.5">Confirm password</label>
             <input type="password" className="input" value={confirm} onChange={(e) => setConfirm(e.target.value)} required />
           </div>
           {error && <p className="text-sm text-red-300 mb-3">{error}</p>}
           <button type="submit" className="btn-primary w-full" disabled={saving}>{saving ? 'Saving…' : 'Set new password'}</button>
         </form>
-        <a href="/login" className="block text-center text-sm text-slate-400 hover:text-white mt-5">← Back to login</a>
+        <a href="/login" className="block text-center text-sm text-gray-500 hover:text-gray-900 mt-5">← Back to login</a>
       </div>
     </div>
   );
@@ -54,7 +54,7 @@ function ResetForm() {
 
 export default function ResetPasswordPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-slate-400">Loading…</div>}>
+    <Suspense fallback={<div className="min-h-screen flex items-center justify-center text-gray-500">Loading…</div>}>
       <ResetForm />
     </Suspense>
   );

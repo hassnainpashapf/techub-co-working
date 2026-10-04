@@ -21,7 +21,7 @@ function Stars({ value, onChange, readOnly }) {
           type="button"
           disabled={readOnly}
           onClick={() => onChange && onChange(n)}
-          className={`text-xl leading-none ${n <= (value || 0) ? 'text-amber-400' : 'text-slate-600'} ${readOnly ? '' : 'hover:scale-125 transition-transform'}`}
+          className={`text-xl leading-none ${n <= (value || 0) ? 'text-amber-400' : 'text-gray-500'} ${readOnly ? '' : 'hover:scale-125 transition-transform'}`}
           aria-label={`${n} stars`}
         >
           ★
@@ -152,33 +152,33 @@ export default function ReviewsPage() {
       <div className="flex flex-wrap items-center gap-3 mb-4">
         {['all', 'draft', 'submitted', 'acknowledged'].map((s) => (
           <button key={s} onClick={() => setStatus(s)}
-            className={`px-4 py-1.5 rounded-full text-sm ${status === s ? 'bg-[#7c3aed] text-white' : 'bg-slate-800 text-slate-300'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm ${status === s ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600'}`}>
             {s === 'all' ? 'Sab' : s}
           </button>
         ))}
         <div className="ml-auto flex gap-2">
           <select value={histEmp} onChange={(e) => loadHistory(e.target.value)}
-            className="bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200">
+            className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800">
             <option value="">History — employee chunein</option>
             {employees.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
           <button onClick={() => { setForm({ ...emptyForm, period: form.period }); setModal('add'); }}
-            className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">
+            className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">
             + New Review
           </button>
         </div>
       </div>
 
       {history && (
-        <div className="mb-6 bg-slate-900/60 border border-slate-800 rounded-xl p-4">
-          <h3 className="font-semibold text-white mb-3">{empName(histEmp)} — Review History</h3>
+        <div className="mb-6 bg-white/60 border border-gray-200 rounded-xl p-4">
+          <h3 className="font-semibold text-gray-900 mb-3">{empName(histEmp)} — Review History</h3>
           {history.length === 0 ? <EmptyState title="Koi review nahi" /> : (
             <div className="space-y-3">
               {history.map((h) => (
-                <div key={h.id} className="flex items-center gap-4 bg-slate-800/60 rounded-lg p-3">
-                  <div className="text-sm font-semibold text-[#c4b5fd] w-24">{h.period}</div>
+                <div key={h.id} className="flex items-center gap-4 bg-gray-100/60 rounded-lg p-3">
+                  <div className="text-sm font-semibold text-teal-700 w-24">{h.period}</div>
                   <Stars value={Math.round(Number(h.overall) || 0)} readOnly />
-                  <div className="text-sm text-slate-300">{h.overall != null ? Number(h.overall).toFixed(1) + ' / 5' : ''}</div>
+                  <div className="text-sm text-gray-600">{h.overall != null ? Number(h.overall).toFixed(1) + ' / 5' : ''}</div>
                   <Badge tone={STATUS_TONE[h.status] || 'slate'}>{h.status}</Badge>
                   <div className="ml-auto text-xs text-slate-500">{h.submittedAt ? new Date(h.submittedAt).toLocaleDateString() : '—'}</div>
                 </div>
@@ -201,7 +201,7 @@ export default function ReviewsPage() {
               {r.status === 'draft' && (
                 <>
                   <button onClick={() => openEdit(r)} className="text-xs px-2 py-1 rounded bg-slate-700 hover:bg-slate-600">Edit</button>
-                  <button onClick={() => doAction(r.id, 'submit')} className="text-xs px-2 py-1 rounded bg-[#7c3aed] hover:bg-[#8b5cf6] text-white">Submit</button>
+                  <button onClick={() => doAction(r.id, 'submit')} className="text-xs px-2 py-1 rounded bg-[#0f766e] hover:bg-[#0f766e] text-white">Submit</button>
                   <button onClick={() => remove(r.id)} className="text-xs px-2 py-1 rounded bg-red-900/60 hover:bg-red-800 text-red-200">Delete</button>
                 </>
               )}
@@ -218,7 +218,7 @@ export default function ReviewsPage() {
           <Field label="Employee">
             <select value={form.employeeId} onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
               required={modal === 'add'} disabled={modal !== 'add'}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200">
+              className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800">
               <option value="">Chunein…</option>
               {employees.map((e) => <option key={e.id} value={e.id}>{e.name} — {e.designation}</option>)}
             </select>
@@ -226,23 +226,23 @@ export default function ReviewsPage() {
           <Field label="Period">
             <input value={form.period} onChange={(e) => setForm({ ...form, period: e.target.value })}
               pattern="\d{4}-Q[1-4]" placeholder="2026-Q3" required disabled={modal !== 'add'}
-              className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" />
+              className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800" />
           </Field>
           <div className="space-y-3">
-            <div className="text-sm font-medium text-slate-300">Ratings</div>
+            <div className="text-sm font-medium text-gray-600">Ratings</div>
             {CRITERIA.map((c) => (
               <div key={c.key} className="flex items-center justify-between">
-                <span className="text-sm text-slate-300">{c.label}</span>
+                <span className="text-sm text-gray-600">{c.label}</span>
                 <Stars value={form.ratings[c.key] || 0}
                   onChange={(n) => setForm({ ...form, ratings: { ...form.ratings, [c.key]: n } })} />
               </div>
             ))}
           </div>
-          <Field label="Strengths"><textarea value={form.strengths} onChange={(e) => setForm({ ...form, strengths: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" /></Field>
-          <Field label="Improvements"><textarea value={form.improvements} onChange={(e) => setForm({ ...form, improvements: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" /></Field>
-          <Field label="Aglay period ke goals"><textarea value={form.goals} onChange={(e) => setForm({ ...form, goals: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" /></Field>
+          <Field label="Strengths"><textarea value={form.strengths} onChange={(e) => setForm({ ...form, strengths: e.target.value })} rows={2} className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800" /></Field>
+          <Field label="Improvements"><textarea value={form.improvements} onChange={(e) => setForm({ ...form, improvements: e.target.value })} rows={2} className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800" /></Field>
+          <Field label="Aglay period ke goals"><textarea value={form.goals} onChange={(e) => setForm({ ...form, goals: e.target.value })} rows={2} className="w-full bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm text-gray-800" /></Field>
           <button type="submit" disabled={saving}
-            className="w-full py-2.5 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white font-medium disabled:opacity-50">
+            className="w-full py-2.5 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white font-medium disabled:opacity-50">
             {saving ? 'Saving…' : 'Save Review'}
           </button>
         </form>

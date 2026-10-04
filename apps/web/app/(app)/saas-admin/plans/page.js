@@ -25,12 +25,12 @@ export default function SaaSPlansPage() {
 
   const columns = [
     { key: 'name', label: 'Plan', render: (p) => (
-      <div><div className="font-semibold text-white">{p.name}</div><div className="text-xs text-slate-400 font-mono">{p.slug}</div></div>
+      <div><div className="font-semibold text-gray-900">{p.name}</div><div className="text-xs text-gray-500 font-mono">{p.slug}</div></div>
     ) },
-    { key: 'price', label: 'Price / month', render: (p) => <span className="text-white font-medium">{money(p.priceMonthly)}</span> },
-    { key: 'users', label: 'Max Users', render: (p) => <span className="text-slate-300">{p.maxUsers}</span> },
-    { key: 'members', label: 'Max Members', render: (p) => <span className="text-slate-300">{p.maxMembers}</span> },
-    { key: 'units', label: 'Max Units', render: (p) => <span className="text-slate-300">{p.maxUnits}</span> },
+    { key: 'price', label: 'Price / month', render: (p) => <span className="text-gray-900 font-medium">{money(p.priceMonthly)}</span> },
+    { key: 'users', label: 'Max Users', render: (p) => <span className="text-gray-600">{p.maxUsers}</span> },
+    { key: 'members', label: 'Max Members', render: (p) => <span className="text-gray-600">{p.maxMembers}</span> },
+    { key: 'units', label: 'Max Units', render: (p) => <span className="text-gray-600">{p.maxUnits}</span> },
     { key: 'features', label: 'Features', render: (p) => (
       <div className="flex flex-wrap gap-1 max-w-[280px]">
         {(p.features || []).map((f) => <Badge key={f} tone="slate">{f}</Badge>)}

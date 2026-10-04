@@ -100,28 +100,28 @@ export default function DunningPage() {
         <>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
             <div className="card p-4">
-              <div className="text-xs text-slate-400 mb-1">Overdue invoices</div>
-              <div className="text-2xl font-bold text-white">{overdue.length}</div>
+              <div className="text-xs text-gray-500 mb-1">Overdue invoices</div>
+              <div className="text-2xl font-bold text-gray-900">{overdue.length}</div>
             </div>
             <div className="card p-4">
-              <div className="text-xs text-slate-400 mb-1">Total overdue</div>
+              <div className="text-xs text-gray-500 mb-1">Total overdue</div>
               <div className="text-2xl font-bold text-red-300">{money(totalBalance)}</div>
             </div>
             <div className="card p-4">
-              <div className="text-xs text-slate-400 mb-1">🔔 Level 1 (1–7d)</div>
+              <div className="text-xs text-gray-500 mb-1">🔔 Level 1 (1–7d)</div>
               <div className="text-2xl font-bold text-amber-300">{byLevel[1] || 0}</div>
             </div>
             <div className="card p-4">
-              <div className="text-xs text-slate-400 mb-1">🚨 Level 2–3 (8d+)</div>
+              <div className="text-xs text-gray-500 mb-1">🚨 Level 2–3 (8d+)</div>
               <div className="text-2xl font-bold text-red-300">{(byLevel[2] || 0) + (byLevel[3] || 0)}</div>
             </div>
           </div>
 
-          <h2 className="text-lg font-bold text-white mb-3">Overdue invoices</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Overdue invoices</h2>
           <DataTable
             columns={['Invoice', 'Member', 'Balance', 'Due date', 'Days overdue', 'Reminder level', 'Last sent']}
             rows={overdue.map((i) => [
-              <span key="n" className="font-medium text-white">{i.number}</span>,
+              <span key="n" className="font-medium text-gray-900">{i.number}</span>,
               <span key="m">{i.memberName || '—'}</span>,
               <span key="b" className="font-medium text-red-300">{money(i.balance)}</span>,
               <span key="d">{fmtDate(i.dueDate)}</span>,
@@ -136,12 +136,12 @@ export default function DunningPage() {
             empty="No overdue invoices. 🎉"
           />
 
-          <h2 className="text-lg font-bold text-white mt-8 mb-3">Reminder history</h2>
+          <h2 className="text-lg font-bold text-gray-900 mt-8 mb-3">Reminder history</h2>
           <DataTable
             columns={['Sent at', 'Invoice', 'Member', 'Level', 'Channel']}
             rows={logs.map((l) => [
               <span key="t">{new Date(l.sentAt).toLocaleString()}</span>,
-              <span key="n" className="font-medium text-white">{l.invoice?.number || '—'}</span>,
+              <span key="n" className="font-medium text-gray-900">{l.invoice?.number || '—'}</span>,
               <span key="m">{l.invoice?.memberName || '—'}</span>,
               <span key="l">
                 <Badge tone={LEVEL_TONE[l.level] || 'slate'}>

@@ -69,16 +69,16 @@ function DataPrivacySection({ member, onChanged }) {
   }
 
   return (
-    <div className="rounded-2xl border border-white/[0.06] bg-[#141422] p-4 mt-6">
-      <h3 className="font-semibold text-white mb-1">Data &amp; Privacy</h3>
-      <p className="text-xs text-slate-400 mb-3">
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 mt-6">
+      <h3 className="font-semibold text-gray-900 mb-1">Data &amp; Privacy</h3>
+      <p className="text-xs text-gray-500 mb-3">
         Export all member data as JSON (password hashes are never included). Anonymization replaces
         personal data with placeholders — financial records are kept for tax compliance.
       </p>
       {msg && <p className="text-xs text-amber-300 mb-3">{msg}</p>}
       <div className="flex flex-wrap gap-2">
         <button onClick={handleExport} disabled={busy}
-          className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-slate-200 hover:bg-white/10 disabled:opacity-50">
+          className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-gray-800 hover:bg-gray-100 disabled:opacity-50">
           {busy ? 'Working…' : 'Export Data (JSON)'}
         </button>
         {staff && (
@@ -90,8 +90,8 @@ function DataPrivacySection({ member, onChanged }) {
       </div>
       {showAnon && (
         <Modal title="Anonymize member" onClose={() => { if (!busy) { setShowAnon(false); setConfirmName(''); } }}>
-          <p className="text-sm text-slate-300 mb-2">
-            This permanently replaces <span className="font-semibold text-white">{member.name}</span>'s personal
+          <p className="text-sm text-gray-600 mb-2">
+            This permanently replaces <span className="font-semibold text-gray-900">{member.name}</span>'s personal
             data (name, email, phone, CNIC) with placeholders and <span className="text-red-300 font-medium">disables their login</span>.
             Invoices and payments are kept for tax compliance. This cannot be undone.
           </p>
@@ -101,7 +101,7 @@ function DataPrivacySection({ member, onChanged }) {
           </Field>
           <div className="flex justify-end gap-2 mt-4">
             <button onClick={() => { setShowAnon(false); setConfirmName(''); }} disabled={busy}
-              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-slate-300 hover:bg-white/10">
+              className="px-3 py-1.5 rounded-lg text-xs font-medium border border-white/15 text-gray-600 hover:bg-gray-100">
               Cancel
             </button>
             <button onClick={handleAnonymize} disabled={busy || !confirmName.trim()}
@@ -216,15 +216,15 @@ function MemberTimeline({ memberId }) {
     return () => { cancelled = true; };
   }, [memberId]);
   if (loading) return <Spinner />;
-  if (!events.length) return <p className="text-sm text-slate-400">No activity yet.</p>;
+  if (!events.length) return <p className="text-sm text-gray-500">No activity yet.</p>;
   return (
     <div className="relative pl-6">
-      <div className="absolute left-2 top-1 bottom-1 w-px bg-white/10" />
+      <div className="absolute left-2 top-1 bottom-1 w-px bg-gray-100" />
       {events.map((e, i) => (
         <div key={i} className="relative pb-4">
-          <div className="absolute -left-6 top-0 w-5 h-5 rounded-full bg-[#1a1a2c] border border-white/15 flex items-center justify-center text-[10px]">{e.icon}</div>
-          <p className="text-sm text-white font-medium">{e.title}</p>
-          {e.detail && <p className="text-xs text-slate-400">{e.detail}</p>}
+          <div className="absolute -left-6 top-0 w-5 h-5 rounded-full bg-white border border-white/15 flex items-center justify-center text-[10px]">{e.icon}</div>
+          <p className="text-sm text-gray-900 font-medium">{e.title}</p>
+          {e.detail && <p className="text-xs text-gray-500">{e.detail}</p>}
           <p className="text-[11px] text-slate-500">{e.at ? new Date(e.at).toLocaleString() : ''}</p>
         </div>
       ))}
@@ -253,18 +253,18 @@ function MemberDetail({ member, onClose, onChanged }) {
     const exceeded = limit != null && balance > limit;
     const pct = limit ? Math.min(100, (balance / limit) * 100) : 0;
     return (
-      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-white/[0.06] bg-[#141422]'}`}>
+      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-gray-200 bg-white'}`}>
         <div className="flex items-center justify-between text-sm mb-2">
-          <span className="text-slate-300 font-medium">Credit</span>
+          <span className="text-gray-600 font-medium">Credit</span>
           {exceeded && <span className="text-[11px] font-bold text-red-300 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
         </div>
         <div className="flex items-baseline gap-2 text-sm mb-2">
-          <span className={exceeded ? 'text-red-300 font-bold' : 'text-white font-semibold'}>Rs {balance.toLocaleString()}</span>
+          <span className={exceeded ? 'text-red-300 font-bold' : 'text-gray-900 font-semibold'}>Rs {balance.toLocaleString()}</span>
           <span className="text-slate-500 text-xs">outstanding</span>
           <span className="text-slate-500 text-xs ml-auto">limit: {limit == null ? 'unlimited' : `Rs ${limit.toLocaleString()}`}</span>
         </div>
         {limit != null && (
-          <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
             <div className={`h-full rounded-full ${exceeded ? 'bg-red-500' : pct > 80 ? 'bg-amber-400' : 'bg-emerald-400'}`} style={{ width: `${pct}%` }} />
           </div>
         )}
@@ -299,13 +299,13 @@ function MemberDetail({ member, onClose, onChanged }) {
       finally { setBusy(false); }
     }
     return (
-      <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mb-5">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 mb-5">
         <div className="flex items-center justify-between mb-2">
-          <span className="text-sm text-slate-300 font-medium">Loyalty Points</span>
-          <span className="text-lg font-bold text-violet-300">{Number(data.balance || 0).toLocaleString()} pts</span>
+          <span className="text-sm text-gray-600 font-medium">Loyalty Points</span>
+          <span className="text-lg font-bold text-teal-300">{Number(data.balance || 0).toLocaleString()} pts</span>
         </div>
         {(data.entries || []).slice(0, 3).map((e) => (
-          <div key={e.id} className="flex justify-between text-xs text-slate-400 py-1 border-t border-white/5">
+          <div key={e.id} className="flex justify-between text-xs text-gray-500 py-1 border-t border-gray-200">
             <span>{e.reason.replace(/_/g, ' ')}</span>
             <span className={e.points > 0 ? 'text-emerald-300' : 'text-red-300'}>{e.points > 0 ? `+${e.points}` : e.points}</span>
           </div>
@@ -352,7 +352,7 @@ function MemberDetail({ member, onClose, onChanged }) {
           <div className="flex gap-2 mb-5">
             {['overview', 'timeline', 'access', 'comms'].map((t) => (
               <button key={t} onClick={() => setTab(t)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-violet-400/60 bg-violet-500/20 text-violet-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-teal-500/60 bg-teal-600/20 text-violet-200' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
                 {t === 'access' ? '🔑 Access' : t === 'comms' ? '💬 Comms' : t}
               </button>
             ))}
@@ -368,16 +368,16 @@ function MemberDetail({ member, onClose, onChanged }) {
           <CreditBar m={m} />
           <LoyaltyCard memberId={m.id} />
           <div className="grid grid-cols-2 gap-3 text-sm mb-5">
-            <div><p className="text-xs text-slate-400">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Email</p><p className="font-medium">{m.email || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">CNIC</p><p className="font-medium">{m.cnic || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Company</p><p className="font-medium">{m.companyName || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Emergency contact</p><p className="font-medium">{m.emergencyContact || '—'}</p></div>
-            <div><p className="text-xs text-slate-400">Status</p><Badge tone={STATUS_TONE[m.status] || 'slate'}>{m.status || '—'}</Badge></div>
+            <div><p className="text-xs text-gray-500">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Email</p><p className="font-medium">{m.email || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">CNIC</p><p className="font-medium">{m.cnic || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Company</p><p className="font-medium">{m.companyName || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Emergency contact</p><p className="font-medium">{m.emergencyContact || '—'}</p></div>
+            <div><p className="text-xs text-gray-500">Status</p><Badge tone={STATUS_TONE[m.status] || 'slate'}>{m.status || '—'}</Badge></div>
           </div>
-          {m.notes && <p className="text-sm text-slate-400 bg-white/5 rounded-lg p-3 mb-5">{m.notes}</p>}
+          {m.notes && <p className="text-sm text-gray-500 bg-gray-100 rounded-lg p-3 mb-5">{m.notes}</p>}
 
-          <h3 className="font-semibold text-white mb-2">Contracts ({contracts.length})</h3>
+          <h3 className="font-semibold text-gray-900 mb-2">Contracts ({contracts.length})</h3>
           <DataTable
             columns={[
               { key: 'unit', label: 'Unit', render: (r) => r.unitCode || r.unit?.code || '—' },
@@ -387,7 +387,7 @@ function MemberDetail({ member, onClose, onChanged }) {
               { key: 'esign', label: 'E-Sign', render: (r) => (
                 <button
                   onClick={() => { setEsignTarget(r); setEsignName(m.name || ''); setEsignEmail(m.email || ''); setEsignMsg(''); }}
-                  className="text-[11px] px-2 py-1 rounded-lg border border-violet-400/40 text-violet-200 hover:bg-violet-500/15">
+                  className="text-[11px] px-2 py-1 rounded-lg border border-teal-500/40 text-violet-200 hover:bg-teal-600/15">
                   ✍️ Request
                 </button>
               ) },
@@ -415,14 +415,14 @@ function MemberDetail({ member, onClose, onChanged }) {
                     <input type="email" className="input w-full" value={esignEmail} onChange={(e) => setEsignEmail(e.target.value)} required maxLength={160} />
                   </Field>
                   <p className="text-xs text-slate-500">The signer gets an email with a one-time link (valid 14 days). Their IP and timestamp are recorded on signing.</p>
-                  {esignMsg && <p className="text-sm text-slate-300">{esignMsg}</p>}
+                  {esignMsg && <p className="text-sm text-gray-600">{esignMsg}</p>}
                   <button type="submit" disabled={esignBusy} className="btn-primary w-full">{esignBusy ? 'Sending…' : 'Send signing link'}</button>
                 </div>
               </form>
             </Modal>
           )}
 
-          <h3 className="font-semibold text-white mb-2 mt-5">Invoices ({invoices.length})</h3>
+          <h3 className="font-semibold text-gray-900 mb-2 mt-5">Invoices ({invoices.length})</h3>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -661,12 +661,12 @@ export default function MembersPage() {
         <div className="card mb-4 border-amber-400/30">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">⏳</span>
-            <h3 className="font-semibold text-white">Contracts expiring soon ({expiring.length})</h3>
+            <h3 className="font-semibold text-gray-900">Contracts expiring soon ({expiring.length})</h3>
             <Badge tone="amber">next 30 days</Badge>
           </div>
           <DataTable
             columns={[
-              { key: 'member', label: 'Member', render: (r) => <span className="font-medium text-white">{r.member?.name || '—'}</span> },
+              { key: 'member', label: 'Member', render: (r) => <span className="font-medium text-gray-900">{r.member?.name || '—'}</span> },
               { key: 'unit', label: 'Unit', render: (r) => r.unit?.code || '—' },
               { key: 'end', label: 'Ends', render: (r) => (r.endDate ? String(r.endDate).slice(0, 10) : '—') },
               { key: 'left', label: 'Days left', render: (r) => <Badge tone={r.daysLeft <= 7 ? 'red' : r.daysLeft <= 14 ? 'amber' : 'slate'}>{r.daysLeft}</Badge> },
@@ -713,8 +713,8 @@ export default function MembersPage() {
       <div className="card">
         {/* Phase 38 Track 5: extended bulk actions bar */}
         {canBulk && selectedIds.length > 0 && (
-          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30">
-            <span className="text-sm font-semibold text-[#ddd6fe]">{selectedIds.length} selected</span>
+          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
+            <span className="text-sm font-semibold text-teal-700">{selectedIds.length} selected</span>
             <select className="input max-w-[180px] !w-auto" value={bulkAction} onChange={(e) => setBulkAction(e.target.value)}>
               <option value="suspend">Suspend (on hold)</option>
               <option value="activate">Activate</option>
@@ -738,13 +738,13 @@ export default function MembersPage() {
             {bulkResult.failed.length > 0 && (
               <span className="text-amber-200"> — {bulkResult.failed.length} failed ({bulkResult.failed.slice(0, 5).map((f) => f.reason || f.id).join(', ')}{bulkResult.failed.length > 5 ? '…' : ''})</span>
             )}
-            <button className="ml-3 underline text-slate-300" onClick={() => setBulkResult(null)}>Dismiss</button>
+            <button className="ml-3 underline text-gray-600" onClick={() => setBulkResult(null)}>Dismiss</button>
           </div>
         )}
         <DataTable
           columns={[
             ...selectColumn,
-            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-white">{r.name}</span> },
+            { key: 'name', label: 'Name', render: (r) => <span className="font-medium text-gray-900">{r.name}</span> },
             { key: 'phone', label: 'Phone' },
             { key: 'company', label: 'Company', render: (r) => r.companyName || '—' },
             { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status || '—'}</Badge> },
@@ -783,7 +783,7 @@ export default function MembersPage() {
           <Field label="Message">
             <textarea className="input" rows={5} value={bulkBody} onChange={(e) => setBulkBody(e.target.value)} placeholder={'Hi everyone,\n\n…'} />
           </Field>
-          <p className="text-xs text-slate-400 mb-4">Members without an email address are skipped automatically.</p>
+          <p className="text-xs text-gray-500 mb-4">Members without an email address are skipped automatically.</p>
           <div className="flex justify-end gap-2">
             <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
             <button
@@ -803,7 +803,7 @@ export default function MembersPage() {
           <Field label="Tag">
             <input className="input" value={bulkTag} onChange={(e) => setBulkTag(e.target.value)} placeholder="vip" maxLength={40} />
           </Field>
-          <p className="text-xs text-slate-400 mb-4">Tag is stored on the member's notes as [tag:name]. Duplicates are skipped.</p>
+          <p className="text-xs text-gray-500 mb-4">Tag is stored on the member's notes as [tag:name]. Duplicates are skipped.</p>
           <div className="flex justify-end gap-2">
             <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
             <button
@@ -820,8 +820,8 @@ export default function MembersPage() {
       {/* Phase 29 Track 4: renew contract modal */}
       {renewTarget && (
         <Modal title={`Renew contract — ${renewTarget.member?.name || ''} (${renewTarget.unit?.code || ''})`} onClose={() => setRenewTarget(null)}>
-          <p className="text-sm text-slate-400 mb-4">
-            Current ends <b className="text-white">{String(renewTarget.endDate).slice(0, 10)}</b>. A new contract will start the next day; the old one will be marked expired.
+          <p className="text-sm text-gray-500 mb-4">
+            Current ends <b className="text-gray-900">{String(renewTarget.endDate).slice(0, 10)}</b>. A new contract will start the next day; the old one will be marked expired.
           </p>
           <Field label="New end date">
             <input type="date" className="input" value={renewDate} onChange={(e) => setRenewDate(e.target.value)} required />

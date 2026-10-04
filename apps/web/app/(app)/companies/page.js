@@ -26,8 +26,8 @@ function CompanyForm({ initial, onSave, saving }) {
       </div>
       <Field label="Address"><input className="input" value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} placeholder="Office address" /></Field>
       <Field label="Notes"><textarea className="input" rows={2} value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} placeholder="Any notes…" /></Field>
-      <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
-        <input type="checkbox" checked={f.isActive} onChange={(e) => setF({ ...f, isActive: e.target.checked })} className="accent-violet-500" />
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+        <input type="checkbox" checked={f.isActive} onChange={(e) => setF({ ...f, isActive: e.target.checked })} className="accent-teal-600" />
         Active
       </label>
       <button type="submit" className="btn-primary w-full" disabled={saving || !f.name.trim()}>{saving ? 'Saving…' : (initial ? 'Update Company' : 'Create Company')}</button>
@@ -40,27 +40,27 @@ function CompanyDetail({ company, onClose, onEdit, onDelete }) {
     <div>
       <div className="flex items-start justify-between mb-4">
         <div>
-          <h3 className="text-xl font-bold text-white">{company.name}</h3>
+          <h3 className="text-xl font-bold text-gray-900">{company.name}</h3>
           <div className="flex items-center gap-2 mt-1">
-            {company.industry && <span className="text-xs text-slate-400">{company.industry}</span>}
+            {company.industry && <span className="text-xs text-gray-500">{company.industry}</span>}
             <Badge tone={company.isActive ? 'green' : 'slate'}>{company.isActive ? 'Active' : 'Inactive'}</Badge>
             <Badge tone="blue">{company._count?.members || 0} members</Badge>
           </div>
         </div>
       </div>
       <div className="grid grid-cols-2 gap-3 text-sm mb-4">
-        {company.email && <div><div className="text-xs text-slate-500">Email</div><div className="text-slate-200">{company.email}</div></div>}
-        {company.phone && <div><div className="text-xs text-slate-500">Phone</div><div className="text-slate-200">{company.phone}</div></div>}
-        {company.website && <div><div className="text-xs text-slate-500">Website</div><a href={company.website} target="_blank" rel="noreferrer" className="text-[#c4b5fd] hover:underline">{company.website}</a></div>}
-        {company.address && <div className="col-span-2"><div className="text-xs text-slate-500">Address</div><div className="text-slate-200">{company.address}</div></div>}
+        {company.email && <div><div className="text-xs text-slate-500">Email</div><div className="text-gray-800">{company.email}</div></div>}
+        {company.phone && <div><div className="text-xs text-slate-500">Phone</div><div className="text-gray-800">{company.phone}</div></div>}
+        {company.website && <div><div className="text-xs text-slate-500">Website</div><a href={company.website} target="_blank" rel="noreferrer" className="text-teal-700 hover:underline">{company.website}</a></div>}
+        {company.address && <div className="col-span-2"><div className="text-xs text-slate-500">Address</div><div className="text-gray-800">{company.address}</div></div>}
       </div>
-      {company.notes && <p className="text-sm text-slate-400 mb-4">{company.notes}</p>}
-      <h4 className="text-sm font-semibold text-slate-200 mb-2">Linked Members</h4>
+      {company.notes && <p className="text-sm text-gray-500 mb-4">{company.notes}</p>}
+      <h4 className="text-sm font-semibold text-gray-800 mb-2">Linked Members</h4>
       {company.members?.length ? (
         <ul className="space-y-1.5 max-h-48 overflow-y-auto">
           {company.members.map((m) => (
-            <li key={m.id} className="flex items-center justify-between bg-white/5 rounded-lg px-3 py-2">
-              <span className="text-sm text-slate-200">{m.name}</span>
+            <li key={m.id} className="flex items-center justify-between bg-gray-100 rounded-lg px-3 py-2">
+              <span className="text-sm text-gray-800">{m.name}</span>
               <Badge tone={m.status === 'active' ? 'green' : 'slate'}>{m.status}</Badge>
             </li>
           ))}
@@ -141,9 +141,9 @@ export default function CompaniesPage() {
   };
 
   const cols = [
-    { key: 'name', label: 'Company', render: (r) => <button className="font-semibold text-white hover:text-[#c4b5fd]" onClick={() => openDetail(r.id)}>{r.name}</button> },
-    { key: 'industry', label: 'Industry', render: (r) => <span className="text-sm text-slate-400">{r.industry || '—'}</span> },
-    { key: 'contact', label: 'Contact', render: (r) => <span className="text-sm text-slate-400">{r.phone || r.email || '—'}</span> },
+    { key: 'name', label: 'Company', render: (r) => <button className="font-semibold text-gray-900 hover:text-teal-700" onClick={() => openDetail(r.id)}>{r.name}</button> },
+    { key: 'industry', label: 'Industry', render: (r) => <span className="text-sm text-gray-500">{r.industry || '—'}</span> },
+    { key: 'contact', label: 'Contact', render: (r) => <span className="text-sm text-gray-500">{r.phone || r.email || '—'}</span> },
     { key: 'members', label: 'Members', render: (r) => <Badge tone="blue">{r._count?.members || 0}</Badge> },
     { key: 'status', label: 'Status', render: (r) => <Badge tone={r.isActive ? 'green' : 'slate'}>{r.isActive ? 'Active' : 'Inactive'}</Badge> },
     {

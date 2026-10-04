@@ -84,12 +84,12 @@ export default function SalesDashboardPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-4">
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <h3 className="font-semibold text-slate-100 mb-1">Pipeline Funnel</h3>
-              <p className="text-xs text-slate-400 mb-4">Stage-wise leads + conversion</p>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+              <h3 className="font-semibold text-gray-900 mb-1">Pipeline Funnel</h3>
+              <p className="text-xs text-gray-500 mb-4">Stage-wise leads + conversion</p>
               <FunnelChart counts={funnel.counts || {}} />
               <div className="mt-4 flex flex-wrap gap-2 text-xs">
-                <span className="text-slate-400">Avg days in stage:</span>
+                <span className="text-gray-500">Avg days in stage:</span>
                 {['new', 'contacted', 'visit'].map((s) => (
                   <Badge key={s} tone="slate">
                     {STAGE_LABELS[s]}: {funnel.avgDays?.[s] != null ? `${funnel.avgDays[s]}d` : '—'}
@@ -99,21 +99,21 @@ export default function SalesDashboardPage() {
               </div>
             </div>
 
-            <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-              <h3 className="font-semibold text-slate-100 mb-1">Deal Cycle</h3>
-              <p className="text-xs text-slate-400 mb-4">Won leads ka avg close time (created → closed)</p>
+            <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+              <h3 className="font-semibold text-gray-900 mb-1">Deal Cycle</h3>
+              <p className="text-xs text-gray-500 mb-4">Won leads ka avg close time (created → closed)</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-5xl font-bold text-emerald-300">
                   {funnel.avgDays?.booked != null ? funnel.avgDays.booked : '—'}
                 </span>
-                <span className="text-slate-400">days average</span>
+                <span className="text-gray-500">days average</span>
               </div>
-              <p className="mt-3 text-sm text-slate-400">
+              <p className="mt-3 text-sm text-gray-500">
                 Is mahinay: <span className="text-emerald-300 font-semibold">{funnel.won ?? 0} won</span> ·{' '}
                 <span className="text-red-300 font-semibold">{funnel.lost ?? 0} lost</span> ·{' '}
                 {funnel.total ?? 0} total leads
               </p>
-              <div className="mt-4 h-2 rounded-full bg-white/10 overflow-hidden">
+              <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500"
                   style={{ width: `${Math.min(100, funnel.conversionRate ?? 0)}%` }}
@@ -122,19 +122,19 @@ export default function SalesDashboardPage() {
             </div>
           </div>
 
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
-            <h3 className="font-semibold text-slate-100 mb-1">Salesperson Leaderboard</h3>
-            <p className="text-xs text-slate-400 mb-4">Pichlay 30 din me won deals per assignee</p>
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
+            <h3 className="font-semibold text-gray-900 mb-1">Salesperson Leaderboard</h3>
+            <p className="text-xs text-gray-500 mb-4">Pichlay 30 din me won deals per assignee</p>
             {board.length === 0 ? (
               <p className="text-sm text-slate-500">Abhi koi won deal nahi.</p>
             ) : (
               <div className="space-y-2">
                 {board.map((row, i) => (
-                  <div key={row.userId || `row-${i}`} className="flex items-center gap-3 rounded-xl border border-white/10 bg-white/[0.02] px-4 py-2.5">
-                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-400/20 text-amber-300' : 'bg-white/10 text-slate-300'}`}>
+                  <div key={row.userId || `row-${i}`} className="flex items-center gap-3 rounded-xl border border-gray-200 bg-gray-50 px-4 py-2.5">
+                    <span className={`w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${i === 0 ? 'bg-amber-400/20 text-amber-300' : 'bg-gray-100 text-gray-600'}`}>
                       {i + 1}
                     </span>
-                    <span className="flex-1 font-medium text-slate-200">{row.name}</span>
+                    <span className="flex-1 font-medium text-gray-800">{row.name}</span>
                     <Badge tone="green">{row.won} won</Badge>
                   </div>
                 ))}

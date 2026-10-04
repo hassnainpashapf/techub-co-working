@@ -130,7 +130,7 @@ export default function MemberImportPage() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
           onClick={() => fileRef.current?.click()}
           className={`card-premium p-10 text-center cursor-pointer border-2 border-dashed transition ${
-            dragOver ? 'border-[#8b5cf6] bg-[#8b5cf6]/10' : 'border-white/10 hover:border-white/25'
+            dragOver ? 'border-[#0f766e] bg-[#0f766e]/10' : 'border-gray-200 hover:border-white/25'
           }`}
         >
           <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden"
@@ -138,8 +138,8 @@ export default function MemberImportPage() {
           {busy ? <Spinner size="lg" /> : (
             <>
               <p className="text-4xl mb-3">📥</p>
-              <p className="text-white font-semibold mb-1">Drop your CSV here or click to browse</p>
-              <p className="text-slate-400 text-sm">Max 2 MB · up to 1000 rows · columns: name, email, phone, company, plan, status</p>
+              <p className="text-gray-900 font-semibold mb-1">Drop your CSV here or click to browse</p>
+              <p className="text-gray-500 text-sm">Max 2 MB · up to 1000 rows · columns: name, email, phone, company, plan, status</p>
             </>
           )}
         </div>
@@ -156,8 +156,8 @@ export default function MemberImportPage() {
 
           {/* Column mapping */}
           <div className="card-premium p-5 mb-6">
-            <h2 className="text-white font-bold mb-1">Column mapping</h2>
-            <p className="text-slate-400 text-xs mb-4">File: <span className="text-slate-200">{fileName}</span> — adjust any column, then re-validate.</p>
+            <h2 className="text-gray-900 font-bold mb-1">Column mapping</h2>
+            <p className="text-gray-500 text-xs mb-4">File: <span className="text-gray-800">{fileName}</span> — adjust any column, then re-validate.</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
               {report.headers.map((h) => (
                 <Field key={h} label={`"${h}"`}>
@@ -175,7 +175,7 @@ export default function MemberImportPage() {
               <button onClick={remapAndRevalidate} disabled={busy} className="btn-secondary text-sm">
                 {busy ? 'Validating…' : '↻ Re-validate with this mapping'}
               </button>
-              <button onClick={reset} className="text-sm text-slate-400 hover:text-slate-200 underline">
+              <button onClick={reset} className="text-sm text-gray-500 hover:text-gray-800 underline">
                 Start over
               </button>
             </div>
@@ -184,11 +184,11 @@ export default function MemberImportPage() {
           {/* Preview */}
           <div className="card-premium p-5 mb-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-white font-bold">Row preview</h2>
+              <h2 className="text-gray-900 font-bold">Row preview</h2>
               <div className="flex gap-1 text-xs">
                 {['all', 'valid', 'invalid'].map((f) => (
                   <button key={f} onClick={() => setFilter(f)}
-                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-[#7c3aed]/70 text-white' : 'text-slate-400 hover:text-white'}`}>
+                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-[#0f766e]/70 text-white' : 'text-gray-500 hover:text-gray-900'}`}>
                     {f}
                   </button>
                 ))}
@@ -197,7 +197,7 @@ export default function MemberImportPage() {
             <div className="overflow-x-auto -mx-5 px-5">
               <table className="w-full text-sm min-w-[720px]">
                 <thead>
-                  <tr className="text-left text-slate-400 text-xs border-b border-white/10">
+                  <tr className="text-left text-gray-500 text-xs border-b border-gray-200">
                     <th className="py-2 pr-3">Row</th>
                     <th className="py-2 pr-3">Name</th>
                     <th className="py-2 pr-3">Email</th>
@@ -209,13 +209,13 @@ export default function MemberImportPage() {
                 </thead>
                 <tbody>
                   {shown.slice(0, 200).map((x) => (
-                    <tr key={x.row} className={`border-b border-white/5 ${x.valid ? '' : 'bg-red-500/[0.04]'}`}>
+                    <tr key={x.row} className={`border-b border-gray-200 ${x.valid ? '' : 'bg-red-500/[0.04]'}`}>
                       <td className="py-2 pr-3 text-slate-500">{x.row}</td>
-                      <td className="py-2 pr-3 text-white">{x.data.name || '—'}</td>
-                      <td className="py-2 pr-3 text-slate-300">{x.data.email || '—'}</td>
-                      <td className="py-2 pr-3 text-slate-300">{x.data.phone || '—'}</td>
-                      <td className="py-2 pr-3 text-slate-300">{x.data.company || '—'}</td>
-                      <td className="py-2 pr-3 text-slate-300">{x.data.planName || '—'}</td>
+                      <td className="py-2 pr-3 text-gray-900">{x.data.name || '—'}</td>
+                      <td className="py-2 pr-3 text-gray-600">{x.data.email || '—'}</td>
+                      <td className="py-2 pr-3 text-gray-600">{x.data.phone || '—'}</td>
+                      <td className="py-2 pr-3 text-gray-600">{x.data.company || '—'}</td>
+                      <td className="py-2 pr-3 text-gray-600">{x.data.planName || '—'}</td>
                       <td className="py-2 pr-3">
                         {x.valid
                           ? <Badge tone="emerald">Valid</Badge>
@@ -236,8 +236,8 @@ export default function MemberImportPage() {
           <div className="card-premium p-5">
             <label className="flex items-center gap-3 mb-4 cursor-pointer">
               <input type="checkbox" checked={sendWelcome} onChange={(e) => setSendWelcome(e.target.checked)}
-                className="w-4 h-4 accent-[#8b5cf6]" />
-              <span className="text-sm text-white">Send welcome email to imported members (only those with an email address)</span>
+                className="w-4 h-4 accent-[#0f766e]" />
+              <span className="text-sm text-gray-900">Send welcome email to imported members (only those with an email address)</span>
             </label>
             <div className="flex gap-2">
               <button onClick={confirmImport} disabled={busy || report.valid === 0} className="btn-primary">
@@ -253,7 +253,7 @@ export default function MemberImportPage() {
       {/* Step 3 — result */}
       {result && (
         <div className="card-premium p-6">
-          <h2 className="text-white font-bold text-lg mb-4">Import complete ✅</h2>
+          <h2 className="text-gray-900 font-bold text-lg mb-4">Import complete ✅</h2>
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
             <StatCard label="Imported" value={result.imported} accent="emerald" />
             <StatCard label="Skipped" value={result.skipped} accent="amber" />

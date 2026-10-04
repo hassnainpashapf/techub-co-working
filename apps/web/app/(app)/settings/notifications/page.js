@@ -11,7 +11,7 @@ function Toggle({ on, onChange, disabled }) {
       type="button"
       disabled={disabled}
       onClick={() => onChange(!on)}
-      className={`w-11 h-6 rounded-full relative transition-colors ${on ? 'bg-violet-500' : 'bg-slate-600/60'} ${disabled ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
+      className={`w-11 h-6 rounded-full relative transition-colors ${on ? 'bg-teal-600' : 'bg-slate-600/60'} ${disabled ? 'opacity-50 cursor-wait' : 'cursor-pointer'}`}
       aria-pressed={on}
     >
       <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow transition-all ${on ? 'left-[22px]' : 'left-0.5'}`} />
@@ -65,7 +65,7 @@ export default function NotificationPreferencesPage() {
       <div className="card-premium p-6 overflow-x-auto">
         <table className="w-full text-sm min-w-[560px]">
           <thead>
-            <tr className="text-left text-xs text-slate-400 uppercase">
+            <tr className="text-left text-xs text-gray-500 uppercase">
               <th className="pb-3 pr-4">Event</th>
               {channels.map((c) => (
                 <th key={c} className="pb-3 px-3 text-center">{channelLabels[c] || c}</th>
@@ -74,8 +74,8 @@ export default function NotificationPreferencesPage() {
           </thead>
           <tbody>
             {events.map((ev) => (
-              <tr key={ev} className="border-t border-white/5">
-                <td className="py-3 pr-4 text-slate-200 font-medium">{eventLabels[ev] || ev}</td>
+              <tr key={ev} className="border-t border-gray-200">
+                <td className="py-3 pr-4 text-gray-800 font-medium">{eventLabels[ev] || ev}</td>
                 {channels.map((ch) => {
                   const key = `${ev}:${ch}`;
                   return (

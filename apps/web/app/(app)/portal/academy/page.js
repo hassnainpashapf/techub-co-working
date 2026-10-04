@@ -12,10 +12,10 @@ const LEVELS = ['', 'beginner', 'intermediate', 'advanced'];
 function ProgressBar({ pct }) {
   const p = Math.max(0, Math.min(100, Number(pct) || 0));
   return (
-    <div className="h-2 rounded-full bg-white/10 overflow-hidden">
+    <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
       <div
         className="h-full rounded-full transition-all"
-        style={{ width: `${p}%`, background: 'linear-gradient(90deg,#3b82f6,#8b5cf6)' }}
+        style={{ width: `${p}%`, background: 'linear-gradient(90deg,#3b82f6,#0f766e)' }}
       />
     </div>
   );
@@ -25,10 +25,10 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
   const slug = slugMap[course.id];
   const price = course.price != null ? `PKR ${Number(course.price).toLocaleString()}` : 'Free';
   return (
-    <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#16162b] to-[#0e0e1c] p-5 hover:border-[#8b5cf6]/40 transition-shadow hover:shadow-[0_0_24px_rgba(139,92,246,0.25)]">
+    <div className="rounded-2xl border border-gray-200 bg-white p-5 hover:border-[#0f766e]/40 transition-shadow hover:shadow-[0_0_24px_rgba(15,118,110,0.25)]">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <div className="text-white font-semibold">{course.title}</div>
+          <div className="text-gray-900 font-semibold">{course.title}</div>
           <div className="mt-1 flex flex-wrap gap-1.5">
             <Badge tone="blue">{course.category || 'general'}</Badge>
             <Badge tone="slate">{course.level || 'beginner'}</Badge>
@@ -38,9 +38,9 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
         {completed ? <Badge tone="green">Completed</Badge> : enrolled ? <Badge tone="blue">Enrolled</Badge> : null}
       </div>
       {course.description ? (
-        <p className="mt-3 text-sm text-slate-300 line-clamp-2">{course.description}</p>
+        <p className="mt-3 text-sm text-gray-600 line-clamp-2">{course.description}</p>
       ) : null}
-      <div className="mt-3 text-xs text-slate-400">
+      <div className="mt-3 text-xs text-gray-500">
         {course.lessonCount ?? ''} lessons
         {course.durationMin ? ` · ${course.durationMin} min` : ''}
       </div>
@@ -48,7 +48,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
         {slug ? (
           <Link
             href={`/portal/academy/${slug}`}
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600 hover:from-[#8b5cf6] hover:to-violet-500"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700 hover:from-[#0f766e] hover:to-teal-600"
           >
             {enrolled ? 'Continue' : 'View course'}
           </Link>
@@ -57,7 +57,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
           <button
             onClick={() => onEnroll(course.id)}
             disabled={enrolling === course.id}
-            className="px-4 py-2 rounded-xl text-sm font-semibold border border-[#8b5cf6]/50 text-[#c4b5fd] hover:bg-[#8b5cf6]/10 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-sm font-semibold border border-[#0f766e]/50 text-teal-700 hover:bg-[#0f766e]/10 disabled:opacity-50"
           >
             {enrolling === course.id ? 'Enrolling…' : 'Enroll now'}
           </button>
@@ -146,19 +146,19 @@ export default function AcademyPortalPage() {
       {/* Continue learning */}
       {inProgress.length > 0 ? (
         <div className="mt-6">
-          <h2 className="text-white font-bold text-lg">Continue learning</h2>
+          <h2 className="text-gray-900 font-bold text-lg">Continue learning</h2>
           <div className="mt-3 grid gap-4 md:grid-cols-2">
             {inProgress.map((e) => {
               const slug = slugMap[e.courseId];
               return (
-                <div key={e.id} className="rounded-2xl border border-[#8b5cf6]/30 bg-gradient-to-b from-[#181834] to-[#101020] p-5">
+                <div key={e.id} className="rounded-2xl border border-[#0f766e]/30 bg-gradient-to-b from-[#181834] to-[#101020] p-5">
                   <div className="flex items-center justify-between gap-3">
-                    <div className="text-white font-semibold">{e.course?.title || 'Course'}</div>
-                    <span className="text-xs text-[#c4b5fd] font-semibold">{e.progressPct || 0}%</span>
+                    <div className="text-gray-900 font-semibold">{e.course?.title || 'Course'}</div>
+                    <span className="text-xs text-teal-700 font-semibold">{e.progressPct || 0}%</span>
                   </div>
                   <div className="mt-3"><ProgressBar pct={e.progressPct} /></div>
                   {slug ? (
-                    <Link href={`/portal/academy/${slug}`} className="mt-4 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600">
+                    <Link href={`/portal/academy/${slug}`} className="mt-4 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700">
                       Continue →
                     </Link>
                   ) : null}
@@ -172,7 +172,7 @@ export default function AcademyPortalPage() {
       {/* Completed */}
       {done.length > 0 ? (
         <div className="mt-8">
-          <h2 className="text-white font-bold text-lg">Completed</h2>
+          <h2 className="text-gray-900 font-bold text-lg">Completed</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {done.map((e) => (
               <Badge key={e.id} tone="green">{e.course?.title || 'Course'}</Badge>
@@ -183,18 +183,18 @@ export default function AcademyPortalPage() {
 
       {/* Catalog */}
       <div className="mt-8 flex flex-wrap items-end justify-between gap-3">
-        <h2 className="text-white font-bold text-lg">Course catalog</h2>
+        <h2 className="text-gray-900 font-bold text-lg">Course catalog</h2>
         <div className="flex flex-wrap gap-2">
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search courses…"
-            className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#8b5cf6]/60"
+            className="px-3 py-2 rounded-xl bg-gray-100 border border-gray-200 text-sm text-gray-900 placeholder:text-slate-500 focus:outline-none focus:border-[#0f766e]/60"
           />
-          <select value={category} onChange={(e) => setCategory(e.target.value)} className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white [&>option]:bg-slate-900">
+          <select value={category} onChange={(e) => setCategory(e.target.value)} className="px-3 py-2 rounded-xl bg-gray-100 border border-gray-200 text-sm text-gray-900 [&>option]:bg-white">
             {CATEGORIES.map((c) => <option key={c} value={c}>{c || 'All categories'}</option>)}
           </select>
-          <select value={level} onChange={(e) => setLevel(e.target.value)} className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white [&>option]:bg-slate-900">
+          <select value={level} onChange={(e) => setLevel(e.target.value)} className="px-3 py-2 rounded-xl bg-gray-100 border border-gray-200 text-sm text-gray-900 [&>option]:bg-white">
             {LEVELS.map((l) => <option key={l} value={l}>{l || 'All levels'}</option>)}
           </select>
         </div>

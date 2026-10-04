@@ -113,11 +113,11 @@ export default function AiSettingsPage() {
               <input type="number" min="0" value={form.monthlyTokenCap} onChange={(e) => setForm({ ...form, monthlyTokenCap: e.target.value })} placeholder="no cap" className="input-premium w-full" />
             </Field>
             <div className="space-y-2">
-              <div className="text-sm font-medium text-slate-200">Enabled features</div>
+              <div className="text-sm font-medium text-gray-800">Enabled features</div>
               {FEATURES.map((f) => (
-                <label key={f.key} className="flex items-center gap-3 cursor-pointer rounded-xl border border-white/10 p-3">
-                  <input type="checkbox" checked={!!form.enabledFeatures[f.key]} onChange={() => toggleFeature(f.key)} className="w-4 h-4 accent-violet-500" />
-                  <div><div className="text-sm text-slate-100">{f.label}</div><div className="text-xs text-slate-400">{f.desc}</div></div>
+                <label key={f.key} className="flex items-center gap-3 cursor-pointer rounded-xl border border-gray-200 p-3">
+                  <input type="checkbox" checked={!!form.enabledFeatures[f.key]} onChange={() => toggleFeature(f.key)} className="w-4 h-4 accent-teal-600" />
+                  <div><div className="text-sm text-gray-900">{f.label}</div><div className="text-xs text-gray-500">{f.desc}</div></div>
                 </label>
               ))}
             </div>
@@ -132,13 +132,13 @@ export default function AiSettingsPage() {
       )}
       {usage && usage.provider !== 'disabled' && (
         <div className="card-premium mt-4 p-6">
-          <div className="text-sm font-medium text-slate-200 mb-2">Token usage — {usage.usageMonth}</div>
-          <div className="flex justify-between text-xs text-slate-400 mb-1">
+          <div className="text-sm font-medium text-gray-800 mb-2">Token usage — {usage.usageMonth}</div>
+          <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>{usage.tokensUsedThisMonth.toLocaleString()} used</span>
             <span>{usage.monthlyTokenCap ? `of ${usage.monthlyTokenCap.toLocaleString()}` : 'no cap'}</span>
           </div>
-          <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-violet-500 to-[#8b5cf6]" style={{ width: `${pct}%` }} />
+          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
+            <div className="h-full bg-gradient-to-r from-teal-600 to-[#0f766e]" style={{ width: `${pct}%` }} />
           </div>
         </div>
       )}

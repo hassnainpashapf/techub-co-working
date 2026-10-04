@@ -13,16 +13,16 @@ function ResultsBars({ results }) {
     <div className="mt-3 space-y-2">
       {results.breakdown.map((b) => (
         <div key={b.optionId}>
-          <div className="flex justify-between text-xs text-slate-300 mb-1">
+          <div className="flex justify-between text-xs text-gray-600 mb-1">
             <span>{b.text}</span>
-            <span className="text-slate-400">
+            <span className="text-gray-500">
               {b.votes} vote{b.votes === 1 ? '' : 's'}
               {b.percent !== undefined ? ` • ${b.percent}%` : ''}
             </span>
           </div>
-          <div className="h-2 rounded-full bg-white/5 overflow-hidden">
+          <div className="h-2 rounded-full bg-gray-100 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#0f766e] to-teal-600 transition-all"
               style={{ width: `${(b.votes / max) * 100}%` }}
             />
           </div>
@@ -67,14 +67,14 @@ function CreateModal({ onClose, onCreated }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div className="card-premium p-6 w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-white font-semibold mb-4">New poll</h3>
+        <h3 className="text-gray-900 font-semibold mb-4">New poll</h3>
         <form onSubmit={submit} className="space-y-4">
           <div>
-            <label className="text-xs text-slate-400">Question</label>
+            <label className="text-xs text-gray-500">Question</label>
             <input className="input mt-1" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="What should we improve first?" maxLength={500} />
           </div>
           <div>
-            <label className="text-xs text-slate-400">Options (2–10)</label>
+            <label className="text-xs text-gray-500">Options (2–10)</label>
             {options.map((t, i) => (
               <div key={i} className="flex gap-2 mt-2">
                 <input
@@ -95,10 +95,10 @@ function CreateModal({ onClose, onCreated }) {
           </div>
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="text-xs text-slate-400">Closes at (optional)</label>
+              <label className="text-xs text-gray-500">Closes at (optional)</label>
               <input type="datetime-local" className="input mt-1" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} />
             </div>
-            <label className="flex items-center gap-2 text-sm text-slate-300 pt-5">
+            <label className="flex items-center gap-2 text-sm text-gray-600 pt-5">
               <input type="checkbox" checked={openNow} onChange={(e) => setOpenNow(e.target.checked)} /> Open immediately
             </label>
           </div>
@@ -178,7 +178,7 @@ export default function PollsPage() {
             <div key={p.id} className="card-premium p-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-white font-semibold">{p.question}</p>
+                  <p className="text-gray-900 font-semibold">{p.question}</p>
                   <div className="flex items-center gap-2 mt-2">
                     <Badge color={STATUS_COLOR[p.status]}>{p.status}</Badge>
                     <span className="text-xs text-slate-500">
