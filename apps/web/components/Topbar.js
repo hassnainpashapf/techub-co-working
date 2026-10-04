@@ -23,13 +23,14 @@ const TITLES = {
 };
 
 export default function Topbar() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [unread, setUnread] = useState(0);
   const [path, setPath] = useState('');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState(null);
   const [searching, setSearching] = useState(false);
   const [dropOpen, setDropOpen] = useState(false);
+  const [userDropOpen, setUserDropOpen] = useState(false);
   const debounceRef = useRef(null);
   const boxRef = useRef(null);
 
@@ -198,6 +199,33 @@ export default function Topbar() {
             </span>
           )}
         </a>
+        <div className="relative">
+          <button
+            onClick={() => setUserDropOpen(!userDropOpen)}
+            className="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl hover:bg-gray-100 transition-colors"
+          >
+            <span className="text-right leading-tight hidden sm:block">
+              <span className="block text-[13px] font-bold text-gray-900 truncate max-w-[120px]">{user.tenantName || user.name || 'Techub Studio'}</span>
+              <span className="block text-[11px] text-gray-500 capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</span>
+            </span>
+            <span className="relative shrink-0">
+              <span className="w-9 h-9 rounded-full bg-[#134e4a] flex items-center justify-center text-white text-sm font-bold">
+                {(user.name || user.email || 'U').charAt(0).toUpperCase()}
+              </span>
+              <span className="absolute bottom-0 right-0 w-2.5 h-2.5 rounded-full bg-green-500 border-2 border-white" />
+            </span>
+          </button>
+          {userDropOpen && (
+            <div className="absolute right-0 top-full mt-2 w-44 rounded-xl bg-white border border-gray-200 shadow-xl p-1.5 z-50">
+              <button
+                onClick={() => { logout(); window.location = '/login'; }}
+                className="w-full text-left px-3.5 py-2 rounded-lg text-[13.5px] font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              >
+                Logout
+              </button>
+            </div>
+          )}
+        </div>
       </div>
     </header>
   );

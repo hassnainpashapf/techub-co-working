@@ -357,10 +357,9 @@ const NAV_OTHERS = [
 ];
 
 export default function Sidebar() {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [current, setCurrent] = useState('');
   const [openMenu, setOpenMenu] = useState('workspaces');
-  const [showUserMenu, setShowUserMenu] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -447,36 +446,6 @@ export default function Sidebar() {
           <p className="text-gray-900 text-[15px] font-bold tracking-tight leading-tight">Techub</p>
           <p className="text-gray-400 text-[11px] font-medium tracking-wide">CO-WORKING</p>
         </div>
-      </div>
-
-      {/* User card */}
-      <div className="px-4 mb-4 relative">
-        <button
-          onClick={() => setShowUserMenu(!showUserMenu)}
-          className="flex items-center gap-3 px-3 py-2.5 w-full text-left rounded-xl bg-gray-50 border border-gray-200 hover:border-teal-300 transition-all duration-200 group"
-        >
-          <span className="relative shrink-0">
-            <span className="w-10 h-10 rounded-full bg-[#134e4a] flex items-center justify-center text-white text-sm font-bold overflow-hidden">
-              {(user.name || user.email || 'U').charAt(0).toUpperCase()}
-            </span>
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-500 border-2 border-white" />
-          </span>
-          <div className="flex-1 min-w-0">
-            <p className="text-gray-900 text-[14px] font-semibold truncate">{user.tenantName || 'Techub Studio'}</p>
-            <p className="text-gray-500 text-[12px] capitalize">{(user.role || 'admin').replace(/_/g, ' ')}</p>
-          </div>
-          <span className="text-gray-400 group-hover:text-gray-600 transition-colors">{ICONS.chevUpDown}</span>
-        </button>
-        {showUserMenu && (
-          <div className="absolute left-4 right-4 top-full mt-1 rounded-xl bg-white border border-gray-200 shadow-xl p-1.5 z-50 animate-[fadeSlideIn_0.2s_ease-out]">
-            <button
-              onClick={() => { logout(); window.location = '/login'; }}
-              className="w-full text-left px-3.5 py-2 rounded-lg text-[13.5px] text-gray-600 hover:text-gray-900 hover:bg-gray-100 transition-colors"
-            >
-              Logout
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Nav */}
