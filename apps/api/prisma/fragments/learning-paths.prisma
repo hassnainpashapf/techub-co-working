@@ -1,0 +1,35 @@
+// Phase 53 Track 8/10: Learning Paths — LearningPath model (ordered course sequences).
+// Coordinator: schema.prisma me merge karo + Tenant par back-relation joro:
+//   Tenant:  learningPaths LearningPath[]
+model LearningPath {
+  id          String   @id @default(cuid())
+  tenantId    String
+  title       String
+  description String?
+  // Ordered array of Course ids, e.g. ["clx1...", "clx2..."] — track 1 ka Course model.
+  courseIds   Json     @default("[]")
+  isPublished Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  @@index([tenantId, isPublished])
+}
+
+// Member progress enrollment se compute hoti hai (Track 2 ka CourseEnrollment model):
+// ek course "complete" hai agar us ki enrollment ka status === 'completed' ho.
+// Koi alag progress table nahi — routes/learning-paths.js me progress helper hai.
+
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "LearningPath" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "description" TEXT,
+//   "courseIds" JSONB NOT NULL DEFAULT '[]',
+//   "isPublished" BOOLEAN NOT NULL DEFAULT false,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL
+// );
+// CREATE INDEX "LearningPath_tenantId_isPublished_idx" ON "LearningPath"("tenantId", "isPublished");

@@ -1,0 +1,54 @@
+// Phase 53 Track 2: Enrollments & Progress — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (parallel tracks — merge conflicts se bachne ke liye).
+// NOTE: Course + Lesson models come from Phase 53 Track 1 (fragments/courses.prisma).
+
+model Enrollment {
+  id           String    @id @default(cuid())
+  tenantId     String    @map("tenant_id")
+  tenant       Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  courseId     String    @map("course_id")
+  course       Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  memberId     String    @map("member_id")
+  member       Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  status       String    @default("active") // active | completed | dropped
+  progressPct  Int       @default(0) @map("progress_pct")
+  enrolledAt   DateTime  @default(now()) @map("enrolled_at")
+  completedAt  DateTime? @map("completed_at")
+
+  lessonProgress LessonProgress[]
+
+  @@unique([tenantId, courseId, memberId])
+  @@index([tenantId, memberId])
+  @@index([tenantId, courseId])
+  @@index([tenantId, status])
+  @@map("enrollments")
+}
+
+model LessonProgress {
+  id            String    @id @default(cuid())
+  tenantId      String    @map("tenant_id")
+  tenant        Tenant    @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  enrollmentId  String    @map("enrollment_id")
+  enrollment    Enrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  lessonId      String    @map("lesson_id")
+  lesson        Lesson    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  isDone        Boolean   @default(false) @map("is_done")
+  doneAt        DateTime? @map("done_at")
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@unique([enrollmentId, lessonId])
+  @@index([tenantId, enrollmentId])
+  @@map("lesson_progress")
+}
+
+// ADD TO Tenant model:
+//   enrollments Enrollment[]
+//   lessonProgress LessonProgress[]
+// ADD TO Member model:
+//   enrollments Enrollment[]
+// ADD TO Course model (Track 1):
+//   enrollments Enrollment[]
+// ADD TO Lesson model (Track 1):
+//   lessonProgress LessonProgress[]

@@ -180,6 +180,15 @@ const NAV_MAIN = [
       { label: '🌱 Green Initiatives', path: '/utilities/green' },
     ],
   },
+  { key: 'academy', label: '🎓 Academy', path: '/academy', icon: 'school',
+    roles: ['ceo', 'admin', 'super_admin', 'manager'],
+    children: [
+      { label: 'Academy Dashboard', path: '/academy' },
+      { label: '📚 Courses', path: '/academy/courses' },
+      { label: '🗺️ Learning Paths', path: '/academy/paths' },
+      { label: '🎤 Workshops', path: '/academy/workshops' },
+    ],
+  },
 ];
 
 // Limited nav for member-portal users — own data only
@@ -206,6 +215,7 @@ const NAV_MEMBER = [
   { key: 'maintenance', label: 'Maintenance', path: '/portal/maintenance', icon: 'launchpad' },
   { key: 'printing', label: 'Printing', path: '/portal/printing', icon: 'investor' },
   { key: 'lostfound', label: 'Lost & Found', path: '/portal/lost-found', icon: 'launchpad' },
+  { key: 'myacademy', label: '🎓 Academy', path: '/portal/academy', icon: 'school' },
 ];
 
 const NAV_OTHERS = [

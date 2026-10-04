@@ -1,0 +1,42 @@
+// Phase 53 Track 7/10: Course Ratings & Reviews — schema fragment.
+// Coordinator: merge into apps/api/prisma/schema.prisma + back-relations joro:
+//   Tenant { courseRatings CourseRating[] }
+//   Course { ratings CourseRating[] }
+//   Member { courseRatings CourseRating[] }
+// schema.prisma untouched by this track.
+
+model CourseRating {
+  id        String   @id @default(cuid())
+  tenantId  String   @map("tenant_id")
+  courseId  String   @map("course_id")
+  memberId  String   @map("member_id")
+  rating    Int // 1..5
+  review    String? // optional review text (max 2000)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  tenant Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  course Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  member Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([courseId, memberId]) // ek member ek course ko ek dafa rate karta hai (dobara = update)
+  @@index([tenantId, courseId])
+  @@index([tenantId, memberId])
+  @@map("course_ratings")
+}
+
+// --- migration SQL (coordinator: 20261003620000_phase53_academy me daale) ---
+// CREATE TABLE "course_ratings" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenant_id" TEXT NOT NULL,
+//   "course_id" TEXT NOT NULL,
+//   "member_id" TEXT NOT NULL,
+//   "rating" INTEGER NOT NULL CHECK ("rating" BETWEEN 1 AND 5),
+//   "review" TEXT,
+//   "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   CONSTRAINT "course_ratings_course_id_fkey" FOREIGN KEY ("course_id") REFERENCES "Course"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "course_ratings_member_id_fkey" FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE,
+//   CONSTRAINT "course_ratings_tenant_id_fkey" FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE
+// );
+// CREATE UNIQUE INDEX "course_ratings_course_id_member_id_key" ON "course_ratings"("course_id", "member_id");
+// CREATE INDEX "course_ratings_tenant_id_course_id_idx" ON "course_ratings"("tenant_id", "course_id");
+// CREATE INDEX "course_ratings_tenant_id_member_id_idx" ON "course_ratings"("tenant_id", "member_id");

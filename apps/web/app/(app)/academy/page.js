@@ -1,0 +1,119 @@
+'use client';
+
+// Phase 53 Track 10/10: Academy Dashboard — stats, popular courses, quick links.
+import { useEffect, useState } from 'react';
+import { api } from '../../../lib/api';
+import { PageHeader, Spinner, ErrorBanner, EmptyState, StatCard, Badge } from '../../../components/ui';
+import { useRequireRoles, AccessDenied } from '../../../components/Protected';
+
+function star(n) {
+  if (!n) return '—';
+  return '⭐ ' + Number(n).toFixed(1);
+}
+
+export default function AcademyDashboardPage() {
+  const allowed = useRequireRoles('ceo', 'admin', 'super_admin', 'manager');
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [err, setErr] = useState('');
+
+  useEffect(() => {
+    if (!allowed) return;
+    (async () => {
+      try {
+        setLoading(true);
+        const s = await api.get('/api/academy-dashboard/stats');
+        setData(s.data || {});
+      } catch (e) {
+        setErr(e?.response?.data?.error || e.message || 'Dashboard load nahi ho saka');
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, [allowed]);
+
+  if (!allowed) return <AccessDenied />;
+  if (loading) return <Spinner />;
+
+  const stats = data?.stats || {};
+  const popular = data?.popularCourses || [];
+
+  return (
+    <div className="space-y-6">
+      <PageHeader title="Academy Dashboard" subtitle="Courses, enrollments, completions aur workshops ka overview" />
+
+      {err && <ErrorBanner message={err} />}
+
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+        <StatCard title="Published Courses" value={stats.publishedCourses ?? '—'} icon="📚" />
+        <StatCard title="Active Enrollments" value={stats.activeEnrollments ?? '—'} icon="🎓" />
+        <StatCard title="Completions (30d)" value={stats.completions30d ?? '—'} icon="✅" />
+        <StatCard title="Avg Rating" value={star(stats.avgRating)} icon="⭐" />
+        <StatCard title="Certificates Issued" value={stats.certificatesIssued ?? '—'} icon="🏅" />
+        <StatCard title="Upcoming Workshops" value={stats.upcomingWorkshops ?? '—'} icon="🎥" />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="card p-5">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-white">🔥 Popular Courses</h3>
+            <a href="/academy/courses" className="btn btn-secondary btn-sm">All Courses</a>
+          </div>
+          {!popular.length && <EmptyState title="Abhi koi enrollment data nahi" hint="Courses publish hon aur enrollments banain to yahan dikhengi" />}
+          <div className="space-y-3">
+            {popular.map((c, i) => (
+              <a key={c.id} href="/academy/courses" className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center font-bold text-white text-sm shrink-0">
+                  {i + 1}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <div className="font-medium text-white truncate">{c.title}</div>
+                  <div className="text-xs text-slate-400">
+                    {c.category || 'general'}{c.level ? ` • ${c.level}` : ''}
+                  </div>
+                </div>
+                <Badge tone="blue">{c.enrollments} enrollments</Badge>
+              </a>
+            ))}
+          </div>
+        </div>
+
+        <div className="card p-5">
+          <h3 className="text-lg font-semibold text-white mb-4">⚡ Quick Links</h3>
+          <div className="grid grid-cols-2 gap-3">
+            <a href="/academy/courses" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">📚</div>
+              <div className="font-medium text-white text-sm">Course Catalog</div>
+              <div className="text-xs text-slate-400">Courses + lessons manage karein</div>
+            </a>
+            <a href="/academy/enrollments" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">🎓</div>
+              <div className="font-medium text-white text-sm">Enrollments</div>
+              <div className="text-xs text-slate-400">Progress aur completions</div>
+            </a>
+            <a href="/academy/quizzes" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">📝</div>
+              <div className="font-medium text-white text-sm">Quizzes</div>
+              <div className="text-xs text-slate-400">Assessments manage karein</div>
+            </a>
+            <a href="/academy/workshops" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">🎥</div>
+              <div className="font-medium text-white text-sm">Live Workshops</div>
+              <div className="text-xs text-slate-400">Sessions schedule karein</div>
+            </a>
+            <a href="/academy/certificates" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">🏅</div>
+              <div className="font-medium text-white text-sm">Certificates</div>
+              <div className="text-xs text-slate-400">Issued certificates</div>
+            </a>
+            <a href="/academy/paths" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+              <div className="text-2xl mb-1">🛤️</div>
+              <div className="font-medium text-white text-sm">Learning Paths</div>
+              <div className="text-xs text-slate-400">Curated learning journeys</div>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

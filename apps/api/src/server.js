@@ -386,6 +386,16 @@ app.use('/api/report-pivot', require('./routes/report-pivot'));
 app.use('/api/report-templates', require('./routes/report-templates'));
 app.use('/api/report-alerts', require('./routes/report-alerts'));
 app.use('/api/reports-hub', require('./routes/reports-hub'));
+// Phase 53: Learning & Academy Pack
+app.use('/api/courses', require('./routes/courses'));
+app.use('/api/enrollments', require('./routes/enrollments'));
+app.use('/api/quizzes', require('./routes/quizzes'));
+app.use('/api/certificates', require('./routes/certificates'));
+app.use('/api/workshops', require('./routes/workshops'));
+app.use('/api/course-ratings', require('./routes/course-ratings').router || require('./routes/course-ratings'));
+app.use('/api/learning-paths', require('./routes/learning-paths'));
+app.use('/api/instructor', require('./routes/instructor'));
+app.use('/api/academy-dashboard', require('./routes/academy-dashboard'));
 try {
   require('./lib/reportScheduler').ensureReportScheduler();
 } catch (e) { console.error('[phase52] report scheduler schedule failed:', e.message); }

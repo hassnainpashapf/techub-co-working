@@ -1,0 +1,83 @@
+// Phase 53 Track 1/10: Course Catalog — Course + Lesson models.
+// Coordinator: schema.prisma me merge karo + Tenant aur User par back-relations joro:
+//   Tenant:  courses Course[]
+//   User:    taughtCourses Course[]  @relation("CourseInstructor")
+model Course {
+  id           String   @id @default(cuid())
+  tenantId     String
+  title        String
+  slug         String
+  description  String?
+  category     String   @default("general") // general | soft-skills | tech | business | wellness
+  level        String   @default("beginner") // beginner | intermediate | advanced
+  thumbnailUrl String?
+  instructorId String?
+  isPublished  Boolean  @default(false)
+  price        Float?
+  durationMin  Int?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  tenant     Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  instructor User?    @relation("CourseInstructor", fields: [instructorId], references: [id], onDelete: SetNull)
+  lessons    Lesson[]
+
+  @@unique([tenantId, slug])
+  @@index([tenantId, isPublished])
+  @@index([tenantId, category])
+  @@index([instructorId])
+}
+
+model Lesson {
+  id         String   @id @default(cuid())
+  courseId   String
+  title      String
+  type       String   @default("text") // video | text | file | quiz
+  contentUrl String?
+  body       String?  // text lesson content (rich text/markdown)
+  durationMin Int?
+  sortOrder  Int      @default(0)
+  isFree     Boolean  @default(false) // preview ke liye free
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  course     Course    @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@index([courseId, sortOrder])
+}
+
+// Migration SQL (coordinator apni migration file me daale):
+// CREATE TABLE "Course" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "tenantId" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "slug" TEXT NOT NULL,
+//   "description" TEXT,
+//   "category" TEXT NOT NULL DEFAULT 'general',
+//   "level" TEXT NOT NULL DEFAULT 'beginner',
+//   "thumbnailUrl" TEXT,
+//   "instructorId" TEXT,
+//   "isPublished" BOOLEAN NOT NULL DEFAULT false,
+//   "price" DOUBLE PRECISION,
+//   "durationMin" INTEGER,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL
+// );
+// CREATE UNIQUE INDEX "Course_tenantId_slug_key" ON "Course"("tenantId", "slug");
+// CREATE INDEX "Course_tenantId_isPublished_idx" ON "Course"("tenantId", "isPublished");
+// CREATE INDEX "Course_tenantId_category_idx" ON "Course"("tenantId", "category");
+// CREATE INDEX "Course_instructorId_idx" ON "Course"("instructorId");
+// CREATE TABLE "Lesson" (
+//   "id" TEXT NOT NULL PRIMARY KEY,
+//   "courseId" TEXT NOT NULL,
+//   "title" TEXT NOT NULL,
+//   "type" TEXT NOT NULL DEFAULT 'text',
+//   "contentUrl" TEXT,
+//   "body" TEXT,
+//   "durationMin" INTEGER,
+//   "sortOrder" INTEGER NOT NULL DEFAULT 0,
+//   "isFree" BOOLEAN NOT NULL DEFAULT false,
+//   "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//   "updatedAt" TIMESTAMP(3) NOT NULL
+// );
+// CREATE INDEX "Lesson_courseId_sortOrder_idx" ON "Lesson"("courseId", "sortOrder");

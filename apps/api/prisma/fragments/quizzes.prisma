@@ -1,0 +1,131 @@
+// Phase 53 Track 3: Quizzes — schema fragment.
+// Coordinator: merge these models into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here.
+//
+// NOTE (cross-track): `Lesson` model Track 1 (Course Catalog) ke fragment me
+// banta hai. Neeche wali relation us model se jurti hai — coordinator merge
+// ke waqt confirm kare ke model ka naam `Lesson` hi hai; agar Track 1 ne koi
+// aur naam rakha ho to wahan adjust kare.
+
+model Quiz {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  lessonId    String   @unique @map("lesson_id")
+  lesson      Lesson   @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  title       String?
+  passingPct  Int      @default(70) @map("passing_pct") // pass hone ke liye darkar % (0..100)
+  maxAttempts Int?     @map("max_attempts") // null = unlimited
+  isActive    Boolean  @default(true) @map("is_active")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  questions QuizQuestion[]
+  attempts  QuizAttempt[]
+
+  @@index([tenantId, isActive])
+  @@map("quizzes")
+}
+
+model QuizQuestion {
+  id           String   @id @default(cuid())
+  tenantId     String   @map("tenant_id")
+  tenant       Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  quizId       String   @map("quiz_id")
+  quiz         Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  question     String
+  type         String   @default("mcq") // mcq | truefalse
+  options      Json     // ["Option A", "Option B", ...] — truefalse ke liye ["True", "False"]
+  correctIndex Int      @map("correct_index") // options me sahi jawab ka index (STAFF ONLY — member ko kabhi na bhejein)
+  points       Int      @default(1)
+  sortOrder    Int      @default(0) @map("sort_order")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, quizId])
+  @@map("quiz_questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  tenantId    String   @map("tenant_id")
+  tenant      Tenant   @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+  quizId      String   @map("quiz_id")
+  quiz        Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  memberId    String   @map("member_id")
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  score       Float    // 0..100 (percentage)
+  passed      Boolean
+  answers     Json     // [{ questionId, selectedIndex, correct }] — sahi jawab (correctIndex) dobara record nahi hota
+  attemptedAt DateTime @default(now()) @map("attempted_at")
+
+  @@index([tenantId, quizId])
+  @@index([tenantId, memberId])
+  @@map("quiz_attempts")
+}
+
+// ADD TO Tenant model:
+//   quizzes       Quiz[]
+//   quizQuestions QuizQuestion[]
+//   quizAttempts  QuizAttempt[]
+//
+// ADD TO Member model:
+//   quizAttempts QuizAttempt[]
+//
+// ADD TO Lesson model (Track 1 — Course Catalog):
+//   quiz Quiz?
+
+// LESSON PLAYER INTEGRATION NOTE (Track 7 — Academy Portal / frontend):
+// Lesson player me "Quiz" tab/section add karein. Jab Lesson.quiz mojud ho:
+//   1. GET /api/quizzes/my/quiz/:lessonId  → questions (correctIndex KE BAGHAIR)
+//   2. UI render: mcq → radio options, truefalse → True/False buttons
+//   3. Submit → POST /api/quizzes/attempts { quizId, answers: [{ questionId, selectedIndex }] }
+//   4. Server auto-grade kar ke { score, passed, details } wapas bhejta hai
+// Attempt limit khatam ho to submit button disable + message dikhayein.
+
+// Migration SQL:
+// CREATE TABLE "quizzes" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "lesson_id" TEXT NOT NULL,
+//     "title" TEXT, "passing_pct" INTEGER NOT NULL DEFAULT 70,
+//     "max_attempts" INTEGER, "is_active" BOOLEAN NOT NULL DEFAULT true,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "quizzes_pkey" PRIMARY KEY ("id")
+// );
+// CREATE UNIQUE INDEX "quizzes_lesson_id_key" ON "quizzes"("lesson_id");
+// CREATE INDEX "quizzes_tenant_id_is_active_idx" ON "quizzes"("tenant_id", "is_active");
+// ALTER TABLE "quizzes" ADD CONSTRAINT "quizzes_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "quizzes" ADD CONSTRAINT "quizzes_lesson_id_fkey"
+//   FOREIGN KEY ("lesson_id") REFERENCES "lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+//
+// CREATE TABLE "quiz_questions" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "quiz_id" TEXT NOT NULL,
+//     "question" TEXT NOT NULL, "type" TEXT NOT NULL DEFAULT 'mcq',
+//     "options" JSONB NOT NULL, "correct_index" INTEGER NOT NULL,
+//     "points" INTEGER NOT NULL DEFAULT 1, "sort_order" INTEGER NOT NULL DEFAULT 0,
+//     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     "updated_at" TIMESTAMP(3) NOT NULL,
+//     CONSTRAINT "quiz_questions_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "quiz_questions_tenant_id_quiz_id_idx" ON "quiz_questions"("tenant_id", "quiz_id");
+// ALTER TABLE "quiz_questions" ADD CONSTRAINT "quiz_questions_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "quiz_questions" ADD CONSTRAINT "quiz_questions_quiz_id_fkey"
+//   FOREIGN KEY ("quiz_id") REFERENCES "quizzes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+//
+// CREATE TABLE "quiz_attempts" (
+//     "id" TEXT NOT NULL, "tenant_id" TEXT NOT NULL, "quiz_id" TEXT NOT NULL,
+//     "member_id" TEXT NOT NULL, "score" DOUBLE PRECISION NOT NULL,
+//     "passed" BOOLEAN NOT NULL, "answers" JSONB NOT NULL,
+//     "attempted_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+//     CONSTRAINT "quiz_attempts_pkey" PRIMARY KEY ("id")
+// );
+// CREATE INDEX "quiz_attempts_tenant_id_quiz_id_idx" ON "quiz_attempts"("tenant_id", "quiz_id");
+// CREATE INDEX "quiz_attempts_tenant_id_member_id_idx" ON "quiz_attempts"("tenant_id", "member_id");
+// ALTER TABLE "quiz_attempts" ADD CONSTRAINT "quiz_attempts_tenant_id_fkey"
+//   FOREIGN KEY ("tenant_id") REFERENCES "tenants"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "quiz_attempts" ADD CONSTRAINT "quiz_attempts_quiz_id_fkey"
+//   FOREIGN KEY ("quiz_id") REFERENCES "quizzes"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+// ALTER TABLE "quiz_attempts" ADD CONSTRAINT "quiz_attempts_member_id_fkey"
+//   FOREIGN KEY ("member_id") REFERENCES "members"("id") ON DELETE CASCADE ON UPDATE CASCADE;

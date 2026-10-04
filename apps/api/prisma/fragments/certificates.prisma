@@ -1,0 +1,39 @@
+// Phase 53 Track 4: Certificates — schema fragment.
+// Coordinator: merge this model into apps/api/prisma/schema.prisma
+// and create the matching migration. DO NOT edit schema.prisma here
+// (10 parallel agents — merge conflicts se bachne ke liye).
+//
+// Depends on Course model from Phase 53 Track 1 (Course Catalog) and
+// Member model from base schema.
+
+model Certificate {
+  id       String @id @default(cuid())
+  tenantId String @map("tenant_id")
+  tenant   Tenant @relation(fields: [tenantId], references: [id], onDelete: Cascade)
+
+  courseId String @map("course_id")
+  course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  memberId String @map("member_id")
+  member   Member @relation("MemberCertificates", fields: [memberId], references: [id], onDelete: Cascade)
+
+  code     String   @unique @map("code") // HMAC-SHA256 stateless verify token
+  issuedAt DateTime @default(now()) @map("issued_at")
+  pdfUrl   String?  @map("pdf_url") // download URL (/api/certificates/:id/pdf)
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@index([tenantId, memberId])
+  @@index([tenantId, courseId])
+  @@map("certificates")
+}
+
+// ADD TO Tenant model:
+//   certificates Certificate[]
+//
+// ADD TO Member model:
+//   certificates Certificate[] @relation("MemberCertificates")
+//
+// ADD TO Course model (Phase 53 Track 1):
+//   certificates Certificate[]
