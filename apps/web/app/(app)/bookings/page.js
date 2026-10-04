@@ -146,30 +146,29 @@ export default function BookingsPage() {
       <PageHeader
         title="Bookings"
         sub="Meeting room reservations"
-        actions={<button data-tour="new-booking" className="btn-primary" onClick={() => { setFormError(''); setModalOpen(true); }}>+ New booking</button>}
+        actions={
+          <>
+            <select className="input !w-auto !py-2 text-[13px]" value={roomFilter} onChange={(e) => setRoomFilter(e.target.value)}>
+              <option value="all">All rooms</option>
+              {rooms.map((r) => (
+                <option key={r.id} value={r.id}>{r.code}</option>
+              ))}
+            </select>
+            <input type="date" className="input !w-auto !py-2 text-[13px]" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
+            {dateFilter && <button className="btn-ghost btn-sm" onClick={() => setDateFilter('')}>Clear</button>}
+            <SavedViews
+              page="bookings"
+              currentFilters={{ roomFilter, dateFilter }}
+              onApply={(f) => {
+                if (typeof f.roomFilter === 'string') setRoomFilter(f.roomFilter);
+                if (typeof f.dateFilter === 'string') setDateFilter(f.dateFilter);
+              }}
+            />
+            <button data-tour="new-booking" className="btn-primary" onClick={() => { setFormError(''); setModalOpen(true); }}>+ New booking</button>
+          </>
+        }
       />
       <ErrorBanner message={error} onRetry={refresh} />
-
-      <div className="card mb-4">
-        <div className="flex flex-wrap gap-3 items-center">
-          <select className="input max-w-[220px]" value={roomFilter} onChange={(e) => setRoomFilter(e.target.value)}>
-            <option value="all">All rooms</option>
-            {rooms.map((r) => (
-              <option key={r.id} value={r.id}>{r.code}</option>
-            ))}
-          </select>
-          <input type="date" className="input max-w-[200px]" value={dateFilter} onChange={(e) => setDateFilter(e.target.value)} />
-          {dateFilter && <button className="btn-ghost btn-sm" onClick={() => setDateFilter('')}>Clear date</button>}
-          <SavedViews
-            page="bookings"
-            currentFilters={{ roomFilter, dateFilter }}
-            onApply={(f) => {
-              if (typeof f.roomFilter === 'string') setRoomFilter(f.roomFilter);
-              if (typeof f.dateFilter === 'string') setDateFilter(f.dateFilter);
-            }}
-          />
-        </div>
-      </div>
 
       <div className="card">
         <DataTable
