@@ -415,7 +415,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         <a
           href={item.path}
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : closeMobile}
-          className={`flex items-center gap-2.5 pl-4 pr-3 py-2 rounded-lg text-[13px] transition-all duration-200 group ${
+          className={`flex items-center gap-2 pl-4 pr-3 py-1.5 rounded-lg text-[13px] transition-all duration-200 group ${
             active
               ? 'text-[#0f766e] font-bold bg-teal-50'
               : 'text-gray-800 hover:text-gray-900 hover:bg-gray-100 font-bold'
@@ -440,7 +440,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
                   key={child.path}
                   href={child.path}
                   onClick={closeMobile}
-                  className={`block px-3 py-1.5 rounded-md text-[12.5px] transition-all duration-200 ${
+                  className={`block px-3 py-1 rounded-md text-[12.5px] transition-all duration-200 ${
                     childActive
                       ? 'text-teal-800 font-bold bg-teal-50'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-semibold'
@@ -473,7 +473,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
           lg:static lg:z-auto lg:translate-x-0 lg:sticky lg:top-0`}
       >
       {/* Brand */}
-      <div className="px-4 pt-4 pb-3 flex items-center gap-2.5">
+      <div className="px-4 pt-3 pb-2 flex items-center gap-2.5">
         <div className="w-9 h-9 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
           T
         </div>
@@ -484,7 +484,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 space-y-1 overflow-y-auto pb-4">
+      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto pb-4">
         {user.role === 'member' ? (
           <>
             <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
@@ -494,7 +494,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
           <>
             <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
             {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
-            <p className="px-3 pt-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
+            <p className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}

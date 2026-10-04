@@ -612,7 +612,7 @@ function MemberDashboard() {
                 key: 'when',
                 label: 'When',
                 render: (r) =>
-                  `${r.startTime ? String(r.startTime).slice(0, 16).replace('T', ' ') : '—'}`,
+                  `${r.startAt ? String(r.startAt).slice(0, 16).replace('T', ' ') : '—'}`,
               },
             ]}
             rows={bookings.slice(0, 5)}

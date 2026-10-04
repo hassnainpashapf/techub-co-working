@@ -183,12 +183,12 @@ export default function SpacesOverviewPage() {
   weekAgo.setDate(weekAgo.getDate() - 6);
   const wkFrom = dayKey(weekAgo);
   const bookingsWeek = bookings.filter((b) => {
-    const k = String(b.startTime || '').slice(0, 10);
+    const k = String(b.startAt || '').slice(0, 10);
     return k >= wkFrom;
   }).length;
 
   const monthPrefix = dayKey(today).slice(0, 7);
-  const bookingsMonth = bookings.filter((b) => String(b.startTime || '').slice(0, 7) === monthPrefix).length;
+  const bookingsMonth = bookings.filter((b) => String(b.startAt || '').slice(0, 7) === monthPrefix).length;
 
   // Bookings trend — last 14 days (bookings count per day)
   const days = [];
@@ -199,7 +199,7 @@ export default function SpacesOverviewPage() {
   }
   const byDay = {};
   bookings.forEach((b) => {
-    const k = String(b.startTime || '').slice(0, 10);
+    const k = String(b.startAt || '').slice(0, 10);
     if (k) byDay[k] = (byDay[k] || 0) + 1;
   });
   const trendLabels = days.map((d) => d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short' }));

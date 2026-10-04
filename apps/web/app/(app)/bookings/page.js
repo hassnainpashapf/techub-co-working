@@ -21,8 +21,8 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
     unitId: initial?.unitId || '',
     memberId: initial?.memberId || '',
     title: initial?.title || '',
-    startTime: initial?.startTime ? String(initial.startTime).slice(0, 16) : '',
-    endTime: initial?.endTime ? String(initial.endTime).slice(0, 16) : '',
+    startTime: initial?.startAt ? String(initial.startAt).slice(0, 16) : '',
+    endTime: initial?.endAt ? String(initial.endAt).slice(0, 16) : '',
   });
   const [rules, setRules] = useState(null);
   useEffect(() => {
@@ -32,7 +32,7 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        onSave({ ...form, memberId: form.memberId || undefined });
+        onSave({ unitId: form.unitId, title: form.title, startAt: form.startTime, endAt: form.endTime, memberId: form.memberId || undefined });
       }}
     >
       {error && <ErrorBanner message={error} />}
@@ -107,7 +107,7 @@ export default function BookingsPage() {
   const filtered = useMemo(() => {
     return bookings.filter((b) => {
       const matchRoom = roomFilter === 'all' || b.unitId === roomFilter;
-      const bDate = b.startTime ? String(b.startTime).slice(0, 10) : '';
+      const bDate = b.startAt ? String(b.startAt).slice(0, 10) : '';
       const matchDate = !dateFilter || bDate === dateFilter;
       return matchRoom && matchDate;
     });
@@ -180,7 +180,7 @@ export default function BookingsPage() {
               key: 'when',
               label: 'When',
               render: (r) =>
-                `${r.startTime ? String(r.startTime).slice(0, 16).replace('T', ' ') : '—'} → ${r.endTime ? String(r.endTime).slice(11, 16) : ''}`,
+                `${r.startAt ? String(r.startAt).slice(0, 16).replace('T', ' ') : '—'} → ${r.endAt ? String(r.endAt).slice(11, 16) : ''}`,
             },
             { key: 'status', label: 'Status', render: (r) => <Badge tone={STATUS_TONE[r.status] || 'slate'}>{r.status || '—'}</Badge> },
             {
