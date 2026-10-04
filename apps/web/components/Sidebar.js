@@ -398,11 +398,11 @@ export default function Sidebar() {
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : undefined}
           className={`flex items-center gap-3 pl-5 pr-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 group ${
             active
-              ? 'text-[#0f766e] font-semibold bg-teal-50'
-              : 'text-gray-600 hover:text-gray-900 hover:bg-gray-100 font-medium'
+              ? 'text-[#0f766e] font-bold bg-teal-50'
+              : 'text-gray-800 hover:text-gray-900 hover:bg-gray-100 font-bold'
           }`}
         >
-          <span className={`transition-all ${active ? 'text-[#0f766e]' : 'text-gray-400 group-hover:text-gray-600'}`}>
+          <span className={`transition-all ${active ? 'text-[#0f766e]' : 'text-gray-500 group-hover:text-gray-700'}`}>
             {ICONS[item.icon]}
           </span>
           <span className="flex-1">{item.label}</span>
@@ -422,8 +422,8 @@ export default function Sidebar() {
                   href={child.path}
                   className={`block px-3.5 py-2 rounded-lg text-[13.5px] transition-all duration-200 ${
                     childActive
-                      ? 'text-teal-800 font-semibold bg-teal-50'
-                      : 'text-gray-500 hover:text-gray-900 hover:bg-gray-100'
+                      ? 'text-teal-800 font-bold bg-teal-50'
+                      : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-semibold'
                   }`}
                 >
                   {child.label}
