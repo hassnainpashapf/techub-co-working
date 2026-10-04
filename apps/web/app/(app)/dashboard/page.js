@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAuth } from '../../../context/AuthContext';
 import {
@@ -23,37 +23,50 @@ function statusTone(s) {
   return 'slate';
 }
 
-// Rich SVG Bar Chart with glow
+// Measure container width for pixel-crisp SVG rendering (no stretching)
+function useChartWidth() {
+  const ref = useRef(null);
+  const [w, setW] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => setW(Math.floor(el.clientWidth)));
+    ro.observe(el);
+    setW(Math.floor(el.clientWidth));
+    return () => ro.disconnect();
+  }, []);
+  return [ref, w];
+}
+
+// Crisp SVG Bar Chart — rendered at real pixel size, no blur filters
 function BarChart({ data, height = 180 }) {
+  const [ref, w] = useChartWidth();
+  const W = Math.max(w, 50);
+  const H = height;
+  const padB = 26, padT = 8;
   const max = Math.max(...data.map((d) => d.value), 1);
-  const barW = 100 / data.length;
+  const slot = W / data.length;
+  const barW = Math.min(slot * 0.56, 64);
   return (
-    <div className="relative" style={{ height }}>
-      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
+    <div ref={ref} className="relative w-full" style={{ height: H }}>
+      <svg width={W} height={H} className="block">
         <defs>
           <linearGradient id="barGrad" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#0f766e" stopOpacity="0.95" />
-            <stop offset="100%" stopColor="#0f766e" stopOpacity="0.25" />
+            <stop offset="100%" stopColor="#0f766e" stopOpacity="0.35" />
           </linearGradient>
-          <filter id="barGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="1.2" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
         </defs>
         {[0.25, 0.5, 0.75].map((f) => (
-          <line key={f} x1="0" y1={height * f} x2="100" y2={height * f} stroke="rgba(0,0,0,0.06)" strokeWidth="0.3" />
+          <line key={f} x1="0" y1={(H - padB) * f + padT} x2={W} y2={(H - padB) * f + padT} stroke="rgba(0,0,0,0.07)" strokeWidth="1" />
         ))}
         {data.map((d, i) => {
-          const h = Math.max((d.value / max) * (height - 30), 3);
-          const x = i * barW + barW * 0.22;
-          const w = barW * 0.56;
+          const h = Math.max(((d.value / max) * (H - padB - padT - 6)), 3);
+          const x = i * slot + (slot - barW) / 2;
+          const y = H - padB - h;
           return (
             <g key={i}>
-              <rect x={x} y={height - 20 - h} width={w} height={h} rx="1.5" fill="url(#barGrad)" filter="url(#barGlow)" className="hover:opacity-80 transition-opacity">
-                <animate attributeName="y" from={height - 20} to={height - 20 - h} dur="0.8s" fill="freeze" />
-                <animate attributeName="height" from="0" to={h} dur="0.8s" fill="freeze" />
-              </rect>
-              <text x={x + w / 2} y={height - 6} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="3.2" fontWeight="600">{d.label}</text>
+              <rect x={Math.round(x)} y={Math.round(y)} width={Math.round(barW)} height={Math.round(h)} rx="4" fill="url(#barGrad)" />
+              <text x={Math.round(i * slot + slot / 2)} y={H - 8} textAnchor="middle" fill="rgba(0,0,0,0.55)" fontSize="11" fontWeight="600">{d.label}</text>
             </g>
           );
         })}
@@ -107,70 +120,62 @@ function SegmentDonut({ data, size = 160, colors }) {
   );
 }
 
-// Rich SVG Donut Chart with glow
+// Crisp SVG Donut Chart — no blur filters
 function DonutChart({ percent, size = 160 }) {
   const r = 62;
   const circ = 2 * Math.PI * r;
   const filled = (percent / 100) * circ;
   return (
     <div className="relative inline-flex items-center justify-center" style={{ width: size, height: size }}>
-      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+      <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90 block">
         <defs>
           <linearGradient id="donutGrad" x1="0" y1="0" x2="1" y2="1">
             <stop offset="0%" stopColor="#5eead4" />
             <stop offset="100%" stopColor="#0f766e" />
           </linearGradient>
-          <filter id="donutGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="3" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
         </defs>
-        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="16" />
+        <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="16" />
         <circle cx="80" cy="80" r={r} fill="none" stroke="url(#donutGrad)" strokeWidth="16" strokeLinecap="round"
-          strokeDasharray={`${filled} ${circ}`} filter="url(#donutGlow)"
-          style={{ transition: 'stroke-dasharray 1s ease-out' }} />
+          strokeDasharray={`${filled} ${circ}`} />
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center">
-        <span className="text-[28px] font-bold text-gray-900 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]">{percent}%</span>
+        <span className="text-[28px] font-bold text-gray-900">{percent}%</span>
         <span className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider">Occupied</span>
       </div>
     </div>
   );
 }
 
-// Rich SVG Area/Line Chart with glow
+// Crisp SVG Area/Line Chart — rendered at real pixel size, no blur filters
 function TrendChart({ data, height = 160, color = '#0f766e' }) {
+  const [ref, w] = useChartWidth();
+  const W = Math.max(w, 50);
+  const H = height;
+  const padB = 28, padT = 10;
   const max = Math.max(...data.map((d) => d.value), 1);
-  const pts = data.map((d, i) => {
-    const x = (i / (data.length - 1)) * 100;
-    const y = height - 24 - (d.value / max) * (height - 44);
-    return `${x},${y}`;
-  }).join(' ');
-  const area = `0,${height - 20} ${pts} 100,${height - 20}`;
+  const px = (i) => (data.length === 1 ? W / 2 : (i / (data.length - 1)) * (W - 8) + 4);
+  const py = (v) => H - padB - (v / max) * (H - padB - padT);
+  const pts = data.map((d, i) => `${px(i).toFixed(1)},${py(d.value).toFixed(1)}`).join(' ');
+  const area = `4,${H - padB} ${pts} ${W - 4},${H - padB}`;
+  const gradId = `areaGrad-${color.replace(/[^a-z0-9]/gi, '')}`;
   return (
-    <div className="relative" style={{ height }}>
-      <svg viewBox={`0 0 100 ${height}`} className="w-full h-full" preserveAspectRatio="none">
+    <div ref={ref} className="relative w-full" style={{ height: H }}>
+      <svg width={W} height={H - 20} className="block">
         <defs>
-          <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor={color} stopOpacity="0.4" />
-            <stop offset="100%" stopColor={color} stopOpacity="0.02" />
+          <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.35" />
+            <stop offset="100%" stopColor={color} stopOpacity="0.03" />
           </linearGradient>
-          <filter id="lineGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="0.8" result="blur" />
-            <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
-          </filter>
         </defs>
-        <polygon points={area} fill="url(#areaGrad)" />
-        <polyline points={pts} fill="none" stroke={color} strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" filter="url(#lineGlow)" vectorEffect="non-scaling-stroke" />
-        {data.map((d, i) => {
-          const x = (i / (data.length - 1)) * 100;
-          const y = height - 24 - (d.value / max) * (height - 44);
-          return <circle key={i} cx={x} cy={y} r="1.6" fill="#111827" stroke={color} strokeWidth="1" style={{ filter: `drop-shadow(0 0 3px ${color})` }} />;
-        })}
-      </svg>
-      <div className="flex justify-between mt-1 px-0.5">
+        <polygon points={area} fill={`url(#${gradId})`} />
+        <polyline points={pts} fill="none" stroke={color} strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
         {data.map((d, i) => (
-          <span key={i} className="text-[10px] font-semibold text-gray-900/45">{d.label}</span>
+          <circle key={i} cx={px(i)} cy={py(d.value)} r="4" fill="#ffffff" stroke={color} strokeWidth="2.5" />
+        ))}
+      </svg>
+      <div className="flex justify-between px-1" style={{ marginTop: 2 }}>
+        {data.map((d, i) => (
+          <span key={i} className="text-[11px] font-semibold text-gray-500">{d.label}</span>
         ))}
       </div>
     </div>
