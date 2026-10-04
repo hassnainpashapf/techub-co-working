@@ -420,68 +420,102 @@ function StaffDashboard() {
         </ChartCard>
       </div>
 
-      {/* Activity Feed */}
-      <div className="mb-6">
-        <div className="flex items-center justify-between mb-3">
-          <h2 className="font-bold text-gray-900 text-[15px]">Recent Activity</h2>
-          <button
-            onClick={() => (window.location.href = '/settings/audit-logs')}
-            className="text-xs font-semibold text-teal-700 hover:text-teal-700"
-          >
-            View all →
-          </button>
+      {/* 3 equal cards */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6">
+        {/* Recent Activity */}
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-900 text-[15px]">Recent Activity</h2>
+            <button
+              onClick={() => (window.location.href = '/settings/audit-logs')}
+              className="text-xs font-semibold text-teal-700 hover:text-teal-800"
+            >
+              View all →
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto -mx-1 px-1">
+            {activity.length === 0 ? (
+              <p className="text-sm text-slate-500 py-8 text-center">No recent activity yet.</p>
+            ) : (
+              <ul className="space-y-1">
+                {activity.slice(0, 7).map((item, i) => (
+                  <li key={i} className="flex items-center gap-3 px-2 py-2.5 hover:bg-gray-50 rounded-xl transition-colors">
+                    <span className="w-9 h-9 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-base shrink-0">{item.icon || '📝'}</span>
+                    <span className="flex-1 text-[13px] text-gray-800 truncate">{item.text}</span>
+                    <span className="text-[11px] text-slate-500 shrink-0 font-medium">{timeAgo(item.time)}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-        <div className="rounded-2xl bg-white border border-gray-200 p-2">
-          {activity.length === 0 ? (
-            <p className="text-sm text-slate-500 px-4 py-6 text-center">No recent activity yet.</p>
-          ) : (
-            <ul className="divide-y divide-gray-100">
-              {activity.map((item, i) => (
-                <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-gray-50 rounded-xl transition-colors">
-                  <span className="w-9 h-9 rounded-xl glass flex items-center justify-center text-base shrink-0 group-hover:shadow-[0_0_16px_rgba(15,118,110,0.25)] group-hover:scale-105 transition-all duration-200">{item.icon || '📝'}</span>
-                  <span className="flex-1 text-[13px] text-gray-800 truncate group-hover:text-gray-900 transition-colors">{item.text}</span>
-                  <span className="text-[11px] text-slate-500 shrink-0 font-medium">{timeAgo(item.time)}</span>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
-        <div>
-          <h2 className="font-bold text-gray-900 mb-3 text-[15px]">Top pending dues</h2>
-          <DataTable
-            columns={[
-              { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
-              { key: 'amount', label: 'Amount', render: (r) => money(r.amount || r.balance) },
-              { key: 'due', label: 'Due date', render: (r) => r.dueDate ? String(r.dueDate).slice(0, 10) : '—' },
-              {
-                key: 'status',
-                label: 'Status',
-                render: (r) => <Badge tone={statusTone(r.status)}>{r.status || 'pending'}</Badge>,
-              },
-            ]}
-            rows={duesList.slice(0, 5)}
-            empty={{ title: 'No pending dues', hint: 'All invoices are settled.' }}
-          />
+        {/* Top pending dues */}
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-900 text-[15px]">Top pending dues</h2>
+            <button
+              onClick={() => (window.location.href = '/billing')}
+              className="text-xs font-semibold text-teal-700 hover:text-teal-800"
+            >
+              View all →
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto -mx-1 px-1">
+            {duesList.length === 0 ? (
+              <p className="text-sm text-slate-500 py-8 text-center">No pending dues. All settled. ✓</p>
+            ) : (
+              <ul className="space-y-1">
+                {duesList.slice(0, 7).map((d, i) => (
+                  <li key={i} className="flex items-center gap-3 px-2 py-2.5 hover:bg-gray-50 rounded-xl transition-colors">
+                    <span className="w-9 h-9 rounded-xl bg-amber-50 border border-amber-100 flex items-center justify-center text-base shrink-0">💰</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[13px] font-semibold text-gray-900 truncate">{d.memberName || d.member?.name || '—'}</span>
+                      <span className="block text-[11px] text-slate-500">Due {d.dueDate ? String(d.dueDate).slice(0, 10) : '—'}</span>
+                    </span>
+                    <span className="text-right shrink-0">
+                      <span className="block text-[13px] font-bold text-gray-900">{money(d.amount || d.balance)}</span>
+                      <Badge tone={statusTone(d.status)}>{d.status || 'pending'}</Badge>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
-        <div>
-          <h2 className="font-bold text-gray-900 mb-3 text-[15px]">Recent invoices</h2>
-          <DataTable
-            columns={[
-              { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
-              { key: 'member', label: 'Member', render: (r) => r.memberName || r.member?.name || '—' },
-              { key: 'amount', label: 'Amount', render: (r) => money(r.amount) },
-              {
-                key: 'status',
-                label: 'Status',
-                render: (r) => <Badge tone={statusTone(r.status)}>{r.status || 'pending'}</Badge>,
-              },
-            ]}
-            rows={invoices.slice(0, 5)}
-            empty={{ title: 'No invoices yet', hint: 'Generate invoices from the Billing page.' }}
-          />
+
+        {/* Recent invoices */}
+        <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="font-bold text-gray-900 text-[15px]">Recent invoices</h2>
+            <button
+              onClick={() => (window.location.href = '/billing')}
+              className="text-xs font-semibold text-teal-700 hover:text-teal-800"
+            >
+              View all →
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto -mx-1 px-1">
+            {invoices.length === 0 ? (
+              <p className="text-sm text-slate-500 py-8 text-center">No invoices yet.</p>
+            ) : (
+              <ul className="space-y-1">
+                {invoices.slice(0, 7).map((inv, i) => (
+                  <li key={i} className="flex items-center gap-3 px-2 py-2.5 hover:bg-gray-50 rounded-xl transition-colors">
+                    <span className="w-9 h-9 rounded-xl bg-teal-50 border border-teal-100 flex items-center justify-center text-base shrink-0">🧾</span>
+                    <span className="flex-1 min-w-0">
+                      <span className="block text-[13px] font-semibold text-gray-900 truncate">{inv.number || inv.id?.slice(0, 8) || '—'}</span>
+                      <span className="block text-[11px] text-slate-500 truncate">{inv.memberName || inv.member?.name || '—'}</span>
+                    </span>
+                    <span className="text-right shrink-0">
+                      <span className="block text-[13px] font-bold text-gray-900">{money(inv.amount)}</span>
+                      <Badge tone={statusTone(inv.status)}>{inv.status || 'pending'}</Badge>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
         </div>
       </div>
     </div>

@@ -143,8 +143,8 @@ export default function UsersPage() {
   return (
     <div>
       <PageHeader
-        title="Users"
-        sub={`${users.length} users`}
+        title="Team Members"
+        sub={`${users.length} team members`}
         actions={<button className="btn-primary" onClick={() => setModal({ mode: 'add' })}>+ Add user</button>}
       />
       <ErrorBanner message={error} onRetry={refresh} />

@@ -60,7 +60,6 @@ const NAV_MAIN = [
       { label: 'Recurring', path: '/bookings/recurring' },
       { label: 'Booking Calendar', path: '/bookings/calendar' },
       { label: 'Floor Plan', path: '/spaces/floorplan' },
-      { label: 'Ride Sharing', path: '/rides' },
     ],
   },
   { key: 'team', label: 'Team', path: '/users', icon: 'team',
@@ -365,7 +364,7 @@ export default function Sidebar() {
     if (typeof window !== 'undefined') {
       const p = window.location.pathname;
       setCurrent(p);
-      if (p.startsWith('/discover') || p.startsWith('/bookings') || p.startsWith('/rides') || p.startsWith('/spaces')) {
+      if (p.startsWith('/discover') || p.startsWith('/bookings') || p.startsWith('/spaces')) {
         setOpenMenu('workspaces');
       } else if (p.startsWith('/users') || p.startsWith('/attendance') || p.startsWith('/reception') || p.startsWith('/mobile')) {
         setOpenMenu('team');

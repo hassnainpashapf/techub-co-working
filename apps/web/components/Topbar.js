@@ -10,8 +10,7 @@ const TITLES = {
   '/spaces': 'Workspaces',
   '/discover': 'Discover Booking',
   '/bookings': 'Booking History',
-  '/rides': 'Ride Sharing',
-  '/users': 'Team',
+  '/users': 'Team Members',
   '/finance': 'Investor',
   '/members': 'School',
   '/tasks': 'Launchpad',
@@ -129,7 +128,7 @@ export default function Topbar() {
   if (!user) return null;
 
   const title = TITLES[path] || 'Workspace';
-  const parent = path.startsWith('/discover') || path.startsWith('/bookings') || path.startsWith('/rides') || path.startsWith('/spaces') ? 'Workspace' : 'Main';
+  const parent = path.startsWith('/discover') || path.startsWith('/bookings') || path.startsWith('/spaces') ? 'Workspace' : 'Main';
 
   return (
     <header className="bg-white border-b border-gray-200 px-7 py-3.5 flex items-center justify-between sticky top-0 z-30 shadow-[0_1px_3px_rgba(0,0,0,0.05)]">
