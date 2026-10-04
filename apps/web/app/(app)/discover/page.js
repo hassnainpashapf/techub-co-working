@@ -188,10 +188,11 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
         <img
           src={images[imgIdx]}
           alt={unit.code}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 contrast-[1.05] saturate-[1.1]"
+          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 contrast-[1.05] saturate-[1.1]"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.08] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
         <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[12px] font-semibold ${unit.isAvailable ? 'bg-[#bfdbfe] text-[#1e3a8a] animate-glowPulse' : 'bg-slate-700/80 text-slate-300'}`}>
           {unit.isAvailable ? 'Available' : 'Booked'}
         </span>
@@ -234,8 +235,8 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
         </p>
         <div className="flex items-end justify-between mt-3.5">
           <div>
-            <p className="text-[12px] text-white">Start from</p>
-            <p className="text-white text-[19px] font-bold">{money(price)}<span className="text-[12px] font-normal text-slate-400">{duration.suffix}</span></p>
+            <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Start from</p>
+            <p className="text-gradient text-[20px] font-extrabold">{money(price)}<span className="text-[12px] font-normal text-slate-400">{duration.suffix}</span></p>
           </div>
           <button
             onClick={() => onBook(unit)}
@@ -401,37 +402,46 @@ export default function DiscoverPage() {
   return (
     <div className="animate-fadeUp">
       <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-        <h1 className="text-white text-[22px] font-bold drop-shadow-[0_0_12px_rgba(255,255,255,0.25)]">Available co-workspace</h1>
+        <div>
+          <h1 className="text-gradient text-[24px] font-extrabold tracking-tight">Available co-workspace</h1>
+          <p className="text-[12.5px] text-slate-400 mt-1 font-medium">
+            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/12 border border-emerald-500/25 text-emerald-300 text-[11.5px] font-bold mr-2">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              {availableCount} available
+            </span>
+            {fromDate === toDate ? `on ${formatDateDisplay(fromDate)}` : `${formatDateDisplay(fromDate)} → ${formatDateDisplay(toDate)}`}
+          </p>
+        </div>
         <div className="flex items-center gap-2">
-          <span className="text-[12px] text-slate-400">{availableCount} of {units.length} available {fromDate === toDate ? `on ${formatDateDisplay(fromDate)}` : `(${formatDateDisplay(fromDate)} → ${formatDateDisplay(toDate)})`}</span>
-          <div className="flex rounded-lg border border-white/10 overflow-hidden">
+          <div className="flex rounded-xl border border-white/10 overflow-hidden glass">
             {[['grid', 'Grid'], ['map', 'Map']].map(([v, l]) => (
               <button key={v} onClick={() => setView(v)}
-                className={`px-3 py-1.5 text-xs font-medium ${view === v ? 'bg-blue-500/25 text-blue-200' : 'text-slate-400 hover:bg-white/5'}`}>{l}</button>
+                className={`px-4 py-2 text-xs font-semibold transition-all duration-200 ${view === v ? 'bg-gradient-to-b from-blue-500/40 to-blue-600/25 text-blue-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>{l}</button>
             ))}
           </div>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-transparent border border-white/10 rounded-lg px-3 py-1.5 text-xs text-slate-300 outline-none">
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="glass rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-blue-400/50 font-medium">
             {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value} className="bg-[#1a1a2e]">{o.label}</option>)}
           </select>
         </div>
       </div>
 
       {bookedMsg && (
-        <div className="mb-4 bg-green-500/10 border border-green-500/30 text-green-300 text-sm rounded-xl px-4 py-3 animate-fadeUp">
+        <div className="mb-4 bg-gradient-to-r from-green-500/15 to-emerald-500/10 border border-green-500/30 text-green-300 text-sm font-medium rounded-xl px-4 py-3 animate-fadeUp shadow-[0_0_24px_rgba(34,197,94,0.15)]">
           {bookedMsg}
         </div>
       )}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       <div className="flex gap-6">
-        <div className="w-[240px] shrink-0">
-          <div className="relative mb-6">
+        <div className="w-[248px] shrink-0">
+          <div className="glass rounded-[20px] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
+          <div className="relative mb-5">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" className="absolute left-3.5 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search workspace"
-              className="w-full bg-transparent border border-white/[0.12] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-white placeholder-slate-400 outline-none focus:border-blue-500/50 transition-colors"
+              className="w-full bg-white/[0.04] border border-white/[0.1] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-white placeholder-slate-500 outline-none focus:border-blue-500/60 focus:shadow-[0_0_16px_rgba(59,130,246,0.2)] transition-all"
             />
           </div>
 
@@ -498,6 +508,7 @@ export default function DiscoverPage() {
               Show favorites only ({favorites.size})
             </label>
           </FilterSection>
+          </div>
         </div>
 
         <div className="flex-1 min-w-0">

@@ -4,10 +4,17 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { API_BASE } from '../../lib/api';
 
+const DEMO_ACCOUNTS = [
+  { email: 'ceo@demo.com', label: 'CEO' },
+  { email: 'admin@demo.com', label: 'Admin' },
+  { email: 'member@demo.com', label: 'Member' },
+];
+
 export default function LoginPage() {
   const { login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPw, setShowPw] = useState(false);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(false);
   const [resetDone, setResetDone] = useState(false);
@@ -38,79 +45,145 @@ export default function LoginPage() {
     }
   }
 
+  function fillDemo(em) {
+    setEmail(em);
+    setPassword('demo1234');
+    setError('');
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#0a0a14] px-4">
-      <div className="w-full max-w-md">
-        <div className="text-center mb-6">
-          {brand?.logoUrl ? (
-            <img src={`${API_BASE}${brand.logoUrl}`} alt={brand.brandName} className="inline-block h-14 w-14 object-contain rounded-xl mb-3" />
-          ) : (
-            <div
-              className="inline-flex text-white rounded-xl h-14 w-14 items-center justify-center text-2xl font-bold mb-3"
-              style={{ background: brand?.primaryColor || '#7c3aed' }}
-            >
-              {(brand?.brandName || 'C').charAt(0).toUpperCase()}
-            </div>
-          )}
-          <h1 className="text-2xl font-bold text-white">{brand?.brandName || 'Coworking SaaS'}</h1>
-          <p className="text-slate-400 text-sm mt-1">Sign in to your workspace</p>
+    <div className="min-h-screen relative flex items-center justify-center px-4 py-10 overflow-hidden bg-[#05050c]">
+      {/* Ambient animated background */}
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute -top-40 left-1/4 w-[560px] h-[420px] bg-blue-600/[0.14] blur-[130px] rounded-full animate-floatY" />
+        <div className="absolute bottom-0 right-1/4 w-[520px] h-[380px] bg-violet-600/[0.12] blur-[130px] rounded-full animate-floatY" style={{ animationDelay: '-3.5s' }} />
+        <div className="absolute top-1/3 left-0 w-[380px] h-[380px] bg-fuchsia-600/[0.06] blur-[120px] rounded-full" />
+        <div
+          className="absolute inset-0 opacity-[0.35]"
+          style={{
+            backgroundImage: 'linear-gradient(rgba(148,163,184,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(148,163,184,0.05) 1px, transparent 1px)',
+            backgroundSize: '56px 56px',
+            maskImage: 'radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 75%)',
+            WebkitMaskImage: 'radial-gradient(ellipse 80% 70% at 50% 40%, black 30%, transparent 75%)',
+          }}
+        />
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_40%,rgba(0,0,0,0.5)_100%)]" />
+      </div>
+
+      <div className="relative w-full max-w-md animate-fadeUp">
+        {/* Brand */}
+        <div className="text-center mb-7">
+          <div className="relative inline-block mb-4">
+            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-blue-500/40 to-violet-500/40 blur-xl opacity-70" />
+            {brand?.logoUrl ? (
+              <img src={`${API_BASE}${brand.logoUrl}`} alt={brand.brandName} className="relative inline-block h-16 w-16 object-contain rounded-2xl" />
+            ) : (
+              <div
+                className="relative inline-flex text-white rounded-2xl h-16 w-16 items-center justify-center text-3xl font-extrabold border border-white/20 shadow-inner"
+                style={{ background: `linear-gradient(135deg, ${brand?.primaryColor || '#3b82f6'}, #8b5cf6)` }}
+              >
+                {(brand?.brandName || 'T').charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <h1 className="text-[28px] font-extrabold text-gradient tracking-tight">{brand?.brandName || 'Techub Co-Working'}</h1>
+          <p className="text-slate-400 text-sm mt-1.5 font-medium">Sign in to your workspace</p>
           {brand?.supportEmail && (
             <p className="text-slate-500 text-xs mt-1">Need help? {brand.supportEmail}</p>
           )}
         </div>
 
-        <div className="card !p-7">
+        {/* Glass card */}
+        <div className="glass rounded-[24px] !p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55),0_0_40px_rgba(59,130,246,0.08)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
           <form onSubmit={handleSubmit}>
             {resetDone && (
-              <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-lg px-4 py-3 mb-4">
+              <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-xl px-4 py-3 mb-4 animate-fadeUp">
                 Password reset successfully. Please sign in with your new password.
               </div>
             )}
             {error && (
-              <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-lg px-4 py-3 mb-4">
+              <div className="bg-red-500/10 border border-red-500/30 text-red-300 text-sm rounded-xl px-4 py-3 mb-4 animate-fadeUp shadow-[0_0_24px_rgba(239,68,68,0.12)]">
                 {error}
               </div>
             )}
             <div className="mb-4">
               <label className="label">Email</label>
-              <input
-                type="email"
-                className="input"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                required
-              />
+              <div className="relative">
+                <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                <input
+                  type="email"
+                  className="input !pl-10"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="you@example.com"
+                  required
+                  autoComplete="email"
+                />
+              </div>
             </div>
-            <div className="mb-5">
+            <div className="mb-6">
               <label className="label">Password</label>
-              <input
-                type="password"
-                className="input"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                required
-              />
+              <div className="relative">
+                <svg className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 pointer-events-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                <input
+                  type={showPw ? 'text' : 'password'}
+                  className="input !pl-10 !pr-11"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••"
+                  required
+                  autoComplete="current-password"
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPw(!showPw)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-500 hover:text-slate-200 transition-colors"
+                  title={showPw ? 'Hide password' : 'Show password'}
+                >
+                  <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    {showPw ? (<><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94"/><path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19"/><line x1="1" y1="1" x2="23" y2="23"/><path d="M14.12 14.12a3 3 0 1 1-4.24-4.24"/></>) : (<><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></>)}
+                  </svg>
+                </button>
+              </div>
             </div>
-            <button type="submit" className="btn-primary w-full" disabled={busy}>
-              {busy ? 'Signing in…' : 'Sign in'}
+            <button type="submit" className="btn-primary btn-shine w-full !py-3 !text-[15px]" disabled={busy}>
+              {busy ? (
+                <span className="inline-flex items-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  Signing in…
+                </span>
+              ) : 'Sign in'}
             </button>
           </form>
-          <a href="/forgot-password" className="block text-center text-sm text-slate-400 hover:text-white mt-4">Forgot password?</a>
+          <a href="/forgot-password" className="block text-center text-sm text-slate-400 hover:text-blue-300 mt-5 transition-colors font-medium">Forgot password?</a>
         </div>
+
         {!brand?.hidePoweredBy && (
-          <p className="text-center text-xs text-slate-600 mt-4">Powered by CoworkOS</p>
+          <p className="text-center text-xs text-slate-600 mt-5">Powered by CoworkOS</p>
         )}
 
-        <div className="mt-4 bg-slate-800 rounded-xl p-4 text-sm">
-          <p className="text-slate-300 font-semibold mb-2">Demo logins</p>
-          <div className="space-y-1 text-slate-400 text-xs">
-            <p><span className="text-slate-200">ceo@demo.com</span> — CEO</p>
-            <p><span className="text-slate-200">admin@demo.com</span> — Admin</p>
-            <p><span className="text-slate-200">member@demo.com</span> — Member</p>
-            <p className="pt-1">Password: <span className="text-slate-200 font-mono">demo1234</span></p>
+        {/* Demo logins */}
+        <div className="mt-4 glass rounded-[20px] p-5 text-sm animate-fadeUp" style={{ animationDelay: '0.15s' }}>
+          <p className="text-gradient font-bold mb-3 text-[13px] uppercase tracking-wider">Demo logins — tap to fill</p>
+          <div className="grid grid-cols-3 gap-2">
+            {DEMO_ACCOUNTS.map((a) => (
+              <button
+                key={a.email}
+                type="button"
+                onClick={() => fillDemo(a.email)}
+                className={`rounded-xl border px-3 py-2.5 text-left transition-all duration-200 hover:-translate-y-0.5 ${
+                  email === a.email
+                    ? 'border-blue-400/60 bg-blue-500/15 shadow-[0_0_20px_rgba(59,130,246,0.25)]'
+                    : 'border-white/10 bg-white/[0.04] hover:border-blue-400/40 hover:bg-blue-500/10'
+                }`}
+              >
+                <p className="text-white text-[13px] font-semibold">{a.label}</p>
+                <p className="text-slate-400 text-[11px] truncate">{a.email}</p>
+              </button>
+            ))}
           </div>
+          <p className="text-slate-500 text-xs mt-3">Password: <span className="text-slate-300 font-mono">demo1234</span></p>
         </div>
       </div>
     </div>

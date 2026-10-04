@@ -132,13 +132,17 @@ function TrendChart({ data, height = 160, color = '#3b82f6' }) {
   );
 }
 
-function ChartCard({ title, sub, children, action }) {
+function ChartCard({ title, sub, children, action, icon }) {
   return (
-    <div className="rounded-[20px] bg-gradient-to-b from-[#14141f] to-[#0e0e18] border border-white/[0.08] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-blue-400/25 hover:shadow-[0_8px_40px_rgba(59,130,246,0.12)] transition-all duration-300">
+    <div className="relative overflow-hidden rounded-[20px] bg-gradient-to-b from-[#14141f] to-[#0e0e18] border border-white/[0.08] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)] hover:border-blue-400/25 hover:shadow-[0_12px_44px_rgba(59,130,246,0.14)] hover:-translate-y-0.5 transition-all duration-300 group">
+      <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
       <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="text-[15px] font-bold text-white">{title}</h3>
-          {sub && <p className="text-[12px] text-white/55 font-medium mt-0.5">{sub}</p>}
+        <div className="flex items-center gap-3">
+          {icon && <span className="icon-tile w-9 h-9 text-base">{icon}</span>}
+          <div>
+            <h3 className="text-[15px] font-bold text-white">{title}</h3>
+            {sub && <p className="text-[12px] text-white/55 font-medium mt-0.5">{sub}</p>}
+          </div>
         </div>
         {action}
       </div>
@@ -242,6 +246,18 @@ function StaffDashboard() {
     ['unpaid', 'partial', 'overdue'].includes((i.status || '').toLowerCase())
   );
 
+  // Trend indicators derived from real trend data (last vs previous period)
+  const trendOf = (arr) => {
+    if (!arr || arr.length < 2) return null;
+    const a = arr[arr.length - 1].value || 0;
+    const b = arr[arr.length - 2].value || 0;
+    if (b === 0) return a > 0 ? { dir: 'up', text: 'new' } : null;
+    const pct = Math.round(((a - b) / b) * 100);
+    if (pct === 0) return { dir: 'flat', text: '0%' };
+    return { dir: pct > 0 ? 'up' : 'down', text: `${pct > 0 ? '+' : ''}${pct}%` };
+  };
+  const revenueTrend = trendOf(revenueData);
+
   return (
     <div>
       <PageHeader title="Dashboard" sub="Overview of your coworking space" />
@@ -252,9 +268,9 @@ function StaffDashboard() {
           <button
             key={a.label}
             onClick={() => (window.location.href = a.href)}
-            className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-b from-[#1a1a2e] to-[#12121f] border border-white/10 text-sm font-semibold text-slate-200 hover:border-blue-400/40 hover:text-white hover:shadow-[0_4px_20px_rgba(59,130,246,0.25)] transition-all duration-200"
+            className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-gradient-to-b from-[#1a1a2e] to-[#12121f] border border-white/10 text-sm font-semibold text-slate-200 hover:border-blue-400/50 hover:text-white hover:shadow-[0_6px_24px_rgba(59,130,246,0.3)] hover:-translate-y-0.5 transition-all duration-200"
           >
-            <span className="text-base">{a.icon}</span>
+            <span className="text-base group-hover:scale-125 group-hover:drop-shadow-[0_0_8px_rgba(59,130,246,0.6)] transition-all duration-200">{a.icon}</span>
             {a.label}
           </button>
         ))}
@@ -276,8 +292,9 @@ function StaffDashboard() {
         <StatCard
           label="Revenue this month"
           value={money(revenueThisMonth)}
-          sub=""
+          sub={range === '12m' ? 'last 12 months' : range === '3m' ? 'last 3 months' : 'last 6 months'}
           accent="green"
+          trend={revenueTrend}
         />
         <StatCard
           label="Pending tasks"
@@ -301,15 +318,15 @@ function StaffDashboard() {
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
-        <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'}>
+        <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'} icon="💰">
           <BarChart data={revenueData.length ? revenueData : [{ label: '—', value: 0 }]} />
         </ChartCard>
-        <ChartCard title="Occupancy" sub={`${occ.occupied ?? 0} of ${occ.total ?? 0} units`}>
+        <ChartCard title="Occupancy" sub={`${occ.occupied ?? 0} of ${occ.total ?? 0} units`} icon="🏢">
           <div className="flex items-center justify-center py-2">
             <DonutChart percent={occupancyPercent} />
           </div>
         </ChartCard>
-        <ChartCard title="Bookings" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'}>
+        <ChartCard title="Bookings" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'} icon="📅">
           <TrendChart
             data={bookingData.length ? bookingData : [{ label: '—', value: 0 }]}
             color="#22c55e"
@@ -353,10 +370,10 @@ function StaffDashboard() {
           ) : (
             <ul className="divide-y divide-white/[0.06]">
               {activity.map((item, i) => (
-                <li key={i} className="flex items-center gap-3 px-4 py-2.5 hover:bg-white/[0.03] rounded-lg transition-colors">
-                  <span className="text-lg shrink-0">{item.icon || '📝'}</span>
-                  <span className="flex-1 text-[13px] text-slate-200 truncate">{item.text}</span>
-                  <span className="text-[11px] text-slate-500 shrink-0">{timeAgo(item.time)}</span>
+                <li key={i} className="flex items-center gap-3 px-4 py-3 hover:bg-gradient-to-r hover:from-blue-500/[0.07] hover:to-transparent rounded-xl transition-all duration-150 group">
+                  <span className="w-9 h-9 rounded-xl glass flex items-center justify-center text-base shrink-0 group-hover:shadow-[0_0_16px_rgba(59,130,246,0.25)] group-hover:scale-105 transition-all duration-200">{item.icon || '📝'}</span>
+                  <span className="flex-1 text-[13px] text-slate-200 truncate group-hover:text-white transition-colors">{item.text}</span>
+                  <span className="text-[11px] text-slate-500 shrink-0 font-medium">{timeAgo(item.time)}</span>
                 </li>
               ))}
             </ul>
