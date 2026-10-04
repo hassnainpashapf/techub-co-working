@@ -5,7 +5,7 @@ import { api } from '../../../../lib/api';
 import { PageHeader, StatCard, Spinner, ErrorBanner, EmptyState } from '../../../../components/ui';
 import { useRequireRoles } from '../../../../components/Protected';
 
-const COLORS = ['#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#a78bfa'];
+const COLORS = ['#8b5cf6', '#10b981', '#f59e0b', '#ef4444', '#a78bfa'];
 const fmt = (v) => `Rs ${Number(v || 0).toLocaleString()}`;
 
 // Multi-line SVG chart (top categories)
@@ -92,7 +92,7 @@ export default function ExpenseTrendsPage() {
         <div className="flex gap-2">
           {[6, 12].map((m) => (
             <button key={m} onClick={() => setMonths(m)}
-              className={`px-4 py-2 rounded-xl text-sm font-semibold ${months === m ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-semibold ${months === m ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
               {m} months
             </button>
           ))}

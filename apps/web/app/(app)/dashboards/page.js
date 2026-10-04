@@ -194,7 +194,7 @@ export default function KpiDashboardsPage() {
                 onClick={() => setSelectedId(d.id)}
                 className={`px-4 py-2 rounded-xl text-sm font-semibold border transition ${
                   d.id === selectedId
-                    ? 'bg-blue-600/20 border-blue-400/40 text-blue-200'
+                    ? 'bg-[#7c3aed]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
                     : 'bg-white/5 border-white/10 text-slate-300 hover:bg-white/10'
                 }`}
               >

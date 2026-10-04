@@ -25,7 +25,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
   const slug = slugMap[course.id];
   const price = course.price != null ? `PKR ${Number(course.price).toLocaleString()}` : 'Free';
   return (
-    <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#16162b] to-[#0e0e1c] p-5 hover:border-blue-500/40 transition-shadow hover:shadow-[0_0_24px_rgba(59,130,246,0.25)]">
+    <div className="rounded-2xl border border-white/10 bg-gradient-to-b from-[#16162b] to-[#0e0e1c] p-5 hover:border-[#8b5cf6]/40 transition-shadow hover:shadow-[0_0_24px_rgba(139,92,246,0.25)]">
       <div className="flex items-start justify-between gap-3">
         <div>
           <div className="text-white font-semibold">{course.title}</div>
@@ -48,7 +48,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
         {slug ? (
           <Link
             href={`/portal/academy/${slug}`}
-            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500"
+            className="px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600 hover:from-[#8b5cf6] hover:to-violet-500"
           >
             {enrolled ? 'Continue' : 'View course'}
           </Link>
@@ -57,7 +57,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
           <button
             onClick={() => onEnroll(course.id)}
             disabled={enrolling === course.id}
-            className="px-4 py-2 rounded-xl text-sm font-semibold border border-blue-500/50 text-blue-300 hover:bg-blue-500/10 disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-sm font-semibold border border-[#8b5cf6]/50 text-[#c4b5fd] hover:bg-[#8b5cf6]/10 disabled:opacity-50"
           >
             {enrolling === course.id ? 'Enrolling…' : 'Enroll now'}
           </button>
@@ -151,14 +151,14 @@ export default function AcademyPortalPage() {
             {inProgress.map((e) => {
               const slug = slugMap[e.courseId];
               return (
-                <div key={e.id} className="rounded-2xl border border-blue-500/30 bg-gradient-to-b from-[#181834] to-[#101020] p-5">
+                <div key={e.id} className="rounded-2xl border border-[#8b5cf6]/30 bg-gradient-to-b from-[#181834] to-[#101020] p-5">
                   <div className="flex items-center justify-between gap-3">
                     <div className="text-white font-semibold">{e.course?.title || 'Course'}</div>
-                    <span className="text-xs text-blue-300 font-semibold">{e.progressPct || 0}%</span>
+                    <span className="text-xs text-[#c4b5fd] font-semibold">{e.progressPct || 0}%</span>
                   </div>
                   <div className="mt-3"><ProgressBar pct={e.progressPct} /></div>
                   {slug ? (
-                    <Link href={`/portal/academy/${slug}`} className="mt-4 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-violet-600">
+                    <Link href={`/portal/academy/${slug}`} className="mt-4 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600">
                       Continue →
                     </Link>
                   ) : null}
@@ -189,7 +189,7 @@ export default function AcademyPortalPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search courses…"
-            className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500/60"
+            className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#8b5cf6]/60"
           />
           <select value={category} onChange={(e) => setCategory(e.target.value)} className="px-3 py-2 rounded-xl bg-white/5 border border-white/10 text-sm text-white [&>option]:bg-slate-900">
             {CATEGORIES.map((c) => <option key={c} value={c}>{c || 'All categories'}</option>)}

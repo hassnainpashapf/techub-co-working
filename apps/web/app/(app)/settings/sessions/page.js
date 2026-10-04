@@ -96,7 +96,7 @@ export default function SessionsPage() {
             <div
               key={s.id}
               className={`rounded-2xl border p-5 bg-gradient-to-br from-[#151527] to-[#0e0e1c] ${
-                s.current ? 'border-blue-500/50 shadow-[0_0_24px_rgba(59,130,246,0.25)]' : 'border-white/10'
+                s.current ? 'border-[#8b5cf6]/50 shadow-[0_0_24px_rgba(139,92,246,0.25)]' : 'border-white/10'
               }`}
             >
               <div className="flex items-start justify-between mb-3">

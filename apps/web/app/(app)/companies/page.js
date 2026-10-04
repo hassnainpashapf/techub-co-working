@@ -51,7 +51,7 @@ function CompanyDetail({ company, onClose, onEdit, onDelete }) {
       <div className="grid grid-cols-2 gap-3 text-sm mb-4">
         {company.email && <div><div className="text-xs text-slate-500">Email</div><div className="text-slate-200">{company.email}</div></div>}
         {company.phone && <div><div className="text-xs text-slate-500">Phone</div><div className="text-slate-200">{company.phone}</div></div>}
-        {company.website && <div><div className="text-xs text-slate-500">Website</div><a href={company.website} target="_blank" rel="noreferrer" className="text-blue-300 hover:underline">{company.website}</a></div>}
+        {company.website && <div><div className="text-xs text-slate-500">Website</div><a href={company.website} target="_blank" rel="noreferrer" className="text-[#c4b5fd] hover:underline">{company.website}</a></div>}
         {company.address && <div className="col-span-2"><div className="text-xs text-slate-500">Address</div><div className="text-slate-200">{company.address}</div></div>}
       </div>
       {company.notes && <p className="text-sm text-slate-400 mb-4">{company.notes}</p>}
@@ -141,7 +141,7 @@ export default function CompaniesPage() {
   };
 
   const cols = [
-    { key: 'name', label: 'Company', render: (r) => <button className="font-semibold text-white hover:text-blue-300" onClick={() => openDetail(r.id)}>{r.name}</button> },
+    { key: 'name', label: 'Company', render: (r) => <button className="font-semibold text-white hover:text-[#c4b5fd]" onClick={() => openDetail(r.id)}>{r.name}</button> },
     { key: 'industry', label: 'Industry', render: (r) => <span className="text-sm text-slate-400">{r.industry || '—'}</span> },
     { key: 'contact', label: 'Contact', render: (r) => <span className="text-sm text-slate-400">{r.phone || r.email || '—'}</span> },
     { key: 'members', label: 'Members', render: (r) => <Badge tone="blue">{r._count?.members || 0}</Badge> },

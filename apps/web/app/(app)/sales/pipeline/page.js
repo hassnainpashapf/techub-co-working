@@ -91,7 +91,7 @@ export default function SalesPipelinePage() {
             <button
               onClick={() => setSortByScore((s) => !s)}
               title="Score ke hisab se sort"
-              className={`btn-ghost ${sortByScore ? '!bg-blue-500/20 !text-blue-300' : ''}`}
+              className={`btn-ghost ${sortByScore ? '!bg-[#8b5cf6]/20 !text-[#c4b5fd]' : ''}`}
             >
               {sortByScore ? '★ Score sort ON' : '☆ Score sort'}
             </button>
@@ -111,7 +111,7 @@ export default function SalesPipelinePage() {
               onDragLeave={() => setDragOver((d) => (d === col.key ? null : d))}
               onDrop={(e) => onDrop(e, col.key)}
               className={`shrink-0 w-[290px] snap-start rounded-2xl border p-3 transition-colors ${
-                dragOver === col.key ? 'border-blue-500 bg-blue-500/10' : 'border-white/10 bg-white/[0.03]'
+                dragOver === col.key ? 'border-[#8b5cf6] bg-[#8b5cf6]/10' : 'border-white/10 bg-white/[0.03]'
               }`}
             >
               <div className="flex items-center justify-between px-1 pb-2">
@@ -128,7 +128,7 @@ export default function SalesPipelinePage() {
                     draggable
                     onDragStart={() => { dragId.current = lead.id; }}
                     onDragEnd={() => { dragId.current = null; setDragOver(null); }}
-                    className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.03] p-3 cursor-grab active:cursor-grabbing hover:border-blue-500/40 transition-colors"
+                    className="rounded-xl border border-white/10 bg-gradient-to-b from-white/[0.07] to-white/[0.03] p-3 cursor-grab active:cursor-grabbing hover:border-[#8b5cf6]/40 transition-colors"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
@@ -152,7 +152,7 @@ export default function SalesPipelinePage() {
                           disabled={moving === lead.id}
                           onClick={() => moveLead(lead.id, NEXT[lead.stage])}
                           title="Next stage"
-                          className="text-[11px] px-2 py-1 rounded-lg bg-blue-500/15 text-blue-300 hover:bg-blue-500/30 disabled:opacity-50"
+                          className="text-[11px] px-2 py-1 rounded-lg bg-[#8b5cf6]/15 text-[#c4b5fd] hover:bg-[#8b5cf6]/30 disabled:opacity-50"
                         >
                           {moving === lead.id ? '…' : `→ ${COLUMNS.find((c) => c.key === NEXT[lead.stage])?.label}`}
                         </button>

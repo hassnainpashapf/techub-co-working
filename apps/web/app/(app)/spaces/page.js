@@ -15,11 +15,11 @@ import {
 import { useRequireRoles, AccessDenied } from '../../../components/Protected';
 
 const STATUS_COLORS = {
-  vacant: 'border-green-300 bg-green-50',
-  occupied: 'border-blue-300 bg-blue-50',
-  maintenance: 'border-amber-300 bg-amber-50',
+  vacant: 'border-green-400/40 bg-green-500/10',
+  occupied: 'border-[#8b5cf6]/40 bg-[#8b5cf6]/10',
+  maintenance: 'border-amber-400/40 bg-amber-500/10',
 };
-const STATUS_TONE = { vacant: 'green', occupied: 'blue', maintenance: 'amber' };
+const STATUS_TONE = { vacant: 'green', occupied: 'violet', maintenance: 'amber' };
 
 function FloorForm({ initial, buildings, onSave, saving }) {
   const [form, setForm] = useState({
@@ -377,7 +377,7 @@ export default function SpacesPage() {
               <span className="text-sm font-medium text-slate-400">{occupancy.pct}% occupied</span>
             </div>
             <div className="h-3 rounded-full bg-white/10 overflow-hidden flex">
-              <div className="bg-blue-500" style={{ width: `${occupancy.total ? (occupancy.occupied / occupancy.total) * 100 : 0}%` }} />
+              <div className="bg-[#8b5cf6]" style={{ width: `${occupancy.total ? (occupancy.occupied / occupancy.total) * 100 : 0}%` }} />
               <div className="bg-amber-400" style={{ width: `${occupancy.total ? (occupancy.maintenance / occupancy.total) * 100 : 0}%` }} />
               <div className="bg-green-400" style={{ width: `${occupancy.total ? (occupancy.vacant / occupancy.total) * 100 : 0}%` }} />
             </div>

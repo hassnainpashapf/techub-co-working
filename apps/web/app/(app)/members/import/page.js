@@ -130,7 +130,7 @@ export default function MemberImportPage() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
           onClick={() => fileRef.current?.click()}
           className={`card-premium p-10 text-center cursor-pointer border-2 border-dashed transition ${
-            dragOver ? 'border-blue-400 bg-blue-500/10' : 'border-white/10 hover:border-white/25'
+            dragOver ? 'border-[#8b5cf6] bg-[#8b5cf6]/10' : 'border-white/10 hover:border-white/25'
           }`}
         >
           <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden"
@@ -188,7 +188,7 @@ export default function MemberImportPage() {
               <div className="flex gap-1 text-xs">
                 {['all', 'valid', 'invalid'].map((f) => (
                   <button key={f} onClick={() => setFilter(f)}
-                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-blue-600/70 text-white' : 'text-slate-400 hover:text-white'}`}>
+                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-[#7c3aed]/70 text-white' : 'text-slate-400 hover:text-white'}`}>
                     {f}
                   </button>
                 ))}
@@ -236,7 +236,7 @@ export default function MemberImportPage() {
           <div className="card-premium p-5">
             <label className="flex items-center gap-3 mb-4 cursor-pointer">
               <input type="checkbox" checked={sendWelcome} onChange={(e) => setSendWelcome(e.target.checked)}
-                className="w-4 h-4 accent-blue-500" />
+                className="w-4 h-4 accent-[#8b5cf6]" />
               <span className="text-sm text-white">Send welcome email to imported members (only those with an email address)</span>
             </label>
             <div className="flex gap-2">

@@ -63,7 +63,7 @@ export default function AcademyDashboardPage() {
           <div className="space-y-3">
             {popular.map((c, i) => (
               <a key={c.id} href="/academy/courses" className="flex items-center gap-3 p-3 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10">
-                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center font-bold text-white text-sm shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#8b5cf6] to-violet-500 flex items-center justify-center font-bold text-white text-sm shrink-0">
                   {i + 1}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -81,32 +81,32 @@ export default function AcademyDashboardPage() {
         <div className="card p-5">
           <h3 className="text-lg font-semibold text-white mb-4">⚡ Quick Links</h3>
           <div className="grid grid-cols-2 gap-3">
-            <a href="/academy/courses" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/courses" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">📚</div>
               <div className="font-medium text-white text-sm">Course Catalog</div>
               <div className="text-xs text-slate-400">Courses + lessons manage karein</div>
             </a>
-            <a href="/academy/enrollments" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/enrollments" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">🎓</div>
               <div className="font-medium text-white text-sm">Enrollments</div>
               <div className="text-xs text-slate-400">Progress aur completions</div>
             </a>
-            <a href="/academy/quizzes" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/quizzes" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">📝</div>
               <div className="font-medium text-white text-sm">Quizzes</div>
               <div className="text-xs text-slate-400">Assessments manage karein</div>
             </a>
-            <a href="/academy/workshops" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/workshops" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">🎥</div>
               <div className="font-medium text-white text-sm">Live Workshops</div>
               <div className="text-xs text-slate-400">Sessions schedule karein</div>
             </a>
-            <a href="/academy/certificates" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/certificates" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">🏅</div>
               <div className="font-medium text-white text-sm">Certificates</div>
               <div className="text-xs text-slate-400">Issued certificates</div>
             </a>
-            <a href="/academy/paths" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-blue-400/40">
+            <a href="/academy/paths" className="p-4 rounded-xl bg-white/5 hover:bg-white/10 transition border border-white/10 hover:border-[#8b5cf6]/40">
               <div className="text-2xl mb-1">🛤️</div>
               <div className="font-medium text-white text-sm">Learning Paths</div>
               <div className="text-xs text-slate-400">Curated learning journeys</div>

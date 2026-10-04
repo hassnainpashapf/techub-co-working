@@ -166,7 +166,7 @@ export default function QuotationsPage() {
               {q.status === 'draft' && (
                 <>
                   <button className="btn-ghost text-xs" onClick={() => setEditing(q)}>Edit</button>
-                  <button className="btn-ghost text-xs text-blue-400" disabled={busy === q.id} onClick={() => act(q, 'send')}>{busy === q.id ? '…' : 'Send'}</button>
+                  <button className="btn-ghost text-xs text-[#c4b5fd]" disabled={busy === q.id} onClick={() => act(q, 'send')}>{busy === q.id ? '…' : 'Send'}</button>
                 </>
               )}
               {(q.status === 'draft' || q.status === 'sent') && (

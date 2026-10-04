@@ -59,7 +59,7 @@ export default function PublicBookPage() {
       <header className="border-b border-white/10">
         <div className="max-w-2xl mx-auto px-4 py-5 flex items-center justify-between">
           <div>
-            <h1 className="text-xl font-extrabold bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent">
+            <h1 className="text-xl font-extrabold bg-gradient-to-r from-violet-400 to-[#c4b5fd] bg-clip-text text-transparent">
               {tenantName || 'Book a Space'}
             </h1>
             <p className="text-xs text-slate-400 mt-0.5">Request a booking — no account needed</p>
@@ -139,7 +139,7 @@ export default function PublicBookPage() {
             <button
               type="submit"
               disabled={sending || units.length === 0}
-              className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 py-3 text-sm font-bold hover:from-violet-500 hover:to-blue-500 disabled:opacity-50 transition"
+              className="w-full rounded-xl bg-gradient-to-r from-violet-600 to-[#7c3aed] py-3 text-sm font-bold hover:from-violet-500 hover:to-[#8b5cf6] disabled:opacity-50 transition"
             >
               {sending ? 'Sending…' : 'Request Booking'}
             </button>

@@ -91,7 +91,7 @@ export default function BudgetsPage() {
       {totals && (
         <div className="grid grid-cols-3 gap-4 mb-6">
           {[
-            { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-blue-300' },
+            { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-[#c4b5fd]' },
             { label: 'Total Actual', value: money(totals.actual), tone: 'text-amber-300' },
             { label: 'Variance', value: money(totals.variance), tone: totals.variance >= 0 ? 'text-emerald-300' : 'text-red-300' },
           ].map((s) => (

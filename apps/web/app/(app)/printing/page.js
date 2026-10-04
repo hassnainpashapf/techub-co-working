@@ -95,7 +95,7 @@ export default function PrintingPage() {
                 onChange={(e) => searchMembers(e.target.value)}
               />
               {members.length > 0 && (
-                <div className="mt-1 rounded-xl border border-slate-700 bg-[#14141f] max-h-40 overflow-auto">
+                <div className="mt-1 rounded-xl border border-slate-700 bg-[#141422] max-h-40 overflow-auto">
                   {members.map((m) => (
                     <button
                       key={m.id}

@@ -132,7 +132,7 @@ export default function TeamInboxPage() {
           <div className="flex gap-2">
             {[['open', 'Open'], ['unassigned', 'Unassigned'], ['me', 'Meri'], ['resolved', 'Resolved']].map(([v, l]) => (
               <button key={v} onClick={() => setFilter(v)}
-                className={`px-3 py-1.5 rounded-lg text-sm ${filter === v ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300'}`}>{l}</button>
+                className={`px-3 py-1.5 rounded-lg text-sm ${filter === v ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>{l}</button>
             ))}
           </div>
         }
@@ -152,10 +152,10 @@ export default function TeamInboxPage() {
           {convos.length === 0 && <EmptyState title="Koi conversation nahi" />}
           {convos.map((c) => (
             <button key={c.key} onClick={() => pick(c)}
-              className={`w-full text-left p-4 border-b border-white/5 hover:bg-white/5 ${sel?.key === c.key ? 'bg-blue-600/10 border-l-2 border-l-blue-500' : ''}`}>
+              className={`w-full text-left p-4 border-b border-white/5 hover:bg-white/5 ${sel?.key === c.key ? 'bg-[#7c3aed]/10 border-l-2 border-l-blue-500' : ''}`}>
               <div className="flex items-center justify-between gap-2">
                 <div className="font-medium text-slate-100 truncate">{c.member?.name || c.external || 'Unknown'}</div>
-                {c.unread > 0 && <span className="text-xs bg-blue-600 text-white rounded-full px-2 py-0.5">{c.unread}</span>}
+                {c.unread > 0 && <span className="text-xs bg-[#7c3aed] text-white rounded-full px-2 py-0.5">{c.unread}</span>}
               </div>
               <div className="flex items-center gap-2 mt-1">
                 <Badge tone={CHANNEL_TONES[c.lastMessage.channel] || 'slate'}>{CHANNEL_LABELS[c.lastMessage.channel] || c.lastMessage.channel}</Badge>
@@ -191,7 +191,7 @@ export default function TeamInboxPage() {
 
               <div className="flex-1 overflow-y-auto p-4 space-y-3">
                 {thread.map((m) => (
-                  <div key={m.id} className={`max-w-[80%] rounded-xl p-3 ${m.direction === 'in' ? 'bg-white/5 mr-auto' : 'bg-blue-600/20 ml-auto'}`}>
+                  <div key={m.id} className={`max-w-[80%] rounded-xl p-3 ${m.direction === 'in' ? 'bg-white/5 mr-auto' : 'bg-[#7c3aed]/20 ml-auto'}`}>
                     <div className="flex items-center gap-2 mb-1">
                       <Badge tone={CHANNEL_TONES[m.channel] || 'slate'}>{CHANNEL_LABELS[m.channel] || m.channel}</Badge>
                       <span className="text-xs text-slate-500">{m.direction === 'in' ? (sel.member?.name || 'Visitor') : (m.user?.name || 'Staff')} • {timeAgo(m.createdAt)}</span>
@@ -222,7 +222,7 @@ export default function TeamInboxPage() {
                     value={reply} onChange={(e) => setReply(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && doReply()} />
                   <button onClick={doReply} disabled={sending || !reply.trim()}
-                    className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm disabled:opacity-50">
+                    className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm disabled:opacity-50">
                     {sending ? '...' : scheduleAt ? '📅 Schedule' : 'Bhejein'}
                   </button>
                 </div>

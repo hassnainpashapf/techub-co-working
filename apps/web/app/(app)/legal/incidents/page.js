@@ -141,7 +141,7 @@ export default function IncidentsPage() {
       <PageHeader
         title="🚨 Incident Reports"
         sub="Safety, security, theft aur damage incidents — report, investigate aur resolve karein."
-        actions={<button onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }); }} className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white">+ Report Incident</button>}
+        actions={<button onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }); }} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white">+ Report Incident</button>}
       />
 
       <div className="mb-6 grid gap-4 md:grid-cols-3">
@@ -151,19 +151,19 @@ export default function IncidentsPage() {
       </div>
 
       <div className="mb-4 flex flex-wrap gap-2">
-        <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-sm text-white">
+        <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-sm text-white">
           <option value="">All statuses</option>
           {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
-        <select value={filters.severity} onChange={(e) => setFilters({ ...filters, severity: e.target.value })} className="rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-sm text-white">
+        <select value={filters.severity} onChange={(e) => setFilters({ ...filters, severity: e.target.value })} className="rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-sm text-white">
           <option value="">All severities</option>
           {SEVERITIES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
         </select>
-        <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} className="rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-sm text-white">
+        <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} className="rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-sm text-white">
           <option value="">All categories</option>
           {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
         </select>
-        <input value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} placeholder="Search title, location…" className="rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-sm text-white" />
+        <input value={filters.search} onChange={(e) => setFilters({ ...filters, search: e.target.value })} placeholder="Search title, location…" className="rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-sm text-white" />
       </div>
 
       {error && <ErrorBanner message={error} onRetry={load} />}
@@ -187,20 +187,20 @@ export default function IncidentsPage() {
         <Modal title="Report Incident" onClose={() => setModal(null)}>
           {msg && <p className="mb-3 text-xs text-rose-300">{msg}</p>}
           <div className="grid gap-3">
-            <Field label="Title"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Meeting room AC leak" className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" /></Field>
+            <Field label="Title"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Meeting room AC leak" className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" /></Field>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Category"><select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white">{CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}</select></Field>
-              <Field label="Severity"><select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })} className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white">{SEVERITIES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}</select></Field>
+              <Field label="Category"><select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white">{CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}</select></Field>
+              <Field label="Severity"><select value={form.severity} onChange={(e) => setForm({ ...form, severity: e.target.value })} className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white">{SEVERITIES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}</select></Field>
             </div>
             <div className="grid grid-cols-2 gap-3">
-              <Field label="Location (optional)"><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Floor 2, corridor" className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" /></Field>
-              <Field label="Occurred at"><input type="datetime-local" value={form.occurredAt} onChange={(e) => setForm({ ...form, occurredAt: e.target.value })} className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" /></Field>
+              <Field label="Location (optional)"><input value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} placeholder="Floor 2, corridor" className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" /></Field>
+              <Field label="Occurred at"><input type="datetime-local" value={form.occurredAt} onChange={(e) => setForm({ ...form, occurredAt: e.target.value })} className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" /></Field>
             </div>
-            <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} placeholder="Kya hua, kab, kaise…" className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" /></Field>
+            <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={4} placeholder="Kya hua, kab, kaise…" className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" /></Field>
             <Field label="Involved member (optional)">
-              <input value={memberQ} onChange={(e) => searchMembers(e.target.value)} placeholder="Member search karein…" className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" />
+              <input value={memberQ} onChange={(e) => searchMembers(e.target.value)} placeholder="Member search karein…" className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" />
               {memberOpts.length > 0 && (
-                <div className="mt-1 max-h-32 overflow-auto rounded-lg border border-white/10 bg-[#12121f]">
+                <div className="mt-1 max-h-32 overflow-auto rounded-lg border border-white/10 bg-[#141422]">
                   {memberOpts.map((m) => (
                     <button key={m.id} onClick={() => { setForm({ ...form, involvedMemberId: m.id }); setMemberQ(m.name); setMemberOpts([]); }} className="block w-full px-3 py-1.5 text-left text-xs text-white hover:bg-white/5">{m.name} <span className="text-white/40">{m.email || ''}</span></button>
                   ))}
@@ -209,7 +209,7 @@ export default function IncidentsPage() {
               {form.involvedMemberId && <p className="mt-1 text-xs text-emerald-300">✓ Member linked {memberQ && <button onClick={() => { setForm({ ...form, involvedMemberId: '' }); setMemberQ(''); }} className="underline">remove</button>}</p>}
             </Field>
             {form.severity === 'critical' && <p className="text-xs text-amber-300">⚠️ Critical incident par CEO/Admin ko foran notification jayegi.</p>}
-            <button onClick={submitReport} disabled={saving || !form.title.trim() || form.description.trim().length < 10} className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{saving ? '…' : 'Submit Report'}</button>
+            <button onClick={submitReport} disabled={saving || !form.title.trim() || form.description.trim().length < 10} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50">{saving ? '…' : 'Submit Report'}</button>
           </div>
         </Modal>
       )}
@@ -228,7 +228,7 @@ export default function IncidentsPage() {
             <div><span className="text-white/40">Reported by:</span> {modal.incident.reportedByName || '—'}</div>
             <div><span className="text-white/40">Member:</span> {modal.incident.involvedMember?.name || '—'}</div>
           </div>
-          <p className="mt-4 whitespace-pre-wrap rounded-lg border border-white/10 bg-[#12121f] p-3 text-sm text-white">{modal.incident.description}</p>
+          <p className="mt-4 whitespace-pre-wrap rounded-lg border border-white/10 bg-[#141422] p-3 text-sm text-white">{modal.incident.description}</p>
           {modal.incident.resolution && (
             <div className="mt-3"><div className="text-xs font-semibold text-emerald-300">Resolution</div><p className="mt-1 whitespace-pre-wrap text-sm text-white/70">{modal.incident.resolution}</p></div>
           )}
@@ -243,7 +243,7 @@ export default function IncidentsPage() {
               )}
             </div>
             {NEXT[modal.incident.status].includes('resolved') && (
-              <Field label="Resolution note (resolved ke liye lazmi)"><textarea value={resolution} onChange={(e) => setResolution(e.target.value)} rows={2} className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white" /></Field>
+              <Field label="Resolution note (resolved ke liye lazmi)"><textarea value={resolution} onChange={(e) => setResolution(e.target.value)} rows={2} className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white" /></Field>
             )}
           </div>
         </Modal>

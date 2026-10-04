@@ -74,7 +74,7 @@ function Donut({ pct, label }) {
       <div className="relative w-36 h-36">
         <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
           <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="16" />
-          <circle cx="80" cy="80" r={r} fill="none" stroke="#3b82f6" strokeWidth="16" strokeLinecap="round"
+          <circle cx="80" cy="80" r={r} fill="none" stroke="#8b5cf6" strokeWidth="16" strokeLinecap="round"
             strokeDasharray={circ} strokeDashoffset={circ * (1 - Math.min(pct, 100) / 100)} />
         </svg>
         <div className="absolute inset-0 flex items-center justify-center">
@@ -204,7 +204,7 @@ export default function ReportsPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2.5 text-sm font-semibold border-b-2 -mb-px transition-colors ${
               tab === t.key
-                ? 'border-blue-500 text-white'
+                ? 'border-[#8b5cf6] text-white'
                 : 'border-transparent text-slate-400 hover:text-white'
             }`}
           >
@@ -325,7 +325,7 @@ export default function ReportsPage() {
                             <span className="text-slate-400">{c.count} members</span>
                           </div>
                           <div className="h-2.5 rounded-full bg-white/10 overflow-hidden">
-                            <div className="h-full rounded-full bg-blue-500" style={{ width: `${(c.count / data.topCompanies[0].count) * 100}%` }} />
+                            <div className="h-full rounded-full bg-[#8b5cf6]" style={{ width: `${(c.count / data.topCompanies[0].count) * 100}%` }} />
                           </div>
                         </div>
                       ))}

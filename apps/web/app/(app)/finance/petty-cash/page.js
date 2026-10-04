@@ -97,7 +97,7 @@ export default function PettyCashPage() {
           <button
             key={t}
             onClick={() => setTypeFilter(t)}
-            className={`px-3 py-1.5 rounded-lg text-[13px] font-medium ${typeFilter === t ? 'bg-blue-600 text-white' : 'bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'}`}
+            className={`px-3 py-1.5 rounded-lg text-[13px] font-medium ${typeFilter === t ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.04] text-slate-300 hover:bg-white/[0.08]'}`}
           >
             {t === '' ? 'All' : t === 'in' ? 'Cash In' : 'Cash Out'}
           </button>

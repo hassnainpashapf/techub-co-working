@@ -10,7 +10,7 @@ import { useRequireRoles, AccessDenied } from '../../../../components/Protected'
 function Bar({ pct }) {
   return (
     <div className="h-2 rounded-full bg-white/10 overflow-hidden min-w-[80px]">
-      <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all" style={{ width: `${pct}%` }} />
+      <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all" style={{ width: `${pct}%` }} />
     </div>
   );
 }
@@ -117,7 +117,7 @@ export default function OnboardingJourneysPage() {
         actions={
           <div className="flex gap-2">
             <button onClick={autoStart} className="px-4 py-2 rounded-xl bg-white/10 text-white text-sm hover:bg-white/20">⚡ Auto-start</button>
-            <button onClick={() => setAssignOpen(true)} className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(59,130,246,0.5)]">+ Journey Assign</button>
+            <button onClick={() => setAssignOpen(true)} className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 text-white text-sm font-semibold hover:shadow-[0_0_20px_rgba(139,92,246,0.5)]">+ Journey Assign</button>
           </div>
         }
       />
@@ -126,7 +126,7 @@ export default function OnboardingJourneysPage() {
       <div className="flex gap-2">
         {['journeys', 'templates'].map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === t ? 'bg-gradient-to-r from-blue-600 to-violet-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === t ? 'bg-gradient-to-r from-[#7c3aed] to-violet-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
             {t === 'journeys' ? '🚀 Journeys' : '📋 Templates'}
           </button>
         ))}
@@ -143,7 +143,7 @@ export default function OnboardingJourneysPage() {
           <div className="flex gap-2">
             {['', 'active', 'completed', 'stalled'].map((s) => (
               <button key={s} onClick={() => setStatusF(s)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-medium ${statusF === s ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300'}`}>
+                className={`px-3 py-1.5 rounded-lg text-xs font-medium ${statusF === s ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>
                 {s || 'Sab'}
               </button>
             ))}
@@ -177,7 +177,7 @@ export default function OnboardingJourneysPage() {
                       <td className="px-4 py-3"><Badge tone={statusTone(j.status)}>{j.status}</Badge></td>
                       <td className="px-4 py-3">
                         <div className="flex gap-2">
-                          <button onClick={() => (open === j.id ? setOpen(null) : loadDetail(j.id))} className="text-blue-400 hover:underline text-xs">Tasks</button>
+                          <button onClick={() => (open === j.id ? setOpen(null) : loadDetail(j.id))} className="text-[#c4b5fd] hover:underline text-xs">Tasks</button>
                           {j.status !== 'completed' && <button onClick={() => setStatus(j.id, 'completed')} className="text-green-400 hover:underline text-xs">Complete</button>}
                           {j.status === 'active' && <button onClick={() => setStatus(j.id, 'stalled')} className="text-red-400 hover:underline text-xs">Stall</button>}
                         </div>
@@ -218,7 +218,7 @@ export default function OnboardingJourneysPage() {
       {tab === 'templates' && (
         <>
           <div className="flex justify-end">
-            <button onClick={() => setTmplOpen('new')} className="px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white text-sm font-semibold">+ Naya Template</button>
+            <button onClick={() => setTmplOpen('new')} className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 text-white text-sm font-semibold">+ Naya Template</button>
           </div>
           {!templates.length ? <EmptyState title="Koi template nahi" hint="Naya template banayein — stages + tasks define karein" /> : (
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -231,7 +231,7 @@ export default function OnboardingJourneysPage() {
                   <div className="mt-2 text-sm text-slate-300">{t.stages?.length || 0} stages · {t._count?.journeys || 0} journeys</div>
                   <div className="mt-1 text-xs text-slate-400 line-clamp-2">{(t.stages || []).map((s) => s.title).join(' → ')}</div>
                   <div className="mt-4 flex gap-3">
-                    <button onClick={() => setTmplOpen(t)} className="text-blue-400 hover:underline text-xs">Edit</button>
+                    <button onClick={() => setTmplOpen(t)} className="text-[#c4b5fd] hover:underline text-xs">Edit</button>
                     <button onClick={async () => { if (confirm('Delete karein?')) { await api.del(`/api/member-journeys/templates/${t.id}`); load(); } }} className="text-red-400 hover:underline text-xs">Delete</button>
                   </div>
                 </div>
@@ -266,7 +266,7 @@ function AssignModal({ members, templates, onClose, onSave }) {
           </select>
         </Field>
         <button disabled={!memberId} onClick={() => onSave(memberId, templateId)}
-          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold disabled:opacity-40">Start Journey</button>
+          className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 text-white font-semibold disabled:opacity-40">Start Journey</button>
       </div>
     </Modal>
   );
@@ -320,8 +320,8 @@ function TemplateModal({ tmpl, onClose }) {
               placeholder="Tasks — har line par ek (e.g. Office tour)" className="w-full rounded-xl bg-white/5 border border-white/10 px-3 py-2 text-white text-sm" />
           </div>
         ))}
-        <button onClick={() => setStages([...stages, { title: '', dayOffset: 0, tasks: '' }])} className="text-blue-400 text-sm hover:underline">+ Stage add karein</button>
-        <button onClick={save} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 text-white font-semibold">Save Template</button>
+        <button onClick={() => setStages([...stages, { title: '', dayOffset: 0, tasks: '' }])} className="text-[#c4b5fd] text-sm hover:underline">+ Stage add karein</button>
+        <button onClick={save} className="w-full py-2.5 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 text-white font-semibold">Save Template</button>
       </div>
     </Modal>
   );

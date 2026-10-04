@@ -10,7 +10,7 @@ function StackedBarChart({ data, height = 220 }) {
   const max = Math.max(...data.map((d) => d.total), 1);
   const barW = 100 / data.length;
   const segs = [
-    { key: 'contracts', color: '#3b82f6', label: 'Contracts' },
+    { key: 'contracts', color: '#8b5cf6', label: 'Contracts' },
     { key: 'recurring', color: '#10b981', label: 'Recurring' },
     { key: 'pipeline', color: '#f59e0b', label: 'Pipeline' },
   ];
@@ -75,7 +75,7 @@ export default function ProjectionsPage() {
   if (!allowed) return <AccessDenied />;
 
   const legend = [
-    { label: 'Contracts', color: '#3b82f6' },
+    { label: 'Contracts', color: '#8b5cf6' },
     { label: 'Recurring invoices', color: '#10b981' },
     { label: 'Pipeline', color: '#f59e0b' },
   ];

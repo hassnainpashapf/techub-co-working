@@ -83,7 +83,7 @@ export default function ImportPage() {
           <button
             key={t.key}
             onClick={() => { setTab(t.key); setFile(null); setPreview([]); setResult(null); setError(''); }}
-            className={`px-4 py-2 rounded-lg text-sm font-medium border ${tab === t.key ? 'bg-blue-600/20 text-blue-300 border-blue-500/40' : 'text-slate-400 border-white/10 hover:text-white'}`}
+            className={`px-4 py-2 rounded-lg text-sm font-medium border ${tab === t.key ? 'bg-[#7c3aed]/20 text-[#c4b5fd] border-[#8b5cf6]/40' : 'text-slate-400 border-white/10 hover:text-white'}`}
           >
             {t.label}
           </button>
@@ -104,7 +104,7 @@ export default function ImportPage() {
           type="file"
           accept=".csv,text/csv"
           onChange={(e) => onFile(e.target.files?.[0] || null)}
-          className="text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-blue-600/20 file:text-blue-300 hover:file:bg-blue-600/30"
+          className="text-sm text-slate-300 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#7c3aed]/20 file:text-[#c4b5fd] hover:file:bg-[#7c3aed]/30"
         />
         {preview.length > 0 && (
           <div className="mt-4 overflow-x-auto">

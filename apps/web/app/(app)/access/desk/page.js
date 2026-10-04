@@ -183,7 +183,7 @@ export default function AccessDeskPage() {
           <div className="mt-3 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
             {results.slice(0, 9).map((m) => (
               <button key={m.id} onClick={() => pick(m)}
-                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-blue-500/50 bg-blue-500/10' : 'border-white/10 hover:border-white/25'}`}>
+                className={`text-left rounded-lg border p-3 transition ${member?.id === m.id ? 'border-[#8b5cf6]/50 bg-[#8b5cf6]/10' : 'border-white/10 hover:border-white/25'}`}>
                 <div className="font-medium text-white">{m.name}</div>
                 <div className="text-xs text-slate-400">{m.email || m.phone || ''}</div>
                 <Badge tone={m.status === 'active' ? 'green' : 'red'}>{m.status || 'unknown'}</Badge>
@@ -284,7 +284,7 @@ export default function AccessDeskPage() {
                 <div className="flex gap-1 flex-wrap">
                   {DAYS.map((d) => (
                     <button key={d.v} onClick={() => toggleDay(d.v)}
-                      className={`px-3 py-1.5 rounded-lg border text-sm ${schedForm.days.includes(d.v) ? 'border-blue-500/60 bg-blue-500/20 text-blue-100' : 'border-white/10 text-slate-400'}`}>
+                      className={`px-3 py-1.5 rounded-lg border text-sm ${schedForm.days.includes(d.v) ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/20 text-blue-100' : 'border-white/10 text-slate-400'}`}>
                       {d.l}
                     </button>
                   ))}

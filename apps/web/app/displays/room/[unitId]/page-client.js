@@ -116,7 +116,7 @@ export default function RoomDisplayPage({ params }) {
         {/* Check-in — links to the existing staff QR check-in scanner */}
         <button
           onClick={() => setShowCheckin(true)}
-          className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 px-10 py-4 text-xl font-bold shadow-[0_0_40px_-8px_rgba(124,58,237,0.6)] transition-all"
+          className="mt-10 rounded-2xl bg-gradient-to-r from-violet-600 to-[#7c3aed] hover:from-violet-500 hover:to-[#8b5cf6] px-10 py-4 text-xl font-bold shadow-[0_0_40px_-8px_rgba(124,58,237,0.6)] transition-all"
         >
           ✅ Check in
         </button>
@@ -164,7 +164,7 @@ export default function RoomDisplayPage({ params }) {
             </p>
             <a
               href="/attendance/scan"
-              className="block rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 hover:from-violet-500 hover:to-blue-500 px-6 py-3.5 font-bold text-white"
+              className="block rounded-xl bg-gradient-to-r from-violet-600 to-[#7c3aed] hover:from-violet-500 hover:to-[#8b5cf6] px-6 py-3.5 font-bold text-white"
             >
               Open QR Scanner (staff)
             </a>

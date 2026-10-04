@@ -163,7 +163,7 @@ export default function MyAccessPage() {
             </Field>
           </div>
           <div className="md:col-span-2">
-            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-5 py-2.5 font-medium disabled:opacity-50">
+            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 px-5 py-2.5 font-medium disabled:opacity-50">
               {submitting ? 'Bhej rahe hain…' : 'Request bhejein'}
             </button>
             {formMsg && (

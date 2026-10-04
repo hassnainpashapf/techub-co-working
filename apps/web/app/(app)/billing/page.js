@@ -76,7 +76,7 @@ function PayOnlineButton({ invoiceId }) {
               {result.paymentUrl ? (
                 <a href={result.paymentUrl} target="_blank" rel="noreferrer" className="btn-primary btn-sm">Open payment page ↗</a>
               ) : (
-                <div className="bg-white/5 rounded-xl p-4 text-sm text-slate-200 whitespace-pre-wrap">{result.instructions}</div>
+                <div className="bg-[#141422] border border-white/[0.06] rounded-2xl p-4 text-sm text-slate-200 whitespace-pre-wrap">{result.instructions}</div>
               )}
               {result.reference && (
                 <p className="mt-3 text-sm text-slate-400">Reference: <span className="text-white font-mono">{result.reference}</span></p>
@@ -200,7 +200,7 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
           />
 
           {canRecordPayment && String(inv.status).toLowerCase() !== 'paid' && (
-            <form onSubmit={recordPayment} className="mt-4 bg-white/5 rounded-xl p-4">
+            <form onSubmit={recordPayment} className="mt-4 bg-[#141422] border border-white/[0.06] rounded-2xl p-4">
               <h3 className="font-semibold text-white mb-3 text-sm">Record payment</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Amount (Rs)"><input type="number" min="1" step="any" className="input" value={payForm.amount} onChange={(e) => setPayForm({ ...payForm, amount: e.target.value })} required /></Field>
@@ -435,14 +435,14 @@ export default function BillingPage() {
         }
       />
       <ErrorBanner message={error} onRetry={refresh} />
-      {genResult && <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3 mb-4">{genResult}</div>}
+      {genResult && <div className="bg-green-500/10 border border-green-500/25 text-green-200 text-sm rounded-xl px-4 py-3 mb-4">{genResult}</div>}
 
       <div className="flex gap-2 mb-4">
         {['invoices', 'dues'].map((t) => (
           <button
             key={t}
             onClick={() => setTab(t)}
-            className={`chip ${tab === t ? 'bg-violet-600 text-white' : 'bg-[#131322] text-slate-400 border border-white/10 hover:bg-white/5'}`}
+            className={`chip ${tab === t ? 'bg-[#8b5cf6] text-white' : 'bg-[#131322] text-slate-400 border border-white/10 hover:bg-white/5'}`}
           >
             {t === 'invoices' ? 'Invoices' : `Dues (${dues.length})`}
           </button>
@@ -469,8 +469,8 @@ export default function BillingPage() {
           </div>
           {/* Phase 30: bulk actions bar */}
           {canBulk && bulkIds.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
-              <span className="text-sm font-semibold text-blue-200">{bulkIds.length} selected</span>
+            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30">
+              <span className="text-sm font-semibold text-[#ddd6fe]">{bulkIds.length} selected</span>
               <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
                 <option value="paid">Paid</option>
                 <option value="unpaid">Unpaid</option>

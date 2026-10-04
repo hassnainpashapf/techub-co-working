@@ -22,7 +22,7 @@ function QuotaBar({ used, included }) {
       </div>
       <div className="h-4 rounded-full bg-slate-800 overflow-hidden">
         <div
-          className={`h-full rounded-full transition-all ${over ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-sky-500 to-blue-500'}`}
+          className={`h-full rounded-full transition-all ${over ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-sky-500 to-[#8b5cf6]'}`}
           style={{ width: `${pct}%` }}
         />
       </div>

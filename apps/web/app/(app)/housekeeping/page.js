@@ -121,7 +121,7 @@ export default function HousekeepingPage() {
       <div className="flex gap-2 mb-4">
         {[['today', "Today's checklist"], ['all', 'All pending'], ['done', 'Completed']].map(([k, label]) => (
           <button key={k} onClick={() => setFilter(k)}
-            className={`px-4 py-2 rounded-xl text-sm font-semibold ${filter === k ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 border border-white/10'}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-semibold ${filter === k ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 border border-white/10'}`}>
             {label}
           </button>
         ))}

@@ -80,8 +80,8 @@ function RuleModal({ rule, entities, onClose, onSaved }) {
         <Field label="Channels">
           <div className="flex gap-2">
             {['email', 'sms', 'push'].map((ch) => (
-              <label key={ch} className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm ${form.channels.includes(ch) ? 'border-blue-500/50 bg-blue-500/10 text-blue-200' : 'border-white/10 text-slate-400'}`}>
-                <input type="checkbox" checked={form.channels.includes(ch)} onChange={() => toggleChannel(ch)} className="accent-blue-500" />
+              <label key={ch} className={`flex items-center gap-2 px-3 py-2 rounded-lg border cursor-pointer text-sm ${form.channels.includes(ch) ? 'border-[#8b5cf6]/50 bg-[#8b5cf6]/10 text-[#ddd6fe]' : 'border-white/10 text-slate-400'}`}>
+                <input type="checkbox" checked={form.channels.includes(ch)} onChange={() => toggleChannel(ch)} className="accent-[#8b5cf6]" />
                 {ch}
               </label>
             ))}
@@ -92,7 +92,7 @@ function RuleModal({ rule, entities, onClose, onSaved }) {
         </Field>
         <label className="flex items-center gap-3 mb-4 cursor-pointer">
           <button type="button" role="switch" aria-checked={form.isActive} onClick={() => setForm({ ...form, isActive: !form.isActive })}
-            className={`w-11 h-6 rounded-full relative transition-colors ${form.isActive ? 'bg-blue-500' : 'bg-white/10'}`}>
+            className={`w-11 h-6 rounded-full relative transition-colors ${form.isActive ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}>
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${form.isActive ? 'left-[22px]' : 'left-0.5'}`} />
           </button>
           <span className="text-sm text-white font-medium">Active</span>
@@ -217,7 +217,7 @@ export default function RemindersPage() {
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <button type="button" role="switch" aria-checked={r.isActive} onClick={() => toggleActive(r)}
-                className={`w-10 h-6 rounded-full relative transition-colors shrink-0 ${r.isActive ? 'bg-blue-500' : 'bg-white/10'}`}>
+                className={`w-10 h-6 rounded-full relative transition-colors shrink-0 ${r.isActive ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}>
                 <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${r.isActive ? 'left-[18px]' : 'left-0.5'}`} />
               </button>
               <div className="flex-1 min-w-[180px]">
@@ -232,7 +232,7 @@ export default function RemindersPage() {
                 <p>{r.lastSentAt ? `last ${new Date(r.lastSentAt).toLocaleDateString()}` : 'never sent'}</p>
               </div>
               <div className="flex gap-1.5">
-                <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-blue-300 hover:text-blue-200 border border-blue-500/30 rounded-lg px-3 py-1.5">
+                <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] border border-[#8b5cf6]/30 rounded-lg px-3 py-1.5">
                   {testing === r.id ? '…' : 'Test'}
                 </button>
                 <button onClick={() => setModal(r)} className="text-xs text-slate-300 hover:text-white border border-white/10 rounded-lg px-3 py-1.5">Edit</button>

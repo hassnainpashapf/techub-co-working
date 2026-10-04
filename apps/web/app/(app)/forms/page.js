@@ -79,7 +79,7 @@ export default function FormsListPage() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-white">{stats.totalForms ?? '—'}</div><div className="text-xs text-slate-400">Total Forms</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-green-300">{stats.publishedForms ?? '—'}</div><div className="text-xs text-slate-400">Published</div></div>
-          <div className="card p-4 text-center"><div className="text-2xl font-bold text-blue-300">{stats.submissions30d ?? '—'}</div><div className="text-xs text-slate-400">Responses (30d)</div></div>
+          <div className="card p-4 text-center"><div className="text-2xl font-bold text-[#c4b5fd]">{stats.submissions30d ?? '—'}</div><div className="text-xs text-slate-400">Responses (30d)</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-amber-300">{stats.newInbox ?? '—'}</div><div className="text-xs text-slate-400">New Inbox</div></div>
         </div>
       )}

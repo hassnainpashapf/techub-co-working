@@ -174,7 +174,7 @@ export default function PortalConciergePage() {
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-blue-300">{services.length}</p>
+          <p className="text-2xl font-bold text-[#c4b5fd]">{services.length}</p>
           <p className="text-xs text-slate-400">Services</p>
         </div>
         <div className="card-premium p-4 text-center">
@@ -195,7 +195,7 @@ export default function PortalConciergePage() {
           <button
             key={t.k}
             onClick={() => setTab(t.k)}
-            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${tab === t.k ? 'bg-blue-600/30 border border-blue-500/50 text-blue-200' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
+            className={`px-4 py-2 rounded-full text-sm font-semibold transition ${tab === t.k ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/50 text-[#ddd6fe]' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
           >
             {t.label}
           </button>
@@ -209,7 +209,7 @@ export default function PortalConciergePage() {
               <button
                 key={c}
                 onClick={() => setCat(c)}
-                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${cat === c ? 'bg-blue-600/30 border border-blue-500/50 text-blue-200' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
+                className={`px-3 py-1.5 rounded-full text-xs font-semibold transition ${cat === c ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/50 text-[#ddd6fe]' : 'bg-slate-800/50 border border-slate-700/50 text-slate-400 hover:text-slate-200'}`}
               >
                 {c === 'all' ? 'All' : `${CAT_ICON[c] || ''} ${c.charAt(0).toUpperCase() + c.slice(1)}`}
               </button>
@@ -230,7 +230,7 @@ export default function PortalConciergePage() {
                   {s.description && <p className="text-sm text-slate-400 line-clamp-2 mb-1">{s.description}</p>}
                   {s.provider?.name && <p className="text-xs text-slate-500 mb-3">by {s.provider.name}</p>}
                   <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold text-blue-300">{fmtPrice(s.basePrice)}</span>
+                    <span className="text-sm font-semibold text-[#c4b5fd]">{fmtPrice(s.basePrice)}</span>
                     <button className="btn-primary text-sm px-4 py-1.5" onClick={() => openForm(s)}>Request</button>
                   </div>
                 </div>

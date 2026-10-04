@@ -129,7 +129,7 @@ export default function EmailTemplatesPage() {
         <div className="card-premium p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-white">Templates</h3>
-            <button type="button" className="text-[11px] text-blue-300 hover:text-blue-200 underline" onClick={seedDefaults} disabled={seeding}>
+            <button type="button" className="text-[11px] text-[#c4b5fd] hover:text-[#ddd6fe] underline" onClick={seedDefaults} disabled={seeding}>
               {seeding ? 'Seeding…' : 'Seed all defaults'}
             </button>
           </div>

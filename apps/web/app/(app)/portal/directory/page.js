@@ -17,18 +17,18 @@ function initials(name) {
 }
 
 const AVATAR_GRADIENTS = [
-  'from-blue-500/30 to-violet-500/30',
+  'from-[#8b5cf6]/30 to-violet-500/30',
   'from-emerald-500/30 to-teal-500/30',
   'from-amber-500/30 to-orange-500/30',
   'from-rose-500/30 to-pink-500/30',
-  'from-cyan-500/30 to-blue-500/30',
+  'from-cyan-500/30 to-[#8b5cf6]/30',
 ];
 
 function MemberCard({ member, index }) {
   const grad = AVATAR_GRADIENTS[index % AVATAR_GRADIENTS.length];
   const company = member.company?.name || member.companyName;
   return (
-    <div className="card-premium p-5 hover:border-blue-400/30 transition-colors">
+    <div className="card-premium p-5 hover:border-[#8b5cf6]/30 transition-colors">
       <div className="flex items-center gap-4 mb-3">
         <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${grad} border border-white/10 flex items-center justify-center text-white font-bold`}>
           {initials(member.name)}
@@ -106,7 +106,7 @@ export default function DirectoryPage() {
             onClick={() => setActiveTag('')}
             className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
               !activeTag
-                ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
+                ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
                 : 'border-white/10 text-slate-400 hover:text-white'
             }`}
           >
@@ -118,7 +118,7 @@ export default function DirectoryPage() {
               onClick={() => setActiveTag(activeTag === t ? '' : t)}
               className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
                 activeTag === t
-                  ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
+                  ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
                   : 'border-white/10 text-slate-400 hover:text-white'
               }`}
             >

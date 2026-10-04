@@ -84,7 +84,7 @@ export default function AdvancesPage() {
         return (
           <div className="min-w-[120px]">
             <div className="h-2 rounded bg-white/10 overflow-hidden">
-              <div className="h-full rounded bg-gradient-to-r from-violet-500 to-blue-500" style={{ width: pct + '%' }} />
+              <div className="h-full rounded bg-gradient-to-r from-violet-500 to-[#8b5cf6]" style={{ width: pct + '%' }} />
             </div>
             <div className="text-xs text-slate-400 mt-1">{fmt(a.deductedSoFar)} / {fmt(a.amount)} ({pct}%)</div>
           </div>
@@ -110,7 +110,7 @@ export default function AdvancesPage() {
         subtitle="Salary advance aur loan requests — payroll se auto-deduct"
         action={
           <button onClick={() => setModal('request')}
-            className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-medium shadow-lg shadow-violet-500/30">
+            className="px-4 py-2 rounded-xl bg-gradient-to-r from-violet-600 to-[#7c3aed] text-white text-sm font-medium shadow-lg shadow-violet-500/30">
             + New Request
           </button>
         }
@@ -120,7 +120,7 @@ export default function AdvancesPage() {
       <div className="flex gap-2 mt-4 mb-6">
         {[['mine', '📋 My Requests'], ['approvals', '⏳ Pending Approvals'], ['all', '📊 All']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
-            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === v ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'}`}>
+            className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === v ? 'bg-[#7c3aed] text-white shadow-lg shadow-blue-500/30' : 'bg-white/5 text-slate-300 border border-white/10 hover:bg-white/10'}`}>
             {l}
           </button>
         ))}
@@ -169,7 +169,7 @@ export default function AdvancesPage() {
             </Field>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-white/5 border border-white/10 text-slate-300 text-sm">Cancel</button>
-              <button disabled={saving} className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-blue-600 text-white text-sm font-medium">
+              <button disabled={saving} className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-[#7c3aed] text-white text-sm font-medium">
                 {saving ? 'Submitting…' : 'Submit Request'}
               </button>
             </div>

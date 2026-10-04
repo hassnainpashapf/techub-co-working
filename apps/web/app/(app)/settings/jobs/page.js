@@ -7,7 +7,7 @@ import { useRequireRoles, AccessDenied } from '../../../../components/Protected'
 
 const STATUS_STYLES = {
   pending: 'bg-amber-500/15 text-amber-300 border-amber-500/30',
-  processing: 'bg-blue-500/15 text-blue-300 border-blue-500/30',
+  processing: 'bg-[#8b5cf6]/15 text-[#c4b5fd] border-[#8b5cf6]/30',
   completed: 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30',
   failed: 'bg-red-500/15 text-red-300 border-red-500/30',
 };

@@ -168,9 +168,9 @@ function RuleModal({ rule, onClose, onSaved }) {
             onRemove={() => setActions(actions.filter((_, j) => j !== i))} />
         ))}
       </div>
-      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-blue-300 hover:text-blue-200 mb-4">+ Add action</button>
+      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] mb-4">+ Add action</button>
       <label className="flex items-center gap-2 text-sm text-slate-300 mb-4">
-        <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="accent-blue-500" />
+        <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="accent-[#8b5cf6]" />
         Rule active
       </label>
       <div className="flex justify-end gap-2">
@@ -244,7 +244,7 @@ export default function AutomationPage() {
                   <span className="ml-2">{(r.actions || []).length} action{(r.actions || []).length !== 1 ? 's' : ''}</span>
                 </p>
               </div>
-              <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-blue-300 border border-blue-500/30 rounded-lg px-3 py-1.5 hover:bg-blue-500/10">
+              <button onClick={() => test(r)} disabled={testing === r.id} className="text-xs text-[#c4b5fd] border border-[#8b5cf6]/30 rounded-lg px-3 py-1.5 hover:bg-[#8b5cf6]/10">
                 {testing === r.id ? '…' : '🧪 Test'}
               </button>
               <button onClick={() => setModal(r)} className="text-xs text-slate-300 border border-white/10 rounded-lg px-3 py-1.5 hover:bg-white/5">Edit</button>

@@ -149,7 +149,7 @@ export default function ParkingPage() {
       <div className="flex gap-2 mb-4">
         {['all', 'free', 'occupied', 'reserved'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}>
             {f}
           </button>
         ))}

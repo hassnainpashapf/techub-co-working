@@ -158,7 +158,7 @@ export default function LocationsComparePage() {
                     </div>
                     <div className="h-2 rounded-full bg-white/5 overflow-hidden">
                       <div
-                        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all duration-700"
+                        className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all duration-700"
                         style={{ width: `${Math.min(r.occupancyPct, 100)}%` }}
                       />
                     </div>

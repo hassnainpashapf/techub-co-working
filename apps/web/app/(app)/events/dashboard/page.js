@@ -16,7 +16,7 @@ function money(n) {
 
 function ProgressBar({ pct }) {
   const p = Math.max(0, Math.min(100, Math.round(pct || 0)));
-  const color = p >= 80 ? 'from-green-500 to-emerald-500' : p >= 40 ? 'from-blue-500 to-cyan-500' : 'from-amber-500 to-orange-500';
+  const color = p >= 80 ? 'from-green-500 to-emerald-500' : p >= 40 ? 'from-[#8b5cf6] to-cyan-500' : 'from-amber-500 to-orange-500';
   return (
     <div className="h-2 rounded-full bg-white/10 overflow-hidden">
       <div className={`h-full rounded-full bg-gradient-to-r ${color}`} style={{ width: `${p}%` }} />

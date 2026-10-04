@@ -138,7 +138,7 @@ export default function AiSettingsPage() {
             <span>{usage.monthlyTokenCap ? `of ${usage.monthlyTokenCap.toLocaleString()}` : 'no cap'}</span>
           </div>
           <div className="h-2 rounded-full bg-white/10 overflow-hidden">
-            <div className="h-full bg-gradient-to-r from-violet-500 to-blue-500" style={{ width: `${pct}%` }} />
+            <div className="h-full bg-gradient-to-r from-violet-500 to-[#8b5cf6]" style={{ width: `${pct}%` }} />
           </div>
         </div>
       )}

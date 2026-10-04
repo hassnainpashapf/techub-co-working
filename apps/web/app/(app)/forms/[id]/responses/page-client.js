@@ -171,12 +171,12 @@ export default function FormResponsesPage() {
           ) : (
             <div className="space-y-2">
               {subs.map((s) => (
-                <div key={s.id} onClick={() => openDetail(s.id)} className="card p-4 cursor-pointer hover:border-blue-500/40">
+                <div key={s.id} onClick={() => openDetail(s.id)} className="card p-4 cursor-pointer hover:border-[#8b5cf6]/40">
                   <div className="flex items-center justify-between gap-2">
                     <div>
                       <p className="text-sm font-semibold text-white">{s.submitterName || s.submitterEmail || 'Anonymous'}</p>
                       <p className="text-xs text-slate-400">{s.submitterEmail || '—'} • {s.answerCount} answers • {new Date(s.createdAt).toLocaleString('en-PK')}</p>
-                      {s.assignedTo && <p className="text-xs text-blue-300 mt-0.5">👤 {s.assignedTo.name}</p>}
+                      {s.assignedTo && <p className="text-xs text-[#c4b5fd] mt-0.5">👤 {s.assignedTo.name}</p>}
                     </div>
                     <Badge tone={STATUS_TONES[s.status] || 'slate'}>{STATUS_LABELS[s.status] || s.status}</Badge>
                   </div>
@@ -208,7 +208,7 @@ export default function FormResponsesPage() {
                   {Object.entries(fs.optionCounts).sort((a, b) => b[1] - a[1]).map(([opt, c]) => (
                     <div key={opt} className="flex items-center gap-2 text-sm">
                       <span className="text-slate-300 flex-1 truncate">{opt}</span>
-                      <div className="w-40 bg-white/10 rounded-full h-2"><div className="bg-blue-500 h-2 rounded-full" style={{ width: `${(c / fs.responses) * 100}%` }} /></div>
+                      <div className="w-40 bg-white/10 rounded-full h-2"><div className="bg-[#8b5cf6] h-2 rounded-full" style={{ width: `${(c / fs.responses) * 100}%` }} /></div>
                       <span className="text-slate-400 text-xs w-8 text-right">{c}</span>
                     </div>
                   ))}

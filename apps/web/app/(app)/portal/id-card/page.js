@@ -29,7 +29,7 @@ export default function IdCardPage() {
   if (error) return <div className="p-6"><ErrorBanner message={error} onRetry={() => window.location.reload()} /></div>;
 
   const brandName = brand?.brandName || 'Techub Co-Working';
-  const primary = brand?.primaryColor || '#3b82f6';
+  const primary = brand?.primaryColor || '#8b5cf6';
   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=280x280&margin=10&data=${encodeURIComponent(data.qrPayload)}`;
   const fmt = (d) => (d ? new Date(d).toLocaleDateString([], { year: 'numeric', month: 'short', day: 'numeric' }) : '—');
   const statusTone = data.status === 'active' ? 'green' : data.status === 'on_hold' ? 'amber' : 'red';

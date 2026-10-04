@@ -114,13 +114,13 @@ function QuizPlayer({ lessonId, onPass }) {
               <div className="text-white font-medium">{i + 1}. {q.text}</div>
               <div className="mt-2 space-y-1.5">
                 {(q.options || []).map((opt, oi) => (
-                  <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer border ${answers[q.id] === oi ? 'border-blue-500 bg-blue-500/15 text-white' : 'border-white/10 text-slate-300 hover:bg-white/5'}`}>
+                  <label key={oi} className={`flex items-center gap-2 px-3 py-2 rounded-lg text-sm cursor-pointer border ${answers[q.id] === oi ? 'border-[#8b5cf6] bg-[#8b5cf6]/15 text-white' : 'border-white/10 text-slate-300 hover:bg-white/5'}`}>
                     <input
                       type="radio"
                       name={`q-${q.id}`}
                       checked={answers[q.id] === oi}
                       onChange={() => setAnswers((a) => ({ ...a, [q.id]: oi }))}
-                      className="accent-blue-500"
+                      className="accent-[#8b5cf6]"
                     />
                     {opt}
                   </label>
@@ -183,7 +183,7 @@ function LessonPlayer({ lesson, onPass, enrolled }) {
             download
             target="_blank"
             rel="noreferrer"
-            className="mt-5 inline-block px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-violet-600"
+            className="mt-5 inline-block px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600"
           >
             ⬇ Download file
           </a>
@@ -286,7 +286,7 @@ export default function AcademyDetailPage() {
 
   return (
     <div className="p-6 max-w-6xl mx-auto">
-      <Link href="/portal/academy" className="text-sm text-blue-400 hover:text-blue-300">← Back to Academy</Link>
+      <Link href="/portal/academy" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Academy</Link>
       <div className="mt-2 flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-extrabold text-white">{course.title}</h1>
@@ -308,7 +308,7 @@ export default function AcademyDetailPage() {
             <button
               onClick={enroll}
               disabled={acting}
-              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-500 hover:to-violet-500 disabled:opacity-50"
+              className="px-5 py-2.5 rounded-xl text-sm font-semibold text-white bg-gradient-to-r from-[#7c3aed] to-violet-600 hover:from-[#8b5cf6] hover:to-violet-500 disabled:opacity-50"
             >
               {acting ? 'Enrolling…' : 'Enroll now — start learning'}
             </button>
@@ -336,7 +336,7 @@ export default function AcademyDetailPage() {
               <button
                 key={l.id}
                 onClick={() => setActiveId(l.id)}
-                className={`w-full text-left px-3 py-2.5 rounded-xl mt-1 flex items-center gap-2 text-sm transition ${isActive ? 'bg-blue-600/20 border border-blue-500/50 text-white' : 'border border-transparent text-slate-300 hover:bg-white/5'}`}
+                className={`w-full text-left px-3 py-2.5 rounded-xl mt-1 flex items-center gap-2 text-sm transition ${isActive ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/50 text-white' : 'border border-transparent text-slate-300 hover:bg-white/5'}`}
               >
                 <span className={`w-6 h-6 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 ${isDone ? 'bg-green-500 text-white' : 'bg-white/10 text-slate-300'}`}>
                   {isDone ? '✓' : i + 1}

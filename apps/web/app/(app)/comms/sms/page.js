@@ -132,7 +132,7 @@ export default function CommsSmsPage() {
         </div>
         <div className="h-2 rounded-full bg-white/10 overflow-hidden">
           <div
-            className={`h-full rounded-full transition-all ${pct !== null ? 'bg-blue-500' : 'bg-blue-500 animate-pulse'}`}
+            className={`h-full rounded-full transition-all ${pct !== null ? 'bg-[#8b5cf6]' : 'bg-[#8b5cf6] animate-pulse'}`}
             style={{ width: pct !== null ? `${pct}%` : '40%' }}
           />
         </div>

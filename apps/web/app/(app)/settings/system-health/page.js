@@ -72,7 +72,7 @@ export default function SystemHealthPage() {
           <button
             onClick={runCheck}
             disabled={checking}
-            className="text-sm px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium transition disabled:opacity-50"
+            className="text-sm px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white font-medium transition disabled:opacity-50"
           >
             {checking ? 'Checking…' : 'Run check now'}
           </button>
@@ -133,7 +133,7 @@ export default function SystemHealthPage() {
               <button
                 onClick={() => retry(j.id)}
                 disabled={acting === j.id}
-                className="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-blue-500/40 bg-blue-500/15 text-blue-200 hover:bg-blue-500/25 transition disabled:opacity-50"
+                className="shrink-0 text-xs px-3 py-1.5 rounded-lg border border-[#8b5cf6]/40 bg-[#8b5cf6]/15 text-[#ddd6fe] hover:bg-[#8b5cf6]/25 transition disabled:opacity-50"
               >
                 {acting === j.id ? 'Retrying…' : 'Retry'}
               </button>

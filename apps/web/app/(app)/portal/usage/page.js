@@ -35,7 +35,7 @@ function TrendBars({ trend }) {
           <div key={i} className="flex-1 flex flex-col items-center gap-1">
             <span className="text-[11px] text-slate-300">{t.total ? Number(t.total).toLocaleString() : ''}</span>
             <div
-              className="w-full rounded-t bg-gradient-to-t from-blue-600 to-blue-400"
+              className="w-full rounded-t bg-gradient-to-t from-[#7c3aed] to-[#c4b5fd]"
               style={{ height: `${Math.max(4, (t.total / max) * 120)}px` }}
               title={Object.entries(t.byType || {})
                 .map(([k, v]) => `${k}: ${v}`)

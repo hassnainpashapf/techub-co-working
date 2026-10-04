@@ -113,7 +113,7 @@ export default function DocumentsPage() {
     {
       key: 'action', label: '', render: (d) => (
         <div className="flex gap-2">
-          {d.fileName && <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => downloadDoc(d)}>Download</button>}
+          {d.fileName && <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe]" onClick={() => downloadDoc(d)}>Download</button>}
           <button className="text-xs text-red-300 hover:text-red-200" onClick={() => delDoc(d.id)}>Delete</button>
         </div>
       ),

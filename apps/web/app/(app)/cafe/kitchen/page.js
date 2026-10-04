@@ -76,7 +76,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
         {items.map((it, i) => (
           <div key={i} className="flex justify-between text-base">
             <span className="text-slate-200">
-              <span className="inline-block min-w-[2.2rem] font-bold text-blue-300">{it.qty}×</span>
+              <span className="inline-block min-w-[2.2rem] font-bold text-[#c4b5fd]">{it.qty}×</span>
               {it.name}
             </span>
             <span className="text-slate-400">Rs {Number(it.price || 0).toLocaleString()}</span>
@@ -110,7 +110,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
           <button
             onClick={() => onStart(order.id)}
             disabled={busy}
-            className="flex-1 rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-4 py-3 text-lg font-bold text-white shadow-lg shadow-blue-900/40 hover:brightness-110 disabled:opacity-50"
+            className="flex-1 rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 px-4 py-3 text-lg font-bold text-white shadow-lg shadow-blue-900/40 hover:brightness-110 disabled:opacity-50"
           >
             {busy ? '…' : '▶ Start Cooking'}
           </button>

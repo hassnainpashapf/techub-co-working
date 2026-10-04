@@ -55,7 +55,7 @@ export default function LoginPage() {
     <div className="min-h-screen relative flex items-center justify-center px-4 py-10 overflow-hidden bg-[#05050c]">
       {/* Ambient animated background */}
       <div className="pointer-events-none absolute inset-0">
-        <div className="absolute -top-40 left-1/4 w-[560px] h-[420px] bg-blue-600/[0.14] blur-[130px] rounded-full animate-floatY" />
+        <div className="absolute -top-40 left-1/4 w-[560px] h-[420px] bg-[#7c3aed]/[0.14] blur-[130px] rounded-full animate-floatY" />
         <div className="absolute bottom-0 right-1/4 w-[520px] h-[380px] bg-violet-600/[0.12] blur-[130px] rounded-full animate-floatY" style={{ animationDelay: '-3.5s' }} />
         <div className="absolute top-1/3 left-0 w-[380px] h-[380px] bg-fuchsia-600/[0.06] blur-[120px] rounded-full" />
         <div
@@ -74,13 +74,13 @@ export default function LoginPage() {
         {/* Brand */}
         <div className="text-center mb-7">
           <div className="relative inline-block mb-4">
-            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-blue-500/40 to-violet-500/40 blur-xl opacity-70" />
+            <div className="absolute -inset-2 rounded-3xl bg-gradient-to-br from-[#8b5cf6]/40 to-violet-500/40 blur-xl opacity-70" />
             {brand?.logoUrl ? (
               <img src={`${API_BASE}${brand.logoUrl}`} alt={brand.brandName} className="relative inline-block h-16 w-16 object-contain rounded-2xl" />
             ) : (
               <div
                 className="relative inline-flex text-white rounded-2xl h-16 w-16 items-center justify-center text-3xl font-extrabold border border-white/20 shadow-inner"
-                style={{ background: `linear-gradient(135deg, ${brand?.primaryColor || '#3b82f6'}, #8b5cf6)` }}
+                style={{ background: `linear-gradient(135deg, ${brand?.primaryColor || '#8b5cf6'}, #8b5cf6)` }}
               >
                 {(brand?.brandName || 'T').charAt(0).toUpperCase()}
               </div>
@@ -94,8 +94,8 @@ export default function LoginPage() {
         </div>
 
         {/* Glass card */}
-        <div className="glass rounded-[24px] !p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55),0_0_40px_rgba(59,130,246,0.08)] relative overflow-hidden">
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-blue-400/60 to-transparent" />
+        <div className="glass rounded-[24px] !p-8 shadow-[0_24px_80px_rgba(0,0,0,0.55),0_0_40px_rgba(139,92,246,0.08)] relative overflow-hidden">
+          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#8b5cf6]/60 to-transparent" />
           <form onSubmit={handleSubmit}>
             {resetDone && (
               <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-300 text-sm rounded-xl px-4 py-3 mb-4 animate-fadeUp">
@@ -156,7 +156,7 @@ export default function LoginPage() {
               ) : 'Sign in'}
             </button>
           </form>
-          <a href="/forgot-password" className="block text-center text-sm text-slate-400 hover:text-blue-300 mt-5 transition-colors font-medium">Forgot password?</a>
+          <a href="/forgot-password" className="block text-center text-sm text-slate-400 hover:text-[#c4b5fd] mt-5 transition-colors font-medium">Forgot password?</a>
         </div>
 
         {!brand?.hidePoweredBy && (
@@ -174,8 +174,8 @@ export default function LoginPage() {
                 onClick={() => fillDemo(a.email)}
                 className={`rounded-xl border px-3 py-2.5 text-left transition-all duration-200 hover:-translate-y-0.5 ${
                   email === a.email
-                    ? 'border-blue-400/60 bg-blue-500/15 shadow-[0_0_20px_rgba(59,130,246,0.25)]'
-                    : 'border-white/10 bg-white/[0.04] hover:border-blue-400/40 hover:bg-blue-500/10'
+                    ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/15 shadow-[0_0_20px_rgba(139,92,246,0.25)]'
+                    : 'border-white/10 bg-white/[0.04] hover:border-[#8b5cf6]/40 hover:bg-[#8b5cf6]/10'
                 }`}
               >
                 <p className="text-white text-[13px] font-semibold">{a.label}</p>

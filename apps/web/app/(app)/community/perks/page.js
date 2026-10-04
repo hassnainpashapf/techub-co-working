@@ -94,7 +94,7 @@ export default function PerksManagePage() {
       <PageHeader
         title="Perks & Benefits"
         sub="Partner discounts for your members"
-        actions={<button onClick={openAdd} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500">+ New perk</button>}
+        actions={<button onClick={openAdd} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6]">+ New perk</button>}
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
@@ -107,7 +107,7 @@ export default function PerksManagePage() {
       <div className="flex gap-2 text-sm">
         {['all', 'active', 'inactive'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
-            className={`rounded-full px-4 py-1.5 font-medium ${filter === f ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+            className={`rounded-full px-4 py-1.5 font-medium ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
             {f[0].toUpperCase() + f.slice(1)}
           </button>
         ))}
@@ -128,7 +128,7 @@ export default function PerksManagePage() {
             <span key="cl" className="text-slate-200">{p.claimsCount || 0}</span>,
             p.isActive ? <Badge key="s" tone="green">Active</Badge> : <Badge key="s" tone="slate">Inactive</Badge>,
             <div key="a" className="flex gap-2">
-              <button onClick={() => openEdit(p)} className="text-sm text-blue-400 hover:text-blue-300">Edit</button>
+              <button onClick={() => openEdit(p)} className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">Edit</button>
               <button onClick={() => remove(p)} className="text-sm text-red-400 hover:text-red-300">Delete</button>
             </div>,
           ]))}
@@ -154,7 +154,7 @@ export default function PerksManagePage() {
             </div>
             <div className="flex justify-end gap-2">
               <button type="button" onClick={() => setModal(null)} className="rounded-lg px-4 py-2 text-sm text-slate-300 hover:bg-white/10">Cancel</button>
-              <button type="submit" disabled={saving} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50">{saving ? 'Saving…' : 'Save perk'}</button>
+              <button type="submit" disabled={saving} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6] disabled:opacity-50">{saving ? 'Saving…' : 'Save perk'}</button>
             </div>
           </form>
         </Modal>

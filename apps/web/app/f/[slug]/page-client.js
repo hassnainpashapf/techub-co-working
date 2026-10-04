@@ -310,7 +310,7 @@ export default function PublicFormPage() {
             })}
             {submitError && <p className="rounded-xl bg-red-500/10 border border-red-400/30 px-4 py-3 text-sm text-red-300">{submitError}</p>}
             <button type="submit" disabled={submitting}
-              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-blue-600 px-6 py-3.5 font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-500 hover:to-blue-500 disabled:opacity-50 transition">
+              className="w-full rounded-xl bg-gradient-to-r from-indigo-600 to-[#7c3aed] px-6 py-3.5 font-semibold text-white shadow-lg shadow-indigo-500/25 hover:from-indigo-500 hover:to-[#8b5cf6] disabled:opacity-50 transition">
               {submitting ? '⏳ Bhej rahe hain…' : (form.submitButtonText || 'Submit')}
             </button>
           </form>

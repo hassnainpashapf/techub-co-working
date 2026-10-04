@@ -51,7 +51,7 @@ export default function LostAnalysisPage() {
                 onClick={() => setDays(d)}
                 className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${
                   days === d
-                    ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
+                    ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]'
                     : 'bg-slate-800 text-slate-300 hover:bg-slate-700'
                 }`}
               >
@@ -113,7 +113,7 @@ export default function LostAnalysisPage() {
                   </div>
                   <div className="h-2.5 rounded-full bg-slate-800 overflow-hidden">
                     <div
-                      className={`h-full rounded-full transition-all ${f.stage === 'lost' ? 'bg-red-500' : 'bg-blue-500'}`}
+                      className={`h-full rounded-full transition-all ${f.stage === 'lost' ? 'bg-red-500' : 'bg-[#8b5cf6]'}`}
                       style={{ width: `${(f.count / maxFunnel) * 100}%` }}
                     />
                   </div>

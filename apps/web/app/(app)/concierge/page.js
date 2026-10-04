@@ -78,7 +78,7 @@ export default function ConciergeDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <h3 className="font-bold text-white mb-4">🔥 Top Services (30d)</h3>
           {s.topServices?.length ? (
             <div className="space-y-3">
@@ -93,7 +93,7 @@ export default function ConciergeDashboardPage() {
             <EmptyState title="Abhi koi data nahi" />
           )}
         </div>
-        <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-5">
+        <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
           <h3 className="font-bold text-white mb-4">🔗 Quick Links</h3>
           <div className="grid grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
@@ -106,7 +106,7 @@ export default function ConciergeDashboardPage() {
         </div>
       </div>
 
-      <div className="rounded-[20px] border border-white/10 bg-white/[0.03] p-5">
+      <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-5">
         <h3 className="font-bold text-white mb-4">📋 Open Requests (preview)</h3>
         {open.length ? (
           <div className="overflow-x-auto">

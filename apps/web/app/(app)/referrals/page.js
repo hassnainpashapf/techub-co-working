@@ -116,7 +116,7 @@ export default function StaffReferralsPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${filter === s ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+            className={`px-3 py-1.5 rounded-lg text-sm font-medium ${filter === s ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
           >
             {s || 'All'}
           </button>

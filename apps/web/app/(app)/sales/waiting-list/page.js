@@ -223,7 +223,7 @@ export default function WaitingListPage() {
                   <td className="px-4 py-3">
                     <div className="flex justify-end gap-1.5 flex-wrap">
                       {(e.status === 'waiting' || e.status === 'expired') && (
-                        <button onClick={() => setOfferEntry(e)} disabled={busy === e.id} className="text-xs text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg px-2.5 py-1.5">Offer</button>
+                        <button onClick={() => setOfferEntry(e)} disabled={busy === e.id} className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-2.5 py-1.5">Offer</button>
                       )}
                       {e.status !== 'converted' && (
                         <button onClick={() => { setConvertEntry(e); setConvertPhone(e.phone || ''); }} disabled={busy === e.id} className="text-xs text-white bg-emerald-600/80 hover:bg-emerald-600 rounded-lg px-2.5 py-1.5">Convert</button>

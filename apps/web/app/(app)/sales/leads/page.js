@@ -200,7 +200,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
   return (
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-black/60" onClick={onClose} />
-      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-[#14141f] border-l border-white/10 p-6 overflow-y-auto">
+      <div className="absolute right-0 top-0 h-full w-full max-w-md bg-[#141422] border-l border-white/10 p-6 overflow-y-auto">
         <div className="flex items-start justify-between mb-4">
           <div>
             <h2 className="text-lg font-semibold">{lead.name}</h2>
@@ -232,8 +232,8 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         </div>
 
         <div className="mb-6 flex gap-2 border-b border-white/10">
-          <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-blue-400 !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
-          <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-blue-400 !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
+          <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-[#8b5cf6] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
+          <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-[#8b5cf6] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
         </div>
 
         {tab === 'followups' ? (

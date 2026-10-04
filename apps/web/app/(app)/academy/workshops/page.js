@@ -163,7 +163,7 @@ export default function WorkshopsPage() {
         <div className="flex gap-2">
           {[['upcoming', 'Upcoming'], ['mine', 'My bookings']].map(([k, l]) => (
             <button key={k} onClick={() => setTab(k)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === k ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+              className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === k ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
               {l}
             </button>
           ))}

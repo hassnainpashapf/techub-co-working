@@ -80,7 +80,7 @@ export default function ProcurementDashboardPage() {
   return (
     <div className="p-4 md:p-6 space-y-6">
       <PageHeader title="Procurement Dashboard" sub="Purchases, bills aur vendor spend ka overview"
-        actions={<button onClick={load} className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold">↻ Refresh</button>} />
+        actions={<button onClick={load} className="px-4 py-2 rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-semibold">↻ Refresh</button>} />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       {stats && (

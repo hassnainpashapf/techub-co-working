@@ -211,8 +211,8 @@ export default function PortalBookingsPage() {
             onClick={() => setTab(t.key)}
             className={`px-4 py-2 rounded-full text-sm font-semibold transition ${
               tab === t.key
-                ? 'bg-blue-600 text-white shadow-[0_0_18px_rgba(37,99,235,0.5)]'
-                : 'bg-slate-800/70 text-slate-300 border border-slate-700 hover:border-blue-500/50'
+                ? 'bg-[#7c3aed] text-white shadow-[0_0_18px_rgba(37,99,235,0.5)]'
+                : 'bg-slate-800/70 text-slate-300 border border-slate-700 hover:border-[#8b5cf6]/50'
             }`}
           >
             {t.label}

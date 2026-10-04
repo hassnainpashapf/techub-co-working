@@ -59,7 +59,7 @@ export default function OnboardingSurveyPage() {
           <div className="grid grid-cols-11 gap-1 mb-4">
             {Array.from({ length: 11 }, (_, i) => (
               <button key={i} onClick={() => setScore(i)}
-                className={`py-2 rounded-lg text-sm font-bold transition ${score === i ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+                className={`py-2 rounded-lg text-sm font-bold transition ${score === i ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
                 {i}
               </button>
             ))}
@@ -69,7 +69,7 @@ export default function OnboardingSurveyPage() {
           </div>
           <textarea value={comment} onChange={(e) => setComment(e.target.value)} rows={3}
             placeholder="Koi tajweez? (optional)"
-            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-blue-500 mb-4" />
+            className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-[#8b5cf6] mb-4" />
           {err && <p className="text-red-400 text-xs mb-3">{err}</p>}
           <button onClick={submit} className="btn-primary w-full py-2.5 rounded-xl font-bold">Submit Feedback</button>
         </>}

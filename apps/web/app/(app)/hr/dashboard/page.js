@@ -173,7 +173,7 @@ export default function HrDashboardPage() {
         <div className="rounded-2xl border border-white/10 bg-gradient-to-br from-slate-900/80 to-slate-950/80 p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-white font-bold">🕐 Aaj ki attendance</h3>
-            <Link href="/hr/attendance" className="text-xs text-blue-300 hover:underline">Details →</Link>
+            <Link href="/hr/attendance" className="text-xs text-[#c4b5fd] hover:underline">Details →</Link>
           </div>
           {attTotal > 0 ? (
             <div className="space-y-3">

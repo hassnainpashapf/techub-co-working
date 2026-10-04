@@ -124,8 +124,8 @@ function InviteSuccess({ invite, onClose }) {
     <Modal title="Invite created" onClose={onClose}>
       <div className="text-center">
         <p className="text-slate-300 text-sm mb-2">Check-in code for <span className="font-semibold text-white">{invite.visitorName}</span></p>
-        <div className="inline-block bg-gradient-to-br from-blue-600/20 to-violet-600/20 border border-blue-500/40 rounded-2xl px-8 py-5 mb-4">
-          <div className="text-4xl font-bold tracking-[0.3em] text-blue-300">{invite.code}</div>
+        <div className="inline-block bg-gradient-to-br from-[#7c3aed]/20 to-violet-600/20 border border-[#8b5cf6]/40 rounded-2xl px-8 py-5 mb-4">
+          <div className="text-4xl font-bold tracking-[0.3em] text-[#c4b5fd]">{invite.code}</div>
           <div className="text-xs text-slate-400 mt-1">{fmtDateTime(invite.expectedAt)}</div>
         </div>
         <p className="text-xs text-slate-400 mb-4">Visitor shows this code at reception for fast check-in.</p>
@@ -207,7 +207,7 @@ export default function PortalVisitorsPage() {
               </div>
               <div className="flex items-center justify-between">
                 <div className="text-xs text-slate-400">
-                  Code <span className="font-mono font-bold text-blue-300 tracking-widest">{inv.code}</span>
+                  Code <span className="font-mono font-bold text-[#c4b5fd] tracking-widest">{inv.code}</span>
                 </div>
                 <div className="text-xs text-slate-400 capitalize">{inv.purpose}</div>
               </div>

@@ -143,7 +143,7 @@ export default function LeadImportPage() {
           onDrop={(e) => { e.preventDefault(); setDragOver(false); handleFile(e.dataTransfer.files?.[0]); }}
           onClick={() => fileRef.current?.click()}
           className={`card-premium p-10 text-center cursor-pointer border-2 border-dashed transition ${
-            dragOver ? 'border-blue-400 bg-blue-500/10' : 'border-white/10 hover:border-white/25'
+            dragOver ? 'border-[#8b5cf6] bg-[#8b5cf6]/10' : 'border-white/10 hover:border-white/25'
           }`}
         >
           <input ref={fileRef} type="file" accept=".csv,text/csv" className="hidden"
@@ -201,7 +201,7 @@ export default function LeadImportPage() {
               <div className="flex gap-1 text-xs">
                 {['all', 'valid', 'invalid'].map((f) => (
                   <button key={f} onClick={() => setFilter(f)}
-                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-blue-600/70 text-white' : 'text-slate-400 hover:text-white'}`}>
+                    className={`px-3 py-1.5 rounded-lg capitalize ${filter === f ? 'bg-[#7c3aed]/70 text-white' : 'text-slate-400 hover:text-white'}`}>
                     {f}
                   </button>
                 ))}

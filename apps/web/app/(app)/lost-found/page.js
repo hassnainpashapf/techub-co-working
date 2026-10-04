@@ -105,7 +105,7 @@ export default function LostFoundStaffPage() {
             <button
               key={t.v}
               onClick={() => setTab(t.v)}
-              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(59,130,246,0.4)]' : 'text-slate-300 hover:text-white'}`}
+              className={`px-4 py-1.5 rounded-lg text-sm font-semibold transition ${tab === t.v ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(139,92,246,0.4)]' : 'text-slate-300 hover:text-white'}`}
             >
               {t.l}
             </button>
@@ -116,7 +116,7 @@ export default function LostFoundStaffPage() {
             <button
               key={t.v}
               onClick={() => setType(t.v)}
-              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${type === t.v ? 'bg-blue-600/30 border-blue-500/50 text-white' : 'bg-white/5 border-white/10 text-slate-300 hover:text-white'}`}
+              className={`px-3 py-1.5 rounded-full text-xs font-semibold border transition ${type === t.v ? 'bg-[#7c3aed]/30 border-[#8b5cf6]/50 text-white' : 'bg-white/5 border-white/10 text-slate-300 hover:text-white'}`}
             >
               {t.l}
             </button>

@@ -138,7 +138,7 @@ export default function VendorBillsPage() {
             </button>
           )}
           {b.status === 'approved' && (
-            <button className="btn-ghost text-blue-400 text-xs" disabled={busy === b.id} onClick={() => doAction(b, 'pay')}>
+            <button className="btn-ghost text-[#c4b5fd] text-xs" disabled={busy === b.id} onClick={() => doAction(b, 'pay')}>
               {busy === b.id ? '…' : 'Mark Paid'}
             </button>
           )}
@@ -171,7 +171,7 @@ export default function VendorBillsPage() {
       <div className="flex flex-wrap gap-2 mb-4">
         <input className="input max-w-xs" placeholder="Search bill no / vendor…" value={search} onChange={(e) => setSearch(e.target.value)} />
         {['', 'pending', 'approved', 'paid', 'disputed'].map((s) => (
-          <button key={s} className={`btn-ghost text-xs ${status === s ? '!bg-blue-500/20 !text-blue-300' : ''}`} onClick={() => setStatus(s)}>
+          <button key={s} className={`btn-ghost text-xs ${status === s ? '!bg-[#8b5cf6]/20 !text-[#c4b5fd]' : ''}`} onClick={() => setStatus(s)}>
             {s === '' ? 'All' : s}
           </button>
         ))}

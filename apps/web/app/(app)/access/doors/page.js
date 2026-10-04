@@ -69,7 +69,7 @@ function HardwareCard() {
             </div>
           )}
           <div className="mt-2 flex gap-2">
-            <button onClick={genKey} disabled={busy} className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+            <button onClick={genKey} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
               {busy ? '…' : 'Generate Key'}
             </button>
             {dk.configured && (
@@ -86,16 +86,16 @@ function HardwareCard() {
               value={webhookUrl}
               onChange={(e) => setWebhookUrl(e.target.value)}
               placeholder="https://device.local/unlock"
-              className="flex-1 rounded-lg bg-[#12121f] border border-white/10 px-3 py-1.5 text-xs text-white"
+              className="flex-1 rounded-lg bg-[#141422] border border-white/10 px-3 py-1.5 text-xs text-white"
             />
-            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
+            <button onClick={saveWebhook} disabled={busy} className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-3 py-1.5 text-xs font-semibold text-white disabled:opacity-50">
               Save
             </button>
           </div>
           <p className="mt-1 text-[11px] text-white/40">Khali save karein to webhook remove ho jayega.</p>
         </div>
       </div>
-      {msg && <p className="mt-3 text-xs text-blue-300">{msg}</p>}
+      {msg && <p className="mt-3 text-xs text-[#c4b5fd]">{msg}</p>}
     </div>
   );
 }
@@ -187,7 +187,7 @@ export default function DoorsPage() {
           <button onClick={() => toggleActive(d)} className="text-xs font-semibold text-amber-300 hover:text-amber-200">
             {d.isActive ? 'Deactivate' : 'Activate'}
           </button>
-          <button onClick={() => openEdit(d)} className="text-xs font-semibold text-blue-300 hover:text-blue-200">Edit</button>
+          <button onClick={() => openEdit(d)} className="text-xs font-semibold text-[#c4b5fd] hover:text-[#ddd6fe]">Edit</button>
           <button onClick={() => remove(d)} className="text-xs font-semibold text-rose-300 hover:text-rose-200">Delete</button>
         </div>
       ),
@@ -202,7 +202,7 @@ export default function DoorsPage() {
         actions={(
           <button
             onClick={openAdd}
-            className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_16px_rgba(59,130,246,0.4)] hover:opacity-90"
+            className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-[0_0_16px_rgba(139,92,246,0.4)] hover:opacity-90"
           >
             + Add Door
           </button>
@@ -220,14 +220,14 @@ export default function DoorsPage() {
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 placeholder="Main Entrance"
-                className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
               />
             </Field>
             <Field label="Type">
               <select
                 value={form.type}
                 onChange={(e) => setForm({ ...form, type: e.target.value })}
-                className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
               >
                 {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
@@ -237,7 +237,7 @@ export default function DoorsPage() {
                 value={form.location}
                 onChange={(e) => setForm({ ...form, location: e.target.value })}
                 placeholder="Ground floor, left corridor"
-                className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
               />
             </Field>
             <Field label="Device ID (hardware integration, optional)">
@@ -245,7 +245,7 @@ export default function DoorsPage() {
                 value={form.deviceId}
                 onChange={(e) => setForm({ ...form, deviceId: e.target.value })}
                 placeholder="e.g. ACS-CTRL-01"
-                className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+                className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
               />
             </Field>
             <label className="flex items-center gap-2 text-sm text-slate-300">
@@ -253,7 +253,7 @@ export default function DoorsPage() {
                 type="checkbox"
                 checked={form.isActive}
                 onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                className="h-4 w-4 accent-blue-500"
+                className="h-4 w-4 accent-[#8b5cf6]"
               />
               Active (door usable for access)
             </label>
@@ -263,7 +263,7 @@ export default function DoorsPage() {
               </button>
               <button
                 type="submit" disabled={saving}
-                className="rounded-lg bg-gradient-to-r from-blue-600 to-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
+                className="rounded-lg bg-gradient-to-r from-[#7c3aed] to-indigo-600 px-4 py-2 text-sm font-semibold text-white disabled:opacity-50"
               >
                 {saving ? 'Saving…' : modal.mode === 'add' ? 'Add Door' : 'Save Changes'}
               </button>

@@ -115,7 +115,7 @@ export default function MaintenancePage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       <div className="grid grid-cols-3 gap-4 mb-5">
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-amber-300">{stats.pending}</div><div className="text-xs text-slate-400">Pending</div></div>
-        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-blue-300">{stats.inProgress}</div><div className="text-xs text-slate-400">In Progress</div></div>
+        <div className="card-premium p-4"><div className="text-2xl font-extrabold text-[#c4b5fd]">{stats.inProgress}</div><div className="text-xs text-slate-400">In Progress</div></div>
         <div className="card-premium p-4"><div className="text-2xl font-extrabold text-white">{money(stats.totalCost)}</div><div className="text-xs text-slate-400">Completed cost</div></div>
       </div>
       <div className="flex gap-2 mb-4">

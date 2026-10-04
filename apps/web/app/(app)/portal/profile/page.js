@@ -23,7 +23,7 @@ function Toggle({ on, onChange, label }) {
       role="switch"
       aria-checked={on}
       onClick={() => onChange(!on)}
-      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-blue-600' : 'bg-white/15'}`}
+      className={`relative inline-flex h-6 w-11 shrink-0 items-center rounded-full transition-colors ${on ? 'bg-[#7c3aed]' : 'bg-white/15'}`}
     >
       <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${on ? 'translate-x-6' : 'translate-x-1'}`} />
       <span className="sr-only">{label}</span>
@@ -231,10 +231,10 @@ export default function PortalProfilePage() {
               key={photoTick}
               src={photoUrl()}
               alt="Profile"
-              className="h-20 w-20 rounded-full object-cover border-2 border-blue-500/50 bg-white/10"
+              className="h-20 w-20 rounded-full object-cover border-2 border-[#8b5cf6]/50 bg-white/10"
               onError={(e) => { e.currentTarget.style.display = 'none'; }}
             />
-            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-blue-600 to-violet-600 flex items-center justify-center text-xl font-bold text-white absolute inset-0 -z-10">
+            <div className="h-20 w-20 rounded-full bg-gradient-to-br from-[#7c3aed] to-violet-600 flex items-center justify-center text-xl font-bold text-white absolute inset-0 -z-10">
               {initials}
             </div>
           </div>
@@ -244,7 +244,7 @@ export default function PortalProfilePage() {
               type="button"
               onClick={() => fileRef.current?.click()}
               disabled={uploading}
-              className="rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition"
+              className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2 transition"
             >
               {uploading ? 'Uploading…' : 'Photo badlein'}
             </button>
@@ -270,7 +270,7 @@ export default function PortalProfilePage() {
             </Field>
           </div>
           <div className="text-xs text-slate-500">Email: <span className="text-slate-300">{member?.email || '—'}</span> · Status: <span className="text-slate-300">{member?.status}</span></div>
-          <button type="submit" disabled={saving} className="rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={saving} className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
             {saving ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>
@@ -330,7 +330,7 @@ export default function PortalProfilePage() {
           <Field label="Tags (comma se alag)">
             <input className="input" value={dir.directoryTags} onChange={(e) => setDir({ ...dir, directoryTags: e.target.value })} placeholder="design, startup, marketing" />
           </Field>
-          <button type="submit" disabled={dirBusy} className="rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={dirBusy} className="rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
             {dirBusy ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>

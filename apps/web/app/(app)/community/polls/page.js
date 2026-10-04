@@ -22,7 +22,7 @@ function ResultsBars({ results }) {
           </div>
           <div className="h-2 rounded-full bg-white/5 overflow-hidden">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all"
+              className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all"
               style={{ width: `${(b.votes / max) * 100}%` }}
             />
           </div>

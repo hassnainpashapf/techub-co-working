@@ -246,7 +246,7 @@ export default function SurveysPage() {
               label: 'Actions',
               render: (s) => (
                 <div className="flex gap-2 flex-wrap">
-                  <button onClick={() => setViewing(s)} className="text-xs text-blue-300 hover:text-blue-200 underline">Results</button>
+                  <button onClick={() => setViewing(s)} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">Results</button>
                   {s.status === 'draft' && (
                     <button onClick={() => setStatus(s, 'active')} disabled={busy === s.id} className="text-xs text-emerald-300 hover:text-emerald-200 underline">Activate</button>
                   )}

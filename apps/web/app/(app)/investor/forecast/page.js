@@ -22,8 +22,8 @@ function ForecastChart({ history, forecast, height = 240 }) {
       <svg viewBox={`0 0 ${W} ${H}`} className="w-full h-full" preserveAspectRatio="none">
         <defs>
           <linearGradient id="fcArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.28" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
+            <stop offset="0%" stopColor="#8b5cf6" stopOpacity="0.28" />
+            <stop offset="100%" stopColor="#8b5cf6" stopOpacity="0" />
           </linearGradient>
         </defs>
         {[0.25, 0.5, 0.75, 1].map((f) => (
@@ -38,7 +38,7 @@ function ForecastChart({ history, forecast, height = 240 }) {
         <line x1={x(split - 0.5)} y1={6} x2={x(split - 0.5)} y2={H - padB} stroke="rgba(255,255,255,0.25)" strokeWidth="0.25" strokeDasharray="1.2,1" />
         <text x={x(split - 0.5)} y={4.5} textAnchor="middle" fill="rgba(255,255,255,0.45)" fontSize="2.6">today</text>
         {/* history line */}
-        <polyline points={pts(history, 0)} fill="none" stroke="#3b82f6" strokeWidth="1" strokeLinecap="round" />
+        <polyline points={pts(history, 0)} fill="none" stroke="#8b5cf6" strokeWidth="1" strokeLinecap="round" />
         {/* forecast line (dashed) */}
         <polyline points={`${x(split - 1)},${y(history[history.length - 1]?.rate || 0)} ${pts(forecast, split)}`} fill="none" stroke="#f59e0b" strokeWidth="1" strokeDasharray="2,1.4" strokeLinecap="round" />
         {all.map((d, i) => (
@@ -126,7 +126,7 @@ export default function ForecastPage() {
 
           <div className="card-premium p-6">
             <div className="flex items-center gap-5 mb-4 text-xs text-slate-400">
-              <span className="flex items-center gap-1.5"><span className="w-6 h-0.5 bg-blue-500 rounded" /> History</span>
+              <span className="flex items-center gap-1.5"><span className="w-6 h-0.5 bg-[#8b5cf6] rounded" /> History</span>
               <span className="flex items-center gap-1.5"><span className="w-6 border-t-2 border-dashed border-amber-500" /> Forecast</span>
             </div>
             {data.history.length === 0 ? (

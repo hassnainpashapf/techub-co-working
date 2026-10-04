@@ -75,13 +75,13 @@ export default function NotificationsPage() {
       <div className="flex flex-wrap items-center gap-2 mb-5">
         <button
           onClick={() => setFilter('all')}
-          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'all' ? 'bg-blue-600 text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'all' ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
         >
           All
         </button>
         <button
           onClick={() => setFilter('unread')}
-          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'unread' ? 'bg-blue-600 text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
+          className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'unread' ? 'bg-[#7c3aed] text-white' : 'bg-white/[0.04] text-slate-400 hover:text-slate-200'}`}
         >
           Unread
         </button>
@@ -102,7 +102,7 @@ export default function NotificationsPage() {
           items.map((n) => (
             <div
               key={n.id}
-              className={`flex items-start gap-3 px-4 py-3.5 rounded-xl transition-colors ${n.isRead ? '' : 'bg-blue-500/[0.07] border border-blue-500/20'}`}
+              className={`flex items-start gap-3 px-4 py-3.5 rounded-xl transition-colors ${n.isRead ? '' : 'bg-[#8b5cf6]/[0.07] border border-[#8b5cf6]/20'}`}
             >
               <span className="text-xl mt-0.5">{TYPE_ICONS[n.type] || '🔔'}</span>
               <div className="flex-1 min-w-0">
@@ -112,7 +112,7 @@ export default function NotificationsPage() {
                 </p>
               </div>
               {!n.isRead && (
-                <button onClick={() => markRead(n.id)} className="text-[12px] text-blue-400 hover:text-blue-300 shrink-0 mt-1">
+                <button onClick={() => markRead(n.id)} className="text-[12px] text-[#c4b5fd] hover:text-[#c4b5fd] shrink-0 mt-1">
                   Mark read
                 </button>
               )}

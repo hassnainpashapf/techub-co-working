@@ -123,7 +123,7 @@ export default function OnboardingPage() {
       <div className="flex items-center gap-2 mt-6 mb-6">
         {STEPS.map((label, i) => (
           <div key={label} className="flex items-center gap-2 flex-1">
-            <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-blue-600 text-white' : 'bg-slate-700 text-slate-400'}`}>{i + 1}</div>
+            <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-[#7c3aed] text-white' : 'bg-slate-700 text-slate-400'}`}>{i + 1}</div>
             <span className={`text-sm ${i <= step ? 'text-white font-semibold' : 'text-slate-500'}`}>{label}</span>
             {i < STEPS.length - 1 && <div className="flex-1 h-px bg-slate-700 mx-1" />}
           </div>
@@ -145,7 +145,7 @@ export default function OnboardingPage() {
               <div className="grid grid-cols-3 gap-2">
                 {PLANS.map((p) => (
                   <button key={p.slug} type="button" onClick={() => set('plan', p.slug)}
-                    className={`rounded-xl border p-3 text-sm font-semibold ${form.plan === p.slug ? 'border-blue-500 bg-blue-500/15 text-white' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
+                    className={`rounded-xl border p-3 text-sm font-semibold ${form.plan === p.slug ? 'border-[#8b5cf6] bg-[#8b5cf6]/15 text-white' : 'border-slate-700 text-slate-400 hover:border-slate-500'}`}>
                     {p.name}
                   </button>
                 ))}

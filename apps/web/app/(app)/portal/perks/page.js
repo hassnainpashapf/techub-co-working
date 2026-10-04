@@ -64,7 +64,7 @@ export default function PortalPerksPage() {
       <div className="flex flex-wrap gap-2">
         {CATEGORIES.map((c) => (
           <button key={c.value} onClick={() => setCategory(c.value)}
-            className={`rounded-full px-4 py-1.5 text-sm font-medium ${category === c.value ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
+            className={`rounded-full px-4 py-1.5 text-sm font-medium ${category === c.value ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}>
             {c.label}
           </button>
         ))}
@@ -100,7 +100,7 @@ export default function PortalPerksPage() {
                     <button
                       onClick={() => claim(p)}
                       disabled={claiming === p.id}
-                      className="w-full rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50">
+                      className="w-full rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6] disabled:opacity-50">
                       {claiming === p.id ? 'Loading…' : p.claimed ? 'Show my code' : 'Claim this perk'}
                     </button>
                   )}

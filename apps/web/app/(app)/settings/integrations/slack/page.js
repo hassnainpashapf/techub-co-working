@@ -121,7 +121,7 @@ export default function SlackPage() {
                   type="checkbox"
                   checked={events.includes(ev.key)}
                   onChange={() => toggleEvent(ev.key)}
-                  className="mt-1 accent-blue-500"
+                  className="mt-1 accent-[#8b5cf6]"
                 />
                 <span>
                   <span className="block text-sm font-semibold text-white">{ev.label}</span>
@@ -138,7 +138,7 @@ export default function SlackPage() {
             type="checkbox"
             checked={isActive}
             onChange={(e) => setIsActive(e.target.checked)}
-            className="accent-blue-500"
+            className="accent-[#8b5cf6]"
           />
           <label htmlFor="slack-active" className="text-sm text-slate-300">Integration active</label>
         </div>

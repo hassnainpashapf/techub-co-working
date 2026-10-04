@@ -199,7 +199,7 @@ export default function FinancePage() {
                   onClick={() => setStatusFilter(s)}
                   className={`px-3 py-1.5 rounded-full text-xs font-medium capitalize transition ${
                     statusFilter === s
-                      ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(59,130,246,0.5)]'
+                      ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(139,92,246,0.5)]'
                       : 'bg-white/5 text-slate-400 hover:text-white'
                   }`}
                 >

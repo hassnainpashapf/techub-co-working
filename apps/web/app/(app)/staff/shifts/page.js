@@ -188,11 +188,11 @@ export default function ShiftsPage() {
               <table className="w-full text-sm min-w-[800px]">
                 <thead>
                   <tr className="bg-white/5">
-                    <th className="text-left p-3 text-slate-300 font-semibold sticky left-0 bg-[#14141f]">Staff</th>
+                    <th className="text-left p-3 text-slate-300 font-semibold sticky left-0 bg-[#141422]">Staff</th>
                     {days.map((d) => {
                       const f = fmtDay(d);
                       return (
-                        <th key={d} className={`p-3 text-center font-semibold ${f.today ? 'text-blue-300' : 'text-slate-300'}`}>
+                        <th key={d} className={`p-3 text-center font-semibold ${f.today ? 'text-[#c4b5fd]' : 'text-slate-300'}`}>
                           {f.dow}<br /><span className="text-lg">{f.num}</span> <span className="text-xs font-normal">{f.month}</span>
                         </th>
                       );
@@ -202,7 +202,7 @@ export default function ShiftsPage() {
                 <tbody>
                   {staff.map((s) => (
                     <tr key={s.id} className="border-t border-white/5 hover:bg-white/[0.02]">
-                      <td className="p-3 sticky left-0 bg-[#14141f]">
+                      <td className="p-3 sticky left-0 bg-[#141422]">
                         <div className="font-semibold text-white">{s.name}</div>
                         <div className="text-xs text-slate-400">{s.role}</div>
                       </td>
@@ -211,15 +211,15 @@ export default function ShiftsPage() {
                         return (
                           <td key={d} className="p-2 text-center align-top min-w-[110px]">
                             {sh ? (
-                              <div className="rounded-xl bg-blue-500/10 border border-blue-400/30 p-2 text-left group relative">
-                                <div className="font-bold text-blue-200 text-xs">{sh.startTime}–{sh.endTime}</div>
+                              <div className="rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 p-2 text-left group relative">
+                                <div className="font-bold text-[#ddd6fe] text-xs">{sh.startTime}–{sh.endTime}</div>
                                 {sh.role && <Badge tone="blue">{sh.role}</Badge>}
                                 {sh.notes && <div className="text-[11px] text-slate-400 mt-1 truncate" title={sh.notes}>{sh.notes}</div>}
                                 <button className="absolute top-1 right-1 text-red-300 opacity-0 group-hover:opacity-100 text-xs" onClick={() => remove(sh.id)} title="Delete">✕</button>
                               </div>
                             ) : (
                               <button
-                                className="w-full rounded-xl border border-dashed border-white/10 p-3 text-slate-500 hover:border-blue-400/40 hover:text-blue-300 text-xs"
+                                className="w-full rounded-xl border border-dashed border-white/10 p-3 text-slate-500 hover:border-[#8b5cf6]/40 hover:text-[#c4b5fd] text-xs"
                                 onClick={() => { setFormInit({ userId: s.id, date: d }); setShowForm(true); }}
                               >+ Add</button>
                             )}

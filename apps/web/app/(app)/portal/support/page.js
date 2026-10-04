@@ -162,7 +162,7 @@ export default function PortalSupportPage() {
 
       <div className="grid grid-cols-3 gap-3 mb-5">
         <div className="card-premium p-4 text-center">
-          <p className="text-2xl font-bold text-blue-300">{openCount}</p>
+          <p className="text-2xl font-bold text-[#c4b5fd]">{openCount}</p>
           <p className="text-xs text-slate-400">Open</p>
         </div>
         <div className="card-premium p-4 text-center">
@@ -180,7 +180,7 @@ export default function PortalSupportPage() {
       ) : (
         <div className="grid md:grid-cols-2 gap-4">
           {tickets.map((t) => (
-            <button key={t.id} onClick={() => openDetail(t.id)} className="card-premium p-5 text-left hover:border-blue-500/40 transition w-full">
+            <button key={t.id} onClick={() => openDetail(t.id)} className="card-premium p-5 text-left hover:border-[#8b5cf6]/40 transition w-full">
               <div className="flex items-start justify-between gap-2 mb-2">
                 <div>
                   <p className="text-xs text-slate-500 font-mono">#{t.ticketNumber}</p>
@@ -265,7 +265,7 @@ export default function PortalSupportPage() {
                   const mine = user && (c.author?.id === user.id);
                   return (
                     <div key={c.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                      <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-blue-600/30 border border-blue-500/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
+                      <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
                         <p className="text-xs text-slate-400 mb-0.5">{c.author?.name || 'Team'} · {fmtDate(c.createdAt)}</p>
                         <p className="text-sm text-slate-100 whitespace-pre-wrap">{c.body}</p>
                       </div>

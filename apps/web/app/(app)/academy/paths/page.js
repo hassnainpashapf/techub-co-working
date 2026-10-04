@@ -22,7 +22,7 @@ function ProgressBar({ pct }) {
   return (
     <div className="h-2 w-full rounded-full bg-slate-700/60 overflow-hidden">
       <div
-        className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500 transition-all"
+        className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500 transition-all"
         style={{ width: `${pct}%` }}
       />
     </div>
@@ -113,7 +113,7 @@ export default function LearningPathsPage() {
         title="Learning Paths"
         sub={isStaff ? 'Ordered course sequences — curate, publish, track' : 'Guided course journeys — follow step by step'}
         actions={isStaff ? (
-          <button onClick={openCreate} className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500">
+          <button onClick={openCreate} className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6]">
             + New Path
           </button>
         ) : null}
@@ -147,7 +147,7 @@ export default function LearningPathsPage() {
                 )}
                 <button
                   onClick={() => toggleExpanded(p.id)}
-                  className="mt-3 text-sm font-medium text-blue-300 hover:text-blue-200"
+                  className="mt-3 text-sm font-medium text-[#c4b5fd] hover:text-[#ddd6fe]"
                 >
                   {open ? 'Hide courses ▴' : `Show courses (${courseList.length}) ▾`}
                 </button>
@@ -165,7 +165,7 @@ export default function LearningPathsPage() {
                 )}
                 {isStaff && (
                   <div className="mt-3 flex gap-2">
-                    <button onClick={() => openEdit(p)} className="rounded-lg bg-blue-600 px-3 py-1.5 text-sm font-medium text-white hover:bg-blue-500">Edit</button>
+                    <button onClick={() => openEdit(p)} className="rounded-lg bg-[#7c3aed] px-3 py-1.5 text-sm font-medium text-white hover:bg-[#8b5cf6]">Edit</button>
                     <button onClick={() => remove(p)} className="rounded-lg bg-red-600/80 px-3 py-1.5 text-sm font-medium text-white hover:bg-red-600">Delete</button>
                   </div>
                 )}
@@ -201,11 +201,11 @@ export default function LearningPathsPage() {
                       key={c.id}
                       type="button"
                       onClick={() => toggleCourse(c.id)}
-                      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${idx >= 0 ? 'bg-blue-600/30 text-blue-100' : 'text-slate-300 hover:bg-slate-800'}`}
+                      className={`flex w-full items-center gap-2 rounded-lg px-2 py-1.5 text-left text-sm ${idx >= 0 ? 'bg-[#7c3aed]/30 text-blue-100' : 'text-slate-300 hover:bg-slate-800'}`}
                     >
                       <span className="text-xs text-slate-400">{idx >= 0 ? `#${idx + 1}` : '—'}</span>
                       <span className="flex-1">{c.title}</span>
-                      {idx >= 0 && <span className="text-blue-300">✓</span>}
+                      {idx >= 0 && <span className="text-[#c4b5fd]">✓</span>}
                     </button>
                   );
                 })}
@@ -225,7 +225,7 @@ export default function LearningPathsPage() {
               <button
                 onClick={save}
                 disabled={saving}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-500 disabled:opacity-50"
+                className="rounded-lg bg-[#7c3aed] px-4 py-2 text-sm font-medium text-white hover:bg-[#8b5cf6] disabled:opacity-50"
               >
                 {saving ? 'Saving…' : 'Save'}
               </button>

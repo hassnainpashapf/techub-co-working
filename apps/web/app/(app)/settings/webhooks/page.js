@@ -70,7 +70,7 @@ function Deliveries({ webhookId }) {
     { key: 'at', label: 'Time', render: (r) => <span className="text-xs text-slate-400">{new Date(r.createdAt).toLocaleString()}</span> },
     {
       key: 'resend', label: '', render: (r) => r.status === 'failed' ? (
-        <button className="text-xs text-blue-300 hover:text-blue-200 disabled:opacity-50" disabled={busy === r.id} onClick={() => resend(r.id)}>
+        <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] disabled:opacity-50" disabled={busy === r.id} onClick={() => resend(r.id)}>
           {busy === r.id ? 'Sending…' : 'Resend'}
         </button>
       ) : null,
@@ -173,7 +173,7 @@ export default function WebhooksPage() {
     {
       key: 'action', label: '', render: (h) => (
         <div className="flex gap-2 flex-wrap">
-          <button className="text-xs text-blue-300 hover:text-blue-200" onClick={() => setViewDeliveries(h)}>Logs</button>
+          <button className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe]" onClick={() => setViewDeliveries(h)}>Logs</button>
           <button className="text-xs text-slate-300 hover:text-white" onClick={() => sendTest(h)}>Test</button>
           <button className="text-xs text-amber-300 hover:text-amber-200" onClick={() => regenSecret(h)}>Secret</button>
           <button className="text-xs text-slate-300 hover:text-white" onClick={() => { setEditing(h); setShowForm(true); }}>Edit</button>

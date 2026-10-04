@@ -147,7 +147,7 @@ export default function ConciergeRequestDetailPage() {
   if (error && !req) {
     return (
       <div>
-        <Link href="/portal/concierge" className="text-sm text-blue-400 hover:text-blue-300">← Back to Concierge</Link>
+        <Link href="/portal/concierge" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Concierge</Link>
         <ErrorBanner message={error} onRetry={load} />
       </div>
     );
@@ -160,7 +160,7 @@ export default function ConciergeRequestDetailPage() {
 
   return (
     <div>
-      <Link href="/portal/concierge" className="text-sm text-blue-400 hover:text-blue-300">← Back to Concierge</Link>
+      <Link href="/portal/concierge" className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]">← Back to Concierge</Link>
       <div className="mt-2">
         <PageHeader
           title={req.title || 'Concierge Request'}
@@ -174,7 +174,7 @@ export default function ConciergeRequestDetailPage() {
         <Badge tone={STATUS_TONE[req.status] || 'slate'}>{(req.status || 'new').replace('_', ' ')}</Badge>
         {req.priority && <Badge tone={req.priority === 'urgent' ? 'red' : 'slate'}>{req.priority}</Badge>}
         {req.assignee?.name && <span className="text-slate-400">Assigned: {req.assignee.name}</span>}
-        {req.price != null && <span className="text-blue-300 font-semibold">PKR {Number(req.price).toLocaleString('en-PK')}</span>}
+        {req.price != null && <span className="text-[#c4b5fd] font-semibold">PKR {Number(req.price).toLocaleString('en-PK')}</span>}
       </div>
 
       {req.details && (
@@ -189,8 +189,8 @@ export default function ConciergeRequestDetailPage() {
         <div className="flex gap-1 mb-5">
           {STEPS.map((s, i) => (
             <div key={s.key} className="flex-1">
-              <div className={`h-1.5 rounded-full ${stepIdx >= 0 && i <= stepIdx ? 'bg-blue-500' : 'bg-slate-700'}`} />
-              <p className={`text-[11px] mt-1 ${stepIdx >= 0 && i <= stepIdx ? 'text-blue-300' : 'text-slate-500'}`}>{s.label}</p>
+              <div className={`h-1.5 rounded-full ${stepIdx >= 0 && i <= stepIdx ? 'bg-[#8b5cf6]' : 'bg-slate-700'}`} />
+              <p className={`text-[11px] mt-1 ${stepIdx >= 0 && i <= stepIdx ? 'text-[#c4b5fd]' : 'text-slate-500'}`}>{s.label}</p>
             </div>
           ))}
         </div>
@@ -198,7 +198,7 @@ export default function ConciergeRequestDetailPage() {
           {timeline.map((t, i) => (
             <div key={i} className="flex gap-3">
               <div className="flex flex-col items-center">
-                <div className="w-2.5 h-2.5 rounded-full bg-blue-400 mt-1" />
+                <div className="w-2.5 h-2.5 rounded-full bg-[#8b5cf6] mt-1" />
                 {i < timeline.length - 1 && <div className="w-px flex-1 bg-slate-700/60" />}
               </div>
               <div className="pb-3">
@@ -220,7 +220,7 @@ export default function ConciergeRequestDetailPage() {
               const mine = user && (m.sender?.id === user.id || m.senderId === user.id);
               return (
                 <div key={m.id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
-                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-blue-600/30 border border-blue-500/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
+                  <div className={`max-w-[85%] rounded-xl px-3 py-2 ${mine ? 'bg-[#7c3aed]/30 border border-[#8b5cf6]/30' : 'bg-slate-800/60 border border-slate-700/50'}`}>
                     <p className="text-xs text-slate-400 mb-0.5">{m.sender?.name || (mine ? 'You' : 'Concierge')} · {fmtDate(m.createdAt)}</p>
                     <p className="text-sm text-slate-100 whitespace-pre-wrap">{m.message || m.body}</p>
                   </div>

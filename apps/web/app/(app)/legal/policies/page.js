@@ -22,7 +22,7 @@ function AckBar({ acked, total }) {
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
       <div className="flex-1 h-2 rounded-full bg-slate-700/60 overflow-hidden">
-        <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500" style={{ width: pct + '%' }} />
+        <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500" style={{ width: pct + '%' }} />
       </div>
       <span className="text-xs text-slate-300 whitespace-nowrap">{acked}/{total}</span>
     </div>

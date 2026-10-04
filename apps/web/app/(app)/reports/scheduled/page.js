@@ -81,7 +81,7 @@ function ReportForm({ initial, onSave, saving }) {
       </Field>
       <label className="flex items-center gap-3 mb-4 cursor-pointer">
         <button type="button" role="switch" aria-checked={f.isActive} onClick={() => setF({ ...f, isActive: !f.isActive })}
-          className={`w-11 h-6 rounded-full relative transition-colors ${f.isActive ? 'bg-blue-500' : 'bg-white/10'}`}>
+          className={`w-11 h-6 rounded-full relative transition-colors ${f.isActive ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}>
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${f.isActive ? 'left-[22px]' : 'left-0.5'}`} />
         </button>
         <span className="text-sm text-white font-medium">Active</span>
@@ -183,7 +183,7 @@ export default function ScheduledReportsPage() {
                 Last sent: {r.lastSentAt ? new Date(r.lastSentAt).toLocaleString() : 'Never'}
               </p>
               <div className="flex flex-wrap gap-2">
-                <button onClick={() => sendNow(r.id)} disabled={sending === r.id} className="text-xs text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg px-3 py-1.5">
+                <button onClick={() => sendNow(r.id)} disabled={sending === r.id} className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-3 py-1.5">
                   {sending === r.id ? 'Queuing…' : 'Send now'}
                 </button>
                 <button onClick={() => { setEditing(r); setShowForm(true); }} className="text-xs text-slate-300 hover:text-white border border-white/10 rounded-lg px-3 py-1.5">Edit</button>

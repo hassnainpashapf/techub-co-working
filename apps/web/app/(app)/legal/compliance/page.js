@@ -45,7 +45,7 @@ export default function CompliancePage() {
       )}
       <div className="flex gap-2">
         {['all', 'pending', 'overdue', 'done'].map(f => (
-          <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1 rounded-full text-sm ${filter === f ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300'}`}>{f}</button>
+          <button key={f} onClick={() => setFilter(f)} className={`px-3 py-1 rounded-full text-sm ${filter === f ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>{f}</button>
         ))}
       </div>
       <DataTable

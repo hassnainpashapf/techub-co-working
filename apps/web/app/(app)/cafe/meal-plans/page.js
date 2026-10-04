@@ -130,7 +130,7 @@ export default function MealPlansPage() {
   return (
     <div className="p-6 space-y-6">
       <PageHeader title="🍱 Meal Plans" subtitle="Monthly lunch / meal subscriptions for members" action={
-        <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium">+ New Plan</button>
+        <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">+ New Plan</button>
       } />
 
       {error && <ErrorBanner message={error} />}
@@ -138,7 +138,7 @@ export default function MealPlansPage() {
       <div className="flex gap-2">
         {['plans', 'subscribers'].map((t) => (
           <button key={t} onClick={() => setTab(t)}
-            className={`px-4 py-1.5 rounded-full text-sm capitalize ${tab === t ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm capitalize ${tab === t ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300'}`}>
             {t}
           </button>
         ))}
@@ -190,7 +190,7 @@ export default function MealPlansPage() {
             <div className="text-xs opacity-60">Total meals per subscription: {Number(form.mealsPerDay || 0) * Number(form.validDays || 0)}</div>
             <div className="flex justify-end gap-2">
               <button onClick={() => setModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-sm">Cancel</button>
-              <button onClick={save} disabled={saving} className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm">{saving ? 'Saving…' : 'Save'}</button>
+              <button onClick={save} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm">{saving ? 'Saving…' : 'Save'}</button>
             </div>
           </div>
         </Modal>

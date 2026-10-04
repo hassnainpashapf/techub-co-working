@@ -128,15 +128,15 @@ export default function CafeMenuPage() {
         <div className="rounded-xl border border-white/10 bg-[#14142a] p-4 space-y-3 h-fit">
           <div className="flex items-center justify-between">
             <h3 className="font-semibold text-white">Categories</h3>
-            <button onClick={openCatAdd} className="text-sm px-3 py-1.5 rounded-lg bg-blue-600 text-white hover:bg-blue-500">+ Add</button>
+            <button onClick={openCatAdd} className="text-sm px-3 py-1.5 rounded-lg bg-[#7c3aed] text-white hover:bg-[#8b5cf6]">+ Add</button>
           </div>
           <div className="space-y-1">
             <button
               onClick={() => setSelCat('all')}
-              className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selCat === 'all' ? 'bg-blue-600/20 border border-blue-500/40 text-white' : 'text-slate-300 hover:bg-white/5'}`}
+              className={`w-full text-left px-3 py-2 rounded-lg text-sm ${selCat === 'all' ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/40 text-white' : 'text-slate-300 hover:bg-white/5'}`}
             >🍽️ All Items ({items.length})</button>
             {categories.map((c) => (
-              <div key={c.id} className={`flex items-center gap-1 px-1 py-1 rounded-lg ${selCat === c.id ? 'bg-blue-600/20 border border-blue-500/40' : ''}`}>
+              <div key={c.id} className={`flex items-center gap-1 px-1 py-1 rounded-lg ${selCat === c.id ? 'bg-[#7c3aed]/20 border border-[#8b5cf6]/40' : ''}`}>
                 <button onClick={() => setSelCat(c.id)} className="flex-1 text-left px-2 py-1 text-sm text-slate-200 truncate">
                   {c.name} <span className="text-slate-500">({c._count?.items ?? 0})</span>
                   {!c.isActive && <span className="text-amber-400"> ⏸</span>}
@@ -155,9 +155,9 @@ export default function CafeMenuPage() {
             <input
               value={search} onChange={(e) => setSearch(e.target.value)}
               placeholder="Item search..."
-              className="flex-1 min-w-[180px] px-4 py-2 rounded-lg bg-[#14142a] border border-white/10 text-white text-sm focus:outline-none focus:border-blue-500"
+              className="flex-1 min-w-[180px] px-4 py-2 rounded-lg bg-[#14142a] border border-white/10 text-white text-sm focus:outline-none focus:border-[#8b5cf6]"
             />
-            <button onClick={openItemAdd} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500">+ Add Item</button>
+            <button onClick={openItemAdd} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">+ Add Item</button>
           </div>
 
           {filteredItems.length === 0 ? (
@@ -206,7 +206,7 @@ export default function CafeMenuPage() {
             </label>
             <div className="flex justify-end gap-2">
               <button onClick={() => setCatModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-slate-300 text-sm">Cancel</button>
-              <button onClick={saveCat} disabled={saving} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500">{saving ? 'Saving...' : 'Save'}</button>
+              <button onClick={saveCat} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">{saving ? 'Saving...' : 'Save'}</button>
             </div>
           </div>
         </Modal>
@@ -235,7 +235,7 @@ export default function CafeMenuPage() {
                   <button
                     key={t.value} type="button"
                     onClick={() => setItemForm({ ...itemForm, tags: itemForm.tags.includes(t.value) ? itemForm.tags.filter((x) => x !== t.value) : [...itemForm.tags, t.value] })}
-                    className={`text-xs px-3 py-1.5 rounded-full border ${itemForm.tags.includes(t.value) ? 'bg-blue-600/30 border-blue-500/50 text-white' : 'bg-white/5 border-white/10 text-slate-400'}`}
+                    className={`text-xs px-3 py-1.5 rounded-full border ${itemForm.tags.includes(t.value) ? 'bg-[#7c3aed]/30 border-[#8b5cf6]/50 text-white' : 'bg-white/5 border-white/10 text-slate-400'}`}
                   >{t.label}</button>
                 ))}
               </div>
@@ -245,7 +245,7 @@ export default function CafeMenuPage() {
             </label>
             <div className="flex justify-end gap-2">
               <button onClick={() => setItemModal(null)} className="px-4 py-2 rounded-lg bg-white/5 text-slate-300 text-sm">Cancel</button>
-              <button onClick={saveItem} disabled={saving} className="px-4 py-2 rounded-lg bg-blue-600 text-white text-sm hover:bg-blue-500">{saving ? 'Saving...' : 'Save'}</button>
+              <button onClick={saveItem} disabled={saving} className="px-4 py-2 rounded-lg bg-[#7c3aed] text-white text-sm hover:bg-[#8b5cf6]">{saving ? 'Saving...' : 'Save'}</button>
             </div>
           </div>
         </Modal>

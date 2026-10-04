@@ -6,7 +6,7 @@ import { PageHeader, StatCard, ErrorBanner, Spinner, EmptyState, DataTable, Moda
 
 const TIER_META = {
   champion: { label: 'Champions', color: '#22c55e', bg: 'bg-green-500/15 text-green-300 border-green-500/30' },
-  active: { label: 'Active', color: '#3b82f6', bg: 'bg-blue-500/15 text-blue-300 border-blue-500/30' },
+  active: { label: 'Active', color: '#8b5cf6', bg: 'bg-[#8b5cf6]/15 text-[#c4b5fd] border-[#8b5cf6]/30' },
   casual: { label: 'Casual', color: '#f59e0b', bg: 'bg-amber-500/15 text-amber-300 border-amber-500/30' },
   'at-risk': { label: 'At-risk', color: '#ef4444', bg: 'bg-red-500/15 text-red-300 border-red-500/30' },
 };
@@ -120,13 +120,13 @@ export default function EngagementPage() {
           <div className="flex gap-2 flex-wrap">
             <button
               onClick={() => setTier('')}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${!tier ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+              className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${!tier ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
             >All</button>
             {Object.entries(TIER_META).map(([k, m]) => (
               <button
                 key={k}
                 onClick={() => setTier(k)}
-                className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${tier === k ? 'bg-blue-600 text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
+                className={`px-3 py-1.5 rounded-full text-xs font-medium transition ${tier === k ? 'bg-[#7c3aed] text-white shadow-[0_0_12px_rgba(37,99,235,0.5)]' : 'bg-slate-800 text-slate-300 hover:bg-slate-700'}`}
               >{m.label}</button>
             ))}
           </div>
@@ -153,11 +153,11 @@ export default function EngagementPage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-4">
-            <div className="rounded-[20px] border border-white/[0.08] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
+            <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
               <h3 className="text-white font-bold mb-4">Tier Distribution</h3>
               <Donut distribution={summary.distribution} total={summary.total} />
             </div>
-            <div className="rounded-[20px] border border-white/[0.08] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
+            <div className="rounded-2xl border border-white/[0.06] bg-gradient-to-b from-[#12121f] to-[#0e0e18] p-6">
               <h3 className="text-white font-bold mb-4">Top Champions 🏆</h3>
               {champions.length === 0 ? (
                 <EmptyState title="Koi champion nahi" hint="80+ score wale members yahan dikhenge" />
@@ -196,7 +196,7 @@ export default function EngagementPage() {
                 { key: 'action', label: 'Action', render: (r) => (
                   <button
                     onClick={() => setMailFor(r)}
-                    className="px-3 py-1.5 rounded-full text-xs font-semibold bg-blue-600 text-white hover:bg-blue-500 shadow-[0_0_12px_rgba(37,99,235,0.4)]"
+                    className="px-3 py-1.5 rounded-full text-xs font-semibold bg-[#7c3aed] text-white hover:bg-[#8b5cf6] shadow-[0_0_12px_rgba(37,99,235,0.4)]"
                   >Send retention email</button>
                 )},
               ]}
@@ -215,7 +215,7 @@ export default function EngagementPage() {
               onChange={(e) => setMessage(e.target.value)}
               rows={4}
               placeholder="e.g. Hum ne apke liye 20% loyalty bonus rakha hai..."
-              className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-blue-500"
+              className="w-full bg-slate-900 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-[#8b5cf6]"
             />
           </Field>
           <div className="flex justify-end gap-2 mt-4">
@@ -223,7 +223,7 @@ export default function EngagementPage() {
             <button
               onClick={sendRetention}
               disabled={sending}
-              className="px-4 py-2 rounded-full text-sm bg-blue-600 text-white font-semibold hover:bg-blue-500 disabled:opacity-50"
+              className="px-4 py-2 rounded-full text-sm bg-[#7c3aed] text-white font-semibold hover:bg-[#8b5cf6] disabled:opacity-50"
             >{sending ? 'Bhej raha...' : 'Send email'}</button>
           </div>
         </Modal>

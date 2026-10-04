@@ -152,7 +152,7 @@ export default function ReviewsPage() {
       <div className="flex flex-wrap items-center gap-3 mb-4">
         {['all', 'draft', 'submitted', 'acknowledged'].map((s) => (
           <button key={s} onClick={() => setStatus(s)}
-            className={`px-4 py-1.5 rounded-full text-sm ${status === s ? 'bg-blue-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
+            className={`px-4 py-1.5 rounded-full text-sm ${status === s ? 'bg-[#7c3aed] text-white' : 'bg-slate-800 text-slate-300'}`}>
             {s === 'all' ? 'Sab' : s}
           </button>
         ))}
@@ -163,7 +163,7 @@ export default function ReviewsPage() {
             {employees.map((e) => <option key={e.id} value={e.id}>{e.name}</option>)}
           </select>
           <button onClick={() => { setForm({ ...emptyForm, period: form.period }); setModal('add'); }}
-            className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium">
+            className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium">
             + New Review
           </button>
         </div>
@@ -176,7 +176,7 @@ export default function ReviewsPage() {
             <div className="space-y-3">
               {history.map((h) => (
                 <div key={h.id} className="flex items-center gap-4 bg-slate-800/60 rounded-lg p-3">
-                  <div className="text-sm font-semibold text-blue-300 w-24">{h.period}</div>
+                  <div className="text-sm font-semibold text-[#c4b5fd] w-24">{h.period}</div>
                   <Stars value={Math.round(Number(h.overall) || 0)} readOnly />
                   <div className="text-sm text-slate-300">{h.overall != null ? Number(h.overall).toFixed(1) + ' / 5' : ''}</div>
                   <Badge tone={STATUS_TONE[h.status] || 'slate'}>{h.status}</Badge>
@@ -201,7 +201,7 @@ export default function ReviewsPage() {
               {r.status === 'draft' && (
                 <>
                   <button onClick={() => openEdit(r)} className="text-xs px-2 py-1 rounded bg-slate-700 hover:bg-slate-600">Edit</button>
-                  <button onClick={() => doAction(r.id, 'submit')} className="text-xs px-2 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white">Submit</button>
+                  <button onClick={() => doAction(r.id, 'submit')} className="text-xs px-2 py-1 rounded bg-[#7c3aed] hover:bg-[#8b5cf6] text-white">Submit</button>
                   <button onClick={() => remove(r.id)} className="text-xs px-2 py-1 rounded bg-red-900/60 hover:bg-red-800 text-red-200">Delete</button>
                 </>
               )}
@@ -242,7 +242,7 @@ export default function ReviewsPage() {
           <Field label="Improvements"><textarea value={form.improvements} onChange={(e) => setForm({ ...form, improvements: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" /></Field>
           <Field label="Aglay period ke goals"><textarea value={form.goals} onChange={(e) => setForm({ ...form, goals: e.target.value })} rows={2} className="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-slate-200" /></Field>
           <button type="submit" disabled={saving}
-            className="w-full py-2.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-white font-medium disabled:opacity-50">
+            className="w-full py-2.5 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white font-medium disabled:opacity-50">
             {saving ? 'Saving…' : 'Save Review'}
           </button>
         </form>

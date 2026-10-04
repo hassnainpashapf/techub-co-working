@@ -93,7 +93,7 @@ export default function GatewaysPage() {
               </div>
               <button
                 onClick={() => setOpen(isOpen ? null : g.name)}
-                className="text-sm text-blue-400 hover:text-blue-300"
+                className="text-sm text-[#c4b5fd] hover:text-[#c4b5fd]"
               >
                 {isOpen ? 'Hide setup instructions ▲' : 'Setup instructions ▼'}
               </button>

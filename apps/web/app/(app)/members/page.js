@@ -69,7 +69,7 @@ function DataPrivacySection({ member, onChanged }) {
   }
 
   return (
-    <div className="rounded-xl border border-white/10 bg-white/[0.03] p-4 mt-6">
+    <div className="rounded-2xl border border-white/[0.06] bg-[#141422] p-4 mt-6">
       <h3 className="font-semibold text-white mb-1">Data &amp; Privacy</h3>
       <p className="text-xs text-slate-400 mb-3">
         Export all member data as JSON (password hashes are never included). Anonymization replaces
@@ -253,7 +253,7 @@ function MemberDetail({ member, onClose, onChanged }) {
     const exceeded = limit != null && balance > limit;
     const pct = limit ? Math.min(100, (balance / limit) * 100) : 0;
     return (
-      <div className={`rounded-xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-white/10 bg-white/[0.03]'}`}>
+      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-500/10' : 'border-white/[0.06] bg-[#141422]'}`}>
         <div className="flex items-center justify-between text-sm mb-2">
           <span className="text-slate-300 font-medium">Credit</span>
           {exceeded && <span className="text-[11px] font-bold text-red-300 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
@@ -713,8 +713,8 @@ export default function MembersPage() {
       <div className="card">
         {/* Phase 38 Track 5: extended bulk actions bar */}
         {canBulk && selectedIds.length > 0 && (
-          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-blue-500/10 border border-blue-400/30">
-            <span className="text-sm font-semibold text-blue-200">{selectedIds.length} selected</span>
+          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30">
+            <span className="text-sm font-semibold text-[#ddd6fe]">{selectedIds.length} selected</span>
             <select className="input max-w-[180px] !w-auto" value={bulkAction} onChange={(e) => setBulkAction(e.target.value)}>
               <option value="suspend">Suspend (on hold)</option>
               <option value="activate">Activate</option>

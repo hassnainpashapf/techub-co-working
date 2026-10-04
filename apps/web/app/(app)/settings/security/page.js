@@ -90,13 +90,13 @@ export default function SecurityPage() {
             value={ipsText}
             onChange={(e) => setIpsText(e.target.value)}
             placeholder={'203.0.113.10\n203.0.113.0/24'}
-            className="w-full rounded-xl bg-[#0d0d1a] border border-slate-700/70 px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-blue-500/60"
+            className="w-full rounded-xl bg-[#0d0d1a] border border-slate-700/70 px-3 py-2 text-sm text-slate-100 font-mono focus:outline-none focus:border-[#8b5cf6]/60"
           />
         </Field>
         <button
           onClick={saveAllowlist}
           disabled={saving}
-          className="mt-3 px-4 py-2 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-semibold hover:from-blue-500 hover:to-indigo-500 disabled:opacity-50"
+          className="mt-3 px-4 py-2 rounded-xl bg-gradient-to-r from-[#7c3aed] to-indigo-600 text-white text-sm font-semibold hover:from-[#8b5cf6] hover:to-indigo-500 disabled:opacity-50"
         >
           {saving ? 'Saving…' : 'Save Allowlist'}
         </button>
@@ -138,7 +138,7 @@ export default function SecurityPage() {
                         <button
                           onClick={() => acknowledge(a.id)}
                           disabled={ackId === a.id}
-                          className="text-xs px-3 py-1 rounded-lg border border-slate-600 text-slate-200 hover:border-blue-500/60 hover:text-white disabled:opacity-50"
+                          className="text-xs px-3 py-1 rounded-lg border border-slate-600 text-slate-200 hover:border-[#8b5cf6]/60 hover:text-white disabled:opacity-50"
                         >
                           {ackId === a.id ? '…' : 'Acknowledge'}
                         </button>

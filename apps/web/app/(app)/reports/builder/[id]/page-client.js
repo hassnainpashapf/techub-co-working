@@ -67,7 +67,7 @@ function BarSvg({ points }) {
         const x = pad + i * ((w - pad * 2) / points.length) + ((w - pad * 2) / points.length - bw) / 2;
         return (
           <g key={i}>
-            <rect x={x} y={h - pad - bh} width={bw} height={bh} rx={4} className="fill-blue-500/80" />
+            <rect x={x} y={h - pad - bh} width={bw} height={bh} rx={4} className="fill-[#8b5cf6]-500/80" />
             <text x={x + bw / 2} y={h - pad + 14} fontSize={10} textAnchor="middle" className="fill-slate-400">
               {String(p.label).slice(0, 10)}
             </text>
@@ -87,10 +87,10 @@ function LineSvg({ points }) {
   const d = points.map((p, i) => `${i === 0 ? 'M' : 'L'}${X(i)},${Y(p.value)}`).join(' ');
   return (
     <svg viewBox={`0 0 ${w} ${h}`} className="w-full h-64">
-      <path d={d} fill="none" strokeWidth={2.5} className="stroke-blue-400" />
+      <path d={d} fill="none" strokeWidth={2.5} className="stroke-[#8b5cf6]-400" />
       {points.map((p, i) => (
         <g key={i}>
-          <circle cx={X(i)} cy={Y(p.value)} r={3.5} className="fill-blue-400" />
+          <circle cx={X(i)} cy={Y(p.value)} r={3.5} className="fill-[#8b5cf6]-400" />
           {i % Math.ceil(points.length / 8) === 0 && (
             <text x={X(i)} y={h - 12} fontSize={10} textAnchor="middle" className="fill-slate-400">{String(p.label).slice(0, 10)}</text>
           )}
@@ -423,7 +423,7 @@ function PivotTab({ id, columns }) {
             <tfoot><tr className="border-t border-slate-600">
               <td className="p-2 font-semibold text-slate-200">Total</td>
               {(result.cols || []).map((c) => <td key={c} className="p-2 text-right font-semibold text-slate-100">{result.colTotals?.[c] ?? 0}</td>)}
-              <td className="p-2 text-right font-bold text-blue-300">{result.grandTotal}</td>
+              <td className="p-2 text-right font-bold text-[#c4b5fd]">{result.grandTotal}</td>
             </tr></tfoot>
           </table>
         </div>

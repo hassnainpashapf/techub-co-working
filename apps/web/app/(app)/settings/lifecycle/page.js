@@ -211,7 +211,7 @@ export default function LifecyclePage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="mb-4 rounded-xl bg-blue-500/10 border border-blue-400/30 px-4 py-3 text-sm text-blue-200">
+      <div className="mb-4 rounded-xl bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 px-4 py-3 text-sm text-[#ddd6fe]">
         💡 Customize email content in{' '}
         <Link href="/settings/email-templates" className="underline font-semibold">Email Templates</Link>
         {' '}— rules can use any built-in or custom template.

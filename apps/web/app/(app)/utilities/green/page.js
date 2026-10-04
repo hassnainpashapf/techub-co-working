@@ -30,7 +30,7 @@ const emptyForm = {
 
 function ProgressBar({ value }) {
   if (value === null || value === undefined) return <span className="text-slate-500 text-xs">—</span>;
-  const color = value >= 100 ? 'bg-emerald-500' : value >= 60 ? 'bg-blue-500' : value >= 30 ? 'bg-amber-500' : 'bg-rose-500';
+  const color = value >= 100 ? 'bg-emerald-500' : value >= 60 ? 'bg-[#8b5cf6]' : value >= 30 ? 'bg-amber-500' : 'bg-rose-500';
   return (
     <div className="flex items-center gap-2 min-w-[140px]">
       <div className="flex-1 h-2 rounded-full bg-slate-700/60 overflow-hidden">

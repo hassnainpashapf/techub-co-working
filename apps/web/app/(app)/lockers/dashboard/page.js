@@ -63,7 +63,7 @@ export default function LockerDashboardPage() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        <div className="rounded-2xl border border-slate-700/60 bg-[#14141f]/80 p-5">
+        <div className="rounded-2xl border border-slate-700/60 bg-[#141422]/80 p-5">
           <h3 className="text-base font-semibold text-slate-100 mb-1">⏳ Expiring in 7 days</h3>
           <p className="text-xs text-slate-400 mb-4">Renew ya release follow-up karein</p>
           {expiring.length === 0 ? (
@@ -90,7 +90,7 @@ export default function LockerDashboardPage() {
           )}
         </div>
 
-        <div className="rounded-2xl border border-slate-700/60 bg-[#14141f]/80 p-5">
+        <div className="rounded-2xl border border-slate-700/60 bg-[#141422]/80 p-5">
           <h3 className="text-base font-semibold text-slate-100 mb-1">🚀 Quick Links</h3>
           <p className="text-xs text-slate-400 mb-4">Locker management shortcuts</p>
           <div className="grid gap-2">

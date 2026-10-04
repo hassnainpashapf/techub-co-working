@@ -167,7 +167,7 @@ export default function FormBuilderPage() {
             {fields.length === 0 && <p className="text-sm text-slate-400">Koi field nahi — upar se joro.</p>}
             <div className="space-y-2">
               {fields.map((f, i) => (
-                <div key={f.id} className={`flex items-center gap-2 p-2 rounded-lg ${editing === f.id ? 'bg-blue-500/10 border border-blue-500/40' : 'bg-white/5'}`}>
+                <div key={f.id} className={`flex items-center gap-2 p-2 rounded-lg ${editing === f.id ? 'bg-[#8b5cf6]/10 border border-[#8b5cf6]/40' : 'bg-white/5'}`}>
                   <span className="text-xs text-slate-400 w-6">{i + 1}</span>
                   <span className="flex-1 text-sm text-white truncate">{f.label}{f.required && <span className="text-red-400"> *</span>}</span>
                   <span className="text-xs text-slate-500">{f.type}</span>

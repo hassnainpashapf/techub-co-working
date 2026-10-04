@@ -13,9 +13,9 @@ function fmtDate(s) {
 const SEV_STYLE = {
   critical: 'border-red-500/40 bg-red-500/10',
   warning: 'border-amber-500/40 bg-amber-500/10',
-  info: 'border-blue-500/40 bg-blue-500/10',
+  info: 'border-[#8b5cf6]/40 bg-[#8b5cf6]/10',
 };
-const SEV_DOT = { critical: 'bg-red-400', warning: 'bg-amber-400', info: 'bg-blue-400' };
+const SEV_DOT = { critical: 'bg-red-400', warning: 'bg-amber-400', info: 'bg-[#8b5cf6]' };
 const SEV_ICON = { critical: '🔴', warning: '⚠️', info: 'ℹ️' };
 
 function Donut({ positive, neutral, negative }) {
@@ -44,7 +44,7 @@ function Donut({ positive, neutral, negative }) {
       </svg>
       <div className="space-y-2 text-sm">
         <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-emerald-400" /> Positive — {positive}</div>
-        <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-blue-400" /> Neutral — {neutral}</div>
+        <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-[#8b5cf6]" /> Neutral — {neutral}</div>
         <div className="flex items-center gap-2"><span className="w-3 h-3 rounded-full bg-red-400" /> Negative — {negative}</div>
       </div>
     </div>

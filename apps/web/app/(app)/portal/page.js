@@ -233,7 +233,7 @@ function AnnouncementsFeed() {
     <div className="card-premium p-5 mt-6" id="announcements">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-white font-bold">📢 Announcements</h2>
-        {unread > 0 && <span className="text-xs font-bold bg-blue-500/20 border border-blue-400/40 text-blue-200 rounded-full px-2.5 py-0.5">{unread} new</span>}
+        {unread > 0 && <span className="text-xs font-bold bg-[#8b5cf6]/20 border border-[#8b5cf6]/40 text-[#ddd6fe] rounded-full px-2.5 py-0.5">{unread} new</span>}
       </div>
       {loading ? <Spinner /> : items.length === 0 ? (
         <p className="text-slate-400 text-sm">No announcements right now.</p>
@@ -251,7 +251,7 @@ function AnnouncementsFeed() {
                 }`}
               >
                 <div className="flex items-center gap-2">
-                  {!a.read && <span className="w-2 h-2 rounded-full bg-blue-400 shrink-0" />}
+                  {!a.read && <span className="w-2 h-2 rounded-full bg-[#8b5cf6] shrink-0" />}
                   {a.pinned && <span className="text-xs">📌</span>}
                   <p className="text-white font-medium text-sm flex-1">{a.title}</p>
                   <span className="text-slate-500 text-xs shrink-0">{new Date(a.createdAt).toLocaleDateString()}</span>
@@ -266,7 +266,7 @@ function AnnouncementsFeed() {
             ))}
           </div>
           {items.length > 3 && (
-            <button onClick={() => setShowAll(!showAll)} className="text-sm text-blue-300 hover:text-blue-200 underline mt-3">
+            <button onClick={() => setShowAll(!showAll)} className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] underline mt-3">
               {showAll ? 'Show less' : `View all ${items.length} →`}
             </button>
           )}
@@ -324,7 +324,7 @@ function DirectoryProfileSection() {
           role="switch"
           aria-checked={optIn}
           onClick={() => setOptIn(!optIn)}
-          className={`w-11 h-6 rounded-full relative transition-colors ${optIn ? 'bg-blue-500' : 'bg-white/10'}`}
+          className={`w-11 h-6 rounded-full relative transition-colors ${optIn ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}
         >
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${optIn ? 'left-[22px]' : 'left-0.5'}`} />
         </button>
@@ -358,7 +358,7 @@ function DirectoryProfileSection() {
       {saved && <p className="text-sm text-emerald-300 mb-3">Saved ✓</p>}
       <div className="flex items-center gap-3">
         <button onClick={save} disabled={saving} className="btn-primary text-sm">{saving ? 'Saving…' : 'Save'}</button>
-        <a href="/portal/directory" className="text-sm text-blue-300 hover:text-blue-200 underline">View directory →</a>
+        <a href="/portal/directory" className="text-sm text-[#c4b5fd] hover:text-[#ddd6fe] underline">View directory →</a>
       </div>
     </div>
   );
@@ -419,12 +419,12 @@ function CalendarFeedSection() {
         <div className="space-y-3">
           <div className="flex items-center gap-2 bg-white/[0.03] border border-white/[0.06] rounded-xl px-3 py-2">
             <code className="flex-1 text-xs text-slate-300 truncate">{feedUrl}</code>
-            <button onClick={copy} className="text-xs text-blue-300 hover:text-blue-200 border border-blue-500/30 rounded-lg px-3 py-1.5 whitespace-nowrap">
+            <button onClick={copy} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] border border-[#8b5cf6]/30 rounded-lg px-3 py-1.5 whitespace-nowrap">
               {copied ? '✓ Copied' : 'Copy link'}
             </button>
           </div>
           <div className="flex flex-wrap gap-2">
-            <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-blue-600/80 hover:bg-blue-600 rounded-lg px-3 py-1.5">Add to Google Calendar</a>
+            <a href={googleUrl} target="_blank" rel="noreferrer" className="text-xs text-white bg-[#7c3aed]/80 hover:bg-[#7c3aed] rounded-lg px-3 py-1.5">Add to Google Calendar</a>
             <a href={webcalUrl} className="text-xs text-white bg-white/10 hover:bg-white/15 border border-white/10 rounded-lg px-3 py-1.5">Subscribe (Apple / Outlook)</a>
             <button onClick={regenerate} disabled={regen} className="text-xs text-slate-400 hover:text-slate-200 underline">
               {regen ? '…' : 'Get new link'}
@@ -450,8 +450,8 @@ function NextBookingCard({ booking, onCheckIn, checkingIn }) {
   const checkedIn = booking.status === 'checked_in';
   return (
     <div className="card-premium p-5 relative overflow-hidden">
-      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-blue-500 via-violet-500 to-blue-500" />
-      <p className="text-xs font-semibold text-blue-300 uppercase tracking-wider mb-1">Next booking</p>
+      <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#8b5cf6] via-violet-500 to-[#8b5cf6]" />
+      <p className="text-xs font-semibold text-[#c4b5fd] uppercase tracking-wider mb-1">Next booking</p>
       <h2 className="text-white font-bold text-lg">{booking.title}</h2>
       <p className="text-slate-300 text-sm mt-1">{booking.unit?.code} • {booking.unit?.type}</p>
       <p className="text-slate-400 text-sm">🕙 {fmtDateTime(booking.startAt)} → {new Date(booking.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
@@ -597,7 +597,7 @@ export default function PortalPage() {
     <div className="max-w-3xl mx-auto">
       {/* HERO */}
       <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-gradient-to-br from-[#1c1c30] via-[#151524] to-[#0e0e1a] border border-violet-400/20 shadow-[0_0_40px_rgba(139,92,246,0.15)]">
-        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-blue-500/20 blur-3xl" />
+        <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#8b5cf6]/20 blur-3xl" />
         <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-violet-500/20 blur-3xl" />
         <div className="relative">
           <p className="text-slate-300 text-sm">Assalam-o-Alaikum,</p>
@@ -650,7 +650,7 @@ export default function PortalPage() {
           <button
             key={a.key}
             onClick={() => quickAction(a.action)}
-            className="card-premium p-4 flex flex-col items-center gap-2 hover:border-blue-400/40 transition group"
+            className="card-premium p-4 flex flex-col items-center gap-2 hover:border-[#8b5cf6]/40 transition group"
           >
             <span className="text-2xl group-hover:scale-110 transition">{a.icon}</span>
             <span className="text-xs text-slate-200 font-medium text-center leading-tight">{a.label}</span>
@@ -670,7 +670,7 @@ export default function PortalPage() {
         <a href="/portal/loyalty" className="block card-premium p-4 mb-6 hover:border-violet-400/40 transition">
           <div className="flex items-center justify-between">
             <p className="text-sm text-white">⭐ You have <span className="font-bold text-violet-300">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
-            <span className="text-sm text-blue-300 underline shrink-0">View →</span>
+            <span className="text-sm text-[#c4b5fd] underline shrink-0">View →</span>
           </div>
         </a>
       )}
@@ -679,10 +679,10 @@ export default function PortalPage() {
       <div className="card-premium p-5" id="bookings">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-white font-bold">My Upcoming Bookings</h2>
-          <button onClick={() => setShowBook(true)} className="text-xs text-blue-300 hover:text-blue-200 underline">+ Book new</button>
+          <button onClick={() => setShowBook(true)} className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">+ Book new</button>
         </div>
         {upcomingBookings.length === 0 ? (
-          <p className="text-slate-400 text-sm">No upcoming bookings. <button onClick={() => setShowBook(true)} className="text-blue-300 underline">Book one now</button></p>
+          <p className="text-slate-400 text-sm">No upcoming bookings. <button onClick={() => setShowBook(true)} className="text-[#c4b5fd] underline">Book one now</button></p>
         ) : (
           <div className="space-y-3">
             {upcomingBookings.map((b) => (
@@ -722,7 +722,7 @@ export default function PortalPage() {
       <div className="card-premium p-5 mt-6">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-white font-bold">My Open Tickets</h2>
-          <a href="/tickets" className="text-xs text-blue-300 hover:text-blue-200 underline">View all →</a>
+          <a href="/tickets" className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">View all →</a>
         </div>
         {openTickets.length === 0 ? (
           <p className="text-slate-400 text-sm">No open tickets. 🎉</p>
@@ -734,7 +734,7 @@ export default function PortalPage() {
                   <p className="text-white font-medium text-sm">#{t.ticketNumber} — {t.title}</p>
                   <p className="text-slate-400 text-xs capitalize">{t.status.replace('_', ' ')} • {t.priority}</p>
                 </div>
-                <a href="/tickets" className="text-xs text-blue-300 hover:text-blue-200 underline">View</a>
+                <a href="/tickets" className="text-xs text-[#c4b5fd] hover:text-[#ddd6fe] underline">View</a>
               </div>
             ))}
           </div>

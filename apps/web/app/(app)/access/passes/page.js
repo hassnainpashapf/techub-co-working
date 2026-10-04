@@ -241,7 +241,7 @@ export default function DayPassesPage() {
         <Modal title="Day Pass tayyar ✅" onClose={() => setCreated(null)}>
           <div className="space-y-4 text-center">
             <div className="text-lg font-bold text-white">{created.visitorName}</div>
-            <div className="font-mono text-2xl tracking-widest text-blue-300">{created.code}</div>
+            <div className="font-mono text-2xl tracking-widest text-[#c4b5fd]">{created.code}</div>
             {created.qrToken && (
               <img src={qrImageUrl(created.qrToken)} alt="Day pass QR" className="mx-auto rounded-lg border border-slate-700" width={180} height={180} />
             )}

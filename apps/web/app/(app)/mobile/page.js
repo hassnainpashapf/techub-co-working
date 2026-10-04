@@ -126,7 +126,7 @@ export default function MobileQuickActionsPage() {
               <Link
                 key={a.path + a.label}
                 href={a.path}
-                className="card p-5 flex flex-col items-center justify-center text-center min-h-[120px] active:scale-95 transition-transform hover:border-blue-500/40"
+                className="card p-5 flex flex-col items-center justify-center text-center min-h-[120px] active:scale-95 transition-transform hover:border-[#8b5cf6]/40"
               >
                 <span className="text-3xl mb-2">{a.icon}</span>
                 <span className="text-white font-semibold text-sm">{a.label}</span>

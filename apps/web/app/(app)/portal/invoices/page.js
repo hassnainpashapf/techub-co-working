@@ -125,7 +125,7 @@ function InvoiceDetailModal({ invoiceId, onClose }) {
           <button
             onClick={download}
             disabled={downloading}
-            className="w-full rounded-xl bg-blue-600 hover:bg-blue-500 disabled:opacity-50 text-white font-semibold py-2.5 transition"
+            className="w-full rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] disabled:opacity-50 text-white font-semibold py-2.5 transition"
           >
             {downloading ? 'Downloading…' : '⬇ Download PDF'}
           </button>
@@ -180,8 +180,8 @@ function PayClaimModal({ invoice, onClose, onDone }) {
 
   return (
     <Modal title={`Pay ${invoice.number}`} onClose={onClose}>
-      <div className="bg-blue-500/10 border border-blue-500/30 rounded-xl p-4 text-sm text-slate-300 mb-4">
-        <div className="font-semibold text-blue-200 mb-1">How to pay</div>
+      <div className="bg-[#8b5cf6]/10 border border-[#8b5cf6]/30 rounded-xl p-4 text-sm text-slate-300 mb-4">
+        <div className="font-semibold text-[#ddd6fe] mb-1">How to pay</div>
         <ol className="list-decimal list-inside space-y-1 text-slate-300">
           <li>Transfer <strong className="text-white">{fmtMoney(remaining(invoice))}</strong> via bank transfer, JazzCash or Easypaisa — or pay cash at reception.</li>
           <li>Fill the form below with your payment details.</li>
@@ -250,7 +250,7 @@ function InvoiceCard({ inv, onView, onPay, onPdf }) {
         <button onClick={() => onView(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-slate-200 text-sm font-medium py-2 hover:bg-white/5 transition">View</button>
         <button onClick={() => onPdf(inv)} className="flex-1 min-w-[90px] rounded-xl border border-white/15 text-slate-200 text-sm font-medium py-2 hover:bg-white/5 transition">PDF</button>
         {remaining(inv) > 0 && inv.status !== 'cancelled' && (
-          <button onClick={() => onPay(inv)} className="flex-1 min-w-[90px] rounded-xl bg-blue-600 hover:bg-blue-500 text-white text-sm font-semibold py-2 transition">Pay now</button>
+          <button onClick={() => onPay(inv)} className="flex-1 min-w-[90px] rounded-xl bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-semibold py-2 transition">Pay now</button>
         )}
       </div>
     </div>
@@ -384,7 +384,7 @@ export default function PortalInvoicesPage() {
                 onClick={() => setTab(t.id)}
                 className={`px-4 py-2 rounded-full text-sm font-semibold whitespace-nowrap transition ${
                   tab === t.id
-                    ? 'bg-blue-600 text-white shadow-[0_0_16px_rgba(59,130,246,0.45)]'
+                    ? 'bg-[#7c3aed] text-white shadow-[0_0_16px_rgba(139,92,246,0.45)]'
                     : 'bg-white/[0.04] border border-white/10 text-slate-300 hover:bg-white/[0.08]'
                 }`}
               >

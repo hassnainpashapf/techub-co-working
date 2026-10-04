@@ -109,7 +109,7 @@ export default function AdminFeedbackPage() {
             <button
               key={t.v}
               onClick={() => setView(t.v)}
-              className={`text-sm rounded-lg px-3 py-1.5 border ${view === t.v ? 'bg-blue-500/20 border-blue-400/40 text-blue-200' : 'bg-white/5 border-white/10 text-slate-400'}`}
+              className={`text-sm rounded-lg px-3 py-1.5 border ${view === t.v ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]' : 'bg-white/5 border-white/10 text-slate-400'}`}
             >
               {t.l}
             </button>
@@ -135,7 +135,7 @@ export default function AdminFeedbackPage() {
                     <p className="text-xs text-slate-300 line-clamp-3">{f.body}</p>
                     <p className="text-xs text-slate-500 mt-1">{who(f)}</p>
                     <div className="flex gap-1 mt-2">
-                      <button className="text-xs text-blue-300 underline" onClick={() => openReply(f)}>Reply</button>
+                      <button className="text-xs text-[#c4b5fd] underline" onClick={() => openReply(f)}>Reply</button>
                       {col.v !== 'done' && (
                         <button className="text-xs text-emerald-300 underline" onClick={() => setStatus(f.id, 'done')}>Done</button>
                       )}

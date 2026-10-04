@@ -73,13 +73,13 @@ function OfferRideModal({ onClose, onAdd }) {
 
 function RideCard({ ride, onRequest, onCancelRequest, onCancelRide, busy }) {
   return (
-    <div className="rounded-2xl bg-gradient-to-b from-[#141422] to-[#101019] border border-white/[0.08] p-5 hover:border-blue-400/40 hover:shadow-[0_8px_48px_rgba(59,130,246,0.22)] hover:-translate-y-1 transition-all duration-300 animate-fadeUp">
+    <div className="rounded-2xl bg-gradient-to-b from-[#141422] to-[#101019] border border-white/[0.08] p-5 hover:border-[#8b5cf6]/40 hover:shadow-[0_8px_48px_rgba(139,92,246,0.22)] hover:-translate-y-1 transition-all duration-300 animate-fadeUp">
       <div className="flex items-center gap-3 mb-4">
-        <span className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-fuchsia-600 flex items-center justify-center text-white font-bold text-[16px] shadow-[0_0_16px_rgba(59,130,246,0.5)]">
+        <span className="w-11 h-11 rounded-full bg-gradient-to-br from-[#8b5cf6] to-fuchsia-600 flex items-center justify-center text-white font-bold text-[16px] shadow-[0_0_16px_rgba(139,92,246,0.5)]">
           {(ride.driver || '?').charAt(0).toUpperCase()}
         </span>
         <div>
-          <p className="text-white text-[15px] font-semibold">{ride.driver}{ride.mine && <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-300">YOU</span>}</p>
+          <p className="text-white text-[15px] font-semibold">{ride.driver}{ride.mine && <span className="ml-2 text-[10px] px-2 py-0.5 rounded-full bg-[#8b5cf6]/20 text-[#c4b5fd]">YOU</span>}</p>
           <p className="text-slate-500 text-[12.5px]">{ride.car || 'Car not specified'}</p>
         </div>
         <span className={`ml-auto px-3 py-1 rounded-full text-[12px] font-semibold ${ride.seats > 0 ? 'bg-[#bfdbfe] text-[#1e3a8a] animate-glowPulse' : 'bg-slate-700/60 text-slate-400'}`}>
@@ -89,8 +89,8 @@ function RideCard({ ride, onRequest, onCancelRequest, onCancelRide, busy }) {
 
       <div className="flex items-center gap-2 mb-4">
         <span className="text-[13.5px] text-slate-200 font-medium">{ride.from}</span>
-        <span className="flex-1 border-t border-dashed border-blue-500/30 relative">
-          <svg className="absolute -top-[9px] left-1/2 -translate-x-1/2 text-blue-400" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
+        <span className="flex-1 border-t border-dashed border-[#8b5cf6]/30 relative">
+          <svg className="absolute -top-[9px] left-1/2 -translate-x-1/2 text-[#c4b5fd]" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M5 12h14"/><path d="M12 5l7 7-7 7"/></svg>
         </span>
         <span className="text-[13.5px] text-slate-200 font-medium text-right">{ride.to}</span>
       </div>
@@ -132,7 +132,7 @@ function RideCard({ ride, onRequest, onCancelRequest, onCancelRide, busy }) {
           disabled={ride.seats <= 0 || busy}
           className={`w-full py-2.5 rounded-xl text-[13.5px] font-semibold transition-all duration-200 active:scale-[0.98] ${
             ride.seats > 0
-              ? 'btn-shine border border-blue-400/60 text-blue-200 bg-blue-500/10 shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:bg-blue-500 hover:text-white'
+              ? 'btn-shine border border-[#8b5cf6]/60 text-[#ddd6fe] bg-[#8b5cf6]/10 shadow-[0_0_16px_rgba(139,92,246,0.35)] hover:bg-[#8b5cf6] hover:text-white'
               : 'bg-white/[0.04] border border-white/[0.08] text-slate-600 cursor-not-allowed'
           }`}
         >
@@ -228,12 +228,12 @@ export default function RidesPage() {
         </div>
         <div className="flex gap-2">
           <button onClick={() => setMineOnly(!mineOnly)}
-            className={`px-4 py-2.5 rounded-xl text-[13.5px] font-semibold border transition-all ${mineOnly ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+            className={`px-4 py-2.5 rounded-xl text-[13.5px] font-semibold border transition-all ${mineOnly ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/20 text-[#ddd6fe]' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
             My Rides
           </button>
           <button
             onClick={() => setShowModal(true)}
-            className="btn-shine px-5 py-2.5 rounded-xl text-[13.5px] font-semibold bg-gradient-to-r from-blue-500 to-blue-600 text-white shadow-[0_0_24px_rgba(59,130,246,0.5)] hover:shadow-[0_0_36px_rgba(59,130,246,0.7)] hover:scale-[1.02] transition-all duration-200 active:scale-95"
+            className="btn-shine px-5 py-2.5 rounded-xl text-[13.5px] font-semibold bg-gradient-to-r from-[#8b5cf6] to-[#7c3aed] text-white shadow-[0_0_24px_rgba(139,92,246,0.5)] hover:shadow-[0_0_36px_rgba(139,92,246,0.7)] hover:scale-[1.02] transition-all duration-200 active:scale-95"
           >
             + Offer a Ride
           </button>
@@ -253,7 +253,7 @@ export default function RidesPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search by area or driver..."
-          className="w-full bg-transparent border border-white/[0.12] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-slate-200 placeholder-slate-600 outline-none focus:border-blue-500/50 transition-colors"
+          className="w-full bg-transparent border border-white/[0.12] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-slate-200 placeholder-slate-600 outline-none focus:border-[#8b5cf6]/50 transition-colors"
         />
       </div>
 

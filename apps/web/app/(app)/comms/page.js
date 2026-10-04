@@ -25,7 +25,7 @@ function ChannelBars({ data }) {
             <span className="text-slate-400">{d.count}</span>
           </div>
           <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
-            <div className="h-full rounded-full bg-gradient-to-r from-blue-500 to-violet-500" style={{ width: `${Math.round((d.count / max) * 100)}%` }} />
+            <div className="h-full rounded-full bg-gradient-to-r from-[#8b5cf6] to-violet-500" style={{ width: `${Math.round((d.count / max) * 100)}%` }} />
           </div>
         </div>
       ))}
@@ -128,7 +128,7 @@ export default function CommsDashboardPage() {
             { href: '/comms/templates', label: '📝 Templates', desc: 'Cross-channel templates' },
             { href: '/members', label: '👥 Members', desc: 'Comms timeline per member' },
           ].map((l) => (
-            <Link key={l.href} href={l.href} className="rounded-xl border border-white/5 bg-white/[0.02] p-4 hover:border-blue-500/40 hover:bg-blue-500/5 transition-colors">
+            <Link key={l.href} href={l.href} className="rounded-xl border border-white/5 bg-white/[0.02] p-4 hover:border-[#8b5cf6]/40 hover:bg-[#8b5cf6]/5 transition-colors">
               <div className="font-medium">{l.label}</div>
               <div className="text-xs text-slate-500 mt-1">{l.desc}</div>
             </Link>

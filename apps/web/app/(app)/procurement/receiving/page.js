@@ -124,7 +124,7 @@ export default function ReceivingPage() {
           <button
             key={t.key}
             onClick={() => setFilter(t.key)}
-            className={`px-3 py-1.5 rounded-full text-sm ${filter === t.key ? 'bg-blue-600 text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
+            className={`px-3 py-1.5 rounded-full text-sm ${filter === t.key ? 'bg-[#7c3aed] text-white' : 'bg-white/5 text-slate-300 hover:bg-white/10'}`}
           >
             {t.label}
           </button>
@@ -152,7 +152,7 @@ export default function ReceivingPage() {
                 <Badge tone="blue">{po.status}</Badge>
                 <button
                   onClick={() => openReceive(po)}
-                  className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium"
+                  className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium"
                 >
                   Receive goods
                 </button>
@@ -244,7 +244,7 @@ export default function ReceivingPage() {
             <button onClick={() => setSelected(null)} className="px-4 py-2 rounded-lg bg-white/10 text-slate-200 text-sm">Cancel</button>
             <button
               onClick={submit} disabled={saving}
-              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium disabled:opacity-50"
+              className="px-4 py-2 rounded-lg bg-[#7c3aed] hover:bg-[#8b5cf6] text-white text-sm font-medium disabled:opacity-50"
             >
               {saving ? 'Saving…' : problems.length ? 'Save partial receipt' : 'Save receipt'}
             </button>

@@ -95,7 +95,7 @@ export default function QrScanPage() {
           </div>
         )}
         {verified && (
-          <div className="mt-4 rounded-xl border border-blue-500/30 bg-blue-500/10 p-4">
+          <div className="mt-4 rounded-xl border border-[#8b5cf6]/30 bg-[#8b5cf6]/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <Badge tone="blue">Identity verified</Badge>
               <Badge tone={verified.status === 'active' ? 'green' : 'amber'}>

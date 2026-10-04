@@ -393,21 +393,18 @@ export default function Sidebar() {
         <a
           href={item.path}
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : undefined}
-          className={`relative flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 overflow-hidden group ${
+          className={`flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-[14px] transition-all duration-200 group ${
             active
-              ? 'text-white font-semibold border border-violet-400/30 bg-gradient-to-r from-violet-500/[0.14] via-[#1a1a2e] to-[#12121f] shadow-[0_0_24px_rgba(139,92,246,0.22),inset_0_1px_0_rgba(255,255,255,0.08)]'
-              : 'text-white/80 hover:text-white hover:bg-white/[0.05] border border-transparent font-medium'
+              ? 'text-white font-semibold border border-[#8b5cf6]/45 bg-[#8b5cf6]/[0.12]'
+              : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent font-medium'
           }`}
         >
-          {active && (
-            <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-6 rounded-full bg-gradient-to-b from-blue-400 to-violet-500 shadow-[0_0_10px_rgba(96,165,250,0.9)]" />
-          )}
-          <span className={`relative ${active ? 'text-blue-200 drop-shadow-[0_0_8px_rgba(147,197,253,0.9)]' : 'text-slate-400 group-hover:text-slate-200 group-hover:drop-shadow-[0_0_6px_rgba(148,163,184,0.5)]'} transition-all`}>
+          <span className={`transition-all ${active ? 'text-[#c4b5fd]' : 'text-slate-500 group-hover:text-slate-300'}`}>
             {ICONS[item.icon]}
           </span>
-          <span className="flex-1 relative">{item.label}</span>
+          <span className="flex-1">{item.label}</span>
           {(item.children || item.chevron) && (
-            <span className={`relative transition-transform duration-200 ${active ? 'text-slate-300' : 'text-slate-600 group-hover:text-slate-400'}`}>
+            <span className={`transition-transform duration-200 ${active ? 'text-slate-400' : 'text-slate-600 group-hover:text-slate-400'}`}>
               {item.children ? (expanded ? ICONS.chevron : ICONS.chevronRight) : ICONS.chevron}
             </span>
           )}
@@ -420,10 +417,10 @@ export default function Sidebar() {
                 <a
                   key={child.path}
                   href={child.path}
-                  className={`block px-3.5 py-2 rounded-xl text-[13.5px] font-medium transition-all duration-200 ${
+                  className={`block px-3.5 py-2 rounded-lg text-[13.5px] transition-all duration-200 ${
                     childActive
-                      ? 'text-white font-semibold bg-gradient-to-b from-[#1a1a2c] to-[#12121e] border border-violet-400/25 shadow-[0_0_20px_rgba(139,92,246,0.2),inset_0_1px_0_rgba(255,255,255,0.06)]'
-                      : 'text-white/75 hover:text-white hover:bg-white/5 border border-transparent'
+                      ? 'text-white font-semibold bg-[#8b5cf6]/[0.14] border border-[#8b5cf6]/30'
+                      : 'text-slate-400 hover:text-white hover:bg-white/[0.04] border border-transparent'
                   }`}
                 >
                   {child.label}
@@ -440,14 +437,11 @@ export default function Sidebar() {
     <aside className="w-[248px] shrink-0 bg-[#08080f] flex flex-col min-h-screen border-r border-white/[0.06] relative">
       {/* Brand */}
       <div className="px-5 pt-5 pb-4 flex items-center gap-3">
-        <div className="relative">
-          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-br from-blue-500/50 to-violet-500/50 blur-md opacity-60" />
-          <div className="relative w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-500 to-violet-600 flex items-center justify-center text-white text-lg font-extrabold border border-white/20">
-            T
-          </div>
+        <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center text-white text-lg font-extrabold">
+          T
         </div>
         <div>
-          <p className="text-white text-[15px] font-extrabold tracking-tight leading-tight">Techub</p>
+          <p className="text-white text-[15px] font-bold tracking-tight leading-tight">Techub</p>
           <p className="text-slate-500 text-[11px] font-medium tracking-wide">CO-WORKING</p>
         </div>
       </div>
@@ -456,14 +450,13 @@ export default function Sidebar() {
       <div className="px-4 mb-4 relative">
         <button
           onClick={() => setShowUserMenu(!showUserMenu)}
-          className="glass flex items-center gap-3 px-3 py-2.5 w-full text-left rounded-2xl hover:border-blue-400/30 transition-all duration-200 group"
+          className="flex items-center gap-3 px-3 py-2.5 w-full text-left rounded-2xl bg-white/[0.03] border border-white/[0.06] hover:border-[#8b5cf6]/40 transition-all duration-200 group"
         >
           <span className="relative shrink-0">
-            <span className="absolute -inset-[2px] rounded-full bg-gradient-to-br from-blue-400 to-violet-500 opacity-70 group-hover:opacity-100 transition-opacity" />
-            <span className="relative w-10 h-10 rounded-full bg-gradient-to-br from-slate-700 to-slate-900 flex items-center justify-center text-white text-sm font-bold overflow-hidden">
+            <span className="w-10 h-10 rounded-full bg-gradient-to-br from-[#8b5cf6] to-[#6d28d9] flex items-center justify-center text-white text-sm font-bold overflow-hidden">
               {(user.name || user.email || 'U').charAt(0).toUpperCase()}
             </span>
-            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-emerald-400 border-2 border-[#0b0b14] shadow-[0_0_8px_rgba(52,211,153,0.8)]" />
+            <span className="absolute bottom-0 right-0 w-3 h-3 rounded-full bg-green-400 border-2 border-[#0b0b14]" />
           </span>
           <div className="flex-1 min-w-0">
             <p className="text-white text-[14px] font-semibold truncate">{user.tenantName || 'Techub Studio'}</p>
@@ -500,21 +493,23 @@ export default function Sidebar() {
         )}
       </nav>
 
-      {/* Upgrade promo card */}
+      {/* Upgrade promo card — Fobework style */}
       <div className="px-4 pb-5">
-        <div className="relative overflow-hidden rounded-2xl p-4 border border-violet-400/25 bg-gradient-to-br from-violet-600/[0.16] via-[#141428] to-blue-600/[0.12] shadow-[0_0_32px_rgba(139,92,246,0.18)]">
-          <div className="absolute -top-8 -right-8 w-28 h-28 rounded-full bg-violet-500/25 blur-2xl" />
-          <div className="relative">
-            <div className="w-9 h-9 rounded-xl icon-tile mb-2.5 text-lg">🚀</div>
-            <p className="text-white text-[13.5px] font-bold">Upgrade to Pro</p>
-            <p className="text-slate-400 text-[11.5px] mt-1 leading-relaxed">Unlock AI insights, white-label & more.</p>
-            <button
-              onClick={() => (window.location.href = '/settings/subscription')}
-              className="btn-shine mt-3 w-full px-3 py-2 rounded-xl text-[12.5px] font-bold text-white bg-gradient-to-r from-blue-500 to-violet-600 border border-white/20 shadow-[0_0_20px_rgba(99,102,241,0.4)] hover:brightness-110 transition-all"
-            >
-              Upgrade now
-            </button>
-          </div>
+        <div className="rounded-2xl p-4 border border-[#8b5cf6]/25 bg-[#141422]">
+          <ul className="space-y-1.5 mb-3">
+            {['Unlimited features', 'Unlimited workspaces', 'Cancel Anytime'].map((t) => (
+              <li key={t} className="flex items-center gap-2 text-[12.5px] text-[#c4b5fd]">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                {t}
+              </li>
+            ))}
+          </ul>
+          <button
+            onClick={() => (window.location.href = '/settings/subscription')}
+            className="w-full px-3 py-2.5 rounded-xl text-[13px] font-bold text-[#4c1d95] bg-[#ddd6fe] hover:bg-[#c4b5fd] transition-colors"
+          >
+            Upgrade Now
+          </button>
         </div>
       </div>
     </aside>

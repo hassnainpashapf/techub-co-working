@@ -72,7 +72,7 @@ export default function CalendarSettingsPage() {
         <div className="card-premium p-6">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 to-emerald-500 flex items-center justify-center text-xl">
+              <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#8b5cf6] to-emerald-500 flex items-center justify-center text-xl">
                 📅
               </div>
               <div>

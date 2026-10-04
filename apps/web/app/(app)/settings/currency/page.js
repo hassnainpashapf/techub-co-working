@@ -70,7 +70,7 @@ export default function CurrencySettingsPage() {
           <select
             value={form.baseCurrency}
             onChange={(e) => setForm({ ...form, baseCurrency: e.target.value })}
-            className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+            className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
           >
             {codes.map((c) => <option key={c} value={c}>{c} — {currencies[c]}</option>)}
           </select>
@@ -88,7 +88,7 @@ export default function CurrencySettingsPage() {
                   type="button"
                   disabled={isBase}
                   onClick={() => toggle(c)}
-                  className={`rounded-full px-3 py-1.5 text-xs font-semibold border transition ${on ? 'border-blue-400/50 bg-blue-500/20 text-blue-200' : 'border-white/10 bg-white/[0.03] text-slate-400 hover:border-white/25'} ${isBase ? 'opacity-60 cursor-not-allowed' : ''}`}
+                  className={`rounded-full px-3 py-1.5 text-xs font-semibold border transition ${on ? 'border-[#8b5cf6]/50 bg-[#8b5cf6]/20 text-[#ddd6fe]' : 'border-white/10 bg-white/[0.03] text-slate-400 hover:border-white/25'} ${isBase ? 'opacity-60 cursor-not-allowed' : ''}`}
                   title={isBase ? 'Base currency is always enabled' : currencies[c]}
                 >
                   {c}{isBase ? ' (base)' : ''}
@@ -102,7 +102,7 @@ export default function CurrencySettingsPage() {
           <select
             value={form.defaultInvoiceCurrency}
             onChange={(e) => setForm({ ...form, defaultInvoiceCurrency: e.target.value })}
-            className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+            className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
           >
             <option value="">Same as base ({form.baseCurrency})</option>
             {form.enabledCurrencies.map((c) => <option key={c} value={c}>{c} — {currencies[c]}</option>)}
@@ -113,7 +113,7 @@ export default function CurrencySettingsPage() {
           <select
             value={form.fxSource}
             onChange={(e) => setForm({ ...form, fxSource: e.target.value })}
-            className="w-full rounded-lg bg-[#12121f] border border-white/10 px-3 py-2 text-white"
+            className="w-full rounded-lg bg-[#141422] border border-white/10 px-3 py-2 text-white"
           >
             <option value="manual">Manual rates</option>
             <option value="auto">Auto update (daily)</option>
@@ -124,7 +124,7 @@ export default function CurrencySettingsPage() {
         <button
           type="submit"
           disabled={saving}
-          className="rounded-xl bg-gradient-to-r from-blue-600 to-violet-600 px-6 py-2.5 font-semibold text-white shadow-lg shadow-blue-600/30 hover:brightness-110 disabled:opacity-50"
+          className="rounded-xl bg-gradient-to-r from-[#7c3aed] to-violet-600 px-6 py-2.5 font-semibold text-white shadow-lg shadow-blue-600/30 hover:brightness-110 disabled:opacity-50"
         >
           {saving ? 'Saving…' : 'Save settings'}
         </button>

@@ -30,8 +30,8 @@ function FeedbackCard({ f, onUpvote, upvoting }) {
           disabled={upvoting === f.id}
           className={`flex items-center gap-1 text-xs rounded-full px-3 py-1.5 border transition ${
             f.upvotedByMe
-              ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
-              : 'bg-white/5 border-white/10 text-slate-300 hover:border-blue-400/40'
+              ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
+              : 'bg-white/5 border-white/10 text-slate-300 hover:border-[#8b5cf6]/40'
           }`}
         >
           👍 {f.upvotes || 0}
@@ -43,8 +43,8 @@ function FeedbackCard({ f, onUpvote, upvoting }) {
         {f.isAnonymous ? '🕵️ Anonymous' : `👤 ${f.member?.name || 'Member'}`} • {new Date(f.createdAt).toLocaleString()}
       </p>
       {f.adminReply && (
-        <div className="mt-3 p-3 rounded-lg bg-blue-500/10 border border-blue-500/20">
-          <p className="text-xs font-semibold text-blue-300 mb-1">Admin reply:</p>
+        <div className="mt-3 p-3 rounded-lg bg-[#8b5cf6]/10 border border-[#8b5cf6]/20">
+          <p className="text-xs font-semibold text-[#c4b5fd] mb-1">Admin reply:</p>
           <p className="text-sm text-slate-200 whitespace-pre-wrap">{f.adminReply}</p>
         </div>
       )}
@@ -126,7 +126,7 @@ export default function PortalFeedbackPage() {
             onClick={() => setTab(t.v)}
             className={`text-sm rounded-full px-4 py-2 border transition ${
               tab === t.v
-                ? 'bg-blue-500/20 border-blue-400/40 text-blue-200'
+                ? 'bg-[#8b5cf6]/20 border-[#8b5cf6]/40 text-[#ddd6fe]'
                 : 'bg-white/5 border-white/10 text-slate-300 hover:border-white/25'
             }`}
           >
@@ -162,7 +162,7 @@ export default function PortalFeedbackPage() {
                 role="switch"
                 aria-checked={isAnonymous}
                 onClick={() => setIsAnonymous(!isAnonymous)}
-                className={`w-11 h-6 rounded-full relative transition-colors ${isAnonymous ? 'bg-blue-500' : 'bg-white/10'}`}
+                className={`w-11 h-6 rounded-full relative transition-colors ${isAnonymous ? 'bg-[#8b5cf6]' : 'bg-white/10'}`}
               >
                 <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${isAnonymous ? 'left-[22px]' : 'left-0.5'}`} />
               </button>
