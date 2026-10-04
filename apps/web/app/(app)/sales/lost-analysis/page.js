@@ -66,7 +66,7 @@ export default function LostAnalysisPage() {
       {loading && <Spinner />}
 
       {!loading && data && (
-        <div className="space-y-6">
+        <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <StatCard label={`Lost leads (last ${days} days)`} value={data.totalLost} accent="red" />
             <StatCard label="Avg days to lost" value={data.avgDaysToLost ?? '—'} accent="amber" />

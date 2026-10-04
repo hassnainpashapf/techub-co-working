@@ -69,7 +69,7 @@ function DataPrivacySection({ member, onChanged }) {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 mt-6">
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 mt-4">
       <h3 className="font-semibold text-gray-900 mb-1">Data &amp; Privacy</h3>
       <p className="text-xs text-gray-500 mb-3">
         Export all member data as JSON (password hashes are never included). Anonymization replaces

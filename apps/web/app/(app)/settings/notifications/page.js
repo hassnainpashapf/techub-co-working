@@ -55,7 +55,7 @@ export default function NotificationPreferencesPage() {
     }
   };
 
-  if (loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (loading) return <div className="p-5 flex justify-center"><Spinner /></div>;
 
   return (
     <div>

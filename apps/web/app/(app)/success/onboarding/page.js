@@ -110,7 +110,7 @@ export default function OnboardingJourneysPage() {
   journeys.forEach((j) => { if (counts[j.status] !== undefined) counts[j.status]++; });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Onboarding Journeys"
         sub="Naye members ke onboarding checklists — stages, tasks aur progress"

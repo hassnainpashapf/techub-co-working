@@ -85,7 +85,7 @@ export default function LockerMapPage() {
     finally { setRenting(false); }
   };
 
-  if (roleLoading) return <div className="p-8"><Spinner /></div>;
+  if (roleLoading) return <div className="p-5"><Spinner /></div>;
   if (!allowed) return <AccessDenied />;
 
   return (
@@ -93,14 +93,14 @@ export default function LockerMapPage() {
       <PageHeader title="Locker Availability Map" subtitle="Location-wise lockers — status color-coded" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {notice && <div className="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-700">{notice}</div>}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
         <StatCard label="Total" value={lockers.length} accent="blue" />
         <StatCard label="Available" value={counts.available} accent="green" />
         <StatCard label="Occupied" value={counts.occupied} accent="red" />
         <StatCard label="Reserved" value={counts.reserved} accent="amber" />
         <StatCard label="Maintenance" value={counts.maintenance} accent="slate" />
       </div>
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {['all', 'available', 'occupied', 'reserved', 'maintenance'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}>
@@ -111,7 +111,7 @@ export default function LockerMapPage() {
       {loading ? <Spinner /> : Object.keys(groups).length === 0 ? (
         <EmptyState title="No lockers" hint="Lockers add hone ke baad map yahan dikhega." />
       ) : (
-        <div className="space-y-6">
+        <div className="space-y-4">
           {Object.entries(groups).map(([loc, items]) => (
             <div key={loc} className="rounded-2xl border border-gray-200/60 bg-white/60 p-5">
               <div className="flex items-center justify-between mb-4">

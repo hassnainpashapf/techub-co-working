@@ -120,7 +120,7 @@ export default function OnboardingPage() {
       <PageHeader title="Tenant Onboarding" sub="Naya workspace 3 steps me tayyar karo" />
 
       {/* stepper */}
-      <div className="flex items-center gap-2 mt-6 mb-6">
+      <div className="flex items-center gap-2 mt-4 mb-4">
         {STEPS.map((label, i) => (
           <div key={label} className="flex items-center gap-2 flex-1">
             <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-[#0f766e] text-white' : 'bg-slate-700 text-gray-500'}`}>{i + 1}</div>
@@ -185,7 +185,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        <div className="flex justify-between mt-6">
+        <div className="flex justify-between mt-4">
           <button onClick={back} disabled={step === 0 || busy} className="btn-secondary disabled:opacity-40">← Peeche</button>
           {step < 2 ? (
             <button onClick={next} disabled={!validStep()} className="btn-primary disabled:opacity-40">Agla →</button>

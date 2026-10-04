@@ -78,7 +78,7 @@ export default function ImportPage() {
     <div>
       <PageHeader title="Import Data" sub="Bulk import members and units from CSV files." />
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -92,13 +92,13 @@ export default function ImportPage() {
 
       {error && <div className="mb-4"><ErrorBanner message={error} /></div>}
 
-      <div className="card-premium p-6 mb-6">
+      <div className="card-premium p-6 mb-4">
         <h3 className="text-gray-900 font-semibold mb-2">1. Download template</h3>
         <p className="text-sm text-gray-500 mb-4">Use the template so columns match. First row must be the header row.</p>
         <button onClick={downloadTemplate} className="btn-secondary">⬇ Download {active.label} template</button>
       </div>
 
-      <div className="card-premium p-6 mb-6">
+      <div className="card-premium p-6 mb-4">
         <h3 className="text-gray-900 font-semibold mb-2">2. Choose CSV file</h3>
         <input
           type="file"

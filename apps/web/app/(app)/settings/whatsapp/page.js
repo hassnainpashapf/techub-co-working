@@ -92,7 +92,7 @@ export default function WhatsappPage() {
       <PageHeader title="WhatsApp Notifications" subtitle="Send template messages via Meta WhatsApp Cloud API (console fallback when unconfigured)" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="card-premium p-6 mb-6 max-w-xl">
+      <div className="card-premium p-6 mb-4 max-w-xl">
         <h3 className="text-gray-900 font-bold mb-1">Business Settings</h3>
         <p className="text-xs text-gray-500 mb-4">Meta Cloud API credentials (Meta developer dashboard se). Tokens write-only hain — dobara nahi dikhenge.</p>
         {cfgInfo && (
@@ -136,7 +136,7 @@ export default function WhatsappPage() {
         </div>
       </div>
 
-      <div className="card-premium p-6 mb-6 max-w-xl">
+      <div className="card-premium p-6 mb-4 max-w-xl">
         <h3 className="text-gray-900 font-bold mb-4">Send message</h3>
         <form onSubmit={send}>
           <Field label="To (phone with country code, e.g. 923001234567)">

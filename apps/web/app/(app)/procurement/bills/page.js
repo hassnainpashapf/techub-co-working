@@ -160,7 +160,7 @@ export default function VendorBillsPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <StatCard title="Outstanding" value={fmtMoney(stats.outstanding)} />
           <StatCard title="Overdue" value={`${stats.overdueCount || 0} — ${fmtMoney(stats.overdueValue)}`} tone="red" />
           <StatCard title="Pending" value={stats.counts?.pending || 0} />

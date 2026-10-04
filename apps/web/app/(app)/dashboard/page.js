@@ -329,7 +329,7 @@ function StaffDashboard() {
     <div>
       <PageHeader title="Dashboard" sub="Overview of your coworking space" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <StatCard
           label="Occupancy"
           value={`${occupancyPercent}%`}
@@ -370,7 +370,7 @@ function StaffDashboard() {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'} icon="💰">
           <BarChart data={revenueData.length ? revenueData : [{ label: '—', value: 0 }]} />
         </ChartCard>
@@ -387,7 +387,7 @@ function StaffDashboard() {
         </ChartCard>
       </div>
       {/* More charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <ChartCard title="New Members" sub="Signups per month" icon="👥">
           <TrendChart data={memberData.length ? memberData : [{ label: '—', value: 0 }]} color="#0f766e" />
         </ChartCard>
@@ -402,7 +402,7 @@ function StaffDashboard() {
       </div>
 
       {/* Tickets by status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <ChartCard title="Members vs Contracts" sub="Active now" icon="🤝">
           <BarChart data={memberContractData} />
         </ChartCard>
@@ -421,7 +421,7 @@ function StaffDashboard() {
       </div>
 
       {/* 3 equal cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4">
         {/* Recent Activity */}
         <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
           <div className="flex items-center justify-between mb-4">
@@ -435,7 +435,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {activity.length === 0 ? (
-              <p className="text-sm text-slate-500 py-8 text-center">No recent activity yet.</p>
+              <p className="text-sm text-slate-500 py-5 text-center">No recent activity yet.</p>
             ) : (
               <ul className="space-y-1">
                 {activity.slice(0, 7).map((item, i) => (
@@ -463,7 +463,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {duesList.length === 0 ? (
-              <p className="text-sm text-slate-500 py-8 text-center">No pending dues. All settled. ✓</p>
+              <p className="text-sm text-slate-500 py-5 text-center">No pending dues. All settled. ✓</p>
             ) : (
               <ul className="space-y-1">
                 {duesList.slice(0, 7).map((d, i) => (
@@ -497,7 +497,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {invoices.length === 0 ? (
-              <p className="text-sm text-slate-500 py-8 text-center">No invoices yet.</p>
+              <p className="text-sm text-slate-500 py-5 text-center">No invoices yet.</p>
             ) : (
               <ul className="space-y-1">
                 {invoices.slice(0, 7).map((inv, i) => (
@@ -555,7 +555,7 @@ function MemberDashboard() {
   return (
     <div>
       <PageHeader title="My Dashboard" sub="Your membership at a glance" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <StatCard
           label="My pending dues"
           value={money(data?.myDues ?? dues.reduce((s, r) => s + Number(r.balance || r.amount || 0), 0))}
@@ -588,7 +588,7 @@ function MemberDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4">
         <div className="card">
           <h2 className="font-semibold text-gray-900 mb-3">My dues</h2>
           <DataTable

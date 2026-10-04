@@ -38,7 +38,7 @@ export default function PortalBadgesPage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-4 sm:p-6 space-y-6">
+    <div className="p-4 sm:p-6 space-y-4">
       <PageHeader title="Badges & Leaderboard" subtitle="Apni achievements dekho aur community me top bano" />
 
       {error && <ErrorBanner message={error} />}

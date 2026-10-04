@@ -154,14 +154,14 @@ export default function ComplianceDocumentsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-3 gap-4 mb-4">
         <StatCard label="Expiring soon" value={counts.expiring} accent="amber" />
         <StatCard label="Expired" value={counts.expired} accent="red" />
         <StatCard label="Valid" value={counts.valid} accent="emerald" />
       </div>
 
       {alerts.length > 0 && (
-        <div className="card-premium p-5 mb-6 border-l-4 border-l-amber-400">
+        <div className="card-premium p-5 mb-4 border-l-4 border-l-amber-400">
           <h2 className="text-gray-900 font-bold mb-3">⚠️ Expiring in 30 days</h2>
           <div className="space-y-2">
             {alerts.map((d) => (

@@ -7,7 +7,7 @@
 export function Spinner({ size = 'md' }) {
   const sizes = { sm: 'h-4 w-4', md: 'h-8 w-8', lg: 'h-12 w-12' };
   return (
-    <div className="flex items-center justify-center py-8">
+    <div className="flex items-center justify-center py-5">
       <div
         className={`animate-spin rounded-full border-2 border-gray-200 border-t-[#0f766e] ${sizes[size] || sizes.md}`}
       />
@@ -17,7 +17,7 @@ export function Spinner({ size = 'md' }) {
 
 export function PageHeader({ title, sub, actions }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
+    <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
       <div>
         <h1 className="text-[24px] 4xl:text-[32px] font-bold text-gray-900 tracking-tight">{title}</h1>
         {sub && <p className="text-[13.5px] 4xl:text-[15px] text-gray-500 mt-1">{sub}</p>}

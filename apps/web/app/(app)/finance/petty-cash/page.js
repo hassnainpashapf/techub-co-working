@@ -86,7 +86,7 @@ export default function PettyCashPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <StatCard label="Current Balance" value={`Rs ${bal.toLocaleString()}`} accent={bal >= 0 ? 'green' : 'red'} sub={bal >= 0 ? 'Healthy' : 'Negative!'} />
         <StatCard label="Total In" value={`Rs ${Number(summary.totalIn || 0).toLocaleString()}`} accent="blue" />
         <StatCard label="Total Out" value={`Rs ${Number(summary.totalOut || 0).toLocaleString()}`} accent="amber" />

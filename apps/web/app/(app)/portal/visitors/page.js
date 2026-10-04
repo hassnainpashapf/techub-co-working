@@ -124,7 +124,7 @@ function InviteSuccess({ invite, onClose }) {
     <Modal title="Invite created" onClose={onClose}>
       <div className="text-center">
         <p className="text-gray-600 text-sm mb-2">Check-in code for <span className="font-semibold text-gray-900">{invite.visitorName}</span></p>
-        <div className="inline-block bg-gradient-to-br from-[#0f766e]/20 to-teal-700/20 border border-[#0f766e]/40 rounded-2xl px-8 py-5 mb-4">
+        <div className="inline-block bg-gradient-to-br from-[#0f766e]/20 to-teal-700/20 border border-[#0f766e]/40 rounded-2xl px-5 py-5 mb-4">
           <div className="text-4xl font-bold tracking-[0.3em] text-teal-700">{invite.code}</div>
           <div className="text-xs text-gray-500 mt-1">{fmtDateTime(invite.expectedAt)}</div>
         </div>

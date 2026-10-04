@@ -213,7 +213,7 @@ export default function RemindersPage() {
       {rules.length === 0 ? (
         <EmptyState title="No reminder rules yet" hint="Create your first rule — e.g. remind members 3 days before an invoice is due." />
       ) : (
-        <div className="grid gap-3 mb-8">
+        <div className="grid gap-3 mb-5">
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <button type="button" role="switch" aria-checked={r.isActive} onClick={() => toggleActive(r)}

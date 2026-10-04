@@ -80,13 +80,13 @@ export default function PortalLoyaltyPage() {
         <ErrorBanner message={error} />
       ) : (
         <div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
             <StatCard label="My Points" value={balance.toLocaleString()} accent="violet" />
             <StatCard label="Worth" value={`Rs ${rupeeValue.toLocaleString()}`} accent="emerald" />
             <StatCard label="Earn Rate" value={`${data?.loyaltyRate ?? 10} pts / Rs 1,000`} accent="blue" />
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 mb-6">
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 mb-4">
             <h2 className="text-gray-900 font-semibold mb-3">Redeem Points</h2>
             <p className="text-xs text-gray-500 mb-4">
               1 point = Rs {pointValue}. Redeemed points become a credit note you can apply to invoices.

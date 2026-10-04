@@ -44,7 +44,7 @@ export default function LockerDashboardPage() {
   const expiring = s.expiring7d || [];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       <PageHeader title="🔐 Locker Dashboard" subtitle="Occupancy, rentals, revenue aur expiring rentals" />
 
       {pendingModules.length > 0 && (
@@ -62,7 +62,7 @@ export default function LockerDashboardPage() {
         <StatCard label="Waitlist" value={s.waitlistCount ?? 0} icon="🪑" accent="amber" sub={s.maintenanceOpen ? `${s.maintenanceOpen} open maintenance` : ''} />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-gray-200/60 bg-white/80 p-5">
           <h3 className="text-base font-semibold text-gray-900 mb-1">⏳ Expiring in 7 days</h3>
           <p className="text-xs text-gray-500 mb-4">Renew ya release follow-up karein</p>

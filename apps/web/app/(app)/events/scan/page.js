@@ -68,7 +68,7 @@ export default function TicketScanPage() {
   const tone = !res ? null : res.valid ? 'green' : 'red';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Ticket Scanning" subtitle="Event entry — QR ticket validate karo" />
 
       {stats && (

@@ -144,7 +144,7 @@ export default function IncidentsPage() {
         actions={<button onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }); }} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900">+ Report Incident</button>}
       />
 
-      <div className="mb-6 grid gap-4 md:grid-cols-3">
+      <div className="mb-4 grid gap-4 md:grid-cols-3">
         <StatCard label="Open / Investigating" value={summary.open || 0} accent="blue" icon="📂" />
         <StatCard label="Critical (open)" value={summary.critical || 0} accent="red" icon="🚨" />
         <StatCard label="Resolved (30d)" value={summary.resolved30d || 0} accent="green" icon="✅" />

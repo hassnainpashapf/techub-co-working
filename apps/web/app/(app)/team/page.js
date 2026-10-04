@@ -90,7 +90,7 @@ function SegmentDonut({ data, size = 190 }) {
   let offset = 0;
   const palette = ['#0f766e', '#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#9ca3af', '#14b8a6'];
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-6">
+    <div className="flex flex-col sm:flex-row items-center gap-4">
       <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-50 to-emerald-50 blur-sm" />
         <svg viewBox="0 0 160 160" className="relative w-full h-full -rotate-90 drop-shadow-sm">
@@ -293,7 +293,7 @@ export default function TeamOverviewPage() {
           ]}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
         <RichStatCard
           label="Total Team Members" value={users.length} sub="registered staff"
           icon="👥" grad="from-teal-500 to-emerald-600" topBorder="from-teal-500 to-emerald-400"
@@ -312,7 +312,7 @@ export default function TeamOverviewPage() {
         />
       </div>
 
-      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-8 mb-6 4xl:mb-8">
+      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5 mb-4 4xl:mb-5">
         <div className="flex items-start justify-between mb-5">
           <div className="flex items-center gap-3.5">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-teal-500/25">📈</span>
@@ -328,9 +328,9 @@ export default function TeamOverviewPage() {
         <AreaTrendChart labels={trendLabels} values={trendValues} height={280} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
-        <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-8">
-          <div className="flex items-center gap-3.5 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4">
+        <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
+          <div className="flex items-center gap-3.5 mb-4">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">🍩</span>
             <div>
               <h3 className="text-[17px] 4xl:text-[20px] font-bold text-gray-900 tracking-tight">Role Distribution</h3>
@@ -340,8 +340,8 @@ export default function TeamOverviewPage() {
           <SegmentDonut data={roleData} size={190} />
         </div>
 
-        <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-8">
-          <div className="flex items-center justify-between mb-6">
+        <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
+          <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3.5">
               <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25">🟢</span>
               <div>

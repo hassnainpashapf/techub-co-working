@@ -69,7 +69,7 @@ function TemplateGallery() {
   };
 
   return (
-    <div className="card p-4 mt-6">
+    <div className="card p-4 mt-4">
       <h3 className="font-semibold mb-1">📚 Template Gallery</h3>
       <p className="text-sm text-gray-500 mb-3">Ready-made report definitions — ek click me clone karo aur customize karo</p>
       {err && <ErrorBanner message={err} />}

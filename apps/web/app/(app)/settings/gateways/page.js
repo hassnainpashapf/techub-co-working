@@ -107,7 +107,7 @@ export default function GatewaysPage() {
         })}
       </div>
 
-      <div className="mt-6 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+      <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 p-5">
         <h3 className="font-semibold text-gray-900 mb-2">Test payment flow</h3>
         <p className="text-sm text-gray-500 mb-4">
           Manual gateway hamesha ready hota hai. Member billing page par "Pay Online" dabakar reference hasil karta hai.

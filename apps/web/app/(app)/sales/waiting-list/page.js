@@ -165,7 +165,7 @@ export default function WaitingListPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         {STATUSES.map((s) => (
           <StatCard key={s.key} label={s.label} value={stats[s.key] || 0} accent={s.tone} />
         ))}

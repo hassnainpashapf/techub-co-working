@@ -77,7 +77,7 @@ export default function TaxReportsPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total Invoiced" value={fmt(data.totalInvoiced)} sub={`${data.invoiceCount} invoices`} accent="blue" />
             <StatCard label="Tax Amount" value={fmt(data.totalTax)} sub={`@ ${data.taxRate}%`} accent="green" />
             <StatCard label="Total Paid" value={fmt(data.totalPaid)} accent="green" />

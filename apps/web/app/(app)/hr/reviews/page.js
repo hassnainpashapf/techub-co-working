@@ -142,7 +142,7 @@ export default function ReviewsPage() {
       <PageHeader title="Performance Reviews" subtitle="Employees ki quarterly performance reviews" />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Total Reviews" value={counts.total} />
         <StatCard label="Draft" value={counts.draft} />
         <StatCard label="Submitted" value={counts.submitted} />
@@ -170,7 +170,7 @@ export default function ReviewsPage() {
       </div>
 
       {history && (
-        <div className="mb-6 bg-white/60 border border-gray-200 rounded-xl p-4">
+        <div className="mb-4 bg-white/60 border border-gray-200 rounded-xl p-4">
           <h3 className="font-semibold text-gray-900 mb-3">{empName(histEmp)} — Review History</h3>
           {history.length === 0 ? <EmptyState title="Koi review nahi" /> : (
             <div className="space-y-3">

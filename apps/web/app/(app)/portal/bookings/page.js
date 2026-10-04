@@ -204,7 +204,7 @@ export default function PortalBookingsPage() {
         )}
       />
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {tabs.map((t) => (
           <button
             key={t.key}

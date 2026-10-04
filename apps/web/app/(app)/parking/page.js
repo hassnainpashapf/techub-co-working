@@ -124,7 +124,7 @@ export default function ParkingPage() {
     } catch (e) { setError(e.message); }
   };
 
-  if (roleLoading) return <div className="p-8"><Spinner /></div>;
+  if (roleLoading) return <div className="p-5"><Spinner /></div>;
   if (!allowed) return <AccessDenied />;
 
   const counts = {
@@ -140,7 +140,7 @@ export default function ParkingPage() {
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ Add spot</button>
       } />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Total spots" value={spots.length} accent="blue" />
         <StatCard label="Free" value={counts.free} accent="green" />
         <StatCard label="Occupied" value={counts.occupied} accent="red" />

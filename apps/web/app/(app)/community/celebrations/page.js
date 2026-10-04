@@ -98,7 +98,7 @@ export default function CelebrationsPage() {
 
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <StatCard label="🎂 Birthdays" value={bdays} />
             <StatCard label="🎉 Anniversaries" value={annivs} />
             <StatCard label="📅 Upcoming" value={items.length} />
@@ -119,7 +119,7 @@ export default function CelebrationsPage() {
             />
           )}
 
-          <h3 className="text-lg font-semibold text-gray-900 mt-8 mb-3">Recently sent</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mt-5 mb-3">Recently sent</h3>
           {log.length === 0 ? <EmptyState title="Abhi kuch nahi bheja" message="Jab birthday/anniversary emails jayengi to yahan log dikhega." /> : (
             <DataTable
               columns={[

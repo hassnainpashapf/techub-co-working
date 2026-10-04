@@ -61,7 +61,7 @@ export default function UtilitiesDashboardPage() {
   const gs = s.greenScore || null;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🔌 Utilities Dashboard" sub="Meters, consumption, cost aur sustainability" actions={
         <button onClick={load} className="btn-secondary">↻ Refresh</button>
       } />
@@ -81,7 +81,7 @@ export default function UtilitiesDashboardPage() {
         <StatCard label="🌱 Green score" value={gs ? `${gs.score}/100` : '—'} accent="green" />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-lg font-semibold mb-4">📊 Consumption (30 din)</h3>
           <Bars items={s.byType30d} />
@@ -104,7 +104,7 @@ export default function UtilitiesDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-lg font-semibold mb-4">🚨 Active Alerts ({s.activeAlertCount || 0})</h3>
           {!(s.activeAlerts || []).length ? (

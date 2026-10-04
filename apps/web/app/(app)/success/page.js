@@ -66,7 +66,7 @@ export default function SuccessDashboardPage() {
   const modules = data?.modules || {};
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Member Success" subtitle="Onboarding, health, feedback aur win-back ka overview" />
 
       {err && <ErrorBanner message={err} />}
@@ -86,7 +86,7 @@ export default function SuccessDashboardPage() {
         <StatCard label="Open Tasks" value={stats.openSuccessTasks ?? '—'} icon="📝" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">🚨 At-Risk Members</h3>

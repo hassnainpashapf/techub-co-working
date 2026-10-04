@@ -55,7 +55,7 @@ export default function LocationsComparePage() {
   const worst = rows.length > 1 ? rows[rows.length - 1] : null;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Locations Comparison"
         subtitle="Building-wise performance: occupancy, revenue, expenses and net"

@@ -27,7 +27,7 @@ const TITLES = {
   '/attendance': 'Attendance',
 };
 
-export default function Topbar({ onMenuClick, sidebarOpen, zoom, onZoomIn, onZoomOut, onZoomReset }) {
+export default function Topbar({ onMenuClick, sidebarOpen }) {
   const { user, logout } = useAuth();
   const [unread, setUnread] = useState(0);
   const [path, setPath] = useState('');
@@ -151,13 +151,6 @@ export default function Topbar({ onMenuClick, sidebarOpen, zoom, onZoomIn, onZoo
         
       </div>
       <div className="flex items-center gap-2.5">
-        {typeof zoom === 'number' && (
-          <div className="flex items-center gap-0.5 bg-gray-100 rounded-full border border-transparent px-1 py-1" title="Page zoom">
-            <button onClick={onZoomOut} title="Zoom out" className="w-7 h-7 rounded-full flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-white transition-all active:scale-95 text-[16px] font-bold leading-none">−</button>
-            <button onClick={onZoomReset} title="Reset zoom to 100%" className="min-w-[42px] text-[11.5px] font-bold text-gray-600 hover:text-teal-700 transition-colors">{zoom}%</button>
-            <button onClick={onZoomIn} title="Zoom in" className="w-7 h-7 rounded-full flex items-center justify-center text-gray-500 hover:text-teal-700 hover:bg-white transition-all active:scale-95 text-[16px] font-bold leading-none">+</button>
-          </div>
-        )}
         <div ref={boxRef} className="relative">
           <div className="flex items-center gap-2.5 bg-gray-100 rounded-full border border-transparent px-3.5 py-2 w-[240px] text-gray-400 focus-within:border-teal-300 focus-within:bg-white transition-all duration-200">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>

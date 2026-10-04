@@ -64,7 +64,7 @@ export default function NotificationsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-4">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Notifications</h1>
           <p className="text-sm text-gray-500 mt-1">Your alerts and reminders.</p>

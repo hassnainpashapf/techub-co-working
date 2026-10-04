@@ -201,7 +201,7 @@ export default function ToursPage() {
         actions={<button className="btn-primary" onClick={() => setShowAdd(true)}>+ Schedule Tour</button>}
       />
       {error && <ErrorBanner message={error} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Today" value={stats.today} icon="📅" />
         <StatCard label="Upcoming" value={stats.upcoming} icon="⏰" />
         <StatCard label="Completed" value={stats.completed} icon="✅" />

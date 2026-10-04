@@ -90,7 +90,7 @@ export default function PerksManagePage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader
         title="Perks & Benefits"
         sub="Partner discounts for your members"

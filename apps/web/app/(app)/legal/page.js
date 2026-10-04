@@ -61,7 +61,7 @@ export default function LegalDashboardPage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="⚖️ Legal & Compliance" sub="Policies, compliance, documents, incidents — ek nazar me" />
 
       {err && <ErrorBanner message={err} />}

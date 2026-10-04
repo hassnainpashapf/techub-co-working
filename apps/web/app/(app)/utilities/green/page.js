@@ -145,7 +145,7 @@ export default function GreenInitiativesPage() {
   ] : [];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader
         title="🌱 Green Initiatives"
         sub="Sustainability goals — energy, water, waste aur awareness"

@@ -204,7 +204,7 @@ export default function AttendancePage() {
             <Field label="Reason"><textarea className="input" rows="3" value={leaveForm.reason} onChange={(e) => setLeaveForm({ ...leaveForm, reason: e.target.value })} required placeholder="Reason for leave" /></Field>
             <button type="submit" className="btn-primary" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit request'}</button>
           </form>
-          <h3 className="font-semibold text-gray-900 mt-6 mb-2">My leaves</h3>
+          <h3 className="font-semibold text-gray-900 mt-4 mb-2">My leaves</h3>
           <DataTable
             columns={[
               { key: 'from', label: 'From', render: (r) => (r.from ? String(r.from).slice(0, 10) : '—') },

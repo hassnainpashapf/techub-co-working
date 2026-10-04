@@ -65,7 +65,7 @@ export default function MemberReferralsPage() {
     }
   }
 
-  if (loading) return <div className="p-8"><Spinner /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
@@ -77,7 +77,7 @@ export default function MemberReferralsPage() {
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       {code && (
-        <div className="grid sm:grid-cols-3 gap-4 mb-6">
+        <div className="grid sm:grid-cols-3 gap-4 mb-4">
           <div className="card-premium p-5 sm:col-span-2">
             <p className="text-xs font-semibold text-gray-500 mb-1">YOUR REFERRAL CODE</p>
             <div className="flex items-center gap-3 flex-wrap">

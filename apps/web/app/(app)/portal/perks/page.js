@@ -57,7 +57,7 @@ export default function PortalPerksPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="Member Perks" sub="Exclusive deals from our partners — just for you" />
       {error && <ErrorBanner message={error} onRetry={load} />}
 

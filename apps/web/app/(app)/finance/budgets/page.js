@@ -68,7 +68,7 @@ export default function BudgetsPage() {
 
   return (
     <div className="p-6 max-w-5xl mx-auto">
-      <div className="flex items-center justify-between mb-6 flex-wrap gap-3">
+      <div className="flex items-center justify-between mb-4 flex-wrap gap-3">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Budgets</h1>
           <p className="text-sm text-gray-500">Budget vs actual per expense category</p>
@@ -89,7 +89,7 @@ export default function BudgetsPage() {
       {error && <div className="mb-4 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl px-4 py-2.5">{error}</div>}
 
       {totals && (
-        <div className="grid grid-cols-3 gap-4 mb-6">
+        <div className="grid grid-cols-3 gap-4 mb-4">
           {[
             { label: 'Total Budgeted', value: money(totals.budgeted), tone: 'text-teal-700' },
             { label: 'Total Actual', value: money(totals.actual), tone: 'text-amber-700' },
@@ -116,7 +116,7 @@ export default function BudgetsPage() {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-slate-500">Loading…</td></tr>
+              <tr><td colSpan={5} className="px-4 py-5 text-center text-slate-500">Loading…</td></tr>
             ) : rows.map((r) => (
               <tr key={r.category} className="border-b border-gray-200 hover:bg-gray-50">
                 <td className="px-4 py-3 text-gray-800 font-medium capitalize">{r.category.replace(/_/g, ' ')}</td>

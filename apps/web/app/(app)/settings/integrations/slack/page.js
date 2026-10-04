@@ -132,7 +132,7 @@ export default function SlackPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mb-6">
+        <div className="flex items-center gap-2 mb-4">
           <input
             id="slack-active"
             type="checkbox"

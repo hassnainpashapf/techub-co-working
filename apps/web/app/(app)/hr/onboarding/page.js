@@ -107,7 +107,7 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Employee Onboarding"
         sub="Naye staff ke liye checklist-based onboarding"

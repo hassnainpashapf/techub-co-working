@@ -94,7 +94,7 @@ export default function LostFoundStaffPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard title="Open items" value={counts.open} accent="blue" />
         <StatCard title="Claimed" value={counts.claimed} accent="green" />
       </div>

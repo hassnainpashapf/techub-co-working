@@ -89,7 +89,7 @@ export default function WhiteLabelPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           <form onSubmit={save} className="card-premium p-6 space-y-4">
             <Field label="Brand name">
               <input className="input" value={f.brandName} onChange={(e) => setF({ ...f, brandName: e.target.value })} placeholder="Techub Co-Working" maxLength={80} />

@@ -59,7 +59,7 @@ export default function ConciergeDashboardPage() {
   const pendingModules = Object.entries(s.modules || {}).filter(([, v]) => !v).map(([k]) => k);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-6">
+    <div className="p-6 max-w-7xl mx-auto space-y-4">
       <PageHeader title="🛎️ Concierge Dashboard" subtitle="Service requests, SLA, ratings aur revenue" />
 
       {pendingModules.length > 0 && (
@@ -77,7 +77,7 @@ export default function ConciergeDashboardPage() {
         <StatCard label="Done (30d)" value={s.byStatus?.done ?? 0} icon="✅" accent="indigo" />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
           <h3 className="font-bold text-gray-900 mb-4">🔥 Top Services (30d)</h3>
           {s.topServices?.length ? (

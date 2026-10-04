@@ -30,7 +30,7 @@ function Donut({ positive, neutral, negative }) {
   ];
   let off = 0;
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-4">
       <svg width="140" height="140" viewBox="0 0 140 140">
         <circle cx="70" cy="70" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="18" />
         {segs.map((s, i) => {
@@ -92,7 +92,7 @@ export default function IntelligencePage() {
   const attn = (insights.unreadCount || 0) + (anomalies.items || []).length + (sentiment.negative || 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="🧠 Intelligence" subtitle="AI insights, anomalies, sentiment aur pricing hints — sab ek jagah" />
 
       {err && <ErrorBanner message={err} />}
@@ -110,7 +110,7 @@ export default function IntelligencePage() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         {/* Insights */}
         <div className="rounded-2xl border border-gray-200 bg-gray-100 p-5">
           <h3 className="font-semibold text-gray-900 mb-4">💡 Weekly Insights</h3>

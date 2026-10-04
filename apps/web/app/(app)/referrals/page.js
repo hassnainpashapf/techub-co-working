@@ -86,7 +86,7 @@ export default function StaffReferralsPage() {
     }
   }
 
-  if (loading && !data) return <div className="p-8"><Spinner /></div>;
+  if (loading && !data) return <div className="p-5"><Spinner /></div>;
   const counts = data?.counts || {};
 
   return (
@@ -98,7 +98,7 @@ export default function StaffReferralsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid sm:grid-cols-4 gap-4 mb-6">
+      <div className="grid sm:grid-cols-4 gap-4 mb-4">
         <StatCard label="Invited" value={counts.invited || 0} accent="amber" icon="✉️" />
         <StatCard label="Joined" value={counts.joined || 0} accent="blue" icon="🤝" />
         <StatCard label="Rewarded" value={counts.rewarded || 0} accent="green" icon="🎁" />

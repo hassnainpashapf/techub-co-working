@@ -75,7 +75,7 @@ export default function BackupsPage() {
   const total = backups.reduce((s, b) => s + Number(b.sizeBytes || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Database Backups"
         subtitle="Nightly automatic backups (2:30 AM) + manual. Sirf super_admin."
@@ -92,7 +92,7 @@ export default function BackupsPage() {
 
       <div className="card overflow-hidden">
         <div className="card-header"><h3 className="font-semibold">Backup History</h3></div>
-        {loading ? <div className="p-8 flex justify-center"><Spinner /></div> : (
+        {loading ? <div className="p-5 flex justify-center"><Spinner /></div> : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead><tr className="text-left text-gray-500 border-b border-gray-200">
@@ -101,7 +101,7 @@ export default function BackupsPage() {
                 <th className="px-4 py-3 text-right">Actions</th>
               </tr></thead>
               <tbody>
-                {backups.length === 0 && <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-500">Koi backup nahi — "Run Backup Now" dabayein.</td></tr>}
+                {backups.length === 0 && <tr><td colSpan={5} className="px-4 py-5 text-center text-gray-500">Koi backup nahi — "Run Backup Now" dabayein.</td></tr>}
                 {backups.map((b) => (
                   <tr key={b.id} className="border-b border-gray-200 hover:bg-gray-100">
                     <td className="px-4 py-3 font-mono text-xs">{b.fileName}{!b.exists && <span className="ml-2 text-amber-700">(file missing)</span>}</td>

@@ -65,7 +65,7 @@ export default function SubscriptionPage() {
       {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{notice}</div>}
       {loading ? <Spinner /> : (
         <>
-          <div className="card-premium p-6 mb-6">
+          <div className="card-premium p-6 mb-4">
             <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
               <div>
                 <div className="text-xs text-gray-500 uppercase tracking-wide mb-1">Current Plan</div>
@@ -82,7 +82,7 @@ export default function SubscriptionPage() {
             </div>
           </div>
 
-          <div className="card-premium p-6 mb-6">
+          <div className="card-premium p-6 mb-4">
             <h2 className="text-lg font-semibold text-gray-900 mb-4">Usage vs Limits</h2>
             {usage ? (
               <>

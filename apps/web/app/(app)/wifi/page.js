@@ -76,7 +76,7 @@ export default function WifiPage() {
     catch (e) { setError(e.message); }
   };
 
-  if (roleLoading) return <div className="p-8"><Spinner /></div>;
+  if (roleLoading) return <div className="p-5"><Spinner /></div>;
   if (!allowed) return <AccessDenied />;
 
   const counts = { active: 0, used: 0, expired: 0, revoked: 0 };
@@ -93,7 +93,7 @@ export default function WifiPage() {
       />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Active" value={counts.active} accent="green" />
         <StatCard label="Used" value={counts.used} accent="blue" />
         <StatCard label="Expired" value={counts.expired} accent="amber" />

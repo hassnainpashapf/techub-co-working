@@ -81,7 +81,7 @@ export default function VendorPaymentsPage() {
   const outstanding = selectedBill ? Number(selectedBill.amount) - Number(selectedBill.paidAmount || 0) : 0;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Vendor Payments" sub="Bill payments record karein aur AP aging dekhein"
         actions={<button className={btnPrimary} onClick={() => { setError(''); setShowPay(true); }}>+ Record Payment</button>} />
       {error && <ErrorBanner message={error} />}

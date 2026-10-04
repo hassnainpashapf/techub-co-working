@@ -75,7 +75,7 @@ export default function AccessDashboardPage() {
 
   const s = stats || {};
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🔐 Access Dashboard" sub="Doors, entries aur live activity" actions={
         <button onClick={() => load(false)} className="btn-secondary">↻ Refresh</button>
       } />
@@ -96,7 +96,7 @@ export default function AccessDashboardPage() {
         <StatCard label="Anomalies (24h)" value={s.anomalies24h ?? '—'} accent="red" />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-lg font-semibold mb-4">📡 Live Feed</h3>
           <LiveFeed events={live.events} />

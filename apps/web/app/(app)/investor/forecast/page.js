@@ -36,14 +36,14 @@ export default function ForecastPage() {
     load();
   }, [allowed, months]);
 
-  if (roleLoading) return <div className="p-8"><Spinner /></div>;
+  if (roleLoading) return <div className="p-5"><Spinner /></div>;
   if (!allowed) return <AccessDenied />;
 
   const t = data ? TREND_META[data.trend] || TREND_META.stable : null;
   const a = data?.assumptions;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader
         title="Occupancy Forecast"
         sub="History vs projected occupancy — simple trend math, no black box"

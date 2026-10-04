@@ -64,7 +64,7 @@ export default function ApiDocsPage() {
         actions={<Badge tone="violet">v1.0.0</Badge>}
       />
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {[
           { key: 'docs', label: '📖 Interactive Docs' },
           { key: 'quickstart', label: '🚀 Quickstart Guide' },
@@ -94,8 +94,8 @@ export default function ApiDocsPage() {
       )}
 
       {tab === 'quickstart' && (
-        <div className="space-y-8 card-premium p-6">
-          <div className="space-y-6">
+        <div className="space-y-5 card-premium p-6">
+          <div className="space-y-4">
             <Step n="1" title="API key banao">
               <p><span className="text-gray-900 font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-700 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-700">cwk_...</code> hota hai.</p>
               <p className="text-gray-500">Har request me ye header bhejo:</p>

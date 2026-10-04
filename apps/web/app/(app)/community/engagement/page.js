@@ -37,7 +37,7 @@ function Donut({ distribution, total }) {
   let acc = 0;
   const segs = Object.entries(distribution).filter(([, v]) => v > 0);
   return (
-    <div className="flex items-center gap-6">
+    <div className="flex items-center gap-4">
       <svg width="180" height="180" viewBox="0 0 180 180">
         <circle cx="90" cy="90" r={R} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="22" />
         {segs.map(([tier, v]) => {
@@ -112,7 +112,7 @@ export default function EngagementPage() {
   const summary = data?.summary;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Member Engagement"
         sub="Kon kitna active hai — bookings, events, feedback, referrals, logins"

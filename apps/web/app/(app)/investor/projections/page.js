@@ -59,14 +59,14 @@ export default function ProjectionsPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total Projected" value={fmt(data.total)} sub={`${data.months} months`} accent="blue" />
             <StatCard label="Contracts" value={fmt(data.breakdown.contracts)} sub={`${data.counts.activeContracts} active`} accent="blue" />
             <StatCard label="Recurring" value={fmt(data.breakdown.recurring)} sub={`${data.counts.activeRecurringInvoices} schedules`} accent="green" />
             <StatCard label="Pipeline" value={fmt(data.breakdown.pipeline)} sub={`${data.counts.openLeads} leads × ${Math.round(data.counts.conversionRate * 100)}%`} accent="amber" />
           </div>
 
-          <div className="card-premium p-6 mb-6">
+          <div className="card-premium p-6 mb-4">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-bold text-gray-900">Monthly Projection</h2>
               <div className="flex gap-4">

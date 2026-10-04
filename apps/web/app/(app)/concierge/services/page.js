@@ -52,7 +52,7 @@ export default function ConciergeServicesPage() {
   const active = services.filter((s) => s.isActive).length;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🛎️ Concierge Services" subtitle="Service catalog manage karein (providers Track 3 page se)" />
 
       {err && <ErrorBanner message={err} />}

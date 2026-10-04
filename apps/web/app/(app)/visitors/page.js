@@ -144,7 +144,7 @@ export default function VisitorsPage() {
       </>) : (
       <div className="grid gap-3">
         {invites.length === 0 ? (
-          <div className="card-premium p-8 text-center text-sm text-gray-500">No pending pre-registrations.</div>
+          <div className="card-premium p-5 text-center text-sm text-gray-500">No pending pre-registrations.</div>
         ) : invites.map((i) => (
           <div key={i.id} className="card-premium p-4 flex items-center justify-between gap-3">
             <div>

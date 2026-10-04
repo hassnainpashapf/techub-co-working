@@ -160,7 +160,7 @@ export default function AccessDeskPage() {
   const blocked = blockedReason(member);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🛎️ Access Desk" sub="Reception — member access, PIN, schedules, manual entry, visitor passes" />
 
       {err && <ErrorBanner message={err} />}
@@ -196,7 +196,7 @@ export default function AccessDeskPage() {
       {loading && <Spinner />}
 
       {member && !loading && (
-        <div className="grid gap-6 lg:grid-cols-2">
+        <div className="grid gap-4 lg:grid-cols-2">
           {/* Access status + credentials */}
           <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-4">
             <div className="flex items-center justify-between">

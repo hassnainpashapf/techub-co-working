@@ -115,7 +115,7 @@ export default function PortalFeedbackPage() {
     <div>
       <PageHeader title="Feedback" subtitle="Apni raye dein — hum behtar banayenge" />
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {[
           { v: 'board', l: '🗳️ Suggestions Board' },
           { v: 'mine', l: '📝 My Feedback' },
@@ -138,7 +138,7 @@ export default function PortalFeedbackPage() {
       {error && <div className="mb-4"><ErrorBanner message={error} /></div>}
 
       {tab === 'new' && (
-        <div className="card-premium p-6 mb-6 max-w-2xl">
+        <div className="card-premium p-6 mb-4 max-w-2xl">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Naya feedback</h2>
           {done && <div className="mb-4 text-sm text-emerald-700">✅ Shukriya! Aap ka feedback mil gaya.</div>}
           <form onSubmit={submit}>

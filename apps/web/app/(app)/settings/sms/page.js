@@ -59,7 +59,7 @@ export default function SmsSettingsPage() {
       {error && <ErrorBanner message={error} />}
       {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{msg}</div>}
 
-      <div className="card-premium p-6 mb-6">
+      <div className="card-premium p-6 mb-4">
         <h2 className="text-lg font-bold text-gray-900 mb-4">Send SMS</h2>
         <form onSubmit={send}>
           <Field label="To (phone number)">

@@ -134,7 +134,7 @@ export default function QuotationsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
         <StatCard label="Draft" value={counts.draft || 0} accent="slate" />
         <StatCard label="Sent" value={counts.sent || 0} accent="blue" />
         <StatCard label="Accepted" value={counts.accepted || 0} accent="green" />

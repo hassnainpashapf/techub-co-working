@@ -106,12 +106,12 @@ export default function PoliciesPage() {
     } catch (e) { setError(e.message); }
   };
 
-  if (roleLoading) return <div className="p-8"><Spinner /></div>;
+  if (roleLoading) return <div className="p-5"><Spinner /></div>;
   if (!allowed) return <AccessDenied />;
-  if (loading) return <div className="p-8"><Spinner /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="📋 Policy Documents" subtitle="Policies + member acknowledgments" actions={
         <button onClick={openNew} className="btn-primary">+ Nayi Policy</button>
       } />
@@ -150,7 +150,7 @@ export default function PoliciesPage() {
             </div>
             <Field label="File URL (optional)"><input className="input-premium" placeholder="https://..." value={form.fileUrl} onChange={e => setForm({ ...form, fileUrl: e.target.value })} /></Field>
             <Field label="Policy Text (optional)"><textarea className="input-premium" rows={6} value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} /></Field>
-            <div className="flex gap-6 text-sm text-gray-800">
+            <div className="flex gap-4 text-sm text-gray-800">
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.requiresAck} onChange={e => setForm({ ...form, requiresAck: e.target.checked })} /> Ack lazmi</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.reAckOnUpdate} onChange={e => setForm({ ...form, reAckOnUpdate: e.target.checked })} /> Update par dobara ack</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} /> Active</label>

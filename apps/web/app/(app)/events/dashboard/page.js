@@ -51,7 +51,7 @@ export default function EventsDashboardPage() {
   if (loading) return <Spinner />;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Event Organizer Dashboard" subtitle="Ticketing sales aur upcoming events ki progress" />
 
       {err && <ErrorBanner message={err} />}

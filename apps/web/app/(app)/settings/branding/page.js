@@ -85,7 +85,7 @@ export default function BrandingPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {msg && <div className="mb-4 bg-green-500/10 border border-green-500/30 text-green-300 text-sm rounded-xl px-4 py-3">{msg}</div>}
       {loading ? <Spinner /> : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
           <div className="card-premium p-6">
             <h3 className="font-semibold text-gray-900 mb-4">Logo</h3>
             <div className="w-32 h-32 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden mb-4">

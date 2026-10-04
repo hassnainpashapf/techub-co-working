@@ -76,16 +76,16 @@ export default function CafeDashboardPage() {
 
   useEffect(() => { load(days); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  if (loading) return <div className="p-8"><Spinner /></div>;
-  if (error) return <div className="p-8"><ErrorBanner message={error} onRetry={() => load(days)} /></div>;
-  if (!stats) return <div className="p-8"><EmptyState title="No data" /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
+  if (error) return <div className="p-5"><ErrorBanner message={error} onRetry={() => load(days)} /></div>;
+  if (!stats) return <div className="p-5"><EmptyState title="No data" /></div>;
 
   const moduleHint = !stats.modules.orders && '⚠️ Orders module abhi migrate nahi hua — yahan data aane ke baad dikhega.';
   const statusEntries = Object.entries(stats.ordersByStatus || {});
   const kitchenLoad = stats.activeOrders;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <PageHeader title="Cafeteria Dashboard" sub="F&B sales, kitchen load aur top items — ek nazar me" />
         <div className="flex gap-2">

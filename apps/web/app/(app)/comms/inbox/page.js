@@ -121,7 +121,7 @@ export default function TeamInboxPage() {
   };
 
   if (!allowed) return <AccessDenied />;
-  if (loading) return <div className="p-8"><Spinner /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
 
   return (
     <div className="p-6">

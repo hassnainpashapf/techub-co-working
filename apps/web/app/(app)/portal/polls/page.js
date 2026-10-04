@@ -39,7 +39,7 @@ export default function PortalPollsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Community Polls" subtitle="Your opinion matters — vote!" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : polls.length === 0 ? (

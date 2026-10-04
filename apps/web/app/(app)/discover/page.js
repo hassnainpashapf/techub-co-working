@@ -394,7 +394,7 @@ export default function DiscoverPage() {
 
   return (
     <div className="animate-fadeUp">
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
         <h1 className="text-gray-900 text-[26px] 4xl:text-[34px] font-bold tracking-tight">Available co-workspace</h1>
         <div className="flex items-center gap-2">
           <div className="flex rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
@@ -416,9 +416,9 @@ export default function DiscoverPage() {
       )}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="flex gap-8">
+      <div className="flex gap-5">
         <div className="w-[300px] shrink-0">
-          <div className="relative mb-6">
+          <div className="relative mb-4">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" className="absolute left-3.5 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               value={search}
@@ -503,7 +503,7 @@ export default function DiscoverPage() {
               <p className="text-sm mt-1">Try adjusting your filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-5 4xl:gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-5 4xl:gap-4">
               {filtered.map((u, i) => (
                 <BookingCard key={u.id} unit={u} index={i} duration={duration} onBook={setBookingUnit} isFav={favorites.has(u.id)} onToggleFav={toggleFav} />
               ))}

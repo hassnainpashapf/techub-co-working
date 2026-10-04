@@ -69,8 +69,8 @@ export default function MyAccessPage() {
     }
   };
 
-  if (loading) return <div className="p-8"><Spinner /></div>;
-  if (error) return <div className="p-8"><ErrorBanner message={error} onRetry={load} /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
+  if (error) return <div className="p-5"><ErrorBanner message={error} onRetry={load} /></div>;
 
   const creds = data?.credentials || [];
   const schedules = data?.schedules || [];
@@ -79,7 +79,7 @@ export default function MyAccessPage() {
   const pendingMig = data?.pendingMigration || [];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
+    <div className="p-6 max-w-5xl mx-auto space-y-4">
       <PageHeader
         title="🔐 My Access"
         sub={data?.member ? `${data.member.name} · ${data.member.status}` : 'Entry access overview'}
@@ -100,7 +100,7 @@ export default function MyAccessPage() {
       </div>
 
       {/* Credentials + Schedules */}
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-semibold mb-3">🔑 Meri Credentials</h3>
           {creds.length === 0 ? (

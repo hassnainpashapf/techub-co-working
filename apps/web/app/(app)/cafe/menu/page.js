@@ -111,7 +111,7 @@ export default function CafeMenuPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="🍽️ Cafe Menu" subtitle="Categories aur menu items manage karein" />
 
       {error && <ErrorBanner message={error} />}
@@ -123,7 +123,7 @@ export default function CafeMenuPage() {
         <StatCard label="Unavailable" value={items.length - availableCount} />
       </div>
 
-      <div className="grid md:grid-cols-[240px_1fr] gap-6">
+      <div className="grid md:grid-cols-[240px_1fr] gap-4">
         {/* Categories column */}
         <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3 h-fit">
           <div className="flex items-center justify-between">

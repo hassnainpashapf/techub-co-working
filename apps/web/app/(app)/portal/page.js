@@ -23,7 +23,7 @@ function PoliciesBanner() {
     } catch {}
   };
   return (
-    <div className="card-premium p-5 mb-6 border-amber-200" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
+    <div className="card-premium p-5 mb-4 border-amber-200" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
       <p className="text-amber-800 font-bold mb-2">📋 {pending.length} policy document{pending.length > 1 ? 's' : ''} pending — parh kar acknowledge karein</p>
       <div className="space-y-2">
         {pending.map((p) => (
@@ -230,7 +230,7 @@ function AnnouncementsFeed() {
   const visible = showAll ? items : items.slice(0, 3);
 
   return (
-    <div className="card-premium p-5 mt-6" id="announcements">
+    <div className="card-premium p-5 mt-4" id="announcements">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-gray-900 font-bold">📢 Announcements</h2>
         {unread > 0 && <span className="text-xs font-bold bg-[#0f766e]/20 border border-[#0f766e]/40 text-teal-700 rounded-full px-2.5 py-0.5">{unread} new</span>}
@@ -315,7 +315,7 @@ function DirectoryProfileSection() {
   }
 
   return (
-    <div className="card-premium p-5 mt-6">
+    <div className="card-premium p-5 mt-4">
       <h2 className="text-gray-900 font-bold mb-1">Directory Profile 🤝</h2>
       <p className="text-gray-500 text-xs mb-4">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
       <label className="flex items-center gap-3 mb-4 cursor-pointer">
@@ -408,7 +408,7 @@ function CalendarFeedSection() {
   };
 
   return (
-    <div className="card-premium p-5 mt-6">
+    <div className="card-premium p-5 mt-4">
       <h2 className="text-gray-900 font-bold mb-1">📅 Add to Calendar</h2>
       <p className="text-gray-500 text-sm mb-4">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
       {loading ? (
@@ -490,7 +490,7 @@ function InvoicesSection({ reloadKey }) {
   const open = invoices.filter((i) => ['unpaid', 'partial'].includes(i.status));
 
   return (
-    <div className="card-premium p-5 mt-6" id="invoices">
+    <div className="card-premium p-5 mt-4" id="invoices">
       <h2 className="text-gray-900 font-bold mb-1">🧾 My Invoices</h2>
       <p className="text-gray-500 text-sm mb-4">
         {open.length === 0 ? 'All clear — no unpaid invoices. 🎉' : `${open.length} unpaid — pay at the front desk or via bank transfer.`}
@@ -596,7 +596,7 @@ export default function PortalPage() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* HERO */}
-      <div className="relative overflow-hidden rounded-2xl p-6 mb-6 bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="relative overflow-hidden rounded-2xl p-6 mb-4 bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#0f766e]/20 blur-3xl" />
         <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-teal-600/20 blur-3xl" />
         <div className="relative">
@@ -620,7 +620,7 @@ export default function PortalPage() {
       <PoliciesBanner />
 
       {/* NEXT BOOKING + BALANCE */}
-      <div className="grid md:grid-cols-2 gap-4 mb-6 mt-6">
+      <div className="grid md:grid-cols-2 gap-4 mb-4 mt-4">
         <NextBookingCard booking={nextBooking} onCheckIn={checkIn} checkingIn={checkingIn} />
         <div className="rounded-2xl border border-gray-200 bg-white p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <div>
@@ -645,7 +645,7 @@ export default function PortalPage() {
 
       {/* QUICK ACTIONS */}
       <h2 className="text-gray-900 font-bold mb-3">⚡ Quick Actions</h2>
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-6">
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
         {QUICK_ACTIONS.map((a) => (
           <button
             key={a.key}
@@ -659,7 +659,7 @@ export default function PortalPage() {
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Upcoming Bookings" value={upcomingBookings.length} accent="blue" />
         <StatCard label="Open Tickets" value={openTickets.length} accent="amber" />
         <StatCard label="Unpaid Amount" value={fmtMoney(unpaidTotal)} accent={unpaidTotal > 0 ? 'red' : 'emerald'} />
@@ -667,7 +667,7 @@ export default function PortalPage() {
       </div>
 
       {loyalty && Number(loyalty.balance || 0) > 0 && (
-        <a href="/portal/loyalty" className="block card-premium p-4 mb-6 hover:border-teal-500/40 transition">
+        <a href="/portal/loyalty" className="block card-premium p-4 mb-4 hover:border-teal-500/40 transition">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-900">⭐ You have <span className="font-bold text-teal-700">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
             <span className="text-sm text-teal-700 underline shrink-0">View →</span>
@@ -719,7 +719,7 @@ export default function PortalPage() {
       <InvoicesSection reloadKey={loading} />
 
       {/* OPEN TICKETS */}
-      <div className="card-premium p-5 mt-6">
+      <div className="card-premium p-5 mt-4">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-gray-900 font-bold">My Open Tickets</h2>
           <a href="/tickets" className="text-xs text-teal-700 hover:text-teal-700 underline">View all →</a>
@@ -747,7 +747,7 @@ export default function PortalPage() {
       <AnnouncementsFeed />
 
       {/* Profile */}
-      <div className="card-premium p-5 mt-6">
+      <div className="card-premium p-5 mt-4">
         <h2 className="text-gray-900 font-bold mb-4">My Profile</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
           <div><p className="text-slate-500 text-xs">Name</p><p className="text-gray-900">{member.name}</p></div>

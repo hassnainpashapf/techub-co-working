@@ -138,7 +138,7 @@ export default function NewslettersPage() {
   };
   useEffect(() => { if (gate === 'ok') load(); }, [gate]);
 
-  if (gate === 'loading') return <div className="p-8"><Spinner /></div>;
+  if (gate === 'loading') return <div className="p-5"><Spinner /></div>;
   if (gate === 'denied') return <AccessDenied />;
 
   const save = async (data) => {
@@ -192,7 +192,7 @@ export default function NewslettersPage() {
       {notice && <div className="mb-4 rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-200">{notice}</div>}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="mb-6 grid gap-4 sm:grid-cols-3">
+      <div className="mb-4 grid gap-4 sm:grid-cols-3">
         <StatCard title="Total newsletters" value={rows.length} />
         <StatCard title="Sent" value={sent} />
         <StatCard title="Emails sent (last batch)" value={rows.reduce((a, r) => a + (r.sentCount || 0), 0)} />

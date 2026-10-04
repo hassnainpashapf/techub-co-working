@@ -86,7 +86,7 @@ export default function AdminFeedbackPage() {
     <div>
       <PageHeader title="Feedback & Suggestions" subtitle="Members ki raye, shikayat aur tajaveez" />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Total feedback" value={summary.total} />
         <StatCard label="New" value={items.filter((i) => i.status === 'new').length} />
         <StatCard label="Avg rating" value={summary.avgRating != null ? `⭐ ${summary.avgRating}` : '—'} />

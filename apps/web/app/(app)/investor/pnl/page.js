@@ -89,14 +89,14 @@ export default function PnlPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total Revenue" value={fmt(data.revenue.total)} sub={`${from} → ${to}`} accent="blue" />
             <StatCard label="Total Expenses" value={fmt(data.expenses.total)} sub="approved only" accent="amber" />
             <StatCard label="Net Profit" value={fmt(data.netProfit)} sub={data.netProfit >= 0 ? 'profitable' : 'loss'} accent={data.netProfit >= 0 ? 'green' : 'red'} />
             <StatCard label="Net Margin" value={`${data.marginPct.toFixed(1)}%`} sub="net / revenue" accent="blue" />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
             <div className="card-premium p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-4">Profit & Loss Statement</h2>
               <div className="text-sm">

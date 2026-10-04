@@ -115,7 +115,7 @@ export default function EventsPage() {
         <button className="btn-primary" onClick={() => { setEditing(null); setShowForm(true); }}>+ New event</button>
       } />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      <div className="grid grid-cols-2 md:grid-cols-3 3xl:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 3xl:grid-cols-4 gap-4 mb-4">
         <StatCard label="Total events" value={events.length} accent="blue" icon="🎉" />
         <StatCard label="Upcoming" value={upcoming} accent="green" icon="📅" />
         <StatCard label="Total RSVPs" value={events.reduce((s, e) => s + (e._count?.rsvps || 0), 0)} accent="purple" icon="✅" />

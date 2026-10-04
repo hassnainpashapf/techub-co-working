@@ -158,7 +158,7 @@ export default function PollsPage() {
   const totalVotes = polls.reduce((s, p) => s + (p.totalVotes || 0), 0);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Community Polls"
         subtitle="Ask members, get real answers"

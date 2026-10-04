@@ -138,13 +138,13 @@ function ResultsView({ survey, onBack }) {
     <div>
       <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-900 mb-4">← Back to surveys</button>
       <PageHeader title={data.survey.title} sub={`${fmtDate(survey.createdAt)} • ${data.survey.status}`} />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Responses" value={stats.responses} accent="blue" />
         <StatCard label="Promoters (9-10)" value={stats.promoters} accent="emerald" />
         <StatCard label="Detractors (0-6)" value={stats.detractors} accent="red" />
         <StatCard label="Passives (7-8)" value={stats.passives} accent="amber" />
       </div>
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid lg:grid-cols-2 gap-4 mb-4">
         <div className="card-premium p-5 flex flex-col items-center">
           <h2 className="text-gray-900 font-bold mb-2 self-start">NPS Score</h2>
           <NpsGauge nps={stats.nps} />

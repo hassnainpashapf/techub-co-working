@@ -123,7 +123,7 @@ export default function LockersPage() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🔐 Locker Inventory" subtitle="Lockers manage karein (code, size, status, rate)">
         <button className="btn-primary" onClick={() => setModal('new')}>+ Naya Locker</button>
       </PageHeader>

@@ -114,7 +114,7 @@ export default function DayPassesPage() {
   const tone = (s) => STATUS_TONE[s] || 'slate';
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Visitor Day Passes"
         sub="Reception se visitor ko time-bound entry pass — QR + WhatsApp share"

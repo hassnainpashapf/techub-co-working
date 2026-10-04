@@ -174,14 +174,14 @@ export default function FinancePage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
         <StatCard label="Income" value={money(income)} sub={`collected in ${month}`} accent="green" />
         <StatCard label="Expenses" value={money(totalExpenses)} sub={`${expenses.length} expense(s)`} accent="red" />
         <StatCard label="Net profit" value={money(net)} sub={net >= 0 ? 'in the green' : 'in the red'} accent={net >= 0 ? 'indigo' : 'amber'} />
       </div>
 
       {/* Phase 46: multi-currency overview widget */}
-      <div className="mb-6">
+      <div className="mb-4">
         <CurrencyWidget />
       </div>
 

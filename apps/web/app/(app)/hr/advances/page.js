@@ -117,7 +117,7 @@ export default function AdvancesPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="flex gap-2 mt-4 mb-6">
+      <div className="flex gap-2 mt-4 mb-4">
         {[['mine', '📋 My Requests'], ['approvals', '⏳ Pending Approvals'], ['all', '📊 All']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition ${tab === v ? 'bg-[#0f766e] text-white shadow-lg shadow-blue-500/30' : 'bg-gray-100 text-gray-600 border border-gray-200 hover:bg-gray-100'}`}>
@@ -127,7 +127,7 @@ export default function AdvancesPage() {
       </div>
 
       {tab === 'mine' && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
           <StatCard label="My Requests" value={stats.mine} />
           <StatCard label="Pending" value={stats.pending} />
           <StatCard label="Deducting Balance" value={fmt(stats.deducting)} />

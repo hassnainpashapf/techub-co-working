@@ -86,7 +86,7 @@ export default function PortalUsagePage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="⚡ Meri Utility Usage" sub="Meters, readings aur utility bills — sab ek jagah" />
 
       {error && <ErrorBanner message={error} />}

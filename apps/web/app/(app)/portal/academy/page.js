@@ -145,7 +145,7 @@ export default function AcademyPortalPage() {
 
       {/* Continue learning */}
       {inProgress.length > 0 ? (
-        <div className="mt-6">
+        <div className="mt-4">
           <h2 className="text-gray-900 font-bold text-lg">Continue learning</h2>
           <div className="mt-3 grid gap-4 md:grid-cols-2">
             {inProgress.map((e) => {
@@ -171,7 +171,7 @@ export default function AcademyPortalPage() {
 
       {/* Completed */}
       {done.length > 0 ? (
-        <div className="mt-8">
+        <div className="mt-5">
           <h2 className="text-gray-900 font-bold text-lg">Completed</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {done.map((e) => (
@@ -182,7 +182,7 @@ export default function AcademyPortalPage() {
       ) : null}
 
       {/* Catalog */}
-      <div className="mt-8 flex flex-wrap items-end justify-between gap-3">
+      <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
         <h2 className="text-gray-900 font-bold text-lg">Course catalog</h2>
         <div className="flex flex-wrap gap-2">
           <input

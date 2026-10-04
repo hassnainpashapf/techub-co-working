@@ -99,7 +99,7 @@ export default function MailPage() {
       } />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Pending pickup" value={pending} accent={pending > 0 ? 'amber' : 'emerald'} />
         <StatCard label="Received" value={counts.received || 0} accent="amber" />
         <StatCard label="Notified" value={counts.notified || 0} accent="blue" />

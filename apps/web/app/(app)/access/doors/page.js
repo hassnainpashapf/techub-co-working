@@ -57,7 +57,7 @@ function HardwareCard() {
   };
 
   return (
-    <div className="mb-6 rounded-xl border border-gray-200 bg-white p-5">
+    <div className="mb-4 rounded-xl border border-gray-200 bg-white p-5">
       <h3 className="text-sm font-bold text-gray-900">🔌 Hardware Integration</h3>
       <p className="mt-1 text-xs text-gray-500">Asal door controllers ke liye device API key aur unlock webhook.</p>
       <div className="mt-4 grid gap-4 md:grid-cols-2">

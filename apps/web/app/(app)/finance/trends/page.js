@@ -46,7 +46,7 @@ export default function ExpenseTrendsPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="Expense Trends" subtitle="Category-wise spend over time with spike detection">
         <div className="flex gap-2">
           {[6, 12].map((m) => (

@@ -12,7 +12,7 @@ function fmt(d) { try { return d ? new Date(d).toLocaleString('en-PK', { timeZon
 
 function Section({ title, hint, children, action }) {
   return (
-    <div className="mb-6">
+    <div className="mb-4">
       <div className="flex items-center justify-between mb-2">
         <h4 className="font-bold text-gray-900">{title}</h4>
         {action}

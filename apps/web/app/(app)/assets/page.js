@@ -134,7 +134,7 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Asset Management"
         subtitle="Track furniture, IT & AV assets — check out to members, flag maintenance"

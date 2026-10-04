@@ -75,7 +75,7 @@ export default function CampaignsPage() {
   };
   useEffect(() => { if (gate === 'ok') load(); }, [gate]);
 
-  if (gate === 'loading') return <div className="p-8"><Spinner /></div>;
+  if (gate === 'loading') return <div className="p-5"><Spinner /></div>;
   if (gate === 'denied') return <AccessDenied />;
 
   const save = async (data) => {

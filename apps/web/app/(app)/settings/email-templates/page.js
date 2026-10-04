@@ -125,7 +125,7 @@ export default function EmailTemplatesPage() {
       {error && <ErrorBanner message={error} />}
       {msg && <div className="mb-4 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm px-4 py-2.5">{msg}</div>}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
         <div className="card-premium p-4">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-sm font-bold text-gray-900">Templates</h3>
@@ -179,13 +179,13 @@ export default function EmailTemplatesPage() {
                 Use this custom template (uncheck to fall back to built-in without deleting)
               </label>
 
-              <div className="flex flex-wrap gap-2 mt-6">
+              <div className="flex flex-wrap gap-2 mt-4">
                 <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save template'}</button>
                 <button type="button" className="btn-secondary" onClick={() => setPreview(!preview)}>{preview ? 'Hide preview' : 'Preview'}</button>
                 {tpl.custom && <button type="button" className="btn-danger" onClick={resetDefault} disabled={saving}>Reset to default</button>}
               </div>
 
-              <div className="mt-6 rounded-xl border border-gray-200 p-4">
+              <div className="mt-4 rounded-xl border border-gray-200 p-4">
                 <h4 className="text-xs font-semibold text-gray-600 mb-2">SEND TEST EMAIL</h4>
                 <div className="flex flex-wrap gap-2">
                   <input className="input flex-1 min-w-[200px]" type="email" placeholder="you@example.com" value={testEmail} onChange={(e) => setTestEmail(e.target.value)} />
@@ -195,7 +195,7 @@ export default function EmailTemplatesPage() {
               </div>
 
               {preview && (
-                <div className="mt-6">
+                <div className="mt-4">
                   <h4 className="text-xs font-semibold text-gray-500 mb-2">PREVIEW (variables highlighted)</h4>
                   <div className="rounded-xl border border-gray-200 bg-[#f4f5f7] p-4 text-sm text-gray-800" dangerouslySetInnerHTML={{ __html: previewHtml() }} />
                   <p className="text-xs text-slate-500 mt-2">Subject preview: <span className="text-gray-600">{form.subject}</span></p>

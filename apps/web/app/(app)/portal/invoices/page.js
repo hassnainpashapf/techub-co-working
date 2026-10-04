@@ -371,7 +371,7 @@ export default function PortalInvoicesPage() {
         <div className="py-16 flex justify-center"><Spinner /></div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
             <StatCard label="Total due" value={fmtMoney(totalDue)} accent="amber" />
             <StatCard label="Overdue invoices" value={String(overdueCount)} accent={overdueCount > 0 ? 'red' : 'green'} />
             <StatCard label="All invoices" value={String(invoices.length)} accent="blue" />

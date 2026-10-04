@@ -118,7 +118,7 @@ export default function ExitsPage() {
         <button onClick={openModal} className="btn-primary">+ Initiate exit</button>
       } />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         <StatCard label="Total exits" value={exits.length} />
         <StatCard label="In progress" value={pending} />
         <StatCard label="Completed" value={exits.filter((x) => x.status === 'completed').length} />

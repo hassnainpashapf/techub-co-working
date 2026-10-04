@@ -219,7 +219,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           <button className="btn-ghost" onClick={onClose}>✕</button>
         </div>
 
-        <div className="mb-6 rounded-lg border border-gray-200 p-4">
+        <div className="mb-4 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Change stage</p>
           <select
             className="input w-full"
@@ -231,7 +231,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           </select>
         </div>
 
-        <div className="mb-6 flex gap-2 border-b border-gray-200">
+        <div className="mb-4 flex gap-2 border-b border-gray-200">
           <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
           <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
         </div>
@@ -241,7 +241,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         ) : (
         <>
 
-        <div className="mb-6 rounded-lg border border-gray-200 p-4">
+        <div className="mb-4 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Log activity</p>
           <form onSubmit={addActivity} className="space-y-3">
             <select className="input w-full" value={type} onChange={(e) => setType(e.target.value)}>
@@ -259,7 +259,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         <p className="text-sm font-medium mb-3">Timeline</p>
         {error && <ErrorBanner message={error} />}
         {loading ? (
-          <div className="flex justify-center py-8"><Spinner /></div>
+          <div className="flex justify-center py-5"><Spinner /></div>
         ) : activities.length === 0 ? (
           <EmptyState title="No activity yet" hint="Log the first call, email or tour above." />
         ) : (
@@ -443,7 +443,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Leads"
         sub="Sales pipeline — capture prospects, move stages, log every touchpoint."

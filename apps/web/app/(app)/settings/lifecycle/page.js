@@ -191,7 +191,7 @@ export default function LifecyclePage() {
     }
   };
 
-  if (allowed === null || loading) return <div className="p-8 flex justify-center"><Spinner /></div>;
+  if (allowed === null || loading) return <div className="p-5 flex justify-center"><Spinner /></div>;
   if (allowed === false) return <AccessDenied />;
 
   const anyRule = triggers.some((t) => t.rule);
@@ -217,7 +217,7 @@ export default function LifecyclePage() {
         {' '}— rules can use any built-in or custom template.
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-8">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
         {triggers.map((t) => (
           <TriggerCard key={t.key} trigger={t} templates={templates} onChanged={refresh} saving={saving} setSaving={setSaving} />
         ))}

@@ -58,7 +58,7 @@ export default function ApiUsagePage() {
   return (
     <div className="p-6 max-w-6xl mx-auto">
       <PageHeader title="API Usage" subtitle="Requests made with API keys — volume, latency, errors and rate limits" />
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {[7, 14, 30].map((d) => (
           <button
             key={d}
@@ -75,19 +75,19 @@ export default function ApiUsagePage() {
 
       {data && !loading && (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
             <StatCard label="Total requests" value={data.total.toLocaleString()} icon="📊" />
             <StatCard label="Error rate" value={`${data.errorRate}%`} icon="⚠️" accent={data.errorRate > 5 ? 'red' : 'green'} />
             <StatCard label="Avg latency" value={`${data.avgLatencyMs} ms`} icon="⚡" />
             <StatCard label="Active keys" value={data.activeKeys} icon="🔑" />
           </div>
 
-          <div className="card-premium p-5 mb-6">
+          <div className="card-premium p-5 mb-4">
             <h3 className="text-sm font-bold text-gray-800 mb-3">Requests per day</h3>
             <BarsChart data={data.perDay} />
           </div>
 
-          <div className="card-premium p-5 mb-6">
+          <div className="card-premium p-5 mb-4">
             <h3 className="text-sm font-bold text-gray-800 mb-3">Top endpoints</h3>
             <DataTable
               columns={[

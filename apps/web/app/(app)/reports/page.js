@@ -379,7 +379,7 @@ function CustomReportsHub({ hub, loading, onRetry }) {
     { label: '📧 Schedules & Alerts', path: '/reports/builder', desc: 'Har report ke Schedule/Alerts tab me' },
   ];
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {stats?.missing?.length > 0 && (
         <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200">
           Kuch modules abhi migrate nahi hue: {stats.missing.join(', ')}.

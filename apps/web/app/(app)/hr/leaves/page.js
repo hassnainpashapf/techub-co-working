@@ -93,7 +93,7 @@ export default function LeavesPage() {
       {error && <ErrorBanner message={error} />}
 
       {/* Balances */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
         {balances.length === 0 && (
           <div className="col-span-full"><EmptyState title="No balances yet" description="Linked employee record banne par yearly balances yahan dikhengi." /></div>
         )}
@@ -126,7 +126,7 @@ export default function LeavesPage() {
 
       {/* Team approvals (managers) */}
       {isManager && (
-        <div className="mt-8">
+        <div className="mt-5">
           <h2 className="text-lg font-semibold mb-3">Team Approvals {pending.length > 0 && <Badge tone="amber">{pending.length}</Badge>}</h2>
           {pending.length === 0 ? (
             <EmptyState title="Nothing pending" description="Koi pending leave request nahi hai." />

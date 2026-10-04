@@ -56,7 +56,7 @@ function Donut({ data, total }) {
   let acc = 0;
   const segs = data.filter((d) => d.count > 0);
   return (
-    <div className="flex items-center gap-6 flex-wrap">
+    <div className="flex items-center gap-4 flex-wrap">
       <svg viewBox="0 0 160 160" className="w-40 h-40">
         <circle cx="80" cy="80" r={R} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="22" />
         {segs.map((d, i) => {
@@ -108,16 +108,16 @@ export default function HrDashboardPage() {
     })();
   }, []);
 
-  if (loading) return <div className="p-8"><Spinner /></div>;
-  if (error) return <div className="p-8"><ErrorBanner message={error} onRetry={() => location.reload()} /></div>;
-  if (!stats) return <div className="p-8"><EmptyState title="No data" hint="HR module not yet migrated" /></div>;
+  if (loading) return <div className="p-5"><Spinner /></div>;
+  if (error) return <div className="p-5"><ErrorBanner message={error} onRetry={() => location.reload()} /></div>;
+  if (!stats) return <div className="p-5"><EmptyState title="No data" hint="HR module not yet migrated" /></div>;
 
   const ta = stats.todayAttendance;
   const attTotal = ta.present + ta.late + ta.absent + ta.onLeave + ta.noRecord;
   const inboxItems = INBOX.filter((i) => stats.pending[i.key] > 0);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="HR Dashboard" sub="Headcount, attendance, approvals aur attrition — ek nazar me" />
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

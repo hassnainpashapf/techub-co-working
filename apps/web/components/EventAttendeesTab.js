@@ -40,7 +40,7 @@ export default function EventAttendeesTab({ eventId, api }) {
   const pct = data.going > 0 ? Math.round((data.checkedIn / data.going) * 100) : 0;
 
   return (
-    <div className="space-y-6 p-1">
+    <div className="space-y-4 p-1">
       {/* RSVP vs actual stats */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         {[

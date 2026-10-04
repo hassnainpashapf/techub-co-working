@@ -39,7 +39,7 @@ export default function AcademyDashboardPage() {
   const popular = data?.popularCourses || [];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="Academy Dashboard" subtitle="Courses, enrollments, completions aur workshops ka overview" />
 
       {err && <ErrorBanner message={err} />}
@@ -53,7 +53,7 @@ export default function AcademyDashboardPage() {
         <StatCard title="Upcoming Workshops" value={stats.upcomingWorkshops ?? '—'} icon="🎥" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <div className="card p-5">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-lg font-semibold text-gray-900">🔥 Popular Courses</h3>

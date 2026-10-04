@@ -214,7 +214,7 @@ export default function KitchenPage() {
   const lateCount = orders.filter((o) => o.elapsedMin >= LATE_MIN).length;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader
         title="Kitchen Display"
         sub="Live order queue — har 5 second me auto-refresh"
@@ -252,7 +252,7 @@ export default function KitchenPage() {
       ) : orders.length === 0 ? (
         <EmptyState title="Koi active order nahi" hint="Naye orders yahan khud aa jayenge." />
       ) : (
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
             <h2 className="text-lg font-bold text-gray-900 mb-3">🆕 New ({pending.length})</h2>
             <div className="space-y-4">

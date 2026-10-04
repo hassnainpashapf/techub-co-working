@@ -33,7 +33,7 @@ export default function CompliancePage() {
 
   const shown = items.filter(i => filter === 'all' || i.status === filter);
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       <PageHeader title="✅ Compliance Checklist" sub="Fire, safety, licenses, tax — sab ek jagah" actions={<button className="btn-primary" onClick={() => setModal(true)}>+ Naya Item</button>} />
       {summary && (
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

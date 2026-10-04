@@ -128,7 +128,7 @@ export default function MealPlansPage() {
   ];
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-4">
       <PageHeader title="🍱 Meal Plans" subtitle="Monthly lunch / meal subscriptions for members" action={
         <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">+ New Plan</button>
       } />

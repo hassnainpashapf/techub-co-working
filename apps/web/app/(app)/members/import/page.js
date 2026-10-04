@@ -148,14 +148,14 @@ export default function MemberImportPage() {
       {/* Step 2 — validation report */}
       {report && !result && (
         <>
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             <StatCard label="Total rows" value={report.total} accent="blue" />
             <StatCard label="Valid" value={report.valid} accent="emerald" />
             <StatCard label="Invalid" value={report.invalid} accent={report.invalid > 0 ? 'red' : 'slate'} />
           </div>
 
           {/* Column mapping */}
-          <div className="card-premium p-5 mb-6">
+          <div className="card-premium p-5 mb-4">
             <h2 className="text-gray-900 font-bold mb-1">Column mapping</h2>
             <p className="text-gray-500 text-xs mb-4">File: <span className="text-gray-800">{fileName}</span> — adjust any column, then re-validate.</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
@@ -182,7 +182,7 @@ export default function MemberImportPage() {
           </div>
 
           {/* Preview */}
-          <div className="card-premium p-5 mb-6">
+          <div className="card-premium p-5 mb-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-gray-900 font-bold">Row preview</h2>
               <div className="flex gap-1 text-xs">
@@ -254,7 +254,7 @@ export default function MemberImportPage() {
       {result && (
         <div className="card-premium p-6">
           <h2 className="text-gray-900 font-bold text-lg mb-4">Import complete ✅</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
             <StatCard label="Imported" value={result.imported} accent="emerald" />
             <StatCard label="Skipped" value={result.skipped} accent="amber" />
             <StatCard label="Welcome emails" value={result.emailsQueued} accent="blue" />

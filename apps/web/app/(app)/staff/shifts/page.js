@@ -170,7 +170,7 @@ export default function ShiftsPage() {
 
       {tab === 'week' && (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
             <StatCard label="Shifts this week" value={shifts.length} accent="blue" icon="🗓️" />
             <StatCard label="Staff scheduled" value={new Set(shifts.map((s) => s.userId)).size} accent="purple" icon="👥" />
             <StatCard label="Total hours" value={Math.round(totalHours)} accent="green" icon="⏱️" />

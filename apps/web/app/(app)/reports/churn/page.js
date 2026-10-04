@@ -164,19 +164,19 @@ export default function ChurnPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Churn rate (90d)" value={`${data.churnRate90d}%`} accent={data.churnRate90d >= 10 ? 'red' : data.churnRate90d >= 5 ? 'amber' : 'green'} />
         <StatCard label="Exited (90d)" value={data.exitedCount90d} />
         <StatCard label="Total members" value={data.totalMembers} />
         <StatCard label="At-risk members" value={atRisk.length} accent={atRisk.length > 0 ? 'amber' : 'green'} />
       </div>
 
-      <div className="card-premium p-5 mb-6">
+      <div className="card-premium p-5 mb-4">
         <h3 className="text-sm font-bold text-gray-900 mb-3">Monthly exits (last 6 months)</h3>
         <HDBarChart data={(data.trend || []).map(t=>({label:t.label,value:t.exited}))} height={160} color="#f87171" />
       </div>
 
-      <div className="card-premium p-5 mb-6">
+      <div className="card-premium p-5 mb-4">
         <h3 className="text-sm font-bold text-gray-900 mb-2">Risk model</h3>
         <div className="flex flex-wrap gap-2 text-xs text-gray-500">
           {Object.entries(data.weights || {}).map(([code, w]) => (

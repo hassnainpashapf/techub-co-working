@@ -78,7 +78,7 @@ export default function ProcurementDashboardPage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-4 md:p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-4">
       <PageHeader title="Procurement Dashboard" sub="Purchases, bills aur vendor spend ka overview"
         actions={<button onClick={load} className="px-4 py-2 rounded-xl bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-semibold">↻ Refresh</button>} />
       {error && <ErrorBanner message={error} onRetry={load} />}
@@ -94,7 +94,7 @@ export default function ProcurementDashboardPage() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">📈 Vendor Spend Trend (6 mahine)</h3>
           {trend.length ? <SpendChart data={trend} /> : <EmptyState title="Data nahi" hint="Paid vendor bills par trend banega" />}
@@ -117,7 +117,7 @@ export default function ProcurementDashboardPage() {
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-6">
+      <div className="grid lg:grid-cols-2 gap-4">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-semibold mb-3">✍️ Approval Inbox {stats && stats.inbox.length > 0 && <Badge tone="amber">{stats.inbox.length}</Badge>}</h3>
           {stats && stats.inbox.length ? (

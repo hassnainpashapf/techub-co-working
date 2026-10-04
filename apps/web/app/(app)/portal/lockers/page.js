@@ -140,7 +140,7 @@ export default function PortalLockersPage() {
         <div className="bg-green-900/30 border border-green-700 text-green-300 rounded px-4 py-2 mb-4">{msg}</div>
       )}
 
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {[
           { k: 'mine', label: `📦 Meray (${activeRentals.length})` },
           { k: 'available', label: '🔍 Khali Lockers' },

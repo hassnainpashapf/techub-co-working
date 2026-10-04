@@ -65,12 +65,12 @@ export default function OvertimePage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-3 gap-4 mb-6">
+          <div className="grid grid-cols-3 gap-4 mb-4">
             {stats.map((s) => <StatCard key={s.label} label={s.label} value={s.value} />)}
           </div>
 
           {isManager && (
-            <div className="mb-8">
+            <div className="mb-5">
               <h2 className="text-lg font-semibold mb-3">📥 Pending Approvals</h2>
               {pending.length === 0 ? <EmptyState title="Koi pending request nahi" /> : (
                 <DataTable

@@ -224,7 +224,7 @@ export default function AutomationPage() {
         actions={<button onClick={() => setModal({})} className="btn-primary">+ New rule</button>} />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
         <StatCard label="Rules" value={rules.length} accent="blue" />
         <StatCard label="Active" value={rules.filter((r) => r.isActive).length} accent="emerald" />
         <StatCard label="Fired (recent)" value={runs.length} accent="violet" />
@@ -234,7 +234,7 @@ export default function AutomationPage() {
       {rules.length === 0 ? (
         <EmptyState title="No automation rules yet" hint="Create your first rule — e.g. create a task when an invoice is 7+ days overdue." />
       ) : (
-        <div className="space-y-3 mb-8">
+        <div className="space-y-3 mb-5">
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <div className="flex-1 min-w-[200px]">
@@ -255,7 +255,7 @@ export default function AutomationPage() {
       )}
 
       {testResult && (
-        <div className="card-premium p-5 mb-8">
+        <div className="card-premium p-5 mb-5">
           <h2 className="text-gray-900 font-bold mb-3">🧪 Dry-run: {testResult.rule.name}</h2>
           <p className="text-sm text-gray-500 mb-3">
             Conditions matched: <Badge tone={testResult.conditionsMatched ? 'emerald' : 'red'}>{testResult.conditionsMatched ? 'Yes' : 'No'}</Badge>

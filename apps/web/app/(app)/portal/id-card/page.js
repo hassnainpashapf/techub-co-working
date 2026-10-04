@@ -40,11 +40,11 @@ export default function IdCardPage() {
 
       {/* Card */}
       <div
-        className="mt-6 rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
+        className="mt-4 rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
         style={{ background: `linear-gradient(135deg, #141428 0%, #0d0d1f 60%, ${primary}33 100%)` }}
       >
         <div className="p-6">
-          <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center justify-between mb-4">
             <div>
               <div className="text-lg font-extrabold text-gray-900 tracking-wide">{brandName}</div>
               <div className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Member ID Card</div>
@@ -66,7 +66,7 @@ export default function IdCardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-6 text-sm">
+          <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
             <div className="rounded-xl bg-gray-100 border border-gray-200 p-3">
               <div className="text-[10px] uppercase tracking-wider text-gray-500">Plan</div>
               <div className="text-gray-900 font-semibold truncate">{data.plan || '—'}</div>
