@@ -62,6 +62,51 @@ function BarChart({ data, height = 180 }) {
   );
 }
 
+// Multi-segment Donut Chart for distributions
+function SegmentDonut({ data, size = 160, colors }) {
+  const total = data.reduce((s, d) => s + d.value, 0) || 1;
+  const r = 62;
+  const circ = 2 * Math.PI * r;
+  let offset = 0;
+  const palette = colors || ['#0f766e', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#9ca3af'];
+  return (
+    <div className="flex items-center gap-5">
+      <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
+        <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
+          <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="18" />
+          {data.map((d, i) => {
+            const frac = d.value / total;
+            const segLen = frac * circ;
+            const el = (
+              <circle key={i} cx="80" cy="80" r={r} fill="none"
+                stroke={palette[i % palette.length]} strokeWidth="18"
+                strokeDasharray={`${segLen} ${circ - segLen}`}
+                strokeDashoffset={-offset}
+                style={{ transition: 'stroke-dasharray 1s ease-out' }} />
+            );
+            offset += segLen;
+            return el;
+          })}
+        </svg>
+        <div className="absolute inset-0 flex flex-col items-center justify-center">
+          <span className="text-[26px] font-bold text-gray-900">{total}</span>
+          <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-wider">Total</span>
+        </div>
+      </div>
+      <div className="space-y-2 min-w-0">
+        {data.map((d, i) => (
+          <div key={i} className="flex items-center gap-2 text-[13px]">
+            <span className="w-3 h-3 rounded-full shrink-0" style={{ background: palette[i % palette.length] }} />
+            <span className="text-gray-600 capitalize truncate">{d.label.replace('_', ' ')}</span>
+            <span className="font-bold text-gray-900 ml-auto pl-2">{d.value}</span>
+          </div>
+        ))}
+        {data.length === 0 && <span className="text-sm text-gray-500">No data</span>}
+      </div>
+    </div>
+  );
+}
+
 // Rich SVG Donut Chart with glow
 function DonutChart({ percent, size = 160 }) {
   const r = 62;
@@ -159,14 +204,6 @@ function timeAgo(t) {
   return `${Math.floor(s / 86400)}d ago`;
 }
 
-const QUICK_ACTIONS = [
-  { label: 'New Booking', icon: '📅', href: '/bookings' },
-  { label: 'New Member', icon: '👥', href: '/members' },
-  { label: 'New Invoice', icon: '🧾', href: '/billing' },
-  { label: 'New Ticket', icon: '🎫', href: '/tickets' },
-  { label: 'Check-in Visitor', icon: '✅', href: '/visitors' },
-];
-
 function StaffDashboard() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -242,6 +279,31 @@ function StaffDashboard() {
   const revenueData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.revenue[i] || 0 }));
   const bookingData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.bookings[i] || 0 }));
   const memberData = trendLabels.map((l, i) => ({ label: shortLabel(l), value: trends.trends.members[i] || 0 }));
+
+  // Invoice status distribution (real data)
+  const invoiceStatusData = (() => {
+    const counts = {};
+    invoices.forEach((inv) => {
+      const s = (inv.status || 'unknown').toLowerCase();
+      counts[s] = (counts[s] || 0) + 1;
+    });
+    return Object.entries(counts)
+      .map(([label, value]) => ({ label, value }))
+      .sort((a, b) => b.value - a.value);
+  })();
+  const INVOICE_COLORS = ['#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#9ca3af', '#0f766e'];
+
+  // Collection: revenue this month vs pending dues (real data)
+  const collectionData = [
+    { label: 'Revenue', value: revenueThisMonth },
+    { label: 'Dues', value: pendingDuesTotal },
+  ];
+
+  // Members vs contracts (real data)
+  const memberContractData = [
+    { label: 'Members', value: data?.membersActive ?? 0 },
+    { label: 'Contracts', value: data?.contractsActive ?? 0 },
+  ];
   const duesList = invoices.filter((i) =>
     ['unpaid', 'partial', 'overdue'].includes((i.status || '').toLowerCase())
   );
@@ -261,20 +323,6 @@ function StaffDashboard() {
   return (
     <div>
       <PageHeader title="Dashboard" sub="Overview of your coworking space" />
-
-      {/* Quick Actions */}
-      <div className="flex flex-wrap gap-2.5 mb-6">
-        {QUICK_ACTIONS.map((a) => (
-          <button
-            key={a.label}
-            onClick={() => (window.location.href = a.href)}
-            className="group flex items-center gap-2.5 px-4 py-2.5 rounded-xl bg-[#0f766e]/[0.08] border border-[#0f766e]/30 text-sm font-semibold text-gray-800 hover:bg-[#0f766e]/[0.16] hover:text-gray-900 transition-all duration-200"
-          >
-            <span className="text-base group-hover:scale-125 group-hover:drop-shadow-[0_0_8px_rgba(15,118,110,0.6)] transition-all duration-200">{a.icon}</span>
-            {a.label}
-          </button>
-        ))}
-      </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
         <StatCard
@@ -333,25 +381,39 @@ function StaffDashboard() {
           />
         </ChartCard>
       </div>
-      {memberData.some((d) => d.value > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
-          <ChartCard title="New Members" sub="Signups per month">
-            <TrendChart data={memberData} color="#0f766e" />
-          </ChartCard>
-          <ChartCard title="Tickets by Status" sub="All time">
-            <div className="flex flex-wrap gap-2 py-4">
-              {Object.entries(trends?.ticketsByStatus || {}).map(([s, c]) => (
-                <span key={s} className="px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
-                  <span className="capitalize">{s.replace('_', ' ')}</span>: <span className="font-bold text-gray-900">{c}</span>
-                </span>
-              ))}
-              {Object.keys(trends?.ticketsByStatus || {}).length === 0 && (
-                <span className="text-sm text-slate-500">No tickets yet</span>
-              )}
-            </div>
-          </ChartCard>
-        </div>
-      )}
+      {/* More charts row */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+        <ChartCard title="New Members" sub="Signups per month" icon="👥">
+          <TrendChart data={memberData.length ? memberData : [{ label: '—', value: 0 }]} color="#0f766e" />
+        </ChartCard>
+        <ChartCard title="Invoice Status" sub="By status" icon="🧾">
+          <div className="py-2">
+            <SegmentDonut data={invoiceStatusData} colors={INVOICE_COLORS} />
+          </div>
+        </ChartCard>
+        <ChartCard title="Collection" sub="Revenue vs pending dues" icon="💵">
+          <BarChart data={collectionData} />
+        </ChartCard>
+      </div>
+
+      {/* Tickets by status */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
+        <ChartCard title="Members vs Contracts" sub="Active now" icon="🤝">
+          <BarChart data={memberContractData} />
+        </ChartCard>
+        <ChartCard title="Tickets by Status" sub="All time" icon="🎫">
+          <div className="flex flex-wrap gap-2 py-4">
+            {Object.entries(trends?.ticketsByStatus || {}).map(([s, c]) => (
+              <span key={s} className="px-3 py-1.5 rounded-lg bg-gray-100 border border-gray-200 text-sm text-gray-800">
+                <span className="capitalize">{s.replace('_', ' ')}</span>: <span className="font-bold text-gray-900">{c}</span>
+              </span>
+            ))}
+            {Object.keys(trends?.ticketsByStatus || {}).length === 0 && (
+              <span className="text-sm text-slate-500">No tickets yet</span>
+            )}
+          </div>
+        </ChartCard>
+      </div>
 
       {/* Activity Feed */}
       <div className="mb-6">
