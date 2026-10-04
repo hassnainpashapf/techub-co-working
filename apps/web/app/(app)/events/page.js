@@ -115,7 +115,7 @@ export default function EventsPage() {
         <button className="btn-primary" onClick={() => { setEditing(null); setShowForm(true); }}>+ New event</button>
       } />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-3 3xl:grid-cols-4 gap-4 mb-6">
         <StatCard label="Total events" value={events.length} accent="blue" icon="🎉" />
         <StatCard label="Upcoming" value={upcoming} accent="green" icon="📅" />
         <StatCard label="Total RSVPs" value={events.reduce((s, e) => s + (e._count?.rsvps || 0), 0)} accent="purple" icon="✅" />
@@ -123,7 +123,7 @@ export default function EventsPage() {
       {loading ? <Spinner /> : events.length === 0 ? (
         <EmptyState title="No events yet" hint="Create your first community event to bring members together." />
       ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
           {events.map((ev) => (
             <div key={ev.id} className="card-premium p-5">
               {ev.imageUrl && <img src={ev.imageUrl} alt="" className="rounded-xl h-36 w-full object-cover mb-3" />}

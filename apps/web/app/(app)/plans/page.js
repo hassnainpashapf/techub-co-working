@@ -137,7 +137,7 @@ export default function PlansPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-5">
           {plans.map((plan) => (
             <div key={plan.id} className="card-premium p-6 relative">
               {!plan.isActive && <div className="absolute top-4 right-4"><Badge tone="slate">Inactive</Badge></div>}

@@ -276,7 +276,7 @@ function StaffDashboard() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
         <StatCard
           label="Occupancy"
           value={`${occupancyPercent}%`}
@@ -317,7 +317,7 @@ function StaffDashboard() {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
         <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'} icon="💰">
           <BarChart data={revenueData.length ? revenueData : [{ label: '—', value: 0 }]} />
         </ChartCard>
@@ -334,7 +334,7 @@ function StaffDashboard() {
         </ChartCard>
       </div>
       {memberData.some((d) => d.value > 0) && (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
           <ChartCard title="New Members" sub="Signups per month">
             <TrendChart data={memberData} color="#8b5cf6" />
           </ChartCard>
@@ -381,7 +381,7 @@ function StaffDashboard() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
         <div>
           <h2 className="font-bold text-white mb-3 text-[15px]">Top pending dues</h2>
           <DataTable
@@ -454,7 +454,7 @@ function MemberDashboard() {
   return (
     <div>
       <PageHeader title="My Dashboard" sub="Your membership at a glance" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 4xl:gap-6 mb-6 4xl:mb-8">
         <StatCard
           label="My pending dues"
           value={money(data?.myDues ?? dues.reduce((s, r) => s + Number(r.balance || r.amount || 0), 0))}
@@ -487,7 +487,7 @@ function MemberDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-6">
         <div className="card">
           <h2 className="font-semibold text-white mb-3">My dues</h2>
           <DataTable

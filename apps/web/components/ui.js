@@ -15,8 +15,8 @@ export function PageHeader({ title, sub, actions }) {
   return (
     <div className="flex flex-wrap items-start justify-between gap-3 mb-6">
       <div>
-        <h1 className="text-[24px] font-bold text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">{title}</h1>
-        {sub && <p className="text-[13.5px] text-white/70 mt-1 font-medium">{sub}</p>}
+        <h1 className="text-[24px] 4xl:text-[32px] font-bold text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.2)]">{title}</h1>
+        {sub && <p className="text-[13.5px] 4xl:text-[15px] text-white/70 mt-1 font-medium">{sub}</p>}
       </div>
       {actions && <div className="flex items-center gap-2">{actions}</div>}
     </div>
@@ -68,7 +68,7 @@ export function StatCard({ label, value, sub, accent = 'blue', icon, trend }) {
           {icon || STAT_ICONS[accent] || STAT_ICONS.blue}
         </span>
       </div>
-      <p className="relative text-[28px] font-extrabold text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.25)] tracking-tight">{value}</p>
+      <p className="relative text-[28px] 4xl:text-[38px] font-extrabold text-white drop-shadow-[0_0_12px_rgba(255,255,255,0.25)] tracking-tight">{value}</p>
       <div className="relative flex items-center gap-2 mt-1.5">
         {trend && (
           <span className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold ${

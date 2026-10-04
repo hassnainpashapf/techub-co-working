@@ -91,7 +91,7 @@ export default function SessionsPage() {
       {sessions.length === 0 ? (
         <EmptyState title="Koi active session nahi" hint="Dobara login karein." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {sessions.map((s) => (
             <div
               key={s.id}

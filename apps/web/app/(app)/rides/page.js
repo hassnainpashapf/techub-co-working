@@ -266,7 +266,7 @@ export default function RidesPage() {
           <p className="text-sm mt-1">Be the first to offer a ride!</p>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-5">
           {filtered.map((ride) => (
             <RideCard key={ride.id} ride={ride} onRequest={handleRequest} onCancelRequest={handleCancelRequest} onCancelRide={handleCancelRide} busy={busy} />
           ))}

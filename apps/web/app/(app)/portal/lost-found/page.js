@@ -102,7 +102,7 @@ export default function PortalLostFoundPage() {
       ) : items.length === 0 ? (
         <EmptyState title="Koi item nahi mili" hint="Khoi ya mili hui cheez report karke shuruwat karein." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {items.map((it) => (
             <div key={it.id} className="card-premium p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-2">

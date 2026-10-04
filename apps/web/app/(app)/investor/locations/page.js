@@ -133,7 +133,7 @@ export default function LocationsComparePage() {
             <CompareChart rows={rows} />
           </div>
 
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
             {rows.map((r) => {
               const isBest = best && r.buildingId === best.buildingId;
               const isWorst = worst && r.buildingId === worst.buildingId;

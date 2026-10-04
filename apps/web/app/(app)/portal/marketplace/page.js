@@ -144,7 +144,7 @@ export default function PortalMarketplacePage() {
       ) : items.length === 0 ? (
         <EmptyState title="Koi listing nahi mili" hint={tab === 'mine' ? 'Abhi tak aap ne koi listing post nahi ki.' : 'Pehli listing post karke shuruwat karein!'} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {items.map((l) => (
             <div key={l.id} className="card-premium p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-2">

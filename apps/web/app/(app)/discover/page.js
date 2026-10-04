@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { api } from '../../../lib/api';
 import { useAuth } from '../../../context/AuthContext';
 import { Spinner, Modal, Field, ErrorBanner } from '../../../components/ui';
@@ -56,7 +56,7 @@ function FilterSection({ title, children, defaultOpen = false }) {
     <div className="border-b border-white/[0.06] pb-5 mb-5">
       <button
         onClick={() => setOpen(!open)}
-        className="flex items-center justify-between w-full text-white text-[15px] font-semibold mb-1 hover:text-blue-200 transition-colors"
+        className="flex items-center justify-between w-full text-white text-[15px] font-semibold mb-1 hover:text-purple-200 transition-colors"
       >
         {title}
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={`transition-transform duration-300 text-white ${open ? 'rotate-180' : ''}`}>
@@ -86,7 +86,7 @@ function DateField({ label, value, onChange }) {
           readOnly
           value={formatDateDisplay(value)}
           onClick={(e) => e.target.previousElementSibling?.showPicker?.()}
-          className="w-full bg-transparent border border-white/[0.12] rounded-xl pl-3.5 pr-10 py-2.5 text-[13.5px] text-white outline-none focus:border-blue-500/50 transition-colors cursor-pointer"
+          className="w-full bg-transparent border border-white/[0.12] rounded-xl pl-3.5 pr-10 py-2.5 text-[13.5px] text-white outline-none focus:border-[#8b5cf6]/60 transition-colors cursor-pointer"
         />
         <input
           type="date"
@@ -183,17 +183,15 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
   const amenities = unit.amenities?.length ? unit.amenities : ['Wi-fi'];
 
   return (
-    <div className="rounded-[20px] bg-gradient-to-b from-[#161626] via-[#12121e] to-[#0e0e18] border border-white/[0.09] overflow-hidden hover:border-blue-400/50 hover:shadow-[0_12px_56px_rgba(59,130,246,0.28),0_0_0_1px_rgba(59,130,246,0.15)] hover:-translate-y-1.5 transition-all duration-300 group animate-fadeUp shadow-[0_4px_24px_rgba(0,0,0,0.4)]" style={{ animationDelay: `${(index % 6) * 0.07}s` }}>
+    <div className="rounded-2xl bg-[#141422] border border-white/[0.06] overflow-hidden hover:border-[#8b5cf6]/40 hover:shadow-[0_12px_48px_rgba(139,92,246,0.16)] hover:-translate-y-1 transition-all duration-300 group animate-fadeUp" style={{ animationDelay: `${(index % 6) * 0.07}s` }}>
       <div className="relative h-44 overflow-hidden">
         <img
           src={images[imgIdx]}
           alt={unit.code}
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 contrast-[1.05] saturate-[1.1]"
+          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/[0.08] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[12px] font-semibold ${unit.isAvailable ? 'bg-[#bfdbfe] text-[#1e3a8a] animate-glowPulse' : 'bg-slate-700/80 text-slate-300'}`}>
+        <span className={`absolute top-3 left-3 px-3 py-1 rounded-full text-[12px] font-semibold ${unit.isAvailable ? 'bg-[#ddd6fe] text-[#4c1d95]' : 'bg-slate-700/80 text-slate-300'}`}>
           {unit.isAvailable ? 'Available' : 'Booked'}
         </span>
         <button
@@ -201,7 +199,7 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-black/50 backdrop-blur flex items-center justify-center hover:bg-black/70 hover:scale-110 transition-all duration-200 active:scale-95"
           title={isFav ? 'Remove from favorites' : 'Add to favorites'}
         >
-          <svg width="16" height="16" viewBox="0 0 24 24" fill={isFav ? '#f472b6' : 'none'} stroke={isFav ? '#f472b6' : '#fff'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={isFav ? 'drop-shadow-[0_0_6px_rgba(244,114,182,0.8)]' : ''}>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill={isFav ? '#a78bfa' : 'none'} stroke={isFav ? '#a78bfa' : '#fff'} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
           </svg>
         </button>
@@ -210,38 +208,35 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
             <button
               key={i}
               onClick={() => setImgIdx(i)}
-              className={`h-1.5 rounded-full transition-all duration-300 ${i === imgIdx ? 'w-5 bg-white' : 'w-1.5 bg-white/40 hover:bg-white/70'}`}
+              className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${i === imgIdx ? 'bg-white' : 'bg-white/40 hover:bg-white/70'}`}
             />
           ))}
         </div>
       </div>
 
       <div className="p-4">
-        <h3 className="text-white text-[16px] font-semibold truncate drop-shadow-[0_0_8px_rgba(255,255,255,0.2)]">{unit.code} — {TYPE_LABELS[unit.type] || unit.type}</h3>
-        {unit.buildingName && <p className="text-[12px] text-slate-400 mt-0.5">📍 {unit.buildingName}</p>}
+        <h3 className="text-white text-[16px] font-semibold truncate">{unit.code} — {TYPE_LABELS[unit.type] || unit.type}</h3>
         <div className="flex items-center gap-2 mt-2.5 flex-wrap">
-          <span className="inline-flex items-center gap-1 text-[12px] text-white">
+          <span className="inline-flex items-center gap-1 text-[12px] text-slate-300">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
             x{unit.capacity || 1}
           </span>
-          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.07] text-[12px] text-white font-semibold">{TYPE_LABELS[unit.type] || unit.type}</span>
-          <span className={`px-2.5 py-0.5 rounded-full text-[12px] ${unit.status === 'vacant' ? 'bg-emerald-500/15 text-emerald-300' : 'bg-amber-500/15 text-amber-300'}`}>
-            {unit.status}
-          </span>
+          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[12px] text-slate-300 font-medium">{TYPE_LABELS[unit.type] || unit.type}</span>
+          <span className="px-2.5 py-0.5 rounded-full bg-white/[0.06] text-[12px] text-slate-400 font-medium">{unit.isAvailable ? 'Shop available' : 'Shop unavailable'}</span>
         </div>
-        <p className="flex items-center gap-2 text-[12.5px] text-white mt-2.5">
+        <p className="flex items-center gap-2 text-[12.5px] text-slate-400 mt-2.5">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           {amenities.join(', ')}
         </p>
-        <div className="flex items-end justify-between mt-3.5">
+        <div className="flex items-end justify-between mt-4">
           <div>
-            <p className="text-[11px] text-slate-400 uppercase tracking-wider font-semibold">Start from</p>
-            <p className="text-gradient text-[20px] font-extrabold">{money(price)}<span className="text-[12px] font-normal text-slate-400">{duration.suffix}</span></p>
+            <p className="text-[12px] text-slate-500">Start from</p>
+            <p className="text-white text-[22px] font-bold leading-tight">{money(price)}<span className="text-[12px] font-normal text-slate-500">{duration.suffix}</span></p>
           </div>
           <button
             onClick={() => onBook(unit)}
             disabled={!unit.isAvailable}
-            className={`btn-shine px-5 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border transition-all duration-200 active:scale-95 ${unit.isAvailable ? 'border-blue-400/60 text-blue-200 bg-blue-500/10 shadow-[0_0_16px_rgba(59,130,246,0.35)] hover:bg-blue-500 hover:text-white hover:shadow-[0_0_28px_rgba(59,130,246,0.65)]' : 'border-white/10 text-slate-500 bg-white/[0.03] cursor-not-allowed'}`}
+            className={`px-5 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border transition-all duration-200 active:scale-95 ${unit.isAvailable ? 'border-[#8b5cf6]/70 text-white bg-[#8b5cf6]/10 hover:bg-[#8b5cf6] hover:shadow-[0_0_24px_rgba(139,92,246,0.5)]' : 'border-white/10 text-slate-500 bg-white/[0.03] cursor-not-allowed'}`}
           >
             Book now
           </button>
@@ -390,8 +385,6 @@ export default function DiscoverPage() {
   else if (sortBy === 'price-high') filtered = [...filtered].sort((a, b) => priceFor(b) - priceFor(a));
   else if (sortBy === 'name') filtered = [...filtered].sort((a, b) => (a.code || '').localeCompare(b.code || ''));
 
-  const availableCount = useMemo(() => units.filter((u) => u.isAvailable).length, [units]);
-
   function handleBooked() {
     setBookingUnit(null);
     setBookedMsg('Booking confirmed! 🎉');
@@ -401,26 +394,17 @@ export default function DiscoverPage() {
 
   return (
     <div className="animate-fadeUp">
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-5">
-        <div>
-          <h1 className="text-gradient text-[24px] font-extrabold tracking-tight">Available co-workspace</h1>
-          <p className="text-[12.5px] text-slate-400 mt-1 font-medium">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-500/12 border border-emerald-500/25 text-emerald-300 text-[11.5px] font-bold mr-2">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
-              {availableCount} available
-            </span>
-            {fromDate === toDate ? `on ${formatDateDisplay(fromDate)}` : `${formatDateDisplay(fromDate)} → ${formatDateDisplay(toDate)}`}
-          </p>
-        </div>
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-6">
+        <h1 className="text-white text-[26px] 4xl:text-[34px] font-bold tracking-tight">Available co-workspace</h1>
         <div className="flex items-center gap-2">
-          <div className="flex rounded-xl border border-white/10 overflow-hidden glass">
+          <div className="flex rounded-xl border border-white/10 overflow-hidden bg-white/[0.03]">
             {[['grid', 'Grid'], ['map', 'Map']].map(([v, l]) => (
               <button key={v} onClick={() => setView(v)}
-                className={`px-4 py-2 text-xs font-semibold transition-all duration-200 ${view === v ? 'bg-gradient-to-b from-blue-500/40 to-blue-600/25 text-blue-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.15)]' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>{l}</button>
+                className={`px-4 py-2 text-xs font-semibold transition-all duration-200 ${view === v ? 'bg-[#8b5cf6]/25 text-purple-100 shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]' : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'}`}>{l}</button>
             ))}
           </div>
-          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="glass rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-blue-400/50 font-medium">
-            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value} className="bg-[#1a1a2e]">{o.label}</option>)}
+          <select value={sortBy} onChange={(e) => setSortBy(e.target.value)} className="bg-white/[0.03] border border-white/10 rounded-xl px-3 py-2 text-xs text-slate-200 outline-none focus:border-[#8b5cf6]/60 font-medium">
+            {SORT_OPTIONS.map((o) => <option key={o.value} value={o.value} className="bg-[#141422]">{o.label}</option>)}
           </select>
         </div>
       </div>
@@ -432,16 +416,15 @@ export default function DiscoverPage() {
       )}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="flex gap-6">
-        <div className="w-[248px] shrink-0">
-          <div className="glass rounded-[20px] p-5 shadow-[0_8px_32px_rgba(0,0,0,0.35)]">
-          <div className="relative mb-5">
+      <div className="flex gap-8">
+        <div className="w-[300px] shrink-0">
+          <div className="relative mb-6">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" className="absolute left-3.5 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Search workspace"
-              className="w-full bg-white/[0.04] border border-white/[0.1] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-white placeholder-slate-500 outline-none focus:border-blue-500/60 focus:shadow-[0_0_16px_rgba(59,130,246,0.2)] transition-all"
+              className="w-full bg-white/[0.03] border border-white/[0.1] rounded-xl pl-10 pr-4 py-2.5 text-[13.5px] text-white placeholder-slate-500 outline-none focus:border-[#8b5cf6]/60 focus:shadow-[0_0_16px_rgba(139,92,246,0.2)] transition-all"
             />
           </div>
 
@@ -449,7 +432,7 @@ export default function DiscoverPage() {
             <DateField label="From" value={fromDate} onChange={setFromDate} />
             <DateField label="To" value={toDate} onChange={setToDate} />
             <label className="flex items-center gap-2 text-[13px] text-slate-300 cursor-pointer">
-              <input type="checkbox" checked={availOnly} onChange={(e) => setAvailOnly(e.target.checked)} className="accent-blue-500" />
+              <input type="checkbox" checked={availOnly} onChange={(e) => setAvailOnly(e.target.checked)} className="accent-[#8b5cf6]" />
               Available only
             </label>
           </FilterSection>
@@ -458,11 +441,11 @@ export default function DiscoverPage() {
             <div className="space-y-3">
               {WORKSPACE_TYPES.map((t) => (
                 <label key={t.label} className="flex items-center gap-3 cursor-pointer group">
-                  <span className={`w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-all duration-200 ${wsType === t.label ? 'border-blue-500' : 'border-slate-600 group-hover:border-slate-400'}`}>
-                    {wsType === t.label && <span className="w-[10px] h-[10px] rounded-full bg-blue-500 shadow-[0_0_8px_rgba(59,130,246,0.8)]" />}
+                  <span className={`w-[18px] h-[18px] rounded-full border flex items-center justify-center transition-all duration-200 ${wsType === t.label ? 'border-[#8b5cf6]' : 'border-slate-600 group-hover:border-slate-400'}`}>
+                    {wsType === t.label && <span className="w-[10px] h-[10px] rounded-full bg-[#8b5cf6] shadow-[0_0_8px_rgba(139,92,246,0.8)]" />}
                   </span>
                   <input type="radio" name="wsType" checked={wsType === t.label} onChange={() => setWsType(t.label)} className="hidden" />
-                  <span className="text-[13.5px] font-medium text-white">{t.label}</span>
+                  <span className="text-[13.5px] font-medium text-slate-200">{t.label}</span>
                 </label>
               ))}
             </div>
@@ -472,7 +455,7 @@ export default function DiscoverPage() {
             <div className="grid grid-cols-2 gap-2">
               {DURATIONS.map((d, i) => (
                 <button key={d.label} onClick={() => setDurationIdx(i)}
-                  className={`px-3 py-2 rounded-xl text-[13px] font-medium border transition-all ${durationIdx === i ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  className={`px-3 py-2 rounded-xl text-[13px] font-medium border transition-all ${durationIdx === i ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/15 text-purple-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
                   {d.label}
                 </button>
               ))}
@@ -484,18 +467,18 @@ export default function DiscoverPage() {
             <div className="space-y-2">
               {BUDGETS.map((b, i) => (
                 <button key={b.label} onClick={() => setBudgetIdx(budgetIdx === i ? null : i)}
-                  className={`w-full text-left px-3 py-2 rounded-xl text-[13px] border transition-all ${budgetIdx === i ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  className={`w-full text-left px-3 py-2 rounded-xl text-[13px] border transition-all ${budgetIdx === i ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/15 text-purple-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
                   {b.label} <span className="text-[11px] opacity-70">/mo</span>
                 </button>
               ))}
             </div>
           </FilterSection>
 
-          <FilterSection title="Freebies">
+          <FilterSection title="Freebie">
             <div className="flex flex-wrap gap-2">
               {FREEBIES.map((fb) => (
                 <button key={fb} onClick={() => toggleFreebie(fb)}
-                  className={`px-3 py-1.5 rounded-full text-[12.5px] border transition-all ${freebies.includes(fb) ? 'border-blue-400/60 bg-blue-500/20 text-blue-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
+                  className={`px-3 py-1.5 rounded-full text-[12.5px] border transition-all ${freebies.includes(fb) ? 'border-[#8b5cf6]/60 bg-[#8b5cf6]/15 text-purple-200' : 'border-white/10 text-slate-400 hover:bg-white/5'}`}>
                   {fb}
                 </button>
               ))}
@@ -504,11 +487,10 @@ export default function DiscoverPage() {
 
           <FilterSection title="Favorites">
             <label className="flex items-center gap-2 text-[13px] text-slate-300 cursor-pointer">
-              <input type="checkbox" checked={showFavsOnly} onChange={(e) => setShowFavsOnly(e.target.checked)} className="accent-pink-500" />
+              <input type="checkbox" checked={showFavsOnly} onChange={(e) => setShowFavsOnly(e.target.checked)} className="accent-[#8b5cf6]" />
               Show favorites only ({favorites.size})
             </label>
           </FilterSection>
-          </div>
         </div>
 
         <div className="flex-1 min-w-0">
@@ -521,7 +503,7 @@ export default function DiscoverPage() {
               <p className="text-sm mt-1">Try adjusting your filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-5">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-5 4xl:gap-6">
               {filtered.map((u, i) => (
                 <BookingCard key={u.id} unit={u} index={i} duration={duration} onBook={setBookingUnit} isFav={favorites.has(u.id)} onToggleFav={toggleFav} />
               ))}
