@@ -52,12 +52,12 @@ export default function ConciergeServicesPage() {
   const active = services.filter((s) => s.isActive).length;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🛎️ Concierge Services" subtitle="Service catalog manage karein (providers Track 3 page se)" />
 
       {err && <ErrorBanner message={err} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Total Services" value={services.length} />
         <StatCard label="Active" value={active} tone="green" />
         <StatCard label="Providers" value={providers.length} tone="blue" />
@@ -78,7 +78,7 @@ export default function ConciergeServicesPage() {
       </div>
 
       {filtered.length === 0 ? <EmptyState title="Koi service nahi" /> : (
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
           {filtered.map((s) => (
             <div key={s.id} className="rounded-xl bg-gray-100 border border-gray-200 p-4 space-y-2">
               <div className="flex items-start justify-between gap-2">

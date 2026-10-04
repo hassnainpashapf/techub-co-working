@@ -120,11 +120,11 @@ export default function ApiKeysPage() {
       {newKey && (
         <Modal title="API Key Created" onClose={() => setNewKey(null)}>
           <p className="text-sm text-amber-700 mb-3">⚠️ Copy this key now — it will never be shown again.</p>
-          <div className="flex items-center gap-2 mb-4">
+          <div className="flex items-center gap-2 mb-3">
             <code className="flex-1 font-mono text-xs bg-black/40 border border-gray-200 rounded-lg px-3 py-2.5 text-emerald-700 break-all">{newKey}</code>
             <button onClick={copy} className="btn-secondary text-xs whitespace-nowrap">{copied ? 'Copied ✓' : 'Copy'}</button>
           </div>
-          <p className="text-xs text-gray-500 mb-4">Use as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">Authorization: Bearer</code> token.</p>
+          <p className="text-xs text-gray-500 mb-3">Use as <code className="font-mono">X-API-Key</code> header or <code className="font-mono">Authorization: Bearer</code> token.</p>
           <button onClick={() => setNewKey(null)} className="btn-primary w-full">Done</button>
         </Modal>
       )}

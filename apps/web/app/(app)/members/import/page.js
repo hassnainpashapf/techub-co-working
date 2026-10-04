@@ -148,16 +148,16 @@ export default function MemberImportPage() {
       {/* Step 2 — validation report */}
       {report && !result && (
         <>
-          <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-3 gap-3 mb-3">
             <StatCard label="Total rows" value={report.total} accent="blue" />
             <StatCard label="Valid" value={report.valid} accent="emerald" />
             <StatCard label="Invalid" value={report.invalid} accent={report.invalid > 0 ? 'red' : 'slate'} />
           </div>
 
           {/* Column mapping */}
-          <div className="card-premium p-5 mb-4">
+          <div className="card-premium p-5 mb-3">
             <h2 className="text-gray-900 font-bold mb-1">Column mapping</h2>
-            <p className="text-gray-500 text-xs mb-4">File: <span className="text-gray-800">{fileName}</span> — adjust any column, then re-validate.</p>
+            <p className="text-gray-500 text-xs mb-3">File: <span className="text-gray-800">{fileName}</span> — adjust any column, then re-validate.</p>
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
               {report.headers.map((h) => (
                 <Field key={h} label={`"${h}"`}>
@@ -171,7 +171,7 @@ export default function MemberImportPage() {
                 </Field>
               ))}
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="flex gap-2 mt-3">
               <button onClick={remapAndRevalidate} disabled={busy} className="btn-secondary text-sm">
                 {busy ? 'Validating…' : '↻ Re-validate with this mapping'}
               </button>
@@ -182,8 +182,8 @@ export default function MemberImportPage() {
           </div>
 
           {/* Preview */}
-          <div className="card-premium p-5 mb-4">
-            <div className="flex items-center justify-between mb-4">
+          <div className="card-premium p-5 mb-3">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-gray-900 font-bold">Row preview</h2>
               <div className="flex gap-1 text-xs">
                 {['all', 'valid', 'invalid'].map((f) => (
@@ -194,7 +194,7 @@ export default function MemberImportPage() {
                 ))}
               </div>
             </div>
-            <div className="overflow-x-auto -mx-5 px-5">
+            <div className="overflow-x-auto -mx-5 px-4">
               <table className="w-full text-sm min-w-[720px]">
                 <thead>
                   <tr className="text-left text-gray-500 text-xs border-b border-gray-200">
@@ -234,7 +234,7 @@ export default function MemberImportPage() {
 
           {/* Confirm */}
           <div className="card-premium p-5">
-            <label className="flex items-center gap-3 mb-4 cursor-pointer">
+            <label className="flex items-center gap-3 mb-3 cursor-pointer">
               <input type="checkbox" checked={sendWelcome} onChange={(e) => setSendWelcome(e.target.checked)}
                 className="w-4 h-4 accent-[#0f766e]" />
               <span className="text-sm text-gray-900">Send welcome email to imported members (only those with an email address)</span>
@@ -253,15 +253,15 @@ export default function MemberImportPage() {
       {/* Step 3 — result */}
       {result && (
         <div className="card-premium p-6">
-          <h2 className="text-gray-900 font-bold text-lg mb-4">Import complete ✅</h2>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <h2 className="text-gray-900 font-bold text-lg mb-3">Import complete ✅</h2>
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             <StatCard label="Imported" value={result.imported} accent="emerald" />
             <StatCard label="Skipped" value={result.skipped} accent="amber" />
             <StatCard label="Welcome emails" value={result.emailsQueued} accent="blue" />
             <StatCard label="Errors" value={result.errors?.length || 0} accent={result.errors?.length ? 'red' : 'slate'} />
           </div>
           {result.errors?.length > 0 && (
-            <div className="mb-4">
+            <div className="mb-3">
               <p className="text-sm font-semibold text-red-700 mb-2">Errors</p>
               {result.errors.slice(0, 50).map((e, i) => (
                 <p key={i} className="text-red-700 text-xs">Row {e.row}: {e.message}</p>

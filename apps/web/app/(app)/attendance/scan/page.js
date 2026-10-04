@@ -52,7 +52,7 @@ export default function QrScanPage() {
   return (
     <div className="p-6 max-w-xl mx-auto">
       <PageHeader title="Scan Member QR" sub={mode === 'verify' ? "Verify a member's ID card" : 'Paste the member\'s QR code to check them in'} />
-      <div className="flex gap-2 mt-4">
+      <div className="flex gap-2 mt-3">
         {[
           { id: 'checkin', label: 'Check in' },
           { id: 'verify', label: 'Verify ID' },
@@ -67,7 +67,7 @@ export default function QrScanPage() {
           </button>
         ))}
       </div>
-      <form onSubmit={submit} className="card-premium p-6 mt-4">
+      <form onSubmit={submit} className="card-premium p-6 mt-3">
         <Field label="QR code">
           <textarea
             className="input font-mono text-xs"
@@ -78,11 +78,11 @@ export default function QrScanPage() {
           />
         </Field>
         {error && <div className="mt-3"><ErrorBanner message={error} /></div>}
-        <button type="submit" className="btn-primary w-full mt-4" disabled={busy}>
+        <button type="submit" className="btn-primary w-full mt-3" disabled={busy}>
           {busy ? 'Working…' : mode === 'verify' ? 'Verify member' : 'Check in'}
         </button>
         {result && (
-          <div className="mt-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+          <div className="mt-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4">
             <div className="flex items-center gap-2 mb-1">
               <Badge tone={result.alreadyCheckedIn ? 'amber' : 'green'}>
                 {result.alreadyCheckedIn ? 'Already checked in' : 'Checked in'}
@@ -95,7 +95,7 @@ export default function QrScanPage() {
           </div>
         )}
         {verified && (
-          <div className="mt-4 rounded-xl border border-[#0f766e]/30 bg-[#0f766e]/10 p-4">
+          <div className="mt-3 rounded-xl border border-[#0f766e]/30 bg-[#0f766e]/10 p-4">
             <div className="flex items-center gap-2 mb-2">
               <Badge tone="blue">Identity verified</Badge>
               <Badge tone={verified.status === 'active' ? 'green' : 'amber'}>

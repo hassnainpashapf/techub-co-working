@@ -90,7 +90,7 @@ function RuleModal({ rule, entities, onClose, onSaved }) {
         <Field label="Template key (optional)">
           <input className="input" value={form.templateKey} onChange={(e) => setForm({ ...form, templateKey: e.target.value })} placeholder="Leave blank for the default template" />
         </Field>
-        <label className="flex items-center gap-3 mb-4 cursor-pointer">
+        <label className="flex items-center gap-3 mb-3 cursor-pointer">
           <button type="button" role="switch" aria-checked={form.isActive} onClick={() => setForm({ ...form, isActive: !form.isActive })}
             className={`w-11 h-6 rounded-full relative transition-colors ${form.isActive ? 'bg-[#0f766e]' : 'bg-gray-100'}`}>
             <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${form.isActive ? 'left-[22px]' : 'left-0.5'}`} />
@@ -114,7 +114,7 @@ function TestResultModal({ result, onClose }) {
         {result.count > 0 && ' (Already-reminded items are excluded.)'}
       </p>
       {result.sample && result.sample.length > 0 && (
-        <div className="space-y-2 mb-4">
+        <div className="space-y-2 mb-3">
           {result.sample.map((s) => (
             <div key={s.entityId} className="text-xs bg-gray-50 border border-gray-200 rounded-lg px-3 py-2 text-gray-600">{s.label}</div>
           ))}
@@ -208,12 +208,12 @@ export default function RemindersPage() {
       />
 
       {error && <ErrorBanner message={error} />}
-      {notice && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{notice}</div>}
+      {notice && <div className="mb-3 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{notice}</div>}
 
       {rules.length === 0 ? (
         <EmptyState title="No reminder rules yet" hint="Create your first rule — e.g. remind members 3 days before an invoice is due." />
       ) : (
-        <div className="grid gap-3 mb-5">
+        <div className="grid gap-3 mb-3">
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <button type="button" role="switch" aria-checked={r.isActive} onClick={() => toggleActive(r)}

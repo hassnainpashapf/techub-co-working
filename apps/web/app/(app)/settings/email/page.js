@@ -53,14 +53,14 @@ export default function EmailSettingsPage() {
     <div className="max-w-2xl">
       <PageHeader title="Email Settings" subtitle="SMTP configuration for automatic notifications" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
+      {msg && <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
-        <form onSubmit={save} className="card-premium p-6 space-y-4">
+        <form onSubmit={save} className="card-premium p-6 space-y-3">
           <label className="flex items-center gap-3 cursor-pointer">
             <input type="checkbox" checked={form.enabled} onChange={(e) => setForm({ ...form, enabled: e.target.checked })} className="w-4 h-4 accent-teal-600" />
             <span className="text-sm font-medium text-gray-900">Enable email notifications</span>
           </label>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <Field label="SMTP host"><input className="input" placeholder="smtp.gmail.com" {...f('host')} /></Field>
             <Field label="Port"><input type="number" className="input" {...f('port')} /></Field>
             <Field label="Username"><input className="input" placeholder="you@example.com" {...f('username')} /></Field>

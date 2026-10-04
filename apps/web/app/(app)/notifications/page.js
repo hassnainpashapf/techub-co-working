@@ -64,7 +64,7 @@ export default function NotificationsPage() {
 
   return (
     <div>
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex items-center justify-between mb-3">
         <div>
           <h1 className="text-2xl font-extrabold text-gray-900">Notifications</h1>
           <p className="text-sm text-gray-500 mt-1">Your alerts and reminders.</p>
@@ -72,7 +72,7 @@ export default function NotificationsPage() {
         <button onClick={markAllRead} className="btn-secondary">Mark all read</button>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-5">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <button
           onClick={() => setFilter('all')}
           className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${filter === 'all' ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-500 hover:text-gray-800'}`}
@@ -122,7 +122,7 @@ export default function NotificationsPage() {
       </div>
 
       {pages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-5">
+        <div className="flex items-center justify-center gap-2 mt-3">
           <button disabled={page <= 1} onClick={() => load(page - 1)} className="btn-secondary disabled:opacity-40">Prev</button>
           <span className="text-[13px] text-gray-500">Page {page} of {pages}</span>
           <button disabled={page >= pages} onClick={() => load(page + 1)} className="btn-secondary disabled:opacity-40">Next</button>

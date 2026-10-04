@@ -107,12 +107,12 @@ export default function PayrollPage() {
         </>
       } />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <StatCard label="Payroll runs" value={runs.length} accent="blue" />
         <StatCard label="Total paid out" value={fmt(totalPaid)} accent="green" />
         <StatCard label="Staff with salary" value={new Set(structures.map((s) => s.userId)).size} accent="violet" />
       </div>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['runs', 'structures'].map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`px-4 py-2 rounded-xl text-sm font-medium ${tab === t ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
             {t === 'runs' ? 'Payroll Runs' : 'Salary Structures'}
@@ -148,7 +148,7 @@ export default function PayrollPage() {
       {showForm && <Modal title="Set salary" onClose={() => setShowForm(false)}><StructureForm users={users} onSave={saveStructure} saving={saving} /></Modal>}
       {runDetail && (
         <Modal title={`Payroll ${runDetail.month}`} onClose={() => setRunDetail(null)}>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3">
             <Badge tone={STATUS_TONE[runDetail.status]}>{runDetail.status}</Badge>
             <span className="text-gray-600 font-semibold">{fmt(runDetail.totalAmount)}</span>
             <span className="flex-1" />

@@ -37,7 +37,7 @@ function Donut({ distribution, total }) {
   let acc = 0;
   const segs = Object.entries(distribution).filter(([, v]) => v > 0);
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <svg width="180" height="180" viewBox="0 0 180 180">
         <circle cx="90" cy="90" r={R} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="22" />
         {segs.map(([tier, v]) => {
@@ -112,7 +112,7 @@ export default function EngagementPage() {
   const summary = data?.summary;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Member Engagement"
         sub="Kon kitna active hai — bookings, events, feedback, referrals, logins"
@@ -145,20 +145,20 @@ export default function EngagementPage() {
         <EmptyState title="No data" hint="Members milne par engagement scores yahan dikhenge" />
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatCard label="Avg Score" value={summary.avgScore} sub={`${summary.total} members`} accent="blue" />
             <StatCard label="Champions" value={summary.championCount} sub="80+ score" accent="green" />
             <StatCard label="At-risk" value={summary.atRiskCount} sub="40 se kam — action lo" accent="red" />
             <StatCard label="Active" value={summary.distribution.active} sub="60-79 score" accent="amber" />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-3">
             <div className="rounded-2xl border border-gray-200 bg-white p-6">
-              <h3 className="text-gray-900 font-bold mb-4">Tier Distribution</h3>
+              <h3 className="text-gray-900 font-bold mb-3">Tier Distribution</h3>
               <Donut distribution={summary.distribution} total={summary.total} />
             </div>
             <div className="rounded-2xl border border-gray-200 bg-white p-6">
-              <h3 className="text-gray-900 font-bold mb-4">Top Champions 🏆</h3>
+              <h3 className="text-gray-900 font-bold mb-3">Top Champions 🏆</h3>
               {champions.length === 0 ? (
                 <EmptyState title="Koi champion nahi" hint="80+ score wale members yahan dikhenge" />
               ) : (
@@ -218,7 +218,7 @@ export default function EngagementPage() {
               className="w-full bg-white border border-gray-200 rounded-xl px-3 py-2 text-gray-900 text-sm focus:outline-none focus:border-[#0f766e]"
             />
           </Field>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button onClick={() => setMailFor(null)} className="px-4 py-2 rounded-full text-sm bg-gray-100 text-gray-600 hover:bg-slate-700">Cancel</button>
             <button
               onClick={sendRetention}

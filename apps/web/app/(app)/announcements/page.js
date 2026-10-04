@@ -39,7 +39,7 @@ function ComposeForm({ onSend, sending }) {
           <input type="date" className="input [color-scheme:dark]" value={f.expiresAt} min={new Date().toISOString().slice(0, 10)} onChange={(e) => setF({ ...f, expiresAt: e.target.value })} />
         </Field>
       </div>
-      <label className="flex items-center gap-2 mb-4 text-sm text-gray-600 cursor-pointer">
+      <label className="flex items-center gap-2 mb-3 text-sm text-gray-600 cursor-pointer">
         <input type="checkbox" checked={f.pinned} onChange={(e) => setF({ ...f, pinned: e.target.checked })} className="accent-teal-600 w-4 h-4" />
         📌 Pin to top of feed
       </label>
@@ -105,7 +105,7 @@ export default function AnnouncementsPage() {
         actions={<button className="btn-primary" onClick={() => setShowForm(true)}>+ New Announcement</button>}
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {result && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">✅ {result}</div>}
+      {result && <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">✅ {result}</div>}
 
       {loading ? <Spinner /> : list.length === 0 ? (
         <EmptyState title="No announcements yet" hint="Send your first broadcast to members and staff." />
@@ -113,7 +113,7 @@ export default function AnnouncementsPage() {
         <div className="space-y-3">
           {list.map((a) => (
             <div key={a.id} className={`card-premium p-5 ${a.pinned ? 'border-teal-500/40 shadow-[0_0_24px_rgba(15,118,110,0.15)]' : ''}`}>
-              <div className="flex items-start justify-between gap-4">
+              <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <div className="flex items-center gap-2 flex-wrap">
                     {a.pinned && <Badge tone="violet">📌 Pinned</Badge>}

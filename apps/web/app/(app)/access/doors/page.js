@@ -57,10 +57,10 @@ function HardwareCard() {
   };
 
   return (
-    <div className="mb-4 rounded-xl border border-gray-200 bg-white p-5">
+    <div className="mb-3 rounded-xl border border-gray-200 bg-white p-5">
       <h3 className="text-sm font-bold text-gray-900">🔌 Hardware Integration</h3>
       <p className="mt-1 text-xs text-gray-500">Asal door controllers ke liye device API key aur unlock webhook.</p>
-      <div className="mt-4 grid gap-4 md:grid-cols-2">
+      <div className="mt-3 grid gap-3 md:grid-cols-2">
         <div>
           <div className="text-xs font-semibold text-gray-600">Device API Key {dk.configured ? <Badge tone="emerald">Configured</Badge> : <Badge tone="slate">Not set</Badge>}</div>
           {newKey && (
@@ -214,7 +214,7 @@ export default function DoorsPage() {
 
       {modal && (
         <Modal title={modal.mode === 'add' ? 'Add Door' : `Edit — ${modal.door.name}`} onClose={() => setModal(null)}>
-          <form onSubmit={save} className="space-y-4">
+          <form onSubmit={save} className="space-y-3">
             <Field label="Door name">
               <input
                 value={form.name}

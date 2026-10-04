@@ -70,7 +70,7 @@ async function downloadCsv(type, from, to) {
 
 function RangeBar({ from, to, setFrom, setTo, groupBy, setGroupBy, exportType, onExported }) {
   return (
-    <div className="flex flex-wrap items-end gap-3 mb-4">
+    <div className="flex flex-wrap items-end gap-3 mb-3">
       <div>
         <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
         <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -163,7 +163,7 @@ export default function ReportsPage() {
     <div>
       <PageHeader title="Reports & Analytics" sub="Real-time business insights with CSV export" />
 
-      <div className="flex gap-2 mb-5 border-b border-gray-200">
+      <div className="flex gap-2 mb-3 border-b border-gray-200">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -201,13 +201,13 @@ export default function ReportsPage() {
         <>
           {tab === 'revenue' && (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                 <StatCard label="Collected" value={money(data.totalCollected)} accent="green" />
                 <StatCard label="Outstanding" value={money(data.outstanding)} accent="red" />
                 <StatCard label="Payments" value={data.paymentCount} accent="blue" />
                 <StatCard label="Open invoices" value={data.openInvoiceCount} accent="indigo" />
               </div>
-              <div className="card mb-4">
+              <div className="card mb-3">
                 <h2 className="font-semibold text-gray-900 mb-3">Revenue by {groupBy}</h2>
                 {data.series.length ? (
                   <HDBarChart data={data.series.map(d=>({label:d.period,value:d.total}))} height={160} color="#2563eb" />
@@ -232,7 +232,7 @@ export default function ReportsPage() {
 
           {tab === 'occupancy' && (
             <>
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mb-3">
                 {data.byType.map((r) => (
                   <div key={r.type} className="card flex items-center justify-between">
                     <Donut pct={r.occupancyPct} label={r.type.replace(/_/g, ' ')} />
@@ -265,13 +265,13 @@ export default function ReportsPage() {
 
           {tab === 'members' && (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                 <StatCard label="Total members" value={data.total} accent="blue" />
                 <StatCard label="Active" value={data.active} accent="green" />
                 <StatCard label="Inactive" value={data.inactive} accent="red" />
                 <StatCard label="Companies" value={data.topCompanies.length} accent="indigo" />
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">New members per month</h2>
                   {data.growth.length ? (
@@ -306,7 +306,7 @@ export default function ReportsPage() {
 
           {tab === 'bookings' && (
             <>
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
                 <StatCard label="Total bookings" value={data.total} accent="blue" />
                 <StatCard label="Confirmed" value={data.byStatus.confirmed || 0} accent="green" />
                 <StatCard label="Cancelled" value={data.byStatus.cancelled || 0} accent="red" />
@@ -316,7 +316,7 @@ export default function ReportsPage() {
                   accent="indigo"
                 />
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">Bookings per day</h2>
                   {data.perDay.length ? (
@@ -334,7 +334,7 @@ export default function ReportsPage() {
                   )}
                 </div>
               </div>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
                 <div className="card">
                   <h2 className="font-semibold text-gray-900 mb-3">By status</h2>
                   <DataTable
@@ -379,20 +379,20 @@ function CustomReportsHub({ hub, loading, onRetry }) {
     { label: '📧 Schedules & Alerts', path: '/reports/builder', desc: 'Har report ke Schedule/Alerts tab me' },
   ];
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       {stats?.missing?.length > 0 && (
         <div className="rounded-xl border border-amber-400/30 bg-amber-400/10 p-4 text-sm text-amber-200">
           Kuch modules abhi migrate nahi hue: {stats.missing.join(', ')}.
         </div>
       )}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <StatCard label="Total Reports" value={stats.totalReports ?? 0} accent="blue" />
         <StatCard label="Meri Reports" value={stats.myReports ?? 0} accent="indigo" />
         <StatCard label="Scheduled (active)" value={stats.scheduledActive ?? 0} accent="green" />
         <StatCard label="KPI Alerts" value={stats.alertsActive ?? 0} accent="red" />
         <StatCard label="Runs (30d)" value={stats.runs30d ?? '—'} accent="violet" />
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div className="card">
           <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-gray-900">🔥 Recent Reports</h2>

@@ -75,10 +75,10 @@ export default function SlackPage() {
     <div>
       <PageHeader title="Slack Integration" subtitle="Bookings, payments, urgent tickets aur visitor check-ins ki notifications Slack me bhejein." />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 mb-4">{msg}</div>}
+      {msg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 mb-3">{msg}</div>}
 
       <div className="card-premium p-6 max-w-2xl">
-        <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-bold text-gray-900">💬 Slack Webhook</h2>
           {config?.configured && (
             <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${config.isActive ? 'bg-emerald-500/15 text-emerald-700' : 'bg-slate-500/15 text-gray-600'}`}>
@@ -87,7 +87,7 @@ export default function SlackPage() {
           )}
         </div>
 
-        <div className="mb-4">
+        <div className="mb-3">
           <label className="block text-xs font-semibold text-gray-600 mb-1.5">Incoming Webhook URL</label>
           <input
             type="password"
@@ -101,7 +101,7 @@ export default function SlackPage() {
           </p>
         </div>
 
-        <div className="mb-4">
+        <div className="mb-3">
           <label className="block text-xs font-semibold text-gray-600 mb-1.5">Channel (optional, sirf label)</label>
           <input
             type="text"
@@ -112,7 +112,7 @@ export default function SlackPage() {
           />
         </div>
 
-        <div className="mb-5">
+        <div className="mb-3">
           <label className="block text-xs font-semibold text-gray-600 mb-2">Kin events par notify karein</label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
             {supportedEvents.map((ev) => (
@@ -132,7 +132,7 @@ export default function SlackPage() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 mb-4">
+        <div className="flex items-center gap-2 mb-3">
           <input
             id="slack-active"
             type="checkbox"

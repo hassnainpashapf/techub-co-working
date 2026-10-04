@@ -80,15 +80,15 @@ export default function PortalLoyaltyPage() {
         <ErrorBanner message={error} />
       ) : (
         <div>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
             <StatCard label="My Points" value={balance.toLocaleString()} accent="violet" />
             <StatCard label="Worth" value={`Rs ${rupeeValue.toLocaleString()}`} accent="emerald" />
             <StatCard label="Earn Rate" value={`${data?.loyaltyRate ?? 10} pts / Rs 1,000`} accent="blue" />
           </div>
 
-          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 mb-4">
+          <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5 mb-3">
             <h2 className="text-gray-900 font-semibold mb-3">Redeem Points</h2>
-            <p className="text-xs text-gray-500 mb-4">
+            <p className="text-xs text-gray-500 mb-3">
               1 point = Rs {pointValue}. Redeemed points become a credit note you can apply to invoices.
               Referral bonus: {data?.referralBonusPoints ?? 100} pts per successful referral.
             </p>
@@ -112,14 +112,14 @@ export default function PortalLoyaltyPage() {
               </button>
             </form>
             {redeemMsg && (
-              <div className={`mt-4 text-sm rounded-lg px-4 py-3 border ${redeemMsg.ok ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
+              <div className={`mt-3 text-sm rounded-lg px-4 py-3 border ${redeemMsg.ok ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-red-50 border-red-200 text-red-700'}`}>
                 {redeemMsg.text}
               </div>
             )}
           </div>
 
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-            <h2 className="text-gray-900 font-semibold mb-4">History</h2>
+            <h2 className="text-gray-900 font-semibold mb-3">History</h2>
             {(data?.entries || []).length === 0 ? (
               <EmptyState title="No activity yet" hint="Points are earned automatically when your invoices are paid in full." />
             ) : (

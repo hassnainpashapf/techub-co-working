@@ -50,11 +50,11 @@ export default function BookingRulesPage() {
       <PageHeader title="Booking Rules" subtitle="Policy for meeting room bookings — applies to all rooms." />
       {error && <ErrorBanner message={error} />}
       {saved && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 mb-4">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700 mb-3">
           Booking rules saved.
         </div>
       )}
-      <div className="card-premium p-6 max-w-2xl space-y-5">
+      <div className="card-premium p-6 max-w-2xl space-y-3">
         {FIELDS.map((f) => (
           <div key={f.key}>
             <Field label={f.label}>

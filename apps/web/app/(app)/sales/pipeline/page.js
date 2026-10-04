@@ -82,7 +82,7 @@ export default function SalesPipelinePage() {
   }
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       <PageHeader
         title="Sales Pipeline"
         sub="Leads ko stages me drag kar ke aagay barhayein"
@@ -103,7 +103,7 @@ export default function SalesPipelinePage() {
       {loading ? (
         <div className="flex justify-center py-16"><Spinner /></div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
+        <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
           {COLUMNS.map((col) => (
             <div
               key={col.key}
@@ -120,7 +120,7 @@ export default function SalesPipelinePage() {
               </div>
               <div className="space-y-2 min-h-[120px]">
                 {grouped[col.key].length === 0 && (
-                  <div className="text-xs text-slate-500 text-center py-6">Koi lead nahi</div>
+                  <div className="text-xs text-slate-500 text-center py-4">Koi lead nahi</div>
                 )}
                 {grouped[col.key].map((lead) => (
                   <div

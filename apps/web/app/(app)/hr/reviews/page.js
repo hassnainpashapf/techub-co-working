@@ -142,14 +142,14 @@ export default function ReviewsPage() {
       <PageHeader title="Performance Reviews" subtitle="Employees ki quarterly performance reviews" />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Total Reviews" value={counts.total} />
         <StatCard label="Draft" value={counts.draft} />
         <StatCard label="Submitted" value={counts.submitted} />
         <StatCard label="Acknowledged" value={counts.acknowledged} />
       </div>
 
-      <div className="flex flex-wrap items-center gap-3 mb-4">
+      <div className="flex flex-wrap items-center gap-3 mb-3">
         {['all', 'draft', 'submitted', 'acknowledged'].map((s) => (
           <button key={s} onClick={() => setStatus(s)}
             className={`px-4 py-1.5 rounded-full text-sm ${status === s ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600'}`}>
@@ -170,12 +170,12 @@ export default function ReviewsPage() {
       </div>
 
       {history && (
-        <div className="mb-4 bg-white/60 border border-gray-200 rounded-xl p-4">
+        <div className="mb-3 bg-white/60 border border-gray-200 rounded-xl p-4">
           <h3 className="font-semibold text-gray-900 mb-3">{empName(histEmp)} — Review History</h3>
           {history.length === 0 ? <EmptyState title="Koi review nahi" /> : (
             <div className="space-y-3">
               {history.map((h) => (
-                <div key={h.id} className="flex items-center gap-4 bg-gray-100/60 rounded-lg p-3">
+                <div key={h.id} className="flex items-center gap-3 bg-gray-100/60 rounded-lg p-3">
                   <div className="text-sm font-semibold text-teal-700 w-24">{h.period}</div>
                   <Stars value={Math.round(Number(h.overall) || 0)} readOnly />
                   <div className="text-sm text-gray-600">{h.overall != null ? Number(h.overall).toFixed(1) + ' / 5' : ''}</div>
@@ -214,7 +214,7 @@ export default function ReviewsPage() {
       )}
 
       <Modal open={!!modal} onClose={() => setModal(null)} title={modal === 'add' ? 'New Performance Review' : 'Edit Review (Draft)'}>
-        <form onSubmit={save} className="space-y-4">
+        <form onSubmit={save} className="space-y-3">
           <Field label="Employee">
             <select value={form.employeeId} onChange={(e) => setForm({ ...form, employeeId: e.target.value })}
               required={modal === 'add'} disabled={modal !== 'add'}

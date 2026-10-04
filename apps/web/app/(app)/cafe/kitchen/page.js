@@ -72,7 +72,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
         </div>
       </div>
 
-      <div className="mt-4 space-y-1.5">
+      <div className="mt-3 space-y-1.5">
         {items.map((it, i) => (
           <div key={i} className="flex justify-between text-base">
             <span className="text-gray-800">
@@ -96,7 +96,7 @@ function OrderCard({ order, onStart, onReady, onPay, busy }) {
         </div>
       )}
 
-      <div className="mt-4 flex gap-2">
+      <div className="mt-3 flex gap-2">
         {!paid && onPay && (
           <button
             onClick={() => onPay(order)}
@@ -214,7 +214,7 @@ export default function KitchenPage() {
   const lateCount = orders.filter((o) => o.elapsedMin >= LATE_MIN).length;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Kitchen Display"
         sub="Live order queue — har 5 second me auto-refresh"
@@ -240,7 +240,7 @@ export default function KitchenPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="New Orders" value={counts.pending} accent="violet" />
         <StatCard label="Preparing" value={counts.preparing} accent="amber" />
         <StatCard label="Late (15m+)" value={lateCount} accent="red" />
@@ -252,10 +252,10 @@ export default function KitchenPage() {
       ) : orders.length === 0 ? (
         <EmptyState title="Koi active order nahi" hint="Naye orders yahan khud aa jayenge." />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           <div>
             <h2 className="text-lg font-bold text-gray-900 mb-3">🆕 New ({pending.length})</h2>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {pending.map((o) => (
                 <OrderCard key={o.id} order={o} onStart={(id) => act(id, 'start')} onPay={(o2) => setPayOrder(o2)} busy={busyId === o.id} />
               ))}
@@ -264,7 +264,7 @@ export default function KitchenPage() {
           </div>
           <div>
             <h2 className="text-lg font-bold text-gray-900 mb-3">🍳 Preparing ({preparing.length})</h2>
-            <div className="space-y-4">
+            <div className="space-y-3">
               {preparing.map((o) => (
                 <OrderCard key={o.id} order={o} onReady={(id) => act(id, 'ready')} onPay={(o2) => setPayOrder(o2)} busy={busyId === o.id} />
               ))}
@@ -276,7 +276,7 @@ export default function KitchenPage() {
 
       {payOrder && (
         <Modal onClose={() => setPayOrder(null)} title={`💰 Payment — Rs ${Number(payOrder.subtotal || 0).toLocaleString()}`}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="text-sm text-gray-500">{payOrder.member ? payOrder.member.name : ''} ka order</div>
             <div>
               <label className="text-sm text-gray-600">Payment method</label>
@@ -298,7 +298,7 @@ export default function KitchenPage() {
 
       {showWaste && (
         <Modal onClose={() => setShowWaste(false)} title="🗑 Log food waste">
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div>
               <label className="text-sm text-gray-600">Kya waste hua?</label>
               <input value={waste.description} onChange={(e) => setWaste((w) => ({ ...w, description: e.target.value }))} placeholder="e.g. 5x chicken biryani" className="input w-full mt-1" />

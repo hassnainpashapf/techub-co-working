@@ -43,7 +43,7 @@ export default function FxGainLossPage() {
       <PageHeader title="FX Gain / Loss" sub="Foreign-currency payments par rate farq ka hisaab (base currency me)" />
       <ErrorBanner message={error} />
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <StatCard label="Total Gains" value={money(gains)} accent="green" />
         <StatCard label="Total Losses" value={money(losses)} accent="red" />
         <StatCard label="Net" value={money(net)} sub={net >= 0 ? 'net gain' : 'net loss'} accent={net >= 0 ? 'indigo' : 'amber'} />

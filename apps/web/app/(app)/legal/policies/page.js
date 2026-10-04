@@ -111,7 +111,7 @@ export default function PoliciesPage() {
   if (loading) return <div className="p-5"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="📋 Policy Documents" subtitle="Policies + member acknowledgments" actions={
         <button onClick={openNew} className="btn-primary">+ Nayi Policy</button>
       } />
@@ -138,9 +138,9 @@ export default function PoliciesPage() {
 
       {showModal && (
         <Modal title={editing ? 'Policy Edit karein' : 'Nayi Policy'} onClose={() => setShowModal(false)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Title"><input className="input-premium" value={form.title} onChange={e => setForm({ ...form, title: e.target.value })} /></Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Category">
                 <select className="input-premium" value={form.category} onChange={e => setForm({ ...form, category: e.target.value })}>
                   {CATEGORIES.map(c => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -150,7 +150,7 @@ export default function PoliciesPage() {
             </div>
             <Field label="File URL (optional)"><input className="input-premium" placeholder="https://..." value={form.fileUrl} onChange={e => setForm({ ...form, fileUrl: e.target.value })} /></Field>
             <Field label="Policy Text (optional)"><textarea className="input-premium" rows={6} value={form.body} onChange={e => setForm({ ...form, body: e.target.value })} /></Field>
-            <div className="flex gap-4 text-sm text-gray-800">
+            <div className="flex gap-3 text-sm text-gray-800">
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.requiresAck} onChange={e => setForm({ ...form, requiresAck: e.target.checked })} /> Ack lazmi</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.reAckOnUpdate} onChange={e => setForm({ ...form, reAckOnUpdate: e.target.checked })} /> Update par dobara ack</label>
               <label className="flex items-center gap-2"><input type="checkbox" checked={form.isActive} onChange={e => setForm({ ...form, isActive: e.target.checked })} /> Active</label>

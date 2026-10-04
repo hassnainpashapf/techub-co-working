@@ -64,13 +64,13 @@ export default function CalendarSettingsPage() {
       {loading && <Spinner />}
       {error && <ErrorBanner message={error} onRetry={load} />}
       {notice && (
-        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
+        <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-sm text-emerald-700">
           {notice}
         </div>
       )}
       {!loading && !error && status && (
         <div className="card-premium p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#0f766e] to-emerald-500 flex items-center justify-center text-xl">
                 📅
@@ -87,11 +87,11 @@ export default function CalendarSettingsPage() {
             </Badge>
           </div>
           {!status.migrated && (
-            <p className="text-sm text-amber-700 mb-4">
+            <p className="text-sm text-amber-700 mb-3">
               Calendar tables abhi database me nahi hain (migration pending).
             </p>
           )}
-          <p className="text-sm text-gray-500 mb-5">
+          <p className="text-sm text-gray-500 mb-3">
             Connect karne ke baad har nayi booking aapke Google Calendar me event ban jayegi,
             aur cancel par event delete ho jayega. Sirf <code className="text-gray-600">calendar.events</code> scope
             use hota hai — aapka poora calendar parha nahi jata.

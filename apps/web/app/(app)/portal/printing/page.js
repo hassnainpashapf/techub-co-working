@@ -58,14 +58,14 @@ export default function PortalPrintingPage() {
       {error && <ErrorBanner message={error} />}
       {loading ? <Spinner /> : balance && (
         <>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
             <div className="card-premium p-5 md:col-span-2">
               <QuotaBar used={balance.used} included={balance.included} />
             </div>
             <StatCard label="Month" value={balance.month} />
           </div>
           {balance.overage > 0 && (
-            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700 mb-4">
+            <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-700 mb-3">
               You printed {balance.overage} pages over your quota this month — overage is billed automatically.
             </div>
           )}

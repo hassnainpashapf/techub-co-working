@@ -59,17 +59,17 @@ export default function ProjectionsPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             <StatCard label="Total Projected" value={fmt(data.total)} sub={`${data.months} months`} accent="blue" />
             <StatCard label="Contracts" value={fmt(data.breakdown.contracts)} sub={`${data.counts.activeContracts} active`} accent="blue" />
             <StatCard label="Recurring" value={fmt(data.breakdown.recurring)} sub={`${data.counts.activeRecurringInvoices} schedules`} accent="green" />
             <StatCard label="Pipeline" value={fmt(data.breakdown.pipeline)} sub={`${data.counts.openLeads} leads × ${Math.round(data.counts.conversionRate * 100)}%`} accent="amber" />
           </div>
 
-          <div className="card-premium p-6 mb-4">
+          <div className="card-premium p-6 mb-3">
             <div className="flex items-center justify-between mb-1">
               <h2 className="text-lg font-bold text-gray-900">Monthly Projection</h2>
-              <div className="flex gap-4">
+              <div className="flex gap-3">
                 {legend.map((l) => (
                   <span key={l.label} className="flex items-center gap-1.5 text-xs text-gray-600">
                     <span className="inline-block w-3 h-3 rounded" style={{ background: l.color }} />
@@ -78,7 +78,7 @@ export default function ProjectionsPage() {
                 ))}
               </div>
             </div>
-            <p className="text-xs text-gray-500 mb-4">Projected revenue per month, stacked by source</p>
+            <p className="text-xs text-gray-500 mb-3">Projected revenue per month, stacked by source</p>
             {data.byMonth.length === 0 ? (
               <EmptyState title="No data" hint="No contracts, recurring invoices or leads found." />
             ) : (

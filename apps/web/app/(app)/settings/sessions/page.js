@@ -84,14 +84,14 @@ export default function SessionsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
       {notice && (
-        <div className="mb-4 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
+        <div className="mb-3 px-4 py-3 rounded-xl bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">
           {notice}
         </div>
       )}
       {sessions.length === 0 ? (
         <EmptyState title="Koi active session nahi" hint="Dobara login karein." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {sessions.map((s) => (
             <div
               key={s.id}
@@ -112,7 +112,7 @@ export default function SessionsPage() {
               <button
                 onClick={() => revokeOne(s.id, s.current)}
                 disabled={revoking === s.id}
-                className="mt-4 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 hover:border-red-300 disabled:opacity-40 transition"
+                className="mt-3 w-full px-3 py-2 rounded-xl text-sm font-semibold bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 hover:border-red-300 disabled:opacity-40 transition"
               >
                 {revoking === s.id ? 'Revoke ho raha…' : s.current ? 'Is device se logout' : 'Revoke session'}
               </button>

@@ -97,7 +97,7 @@ function CreateSurveyModal({ onClose, onDone }) {
   return (
     <Modal title="New NPS Survey" onClose={onClose}>
       <form onSubmit={submit}>
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>}
         <Field label="Title">
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} required placeholder="e.g. Monthly NPS — October" maxLength={200} />
         </Field>
@@ -136,27 +136,27 @@ function ResultsView({ survey, onBack }) {
 
   return (
     <div>
-      <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-900 mb-4">← Back to surveys</button>
+      <button onClick={onBack} className="text-sm text-gray-500 hover:text-gray-900 mb-3">← Back to surveys</button>
       <PageHeader title={data.survey.title} sub={`${fmtDate(survey.createdAt)} • ${data.survey.status}`} />
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Responses" value={stats.responses} accent="blue" />
         <StatCard label="Promoters (9-10)" value={stats.promoters} accent="emerald" />
         <StatCard label="Detractors (0-6)" value={stats.detractors} accent="red" />
         <StatCard label="Passives (7-8)" value={stats.passives} accent="amber" />
       </div>
-      <div className="grid lg:grid-cols-2 gap-4 mb-4">
+      <div className="grid lg:grid-cols-2 gap-3 mb-3">
         <div className="card-premium p-5 flex flex-col items-center">
           <h2 className="text-gray-900 font-bold mb-2 self-start">NPS Score</h2>
           <NpsGauge nps={stats.nps} />
           <p className="text-xs text-slate-500 mt-2">% Promoters − % Detractors (−100 … +100)</p>
         </div>
         <div className="card-premium p-5">
-          <h2 className="text-gray-900 font-bold mb-4">Score Distribution</h2>
+          <h2 className="text-gray-900 font-bold mb-3">Score Distribution</h2>
           <ScoreBars distribution={stats.distribution} />
         </div>
       </div>
       <div className="card-premium p-5">
-        <h2 className="text-gray-900 font-bold mb-4">Comments ({comments.length})</h2>
+        <h2 className="text-gray-900 font-bold mb-3">Comments ({comments.length})</h2>
         {comments.length === 0 ? (
           <p className="text-gray-500 text-sm">No comments yet.</p>
         ) : (

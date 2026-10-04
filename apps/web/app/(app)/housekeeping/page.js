@@ -110,7 +110,7 @@ export default function HousekeepingPage() {
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ New task</button>
       </PageHeader>
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <StatCard label="Pending" value={pending.length} accent="amber" />
         <StatCard label="Overdue" value={overdue.length} accent="red" />
         <StatCard label="Done today" value={doneToday.length} accent="green" />
@@ -118,7 +118,7 @@ export default function HousekeepingPage() {
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[['today', "Today's checklist"], ['all', 'All pending'], ['done', 'Completed']].map(([k, label]) => (
           <button key={k} onClick={() => setFilter(k)}
             className={`px-4 py-2 rounded-xl text-sm font-semibold ${filter === k ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 border border-gray-200'}`}>
@@ -133,7 +133,7 @@ export default function HousekeepingPage() {
         <div className="space-y-3">
           {tasks.map((t) => (
             <div key={t.id}
-              className={`card-premium p-4 flex items-center gap-4 ${isOverdue(t) ? 'border-red-500/50' : ''}`}>
+              className={`card-premium p-4 flex items-center gap-3 ${isOverdue(t) ? 'border-red-500/50' : ''}`}>
               <button
                 onClick={() => t.status === 'pending' && complete(t.id)}
                 disabled={t.status !== 'pending' || completing === t.id}

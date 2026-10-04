@@ -114,7 +114,7 @@ export default function DayPassesPage() {
   const tone = (s) => STATUS_TONE[s] || 'slate';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Visitor Day Passes"
         sub="Reception se visitor ko time-bound entry pass — QR + WhatsApp share"
@@ -127,7 +127,7 @@ export default function DayPassesPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Total passes" value={total} />
         <StatCard label="Active" value={activeCount} accent="green" />
         <StatCard label="Filter" value={statusFilter || 'Sab'} sub="status filter" />
@@ -165,7 +165,7 @@ export default function DayPassesPage() {
       </div>
 
       {/* Passes list */}
-      <div className="card p-5 space-y-4">
+      <div className="card p-5 space-y-3">
         <div className="flex items-center gap-3">
           <h3 className="font-semibold text-gray-900">Passes</h3>
           <select className="input w-44" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
@@ -205,7 +205,7 @@ export default function DayPassesPage() {
       {/* Create modal */}
       {showCreate && (
         <Modal title="Naya Day Pass" onClose={() => setShowCreate(false)}>
-          <form onSubmit={createPass} className="space-y-4">
+          <form onSubmit={createPass} className="space-y-3">
             <Field label="Visitor ka naam *">
               <input className="input" value={form.visitorName} onChange={(e) => setForm({ ...form, visitorName: e.target.value })} required maxLength={120} />
             </Field>
@@ -239,7 +239,7 @@ export default function DayPassesPage() {
       {/* Created pass — QR + WhatsApp share */}
       {created && (
         <Modal title="Day Pass tayyar ✅" onClose={() => setCreated(null)}>
-          <div className="space-y-4 text-center">
+          <div className="space-y-3 text-center">
             <div className="text-lg font-bold text-gray-900">{created.visitorName}</div>
             <div className="font-mono text-2xl tracking-widest text-teal-700">{created.code}</div>
             {created.qrToken && (

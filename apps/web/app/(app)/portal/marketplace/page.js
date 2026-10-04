@@ -108,7 +108,7 @@ export default function PortalMarketplacePage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <div className="flex gap-1 p-1 rounded-xl bg-gray-100 border border-gray-200">
           {[{ v: 'all', l: 'Sab listings' }, { v: 'mine', l: 'Meri listings' }].map((t) => (
             <button
@@ -144,7 +144,7 @@ export default function PortalMarketplacePage() {
       ) : items.length === 0 ? (
         <EmptyState title="Koi listing nahi mili" hint={tab === 'mine' ? 'Abhi tak aap ne koi listing post nahi ki.' : 'Pehli listing post karke shuruwat karein!'} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {items.map((l) => (
             <div key={l.id} className="card-premium p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-2">
@@ -188,7 +188,7 @@ export default function PortalMarketplacePage() {
             <Field label="Title">
               <input className="input" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={120} placeholder="e.g. Logo design service" />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Category">
                 <select className="input" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                   <option value="service">🛎️ Service</option>
@@ -206,7 +206,7 @@ export default function PortalMarketplacePage() {
             <Field label="Contact info (optional)">
               <input className="input" value={form.contactInfo} onChange={(e) => setForm({ ...form, contactInfo: e.target.value })} maxLength={200} placeholder="Phone ya email" />
             </Field>
-            <p className="text-xs text-slate-500 mb-4">Listing 30 din baad auto-expire ho jayegi.</p>
+            <p className="text-xs text-slate-500 mb-3">Listing 30 din baad auto-expire ho jayegi.</p>
             <div className="flex justify-end gap-2">
               <button type="button" className="btn-ghost" onClick={() => setShowPost(false)}>Cancel</button>
               <button type="submit" className="btn-primary" disabled={posting}>{posting ? 'Posting...' : 'Post karein'}</button>

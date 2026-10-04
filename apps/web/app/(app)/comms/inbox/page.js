@@ -139,14 +139,14 @@ export default function TeamInboxPage() {
       />
       {err && <ErrorBanner message={err} />}
 
-      <div className="mb-4 max-w-md">
+      <div className="mb-3 max-w-md">
         <Field label="Search">
           <input className="input-premium" placeholder="Naam, email ya message..." value={search}
             onChange={(e) => setSearch(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && loadConvos()} />
         </Field>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 h-[calc(100vh-320px)] min-h-[480px]">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 h-[calc(100vh-320px)] min-h-[480px]">
         {/* Conversation list */}
         <div className="rounded-2xl border border-gray-200 bg-gray-50 overflow-y-auto">
           {convos.length === 0 && <EmptyState title="Koi conversation nahi" />}

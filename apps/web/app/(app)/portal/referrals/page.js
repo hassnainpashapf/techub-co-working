@@ -77,7 +77,7 @@ export default function MemberReferralsPage() {
       {error && <ErrorBanner message={error} onRetry={load} />}
 
       {code && (
-        <div className="grid sm:grid-cols-3 gap-4 mb-4">
+        <div className="grid sm:grid-cols-3 gap-3 mb-3">
           <div className="card-premium p-5 sm:col-span-2">
             <p className="text-xs font-semibold text-gray-500 mb-1">YOUR REFERRAL CODE</p>
             <div className="flex items-center gap-3 flex-wrap">

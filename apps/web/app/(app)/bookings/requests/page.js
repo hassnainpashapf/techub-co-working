@@ -114,7 +114,7 @@ export default function BookingRequestsPage() {
           </div>
         }
       />
-      {notice && <div className="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{notice}</div>}
+      {notice && <div className="mb-3 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs text-emerald-700">{notice}</div>}
       {error && <ErrorBanner message={error} />}
       {loading ? <Spinner /> : <DataTable columns={columns} rows={requests} rowKey="id" emptyText={`No ${filter} requests.`} />}
     </div>

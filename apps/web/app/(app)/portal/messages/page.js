@@ -82,7 +82,7 @@ export default function PortalMessagesPage() {
     <div className="p-4 md:p-6">
       <PageHeader title="Messages" subtitle="Chat with our team" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid md:grid-cols-3 gap-4 mt-4" style={{ minHeight: 500 }}>
+      <div className="grid md:grid-cols-3 gap-3 mt-3" style={{ minHeight: 500 }}>
         <div className="card-premium p-3 overflow-y-auto" style={{ maxHeight: 600 }}>
           {convs.length === 0 && <EmptyState title="No messages yet" hint="Hamari team se chat yahan dikhegi." />}
           {convs.map((c) => (

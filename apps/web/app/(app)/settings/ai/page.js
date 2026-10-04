@@ -89,9 +89,9 @@ export default function AiSettingsPage() {
     <div className="max-w-2xl">
       <PageHeader title="AI Settings" subtitle="LLM provider for chat, insights & sentiment features" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
+      {msg && <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
-        <form onSubmit={save} className="card-premium p-6 space-y-4">
+        <form onSubmit={save} className="card-premium p-6 space-y-3">
           <Field label="Provider">
             <select value={form.provider} onChange={(e) => setForm({ ...form, provider: e.target.value })} className="input-premium w-full">
               {PROVIDERS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
@@ -131,7 +131,7 @@ export default function AiSettingsPage() {
         </form>
       )}
       {usage && usage.provider !== 'disabled' && (
-        <div className="card-premium mt-4 p-6">
+        <div className="card-premium mt-3 p-6">
           <div className="text-sm font-medium text-gray-800 mb-2">Token usage — {usage.usageMonth}</div>
           <div className="flex justify-between text-xs text-gray-500 mb-1">
             <span>{usage.tokensUsedThisMonth.toLocaleString()} used</span>

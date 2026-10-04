@@ -75,7 +75,7 @@ export default function AccessDashboardPage() {
 
   const s = stats || {};
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🔐 Access Dashboard" sub="Doors, entries aur live activity" actions={
         <button onClick={() => load(false)} className="btn-secondary">↻ Refresh</button>
       } />
@@ -87,7 +87,7 @@ export default function AccessDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard label="Entries aaj" value={s.entriesToday ?? '—'} accent="green" />
         <StatCard label="Denied aaj" value={s.deniedToday ?? '—'} accent="red" />
         <StatCard label="Active credentials" value={s.activeCredentials ?? '—'} accent="blue" />
@@ -96,13 +96,13 @@ export default function AccessDashboardPage() {
         <StatCard label="Anomalies (24h)" value={s.anomalies24h ?? '—'} accent="red" />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">📡 Live Feed</h3>
+          <h3 className="text-lg font-semibold mb-3">📡 Live Feed</h3>
           <LiveFeed events={live.events} />
         </div>
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">🏢 Who's In ({live.inside.length})</h3>
+          <h3 className="text-lg font-semibold mb-3">🏢 Who's In ({live.inside.length})</h3>
           {!live.inside.length ? (
             <EmptyState title="Abhi koi andar nahi" />
           ) : (
@@ -122,7 +122,7 @@ export default function AccessDashboardPage() {
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-white p-5">
-        <h3 className="text-lg font-semibold mb-4">⚡ Quick Links</h3>
+        <h3 className="text-lg font-semibold mb-3">⚡ Quick Links</h3>
         <div className="flex flex-wrap gap-3">
           <a href="/access/doors" className="btn-secondary">🚪 Doors</a>
           <a href="/access/desk" className="btn-secondary">🧾 Reception Desk</a>

@@ -106,7 +106,7 @@ function TicketDetail({ ticket, onClose, onUpdate, canWrite }) {
     <Modal title={`Ticket #${ticket.ticketNumber} — ${ticket.title}`} onClose={onClose} wide>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading || !detail ? <Spinner /> : (
-        <div className="space-y-5">
+        <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
             <Badge tone={toneOf(STATUSES, detail.status)}>{labelOf(STATUSES, detail.status)}</Badge>
             <Badge tone={toneOf(PRIORITIES, detail.priority)}>{labelOf(PRIORITIES, detail.priority)} priority</Badge>
@@ -210,7 +210,7 @@ export default function TicketsPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid grid-cols-3 gap-4 mb-5">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         {[
           { l: 'Open', v: stats.open, tone: 'blue' },
           { l: 'In Progress', v: stats.inProgress, tone: 'amber' },
@@ -223,7 +223,7 @@ export default function TicketsPage() {
         ))}
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[{ v: '', l: 'All' }, ...STATUSES].map((s) => (
           <button
             key={s.v}

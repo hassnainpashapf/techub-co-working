@@ -61,7 +61,7 @@ export default function LegalDashboardPage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="⚖️ Legal & Compliance" sub="Policies, compliance, documents, incidents — ek nazar me" />
 
       {err && <ErrorBanner message={err} />}
@@ -70,7 +70,7 @@ export default function LegalDashboardPage() {
         <ErrorBanner message={`Kuch modules abhi merge nahi hue: ${data.missing.join(', ')} — ye sections khali dikhen ge.`} />
       )}
 
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-6">
+      <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
         <StatCard title="Pending Acks" value={data?.pendingAcks?.count ?? '—'} />
         <StatCard title="Overdue Compliance" value={data?.overdueCompliance ?? '—'} tone="red" />
         <StatCard title="Docs Expiring (30d)" value={data?.expiringDocsCount ?? '—'} tone="amber" />
@@ -79,7 +79,7 @@ export default function LegalDashboardPage() {
         <StatCard title="Non-compliant Vendors" value={data?.nonCompliantVendors ?? '—'} tone="amber" />
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         <AlertRow
           title="⏳ Pending Policy Acknowledgments"
           items={data?.pendingAcks?.policies}
@@ -99,7 +99,7 @@ export default function LegalDashboardPage() {
 
       <div>
         <h3 className="mb-3 text-sm font-semibold text-gray-600">Quick Links</h3>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           {QUICK_LINKS.map((q) => (
             <a key={q.path} href={q.path} className="block rounded-2xl border border-gray-200 bg-gray-50 p-4 transition hover:border-teal-200 hover:bg-gray-100">
               <div className="text-sm font-semibold">{q.label}</div>

@@ -85,7 +85,7 @@ export default function CafeDashboardPage() {
   const kitchenLoad = stats.activeOrders;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <div className="flex items-start justify-between flex-wrap gap-3">
         <PageHeader title="Cafeteria Dashboard" sub="F&B sales, kitchen load aur top items — ek nazar me" />
         <div className="flex gap-2">
@@ -102,7 +102,7 @@ export default function CafeDashboardPage() {
 
       {moduleHint && <ErrorBanner message={moduleHint} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard label="Aaj ki sales" value={`Rs ${Math.round(stats.today.revenue).toLocaleString()}`} accent="amber" icon="💰" />
         <StatCard label="Aaj ke orders" value={stats.today.orders} accent="blue" icon="🧾" />
         <StatCard label="Active orders" value={stats.activeOrders} accent="violet" icon="🔥" />
@@ -111,7 +111,7 @@ export default function CafeDashboardPage() {
         <StatCard label="Meal plan subs" value={stats.modules.mealPlans ? stats.mealPlanSubscribers : '—'} accent="cyan" icon="🍱" />
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-4">
+      <div className="grid lg:grid-cols-3 gap-3">
         <div className="lg:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-bold text-gray-900">Sales trend — {days} din</h3>
@@ -126,7 +126,7 @@ export default function CafeDashboardPage() {
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-bold text-gray-900 mb-3">Kitchen load</h3>
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-3 mb-3">
             <div className="text-5xl font-extrabold text-amber-400">{kitchenLoad}</div>
             <div className="text-sm text-gray-500">active orders<br />queue me</div>
           </div>
@@ -144,13 +144,13 @@ export default function CafeDashboardPage() {
             <p className="text-sm text-slate-500">Koi active order nahi — kitchen free hai ✅</p>
           )}
           <Link href="/cafe/kitchen"
-            className="mt-4 inline-block px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-200 text-amber-700 text-sm font-semibold hover:bg-amber-500/25 transition">
+            className="mt-3 inline-block px-4 py-2 rounded-xl bg-amber-500/15 border border-amber-200 text-amber-700 text-sm font-semibold hover:bg-amber-500/25 transition">
             Kitchen display kholo →
           </Link>
         </div>
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-bold text-gray-900 mb-3">Top items ({days} din)</h3>
           {(top?.items || []).length > 0 ? (

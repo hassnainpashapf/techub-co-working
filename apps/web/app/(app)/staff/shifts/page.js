@@ -166,16 +166,16 @@ export default function ShiftsPage() {
         </div>
       } />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      {genMsg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-4">{genMsg}</div>}
+      {genMsg && <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-3">{genMsg}</div>}
 
       {tab === 'week' && (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-3 mb-3">
             <StatCard label="Shifts this week" value={shifts.length} accent="blue" icon="🗓️" />
             <StatCard label="Staff scheduled" value={new Set(shifts.map((s) => s.userId)).size} accent="purple" icon="👥" />
             <StatCard label="Total hours" value={Math.round(totalHours)} accent="green" icon="⏱️" />
           </div>
-          <div className="flex items-center gap-3 mb-4">
+          <div className="flex items-center gap-3 mb-3">
             <button className="btn-secondary" onClick={() => changeWeek(weekOffset - 1)}>← Prev</button>
             <button className="btn-secondary" onClick={() => changeWeek(0)}>Today</button>
             <button className="btn-secondary" onClick={() => changeWeek(weekOffset + 1)}>Next →</button>

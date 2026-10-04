@@ -87,10 +87,10 @@ export default function WhiteLabelPage() {
     <div className="max-w-3xl">
       <PageHeader title="White Label" subtitle="Apne brand ke naam, logo aur rang me app ko dhalo" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
+      {msg && <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{msg}</div>}
       {loading ? <Spinner /> : (
-        <div className="grid gap-4 lg:grid-cols-2">
-          <form onSubmit={save} className="card-premium p-6 space-y-4">
+        <div className="grid gap-3 lg:grid-cols-2">
+          <form onSubmit={save} className="card-premium p-6 space-y-3">
             <Field label="Brand name">
               <input className="input" value={f.brandName} onChange={(e) => setF({ ...f, brandName: e.target.value })} placeholder="Techub Co-Working" maxLength={80} />
             </Field>
@@ -143,7 +143,7 @@ export default function WhiteLabelPage() {
           <div>
             <p className="label">Live preview</p>
             <div className="rounded-2xl border border-gray-200 bg-[#f4f5f7] p-6">
-              <div className="text-center mb-5">
+              <div className="text-center mb-3">
                 {logoSrc ? (
                   <img src={logoSrc} alt={previewName} className="h-14 w-14 object-contain mx-auto mb-3 rounded-xl" />
                 ) : (
@@ -160,7 +160,7 @@ export default function WhiteLabelPage() {
                 <button type="button" className="w-full h-10 rounded-lg text-gray-900 font-semibold" style={{ background: f.primaryColor }}>Sign in</button>
               </div>
               {!f.hidePoweredBy && (
-                <p className="text-center text-xs text-slate-500 mt-4">Powered by CoworkOS</p>
+                <p className="text-center text-xs text-slate-500 mt-3">Powered by CoworkOS</p>
               )}
               {f.supportEmail && (
                 <p className="text-center text-xs text-slate-500 mt-2">Need help? {f.supportEmail}</p>

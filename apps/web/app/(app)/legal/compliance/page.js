@@ -33,10 +33,10 @@ export default function CompliancePage() {
 
   const shown = items.filter(i => filter === 'all' || i.status === filter);
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="✅ Compliance Checklist" sub="Fire, safety, licenses, tax — sab ek jagah" actions={<button className="btn-primary" onClick={() => setModal(true)}>+ Naya Item</button>} />
       {summary && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard label="Pending" value={summary.counts?.find(c => c.status === 'pending')?._count ?? 0} tone="amber" />
           <StatCard label="Overdue" value={summary.counts?.find(c => c.status === 'overdue')?._count ?? 0} tone="red" />
           <StatCard label="Done" value={summary.counts?.find(c => c.status === 'done')?._count ?? 0} tone="green" />
@@ -76,7 +76,7 @@ export default function CompliancePage() {
             </select>
           </Field>
           <Field label="Description"><textarea className="input-premium" value={form.description} onChange={e => setForm({ ...form, description: e.target.value })} /></Field>
-          <div className="flex justify-end gap-2 mt-4"><button className="btn-ghost" onClick={() => setModal(null)}>Cancel</button><button className="btn-primary" onClick={save}>Save</button></div>
+          <div className="flex justify-end gap-2 mt-3"><button className="btn-ghost" onClick={() => setModal(null)}>Cancel</button><button className="btn-primary" onClick={save}>Save</button></div>
         </Modal>
       )}
     </div>

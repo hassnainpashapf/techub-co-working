@@ -50,7 +50,7 @@ export default function PortalEventsPage() {
       {events.length === 0 ? (
         <EmptyState title="No events right now" hint="Check back soon — new community events are posted regularly." />
       ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-3">
           {events.map((ev) => {
             const mine = myRsvps[ev.id];
             const full = ev.capacity && (ev.counts?.going || 0) >= ev.capacity && mine !== 'going';

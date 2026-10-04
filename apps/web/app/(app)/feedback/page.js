@@ -86,7 +86,7 @@ export default function AdminFeedbackPage() {
     <div>
       <PageHeader title="Feedback & Suggestions" subtitle="Members ki raye, shikayat aur tajaveez" />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Total feedback" value={summary.total} />
         <StatCard label="New" value={items.filter((i) => i.status === 'new').length} />
         <StatCard label="Avg rating" value={summary.avgRating != null ? `⭐ ${summary.avgRating}` : '—'} />
@@ -95,7 +95,7 @@ export default function AdminFeedbackPage() {
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex flex-wrap gap-3 mb-4 items-center">
+      <div className="flex flex-wrap gap-3 mb-3 items-center">
         <select className="input max-w-48" value={statusF} onChange={(e) => setStatusF(e.target.value)}>
           <option value="">All statuses</option>
           {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -120,7 +120,7 @@ export default function AdminFeedbackPage() {
       {loading ? <Spinner /> : items.length === 0 ? (
         <EmptyState title="Koi feedback nahi" />
       ) : view === 'kanban' ? (
-        <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="grid md:grid-cols-3 xl:grid-cols-5 gap-3">
           {COLUMNS.map((col) => (
             <div key={col.v} className="rounded-xl bg-gray-50 border border-gray-200 p-3 min-h-40">
               <p className="text-sm font-bold text-gray-900 mb-3">{col.l} <span className="text-slate-500">({byStatus[col.v].length})</span></p>
@@ -185,7 +185,7 @@ export default function AdminFeedbackPage() {
       {replyFor && (
         <Modal title={`Reply — ${who(replyFor)}`} onClose={() => setReplyFor(null)}>
           {replyFor.title && <p className="text-sm font-semibold text-gray-900 mb-2">{replyFor.title}</p>}
-          <p className="text-sm text-gray-600 mb-4 p-3 rounded-lg bg-gray-100">"{replyFor.body}"</p>
+          <p className="text-sm text-gray-600 mb-3 p-3 rounded-lg bg-gray-100">"{replyFor.body}"</p>
           <Field label="Status">
             <select className="input" value={newStatus} onChange={(e) => setNewStatus(e.target.value)}>
               {STATUSES.map((s) => <option key={s} value={s}>{s}</option>)}

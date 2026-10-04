@@ -17,7 +17,7 @@ function Kbd({ children }) {
 
 function Row({ keys, label }) {
   return (
-    <div className="flex items-center justify-between gap-4 py-1.5">
+    <div className="flex items-center justify-between gap-3 py-1.5">
       <span className="text-[13.5px] text-gray-600">{label}</span>
       <span className="flex items-center gap-1">{keys}</span>
     </div>
@@ -32,13 +32,13 @@ function ShortcutsHelp({ onClose }) {
         className="relative card-premium w-full max-w-md p-6 max-h-[85vh] overflow-y-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-lg font-extrabold text-gray-900">Keyboard shortcuts</h2>
           <button onClick={onClose} className="text-gray-500 hover:text-gray-900 text-xl leading-none px-2" aria-label="Close">×</button>
         </div>
 
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Navigate</p>
-        <div className="mb-4 divide-y divide-white/[0.04]">
+        <div className="mb-3 divide-y divide-white/[0.04]">
           <Row keys={<><Kbd>g</Kbd><Kbd>d</Kbd></>} label="Go to Dashboard" />
           <Row keys={<><Kbd>g</Kbd><Kbd>b</Kbd></>} label="Go to Bookings" />
           <Row keys={<><Kbd>g</Kbd><Kbd>m</Kbd></>} label="Go to Members" />
@@ -47,7 +47,7 @@ function ShortcutsHelp({ onClose }) {
         </div>
 
         <p className="text-[11px] font-semibold uppercase tracking-wider text-slate-500 mb-1">Actions</p>
-        <div className="mb-4 divide-y divide-white/[0.04]">
+        <div className="mb-3 divide-y divide-white/[0.04]">
           <Row keys={<Kbd>/</Kbd>} label="Focus search" />
           <Row keys={<Kbd>n</Kbd>} label="New booking (on booking pages)" />
         </div>
@@ -58,7 +58,7 @@ function ShortcutsHelp({ onClose }) {
           <Row keys={<Kbd>Esc</Kbd>} label="Close dialog" />
         </div>
 
-        <p className="mt-4 text-[12px] text-slate-500">Shortcuts don&apos;t fire while you&apos;re typing in a field.</p>
+        <p className="mt-3 text-[12px] text-slate-500">Shortcuts don&apos;t fire while you&apos;re typing in a field.</p>
       </div>
     </div>
   );

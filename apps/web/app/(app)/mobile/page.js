@@ -96,7 +96,7 @@ export default function MobileQuickActionsPage() {
       ) : (
         <>
           {/* Aaj ki stats */}
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             <StatCard
               label="Occupancy"
               value={`${Math.round((stats?.occupancyRate || 0) * 100)}%`}
@@ -121,7 +121,7 @@ export default function MobileQuickActionsPage() {
 
           {/* Quick actions — bade touch buttons */}
           <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Quick Actions</h2>
-          <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="grid grid-cols-2 gap-3 mb-3">
             {ACTIONS.map((a) => (
               <Link
                 key={a.path + a.label}
@@ -137,7 +137,7 @@ export default function MobileQuickActionsPage() {
 
           {/* Recent activity */}
           <h2 className="text-sm font-semibold text-gray-600 uppercase tracking-wide mb-3">Recent Activity</h2>
-          <div className="card p-2 mb-4">
+          <div className="card p-2 mb-3">
             {activity.length === 0 ? (
               <EmptyState title="Koi activity nahi" hint="Abhi tak koi recent activity record nahi hui." />
             ) : (

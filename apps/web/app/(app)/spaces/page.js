@@ -311,7 +311,7 @@ export default function SpacesPage() {
       <ErrorBanner message={error} onRetry={refresh} />
 
       {/* Buildings */}
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex items-center justify-between mb-3">
           <h2 className="font-semibold text-gray-900">Buildings</h2>
           <button className="btn-primary btn-sm" onClick={() => setModal({ kind: 'building', mode: 'add' })}>+ Add building</button>
@@ -344,7 +344,7 @@ export default function SpacesPage() {
       </div>
 
       {/* Building filter */}
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <label className="text-sm text-gray-500">Building:</label>
         <select className="input max-w-xs" value={buildingFilter} onChange={(e) => setBuildingFilter(e.target.value)}>
           <option value="">All buildings</option>
@@ -355,7 +355,7 @@ export default function SpacesPage() {
       </div>
 
       {/* Floor tabs */}
-      <div className="flex flex-wrap gap-2 mb-5">
+      <div className="flex flex-wrap gap-2 mb-3">
         {floors.map((f) => (
           <button
             key={f.id}
@@ -371,7 +371,7 @@ export default function SpacesPage() {
       {activeFloor && (
         <>
           {/* Occupancy summary */}
-          <div className="card mb-4">
+          <div className="card mb-3">
             <div className="flex items-center justify-between mb-2">
               <h2 className="font-semibold text-gray-900">Occupancy</h2>
               <span className="text-sm font-medium text-gray-500">{occupancy.pct}% occupied</span>
@@ -381,7 +381,7 @@ export default function SpacesPage() {
               <div className="bg-amber-400" style={{ width: `${occupancy.total ? (occupancy.maintenance / occupancy.total) * 100 : 0}%` }} />
               <div className="bg-green-400" style={{ width: `${occupancy.total ? (occupancy.vacant / occupancy.total) * 100 : 0}%` }} />
             </div>
-            <div className="flex gap-4 mt-2 text-xs text-gray-500">
+            <div className="flex gap-3 mt-2 text-xs text-gray-500">
               <span>🟦 Occupied: {occupancy.occupied}</span>
               <span>🟩 Vacant: {occupancy.vacant}</span>
               <span>🟨 Maintenance: {occupancy.maintenance}</span>
@@ -397,7 +397,7 @@ export default function SpacesPage() {
           </div>
 
           {/* Zones */}
-          <div className="card mb-4">
+          <div className="card mb-3">
             <h2 className="font-semibold text-gray-900 mb-3">Zones</h2>
             <DataTable
               columns={[

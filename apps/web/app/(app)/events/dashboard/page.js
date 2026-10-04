@@ -51,12 +51,12 @@ export default function EventsDashboardPage() {
   if (loading) return <Spinner />;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Event Organizer Dashboard" subtitle="Ticketing sales aur upcoming events ki progress" />
 
       {err && <ErrorBanner message={err} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
         <StatCard title="Upcoming Events" value={stats?.upcomingEvents ?? '—'} icon="📅" />
         <StatCard title="Tickets Sold (30d)" value={stats?.ticketsSold30d ?? '—'} icon="🎟️" />
         <StatCard title="Ticket Revenue (30d)" value={money(stats?.ticketRevenue30d)} icon="💰" />
@@ -65,7 +65,7 @@ export default function EventsDashboardPage() {
       </div>
 
       <div className="card p-5">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h3 className="text-lg font-semibold text-gray-900">Upcoming Events — Sales Progress</h3>
           <div className="flex gap-2">
             <a href="/events" className="btn btn-secondary btn-sm">+ Create Event</a>
@@ -73,7 +73,7 @@ export default function EventsDashboardPage() {
           </div>
         </div>
         {!events.length && <EmptyState title="Koi upcoming event nahi" hint="Events page se naya event banayein" />}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {events.map((ev) => (
             <a key={ev.id} href="/events" className="block p-4 rounded-xl bg-gray-100 hover:bg-gray-100 transition border border-gray-200">
               <div className="flex items-center justify-between gap-3 mb-2">
@@ -96,7 +96,7 @@ export default function EventsDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <a href="/events" className="card p-5 hover:border-teal-500/40 transition">
           <div className="text-2xl mb-2">📅</div>
           <div className="font-semibold text-gray-900">Manage Events</div>

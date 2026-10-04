@@ -12,7 +12,7 @@ function RichStatCard({ label, value, sub, icon, grad, topBorder }) {
   return (
     <div className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_14px_34px_-12px_rgba(15,118,110,0.28)] hover:-translate-y-1 hover:border-teal-200 transition-all duration-300`}>
       <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${topBorder}`} />
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-[11.5px] font-bold uppercase tracking-[0.12em] text-gray-500">{label}</p>
         </div>
@@ -90,7 +90,7 @@ function SegmentDonut({ data, size = 190 }) {
   let offset = 0;
   const palette = ['#0f766e', '#22c55e', '#3b82f6', '#f59e0b', '#8b5cf6', '#ef4444', '#9ca3af', '#14b8a6'];
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-center gap-3">
       <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-50 to-emerald-50 blur-sm" />
         <svg viewBox="0 0 160 160" className="relative w-full h-full -rotate-90 drop-shadow-sm">
@@ -293,7 +293,7 @@ export default function TeamOverviewPage() {
           ]}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <RichStatCard
           label="Total Team Members" value={users.length} sub="registered staff"
           icon="👥" grad="from-teal-500 to-emerald-600" topBorder="from-teal-500 to-emerald-400"
@@ -312,8 +312,8 @@ export default function TeamOverviewPage() {
         />
       </div>
 
-      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5 mb-4 4xl:mb-5">
-        <div className="flex items-start justify-between mb-5">
+      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5 mb-3 4xl:mb-3">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3.5">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-teal-500/25">📈</span>
             <div>
@@ -328,9 +328,9 @@ export default function TeamOverviewPage() {
         <AreaTrendChart labels={trendLabels} values={trendValues} height={280} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 4xl:gap-3">
         <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
-          <div className="flex items-center gap-3.5 mb-4">
+          <div className="flex items-center gap-3.5 mb-3">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">🍩</span>
             <div>
               <h3 className="text-[17px] 4xl:text-[20px] font-bold text-gray-900 tracking-tight">Role Distribution</h3>
@@ -341,7 +341,7 @@ export default function TeamOverviewPage() {
         </div>
 
         <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3.5">
               <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-blue-500 to-indigo-600 shadow-lg shadow-blue-500/25">🟢</span>
               <div>
@@ -369,7 +369,7 @@ export default function TeamOverviewPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-14 text-center">
-              <span className="w-16 h-16 rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-3xl mb-4 shadow-inner">🌙</span>
+              <span className="w-16 h-16 rounded-3xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-3xl mb-3 shadow-inner">🌙</span>
               <p className="text-[15px] font-bold text-gray-800">Nobody checked in yet</p>
               <p className="text-[12.5px] text-gray-500 font-medium mt-1 max-w-[240px]">
                 Today&apos;s attendance will appear here once the team checks in.

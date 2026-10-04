@@ -38,7 +38,7 @@ function CodeBlock({ title, code }) {
 
 function Step({ n, title, children }) {
   return (
-    <div className="flex gap-4">
+    <div className="flex gap-3">
       <div className="shrink-0 w-8 h-8 rounded-full bg-teal-600/20 border border-teal-500/40 flex items-center justify-center text-sm font-bold text-violet-700">{n}</div>
       <div className="flex-1">
         <h3 className="font-semibold text-gray-900 mb-2">{title}</h3>
@@ -64,7 +64,7 @@ export default function ApiDocsPage() {
         actions={<Badge tone="violet">v1.0.0</Badge>}
       />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[
           { key: 'docs', label: '📖 Interactive Docs' },
           { key: 'quickstart', label: '🚀 Quickstart Guide' },
@@ -80,7 +80,7 @@ export default function ApiDocsPage() {
       </div>
 
       {tab === 'docs' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-4 flex flex-wrap items-center gap-3">
             <span className="text-sm text-gray-600">Swagger UI isi page me embedded hai. Nayi tab me kholna ho to:</span>
             <a href={docsUrl} target="_blank" rel="noreferrer" className="btn-primary text-sm">Open in new tab ↗</a>
@@ -94,8 +94,8 @@ export default function ApiDocsPage() {
       )}
 
       {tab === 'quickstart' && (
-        <div className="space-y-5 card-premium p-6">
-          <div className="space-y-4">
+        <div className="space-y-3 card-premium p-6">
+          <div className="space-y-3">
             <Step n="1" title="API key banao">
               <p><span className="text-gray-900 font-semibold">Settings → API Keys</span> par jao, "New key" dabao. Secret <span className="text-amber-700 font-semibold">sirf ek dafa</span> dikhega — foran copy karke safe jagah rakho. Key ka format <code className="font-mono text-violet-700">cwk_...</code> hota hai.</p>
               <p className="text-gray-500">Har request me ye header bhejo:</p>

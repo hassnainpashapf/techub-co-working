@@ -128,7 +128,7 @@ export default function MealPlansPage() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🍱 Meal Plans" subtitle="Monthly lunch / meal subscriptions for members" action={
         <button onClick={openAdd} className="px-4 py-2 rounded-lg bg-[#0f766e] hover:bg-[#0f766e] text-white text-sm font-medium">+ New Plan</button>
       } />
@@ -147,7 +147,7 @@ export default function MealPlansPage() {
       {tab === 'plans' && (
         <>
           {stats && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               <StatCard label="Total plans" value={stats.total} />
               <StatCard label="Active plans" value={stats.active} />
               <StatCard label="Total subscribers" value={stats.subscribers} />
@@ -161,7 +161,7 @@ export default function MealPlansPage() {
       )}
 
       {tab === 'subscribers' && (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex gap-2 items-center">
             <label className="text-sm opacity-70">Plan:</label>
             <select value={planFilter} onChange={(e) => setPlanFilter(e.target.value)} className="bg-gray-100 border border-gray-200 rounded-lg px-3 py-2 text-sm">
@@ -176,7 +176,7 @@ export default function MealPlansPage() {
 
       {modal && (
         <Modal title={modal === 'add' ? 'New Meal Plan' : `Edit: ${modal.name}`} onClose={() => setModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Plan name" value={form.name} onChange={(e) => setF('name', e.target.value)} placeholder="Monthly Lunch" />
             <Field label="Description" value={form.description} onChange={(e) => setF('description', e.target.value)} placeholder="Weekday lunch, 1 meal/day" />
             <div className="grid grid-cols-3 gap-3">

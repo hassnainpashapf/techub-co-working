@@ -56,7 +56,7 @@ function Donut({ data, total }) {
   let acc = 0;
   const segs = data.filter((d) => d.count > 0);
   return (
-    <div className="flex items-center gap-4 flex-wrap">
+    <div className="flex items-center gap-3 flex-wrap">
       <svg viewBox="0 0 160 160" className="w-40 h-40">
         <circle cx="80" cy="80" r={R} fill="none" stroke="rgba(0,0,0,0.07)" strokeWidth="22" />
         {segs.map((d, i) => {
@@ -117,17 +117,17 @@ export default function HrDashboardPage() {
   const inboxItems = INBOX.filter((i) => stats.pending[i.key] > 0);
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="HR Dashboard" sub="Headcount, attendance, approvals aur attrition — ek nazar me" />
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Active employees" value={stats.headcount.active} accent="blue" icon="👥" />
         <StatCard label="On leave today" value={ta.onLeave} accent="amber" icon="🏖️" />
         <StatCard label="Present today" value={ta.present + ta.late} accent="green" icon="✅" />
         <StatCard label="Exited (all time)" value={stats.headcount.exited} accent="red" icon="🚪" />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <div className="flex items-center justify-between mb-3">
             <h3 className="text-gray-900 font-bold">Attrition — joins vs exits</h3>
@@ -154,7 +154,7 @@ export default function HrDashboardPage() {
         </div>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="text-gray-900 font-bold mb-3">📥 Pending approvals inbox</h3>
           {inboxItems.length > 0 ? (

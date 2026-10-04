@@ -51,13 +51,13 @@ function LockerForm({ initial, onSave, onClose }) {
 
   return (
     <Modal title={initial?.id ? 'Locker Edit Karein' : 'Naya Locker'} onClose={onClose}>
-      <form onSubmit={submit} className="space-y-4">
+      <form onSubmit={submit} className="space-y-3">
         {err && <ErrorBanner message={err} />}
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <Field label="Code *"><input className="input" value={form.code} onChange={(e) => set('code', e.target.value)} placeholder="L-101" /></Field>
           <Field label="Location"><input className="input" value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="Floor 2, Zone A" /></Field>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-2 gap-3">
           <Field label="Size">
             <select className="input" value={form.size} onChange={(e) => set('size', e.target.value)}>
               {SIZES.map((s) => <option key={s} value={s}>{s}</option>)}
@@ -123,14 +123,14 @@ export default function LockersPage() {
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🔐 Locker Inventory" subtitle="Lockers manage karein (code, size, status, rate)">
         <button className="btn-primary" onClick={() => setModal('new')}>+ Naya Locker</button>
       </PageHeader>
 
       {err && <ErrorBanner message={err} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <StatCard label="Total Lockers" value={total} />
         <StatCard label="Available" value={byStatus.available || 0} />
         <StatCard label="Occupied" value={byStatus.occupied || 0} />
@@ -163,7 +163,7 @@ export default function LockersPage() {
       {lockers.length === 0 ? (
         <EmptyState title="Koi locker nahi" message="Pehla locker add karein" />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3">
           {lockers.map((l) => (
             <div key={l.id} className="card p-4 space-y-2">
               <div className="flex items-center justify-between">

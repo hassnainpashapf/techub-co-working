@@ -210,14 +210,14 @@ export default function EmployeesPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid-4 mb-4">
+      <div className="grid-4 mb-3">
         <StatCard title="Total Employees" value={emps.length} />
         <StatCard title="Active" value={active.length} />
         <StatCard title="Departments" value={new Set(emps.map((e) => e.department)).size} />
         <StatCard title="On Leave" value={emps.filter((e) => e.status === 'on_leave').length} />
       </div>
 
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex flex-wrap gap-2 items-center">
           <input
             className="input max-w-xs" placeholder="🔍 Naam, email, designation..."
@@ -265,7 +265,7 @@ export default function EmployeesPage() {
             <Field label="CNIC"><input className="input" value={form.cnic} onChange={(e) => setForm({ ...form, cnic: e.target.value })} /></Field>
             <Field label="Address" className="col-span-2"><input className="input" value={form.address} onChange={(e) => setForm({ ...form, address: e.target.value })} /></Field>
           </div>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn-ghost" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn-primary" onClick={save} disabled={saving || !form.name.trim()}>
               {saving ? 'Saving...' : 'Save'}
@@ -276,7 +276,7 @@ export default function EmployeesPage() {
 
       {profile && (
         <Modal title={'👤 ' + profile.name} onClose={() => setProfile(null)}>
-          <div className="flex gap-2 mb-4">
+          <div className="flex gap-2 mb-3">
             <button className={ptab === 'info' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('info')}>Info</button>
             <button className={ptab === 'documents' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('documents')}>Documents</button>
             <button className={ptab === 'cafe' ? 'btn-sm btn-primary' : 'btn-sm'} onClick={() => setPtab('cafe')}>Café Role</button>
@@ -301,7 +301,7 @@ export default function EmployeesPage() {
           {ptab === 'cafe' && (
             <CafeRoleTab employeeId={profile.id} />
           )}
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn-ghost" onClick={() => { openEdit(profile); setProfile(null); }}>✏️ Edit</button>
             <button className="btn-ghost" onClick={() => setProfile(null)}>Close</button>
           </div>

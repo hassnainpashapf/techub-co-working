@@ -92,15 +92,15 @@ export default function LockerMapPage() {
     <div className="p-6">
       <PageHeader title="Locker Availability Map" subtitle="Location-wise lockers — status color-coded" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {notice && <div className="mb-4 rounded-xl border border-emerald-400/40 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-700">{notice}</div>}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+      {notice && <div className="mb-3 rounded-xl border border-emerald-400/40 bg-emerald-50 px-4 py-2.5 text-sm text-emerald-700">{notice}</div>}
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3">
         <StatCard label="Total" value={lockers.length} accent="blue" />
         <StatCard label="Available" value={counts.available} accent="green" />
         <StatCard label="Occupied" value={counts.occupied} accent="red" />
         <StatCard label="Reserved" value={counts.reserved} accent="amber" />
         <StatCard label="Maintenance" value={counts.maintenance} accent="slate" />
       </div>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['all', 'available', 'occupied', 'reserved', 'maintenance'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}>
@@ -111,10 +111,10 @@ export default function LockerMapPage() {
       {loading ? <Spinner /> : Object.keys(groups).length === 0 ? (
         <EmptyState title="No lockers" hint="Lockers add hone ke baad map yahan dikhega." />
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-3">
           {Object.entries(groups).map(([loc, items]) => (
             <div key={loc} className="rounded-2xl border border-gray-200/60 bg-white/60 p-5">
-              <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center justify-between mb-3">
                 <h3 className="text-lg font-bold text-gray-900">📍 {loc}</h3>
                 <Badge tone="blue">{items.length} lockers</Badge>
               </div>

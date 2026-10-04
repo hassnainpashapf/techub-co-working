@@ -40,11 +40,11 @@ export default function IdCardPage() {
 
       {/* Card */}
       <div
-        className="mt-4 rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
+        className="mt-3 rounded-3xl overflow-hidden shadow-2xl border border-gray-200"
         style={{ background: `linear-gradient(135deg, #141428 0%, #0d0d1f 60%, ${primary}33 100%)` }}
       >
         <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div>
               <div className="text-lg font-extrabold text-gray-900 tracking-wide">{brandName}</div>
               <div className="text-[11px] text-gray-500 uppercase tracking-[0.2em]">Member ID Card</div>
@@ -52,7 +52,7 @@ export default function IdCardPage() {
             <Badge tone={statusTone}>{String(data.status).replace('_', ' ').toUpperCase()}</Badge>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-extrabold text-gray-900 shrink-0"
               style={{ background: `linear-gradient(135deg, ${primary}, #0f766e)` }}
@@ -66,7 +66,7 @@ export default function IdCardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3 mt-4 text-sm">
+          <div className="grid grid-cols-2 gap-3 mt-3 text-sm">
             <div className="rounded-xl bg-gray-100 border border-gray-200 p-3">
               <div className="text-[10px] uppercase tracking-wider text-gray-500">Plan</div>
               <div className="text-gray-900 font-semibold truncate">{data.plan || '—'}</div>
@@ -79,7 +79,7 @@ export default function IdCardPage() {
         </div>
 
         {/* QR */}
-        <div className="bg-white/95 px-6 py-6 flex flex-col items-center">
+        <div className="bg-white/95 px-6 py-4 flex flex-col items-center">
           {!imgFailed ? (
             <img
               src={qrUrl}
@@ -103,7 +103,7 @@ export default function IdCardPage() {
         </div>
       </div>
 
-      <p className="text-xs text-slate-500 mt-4 text-center">
+      <p className="text-xs text-slate-500 mt-3 text-center">
         Keep this card private — it identifies you. Card refreshes automatically.
       </p>
     </div>

@@ -187,7 +187,7 @@ export default function KpiDashboardsPage() {
       ) : (
         <>
           {/* Dashboard selector */}
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-3">
             {dashboards.map((d) => (
               <button
                 key={d.id}
@@ -205,7 +205,7 @@ export default function KpiDashboardsPage() {
           </div>
 
           {showNew && (
-            <div className="card-premium p-4 mb-4 flex gap-2 items-center max-w-md">
+            <div className="card-premium p-4 mb-3 flex gap-2 items-center max-w-md">
               <input
                 className="input flex-1"
                 placeholder="Dashboard ka naam"
@@ -222,7 +222,7 @@ export default function KpiDashboardsPage() {
           {selected && (
             <>
               {/* Builder toolbar */}
-              <div className="card-premium p-4 mb-4">
+              <div className="card-premium p-4 mb-3">
                 <div className="flex flex-wrap items-center gap-2">
                   {renaming ? (
                     <>
@@ -263,7 +263,7 @@ export default function KpiDashboardsPage() {
               {dataLoading ? (
                 <Spinner />
               ) : data && data.widgets.length ? (
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                   {data.widgets.map((w) => (
                     <div key={w.id} className="relative">
                       <StatCard

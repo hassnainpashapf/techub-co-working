@@ -16,9 +16,9 @@ export default function AppLayout({ children }) {
     try {
       const v = window.localStorage.getItem(KEY);
       if (v === '0') setSidebarOpen(false);
-      // Permanent 90% page zoom (zoom control removed) — matches the compact look
+      // Permanent 80% page zoom (zoom control removed) — matches the compact look
       window.localStorage.removeItem('cw_zoom');
-      document.body.style.zoom = '0.9';
+      document.body.style.zoom = '0.8';
     } catch (_e) { /* ignore */ }
   }, []);
 
@@ -38,7 +38,7 @@ export default function AppLayout({ children }) {
           <div className="flex-1 min-w-0 flex flex-col">
             <Topbar onMenuClick={toggle} sidebarOpen={sidebarOpen} />
             <Shortcuts />
-            <main className="flex-1 p-4 3xl:p-6 4xl:p-6 max-w-7xl 3xl:max-w-[1680px] 4xl:max-w-[2400px] w-full mx-auto">{children}</main>
+            <main className="flex-1 p-3 3xl:p-4 4xl:p-5 max-w-7xl 3xl:max-w-[1680px] 4xl:max-w-[2400px] w-full mx-auto">{children}</main>
           </div>
         </div>
         <OnboardingTour />

@@ -178,7 +178,7 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
               ⬇ Download PDF
             </button>
           </div>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm mb-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-sm mb-3">
             <div><p className="text-xs text-gray-500">Member</p><p className="font-medium">{inv.memberName || inv.member?.name || '—'}</p></div>
             <div><p className="text-xs text-gray-500">Total</p><p className="font-medium">{money(inv.amount)}</p></div>
             <div><p className="text-xs text-gray-500">Balance</p><p className="font-medium">{money(inv.balance ?? inv.amount)}</p></div>
@@ -200,7 +200,7 @@ function InvoiceDetail({ invoice, onClose, onChanged, canRecordPayment = true })
           />
 
           {canRecordPayment && String(inv.status).toLowerCase() !== 'paid' && (
-            <form onSubmit={recordPayment} className="mt-4 bg-white border border-gray-200 rounded-2xl p-4">
+            <form onSubmit={recordPayment} className="mt-3 bg-white border border-gray-200 rounded-2xl p-4">
               <h3 className="font-semibold text-gray-900 mb-3 text-sm">Record payment</h3>
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <Field label="Amount (Rs)"><input type="number" min="1" step="any" className="input" value={payForm.amount} onChange={(e) => setPayForm({ ...payForm, amount: e.target.value })} required /></Field>
@@ -435,9 +435,9 @@ export default function BillingPage() {
         }
       />
       <ErrorBanner message={error} onRetry={refresh} />
-      {genResult && <div className="bg-green-500/10 border border-green-500/25 text-green-200 text-sm rounded-xl px-4 py-3 mb-4">{genResult}</div>}
+      {genResult && <div className="bg-green-500/10 border border-green-500/25 text-green-200 text-sm rounded-xl px-4 py-3 mb-3">{genResult}</div>}
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['invoices', 'dues'].map((t) => (
           <button
             key={t}
@@ -451,7 +451,7 @@ export default function BillingPage() {
 
       {tab === 'invoices' && (
         <div className="card">
-          <div className="flex flex-wrap gap-3 mb-4">
+          <div className="flex flex-wrap gap-3 mb-3">
             <select className="input max-w-[180px]" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
               <option value="all">All statuses</option>
               <option value="pending">Pending</option>
@@ -469,7 +469,7 @@ export default function BillingPage() {
           </div>
           {/* Phase 30: bulk actions bar */}
           {canBulk && bulkIds.length > 0 && (
-            <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
+            <div className="flex flex-wrap items-center gap-3 mb-3 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
               <span className="text-sm font-semibold text-teal-700">{bulkIds.length} selected</span>
               <select className="input max-w-[160px] !w-auto" value={bulkStatus} onChange={(e) => setBulkStatus(e.target.value)}>
                 <option value="paid">Paid</option>
@@ -517,7 +517,7 @@ export default function BillingPage() {
 
       {tab === 'dues' && (
         <div className="card">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="font-semibold text-gray-900">Outstanding dues</h2>
             <p className="text-sm text-gray-500">Total: <span className="font-bold text-red-600">{money(totalDues)}</span></p>
           </div>

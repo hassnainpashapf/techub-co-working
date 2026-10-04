@@ -48,7 +48,7 @@ function RecurringForm({ units, members, isMember, onSave, saving, error }) {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-3">
       {error && <ErrorBanner message={error} />}
       {!isMember && (
         <Field label="Member">
@@ -71,7 +71,7 @@ function RecurringForm({ units, members, isMember, onSave, saving, error }) {
       <Field label="Title">
         <input className="input" value={form.title} onChange={set('title')} required placeholder="e.g. Weekly team standup" />
       </Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Weekday">
           <select className="input" value={form.dayOfWeek} onChange={set('dayOfWeek')}>
             {WEEKDAYS.map((d, i) => (
@@ -210,7 +210,7 @@ export default function RecurringBookingsPage() {
         }
       />
       {error && <ErrorBanner message={error} onRetry={refresh} />}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['all', 'active', 'paused', 'cancelled'].map((s) => (
           <button
             key={s}

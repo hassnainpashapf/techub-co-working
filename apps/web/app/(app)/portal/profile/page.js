@@ -11,7 +11,7 @@ function Section({ title, desc, children }) {
     <div className="rounded-2xl border border-gray-200 bg-white p-5 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
       <h2 className="text-base font-semibold text-gray-900">{title}</h2>
       {desc && <p className="text-xs text-gray-500 mt-1">{desc}</p>}
-      <div className="mt-4 space-y-4">{children}</div>
+      <div className="mt-3 space-y-3">{children}</div>
     </div>
   );
 }
@@ -215,7 +215,7 @@ export default function PortalProfilePage() {
   const pwScore = passwordStrength(pw.next);
 
   return (
-    <div className="space-y-5 max-w-2xl mx-auto pb-10">
+    <div className="space-y-3 max-w-2xl mx-auto pb-10">
       <PageHeader title="Meri Profile" subtitle="Apni maloomat, password aur preferences manage karein" />
 
       {err && <ErrorBanner message={err} onClose={() => setErr('')} />}
@@ -225,7 +225,7 @@ export default function PortalProfilePage() {
 
       {/* Profile info */}
       <Section title="Profile" desc="Aapki bunyadi maloomat">
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-3">
           <div className="relative">
             <img
               key={photoTick}
@@ -270,7 +270,7 @@ export default function PortalProfilePage() {
             </Field>
           </div>
           <div className="text-xs text-slate-500">Email: <span className="text-gray-600">{member?.email || '—'}</span> · Status: <span className="text-gray-600">{member?.status}</span></div>
-          <button type="submit" disabled={saving} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={saving} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2.5 transition">
             {saving ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>
@@ -296,7 +296,7 @@ export default function PortalProfilePage() {
           <Field label="Naya password dobara">
             <input type="password" className="input" value={pw.confirm} onChange={(e) => setPw({ ...pw, confirm: e.target.value })} required autoComplete="new-password" />
           </Field>
-          <button type="submit" disabled={pwBusy} className="rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={pwBusy} className="rounded-xl bg-teal-700 hover:bg-teal-600 disabled:opacity-50 text-white text-sm font-semibold px-4 py-2.5 transition">
             {pwBusy ? 'Change ho raha…' : 'Password change karein'}
           </button>
         </form>
@@ -330,7 +330,7 @@ export default function PortalProfilePage() {
           <Field label="Tags (comma se alag)">
             <input className="input" value={dir.directoryTags} onChange={(e) => setDir({ ...dir, directoryTags: e.target.value })} placeholder="design, startup, marketing" />
           </Field>
-          <button type="submit" disabled={dirBusy} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-5 py-2.5 transition">
+          <button type="submit" disabled={dirBusy} className="rounded-xl bg-[#0f766e] hover:bg-[#0f766e] disabled:opacity-50 text-white text-sm font-semibold px-4 py-2.5 transition">
             {dirBusy ? 'Save ho raha…' : 'Save karein'}
           </button>
         </form>
@@ -339,10 +339,10 @@ export default function PortalProfilePage() {
       {/* Account */}
       <Section title="Account" desc="Logout ya data deletion request">
         <div className="flex flex-col sm:flex-row gap-3">
-          <button type="button" onClick={doLogout} className="rounded-xl border border-gray-200 text-gray-800 text-sm font-semibold px-5 py-2.5 hover:bg-gray-100 transition">
+          <button type="button" onClick={doLogout} className="rounded-xl border border-gray-200 text-gray-800 text-sm font-semibold px-4 py-2.5 hover:bg-gray-100 transition">
             Logout
           </button>
-          <button type="button" onClick={requestDeletion} disabled={delBusy} className="rounded-xl border border-red-500/40 text-red-700 text-sm font-semibold px-5 py-2.5 hover:bg-red-50 disabled:opacity-50 transition">
+          <button type="button" onClick={requestDeletion} disabled={delBusy} className="rounded-xl border border-red-500/40 text-red-700 text-sm font-semibold px-4 py-2.5 hover:bg-red-50 disabled:opacity-50 transition">
             {delBusy ? 'Bhej rahe…' : 'Mera data delete karne ki request'}
           </button>
         </div>

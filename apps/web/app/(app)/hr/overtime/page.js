@@ -65,12 +65,12 @@ export default function OvertimePage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-3 gap-4 mb-4">
+          <div className="grid grid-cols-3 gap-3 mb-3">
             {stats.map((s) => <StatCard key={s.label} label={s.label} value={s.value} />)}
           </div>
 
           {isManager && (
-            <div className="mb-5">
+            <div className="mb-3">
               <h2 className="text-lg font-semibold mb-3">📥 Pending Approvals</h2>
               {pending.length === 0 ? <EmptyState title="Koi pending request nahi" /> : (
                 <DataTable
@@ -111,7 +111,7 @@ export default function OvertimePage() {
         <Field label="Date" type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
         <Field label="Minutes (min 15)" type="number" min="15" max="720" value={form.minutes} onChange={(e) => setForm({ ...form, minutes: e.target.value })} />
         <Field label="Reason" textarea value={form.reason} onChange={(e) => setForm({ ...form, reason: e.target.value })} placeholder="Kyun overtime chahiye..." />
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-2 mt-3">
           <button className="btn-ghost" onClick={() => setModal(false)}>Cancel</button>
           <button className="btn-primary" disabled={submitting} onClick={submit}>{submitting ? 'Sending...' : 'Submit Request'}</button>
         </div>

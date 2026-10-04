@@ -68,11 +68,11 @@ export default function TicketScanPage() {
   const tone = !res ? null : res.valid ? 'green' : 'red';
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Ticket Scanning" subtitle="Event entry — QR ticket validate karo" />
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard label="Scanned" value={stats.scanned} />
           <StatCard label="Total" value={stats.total} />
           <StatCard label="Remaining" value={stats.remaining} />
@@ -80,7 +80,7 @@ export default function TicketScanPage() {
         </div>
       )}
 
-      <div className="card p-5 space-y-4 max-w-xl">
+      <div className="card p-5 space-y-3 max-w-xl">
         <Field label="Event (optional filter)">
           <select className="input" value={eventId} onChange={(e) => setEventId(e.target.value)}>
             <option value="">— All events —</option>

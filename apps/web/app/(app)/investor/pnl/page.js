@@ -72,7 +72,7 @@ export default function PnlPage() {
         actions={<button className="btn-secondary" onClick={exportCsv}>⬇ Export CSV</button>}
       />
 
-      <div className="flex flex-wrap items-end gap-3 mb-5">
+      <div className="flex flex-wrap items-end gap-3 mb-3">
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -89,16 +89,16 @@ export default function PnlPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             <StatCard label="Total Revenue" value={fmt(data.revenue.total)} sub={`${from} → ${to}`} accent="blue" />
             <StatCard label="Total Expenses" value={fmt(data.expenses.total)} sub="approved only" accent="amber" />
             <StatCard label="Net Profit" value={fmt(data.netProfit)} sub={data.netProfit >= 0 ? 'profitable' : 'loss'} accent={data.netProfit >= 0 ? 'green' : 'red'} />
             <StatCard label="Net Margin" value={`${data.marginPct.toFixed(1)}%`} sub="net / revenue" accent="blue" />
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
             <div className="card-premium p-6">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Profit & Loss Statement</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-3">Profit & Loss Statement</h2>
               <div className="text-sm">
                 <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1">Revenue</div>
                 <Line label="Contract revenue" value={data.revenue.contract} />
@@ -106,7 +106,7 @@ export default function PnlPage() {
                 <Line label="Less: refunds" value={data.revenue.refunds} negative />
                 <Line label="Total revenue" value={data.revenue.total} bold tone="green" />
 
-                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-5">Expenses</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-3">Expenses</div>
                 {data.expenses.byCategory.map((c) => (
                   <Line key={c.category} label={c.category.replace(/_/g, ' ')} value={c.amount} />
                 ))}
@@ -115,7 +115,7 @@ export default function PnlPage() {
                 )}
                 <Line label="Total expenses" value={data.expenses.total} bold tone="red" />
 
-                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-5">Profit</div>
+                <div className="text-xs font-bold uppercase tracking-wider text-gray-500 mb-1 mt-3">Profit</div>
                 <Line label="Gross profit" value={data.grossProfit} />
                 <Line label="Net profit" value={data.netProfit} bold tone={data.netProfit >= 0 ? 'green' : 'red'} />
                 <div className="flex items-center justify-between py-2.5">
@@ -127,7 +127,7 @@ export default function PnlPage() {
 
             <div className="card-premium p-6">
               <h2 className="text-lg font-bold text-gray-900 mb-1">Monthly Profit</h2>
-              <p className="text-xs text-gray-500 mb-4">Revenue minus expenses per month</p>
+              <p className="text-xs text-gray-500 mb-3">Revenue minus expenses per month</p>
               {data.monthly.length === 0 ? (
                 <EmptyState title="No data" hint="No activity in this period." />
               ) : (
@@ -137,7 +137,7 @@ export default function PnlPage() {
           </div>
 
           <div className="card-premium p-6">
-            <h2 className="text-lg font-bold text-gray-900 mb-4">Monthly Breakdown</h2>
+            <h2 className="text-lg font-bold text-gray-900 mb-3">Monthly Breakdown</h2>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -160,7 +160,7 @@ export default function PnlPage() {
                 </tbody>
               </table>
             </div>
-            <div className="mt-4 text-xs text-slate-500">
+            <div className="mt-3 text-xs text-slate-500">
               {data.assumptions.join(' ')}
             </div>
           </div>

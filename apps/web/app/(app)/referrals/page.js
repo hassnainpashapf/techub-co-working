@@ -98,7 +98,7 @@ export default function StaffReferralsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid sm:grid-cols-4 gap-4 mb-4">
+      <div className="grid sm:grid-cols-4 gap-3 mb-3">
         <StatCard label="Invited" value={counts.invited || 0} accent="amber" icon="✉️" />
         <StatCard label="Joined" value={counts.joined || 0} accent="blue" icon="🤝" />
         <StatCard label="Rewarded" value={counts.rewarded || 0} accent="green" icon="🎁" />
@@ -111,7 +111,7 @@ export default function StaffReferralsPage() {
         />
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['', 'invited', 'joined', 'rewarded'].map((s) => (
           <button
             key={s}

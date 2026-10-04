@@ -172,7 +172,7 @@ export default function PortalConciergePage() {
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
       {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-teal-700">{services.length}</p>
           <p className="text-xs text-gray-500">Services</p>
@@ -187,7 +187,7 @@ export default function PortalConciergePage() {
         </div>
       </div>
 
-      <div className="flex gap-2 mb-5">
+      <div className="flex gap-2 mb-3">
         {[
           { k: 'services', label: '🛎️ Services' },
           { k: 'requests', label: `📋 My Requests (${requests.length})` },
@@ -204,7 +204,7 @@ export default function PortalConciergePage() {
 
       {tab === 'services' && (
         <div>
-          <div className="flex flex-wrap gap-2 mb-4">
+          <div className="flex flex-wrap gap-2 mb-3">
             {CATEGORIES.map((c) => (
               <button
                 key={c}
@@ -219,7 +219,7 @@ export default function PortalConciergePage() {
           {filtered.length === 0 ? (
             <EmptyState title="No services yet" hint="Concierge services will appear here once the team publishes the catalog." />
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
               {filtered.map((s) => (
                 <div key={s.id} className="card-premium p-5">
                   <div className="flex items-start justify-between gap-2 mb-2">
@@ -245,7 +245,7 @@ export default function PortalConciergePage() {
           {requests.length === 0 ? (
             <EmptyState title="No requests yet" hint="Pick a service above and we'll handle the rest — from coffee runs to airport pickups." />
           ) : (
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid md:grid-cols-2 gap-3">
               {requests.map((r) => {
                 const myRating = ratings[r.id];
                 return (

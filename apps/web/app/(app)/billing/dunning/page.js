@@ -88,7 +88,7 @@ export default function DunningPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
       {result && (
-        <div className="card mb-4 p-4 text-sm">
+        <div className="card mb-3 p-4 text-sm">
           ✅ Processed <b>{result.processed}</b> overdue invoices — sent <b>{result.sent}</b> reminders
           {result.skipped ? <span> ({result.skipped} skipped)</span> : null}.
         </div>
@@ -98,7 +98,7 @@ export default function DunningPage() {
         <Spinner />
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
             <div className="card p-4">
               <div className="text-xs text-gray-500 mb-1">Overdue invoices</div>
               <div className="text-2xl font-bold text-gray-900">{overdue.length}</div>
@@ -136,7 +136,7 @@ export default function DunningPage() {
             empty="No overdue invoices. 🎉"
           />
 
-          <h2 className="text-lg font-bold text-gray-900 mt-5 mb-3">Reminder history</h2>
+          <h2 className="text-lg font-bold text-gray-900 mt-3 mb-3">Reminder history</h2>
           <DataTable
             columns={['Sent at', 'Invoice', 'Member', 'Level', 'Channel']}
             rows={logs.map((l) => [

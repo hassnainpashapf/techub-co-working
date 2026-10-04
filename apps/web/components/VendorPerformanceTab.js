@@ -80,7 +80,7 @@ export default function VendorPerformanceTab({ vendorId }) {
 
   return (
     <div>
-      <div className="mb-4 flex gap-2">
+      <div className="mb-3 flex gap-2">
         <button
           onClick={() => setTab('perf')}
           className={`rounded-lg px-4 py-2 text-sm ${tab === 'perf' ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'}`}
@@ -97,7 +97,7 @@ export default function VendorPerformanceTab({ vendorId }) {
 
       {tab === 'perf' && perf && (
         <div>
-          <div className="mb-4 grid grid-cols-2 gap-3 md:grid-cols-3">
+          <div className="mb-3 grid grid-cols-2 gap-3 md:grid-cols-3">
             {stat('Avg rating', perf.avgRating != null ? `${perf.avgRating}/5` : '—')}
             {stat('Ratings', perf.ratingCount ?? '—')}
             {stat('On-time delivery', perf.onTimeDeliveryPct != null ? `${perf.onTimeDeliveryPct}%` : '—')}
@@ -113,9 +113,9 @@ export default function VendorPerformanceTab({ vendorId }) {
 
       {tab === 'ratings' && (
         <div>
-          <div className="mb-5 rounded-xl border border-gray-200 bg-gray-100 p-4">
+          <div className="mb-3 rounded-xl border border-gray-200 bg-gray-100 p-4">
             <div className="mb-3 text-sm font-semibold text-gray-900">Rate this vendor</div>
-            <div className="mb-3 flex flex-wrap items-center gap-4">
+            <div className="mb-3 flex flex-wrap items-center gap-3">
               <Stars value={form.score} onPick={(s) => setForm({ ...form, score: s })} />
               <select
                 value={form.criteria}
@@ -141,7 +141,7 @@ export default function VendorPerformanceTab({ vendorId }) {
           </div>
 
           {data?.byCriteria && (
-            <div className="mb-4 grid grid-cols-3 gap-3">
+            <div className="mb-3 grid grid-cols-3 gap-3">
               {CRITERIA.map((c) => (
                 <div key={c.key} className="rounded-xl border border-gray-200 bg-gray-100 p-3 text-center">
                   <div className="text-xs text-gray-500">{c.label}</div>

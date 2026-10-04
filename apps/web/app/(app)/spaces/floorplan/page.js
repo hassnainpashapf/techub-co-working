@@ -144,7 +144,7 @@ export default function FloorPlanPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="flex flex-wrap gap-4 mb-5">
+      <div className="flex flex-wrap gap-3 mb-3">
         <Field label="Building">
           <select className="input min-w-[200px]" value={buildingId} onChange={(e) => setBuildingId(e.target.value)}>
             {buildings.map((b) => <option key={b.id} value={b.id}>{b.name}</option>)}
@@ -187,7 +187,7 @@ export default function FloorPlanPage() {
             </div>
           </div>
 
-          <div className="flex flex-wrap gap-4 mt-4 text-xs text-gray-600">
+          <div className="flex flex-wrap gap-3 mt-3 text-xs text-gray-600">
             {Object.entries({ vacant: 'Vacant', occupied: 'Occupied', reserved: 'Reserved', maintenance: 'Maintenance' }).map(([k, l]) => (
               <span key={k} className="flex items-center gap-1.5">
                 <span className={`w-3 h-3 rounded border ${STATUS_STYLE[k]}`} />{l}

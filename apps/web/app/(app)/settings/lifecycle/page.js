@@ -78,7 +78,7 @@ function TriggerCard({ trigger, templates, onChanged, saving, setSaving }) {
         />
       </div>
 
-      <div className="flex items-center gap-2 mb-4">
+      <div className="flex items-center gap-2 mb-3">
         <Badge color={trigger.audience > 0 ? 'amber' : 'slate'}>
           {trigger.audience} member{trigger.audience === 1 ? '' : 's'} match now
         </Badge>
@@ -130,7 +130,7 @@ function TriggerCard({ trigger, templates, onChanged, saving, setSaving }) {
         </div>
       )}
 
-      <div className="flex items-center gap-3 mt-4">
+      <div className="flex items-center gap-3 mt-3">
         {dirty && rule && (
           <button onClick={() => save({ action, templateKey: templateKey || null, message: message || null })} disabled={saving} className="btn-primary text-sm">
             {saving ? 'Saving…' : 'Save changes'}
@@ -211,13 +211,13 @@ export default function LifecyclePage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="mb-4 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30 px-4 py-3 text-sm text-teal-700">
+      <div className="mb-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30 px-4 py-3 text-sm text-teal-700">
         💡 Customize email content in{' '}
         <Link href="/settings/email-templates" className="underline font-semibold">Email Templates</Link>
         {' '}— rules can use any built-in or custom template.
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 mb-3">
         {triggers.map((t) => (
           <TriggerCard key={t.key} trigger={t} templates={templates} onChanged={refresh} saving={saving} setSaving={setSaving} />
         ))}

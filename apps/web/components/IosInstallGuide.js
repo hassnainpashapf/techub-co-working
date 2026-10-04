@@ -78,7 +78,7 @@ export default function IosInstallGuide() {
             <span>Tap <strong>&ldquo;Add&rdquo;</strong> to confirm</span>
           </li>
         </ol>
-        <button onClick={dismiss} className="btn-primary w-full mt-4 !py-2 text-[13px]">Got it</button>
+        <button onClick={dismiss} className="btn-primary w-full mt-3 !py-2 text-[13px]">Got it</button>
       </div>
     </div>
   );

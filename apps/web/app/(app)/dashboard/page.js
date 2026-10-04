@@ -83,7 +83,7 @@ function SegmentDonut({ data, size = 160, colors }) {
   let offset = 0;
   const palette = colors || ['#0f766e', '#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#9ca3af'];
   return (
-    <div className="flex items-center gap-5">
+    <div className="flex items-center gap-3">
       <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <svg viewBox="0 0 160 160" className="w-full h-full -rotate-90">
           <circle cx="80" cy="80" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="18" />
@@ -186,7 +186,7 @@ function ChartCard({ title, sub, children, action, icon }) {
   return (
     <div className="relative overflow-hidden rounded-2xl bg-white border border-gray-200 p-5 hover:border-[#0f766e]/35 transition-all duration-200">
       <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-transparent via-[#0f766e]/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
           {icon && <span className="icon-tile w-9 h-9 text-base">{icon}</span>}
           <div>
@@ -329,7 +329,7 @@ function StaffDashboard() {
     <div>
       <PageHeader title="Dashboard" sub="Overview of your coworking space" />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <StatCard
           label="Occupancy"
           value={`${occupancyPercent}%`}
@@ -370,7 +370,7 @@ function StaffDashboard() {
           ))}
         </div>
       </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <ChartCard title="Revenue Trend" sub={range === '12m' ? 'Last 12 months' : range === '3m' ? 'Last 3 months' : 'Last 6 months'} icon="💰">
           <BarChart data={revenueData.length ? revenueData : [{ label: '—', value: 0 }]} />
         </ChartCard>
@@ -387,7 +387,7 @@ function StaffDashboard() {
         </ChartCard>
       </div>
       {/* More charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <ChartCard title="New Members" sub="Signups per month" icon="👥">
           <TrendChart data={memberData.length ? memberData : [{ label: '—', value: 0 }]} color="#0f766e" />
         </ChartCard>
@@ -402,7 +402,7 @@ function StaffDashboard() {
       </div>
 
       {/* Tickets by status */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <ChartCard title="Members vs Contracts" sub="Active now" icon="🤝">
           <BarChart data={memberContractData} />
         </ChartCard>
@@ -421,10 +421,10 @@ function StaffDashboard() {
       </div>
 
       {/* 3 equal cards */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 4xl:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 4xl:gap-3">
         {/* Recent Activity */}
         <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Recent Activity</h2>
             <button
               onClick={() => (window.location.href = '/settings/audit-logs')}
@@ -435,7 +435,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {activity.length === 0 ? (
-              <p className="text-sm text-slate-500 py-5 text-center">No recent activity yet.</p>
+              <p className="text-sm text-slate-500 py-3 text-center">No recent activity yet.</p>
             ) : (
               <ul className="space-y-1">
                 {activity.slice(0, 7).map((item, i) => (
@@ -452,7 +452,7 @@ function StaffDashboard() {
 
         {/* Top pending dues */}
         <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Top pending dues</h2>
             <button
               onClick={() => (window.location.href = '/billing')}
@@ -463,7 +463,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {duesList.length === 0 ? (
-              <p className="text-sm text-slate-500 py-5 text-center">No pending dues. All settled. ✓</p>
+              <p className="text-sm text-slate-500 py-3 text-center">No pending dues. All settled. ✓</p>
             ) : (
               <ul className="space-y-1">
                 {duesList.slice(0, 7).map((d, i) => (
@@ -486,7 +486,7 @@ function StaffDashboard() {
 
         {/* Recent invoices */}
         <div className="rounded-2xl bg-white border border-gray-200 p-5 flex flex-col min-h-[320px]">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h2 className="font-bold text-gray-900 text-[15px]">Recent invoices</h2>
             <button
               onClick={() => (window.location.href = '/billing')}
@@ -497,7 +497,7 @@ function StaffDashboard() {
           </div>
           <div className="flex-1 overflow-y-auto -mx-1 px-1">
             {invoices.length === 0 ? (
-              <p className="text-sm text-slate-500 py-5 text-center">No invoices yet.</p>
+              <p className="text-sm text-slate-500 py-3 text-center">No invoices yet.</p>
             ) : (
               <ul className="space-y-1">
                 {invoices.slice(0, 7).map((inv, i) => (
@@ -555,7 +555,7 @@ function MemberDashboard() {
   return (
     <div>
       <PageHeader title="My Dashboard" sub="Your membership at a glance" />
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <StatCard
           label="My pending dues"
           value={money(data?.myDues ?? dues.reduce((s, r) => s + Number(r.balance || r.amount || 0), 0))}
@@ -577,7 +577,7 @@ function MemberDashboard() {
       </div>
 
       {contract && (
-        <div className="card mb-4">
+        <div className="card mb-3">
           <h2 className="font-semibold text-gray-900 mb-2">My contract</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-sm">
             <div><p className="text-xs text-gray-500">Unit</p><p className="font-medium">{contract.unitCode || contract.space || '—'}</p></div>
@@ -588,7 +588,7 @@ function MemberDashboard() {
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 4xl:gap-3">
         <div className="card">
           <h2 className="font-semibold text-gray-900 mb-3">My dues</h2>
           <DataTable

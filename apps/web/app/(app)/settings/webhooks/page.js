@@ -32,7 +32,7 @@ function WebhookForm({ initial, events, onSave, saving }) {
       <Field label="Secret (HMAC signing — shown once, then masked)">
         <input className="input font-mono text-xs" value={f.secret} onChange={(e) => setF({ ...f, secret: e.target.value })} placeholder="Auto-generated if blank" />
       </Field>
-      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-3">
         <input type="checkbox" checked={f.active} onChange={(e) => setF({ ...f, active: e.target.checked })} className="accent-teal-600" />
         Active
       </label>

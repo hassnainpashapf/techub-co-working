@@ -77,7 +77,7 @@ export default function PortalLostFoundPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <div className="flex gap-1 p-1 rounded-xl bg-gray-100 border border-gray-200">
           {[{ v: 'all', l: 'Sab' }, { v: 'lost', l: '🔍 Khoi hui' }, { v: 'found', l: '📦 Mili hui' }].map((t) => (
             <button
@@ -102,7 +102,7 @@ export default function PortalLostFoundPage() {
       ) : items.length === 0 ? (
         <EmptyState title="Koi item nahi mili" hint="Khoi ya mili hui cheez report karke shuruwat karein." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {items.map((it) => (
             <div key={it.id} className="card-premium p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-2">

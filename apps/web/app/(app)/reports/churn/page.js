@@ -67,7 +67,7 @@ function OfferModal({ member, onClose, onSent }) {
         onClick={(e) => e.stopPropagation()}
       >
         <h3 className="text-lg font-bold text-gray-900 mb-1">Send retention offer</h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-gray-500 mb-3">
           To: <span className="text-gray-900 font-medium">{member.memberName}</span>
           {member.email ? <span className="text-slate-500"> ({member.email})</span> : ' — no email on file'}
         </p>
@@ -81,7 +81,7 @@ function OfferModal({ member, onClose, onSent }) {
           placeholder="e.g. We'd like to offer you 10% off your next month…"
         />
         {error && <p className="text-sm text-red-300 mt-2">{error}</p>}
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-2 mt-3">
           <button className="btn-ghost" onClick={onClose} disabled={sending}>
             Cancel
           </button>
@@ -159,24 +159,24 @@ export default function ChurnPage() {
       <PageHeader title="Churn Analysis" subtitle="Exit rate, trend and at-risk members" />
 
       {sentMsg && (
-        <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200 mb-4">
+        <div className="rounded-xl border border-emerald-400/30 bg-emerald-500/10 p-3 text-sm text-emerald-200 mb-3">
           {sentMsg}
         </div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Churn rate (90d)" value={`${data.churnRate90d}%`} accent={data.churnRate90d >= 10 ? 'red' : data.churnRate90d >= 5 ? 'amber' : 'green'} />
         <StatCard label="Exited (90d)" value={data.exitedCount90d} />
         <StatCard label="Total members" value={data.totalMembers} />
         <StatCard label="At-risk members" value={atRisk.length} accent={atRisk.length > 0 ? 'amber' : 'green'} />
       </div>
 
-      <div className="card-premium p-5 mb-4">
+      <div className="card-premium p-5 mb-3">
         <h3 className="text-sm font-bold text-gray-900 mb-3">Monthly exits (last 6 months)</h3>
         <HDBarChart data={(data.trend || []).map(t=>({label:t.label,value:t.exited}))} height={160} color="#f87171" />
       </div>
 
-      <div className="card-premium p-5 mb-4">
+      <div className="card-premium p-5 mb-3">
         <h3 className="text-sm font-bold text-gray-900 mb-2">Risk model</h3>
         <div className="flex flex-wrap gap-2 text-xs text-gray-500">
           {Object.entries(data.weights || {}).map(([code, w]) => (

@@ -57,10 +57,10 @@ export default function SmsSettingsPage() {
       <PageHeader title="SMS Notifications" subtitle={configured ? 'Twilio connected' : 'Twilio not configured — messages are logged to console (dev mode)'} />
 
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{msg}</div>}
+      {msg && <div className="mb-3 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{msg}</div>}
 
-      <div className="card-premium p-6 mb-4">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Send SMS</h2>
+      <div className="card-premium p-6 mb-3">
+        <h2 className="text-lg font-bold text-gray-900 mb-3">Send SMS</h2>
         <form onSubmit={send}>
           <Field label="To (phone number)">
             <input className="input" value={form.to} onChange={(e) => setForm({ ...form, to: e.target.value })} placeholder="+92 300 1234567" required />
@@ -73,7 +73,7 @@ export default function SmsSettingsPage() {
       </div>
 
       <div className="card-premium p-6">
-        <h2 className="text-lg font-bold text-gray-900 mb-4">Recent messages</h2>
+        <h2 className="text-lg font-bold text-gray-900 mb-3">Recent messages</h2>
         {logs.length === 0 ? (
           <p className="text-sm text-gray-500">No messages yet.</p>
         ) : (

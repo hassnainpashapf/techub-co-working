@@ -58,7 +58,7 @@ function BookingForm({ initial, rooms, members, onSave, saving, error }) {
         <Field label="Ends"><input type="datetime-local" className="input" value={form.endTime} onChange={(e) => setForm({ ...form, endTime: e.target.value })} required /></Field>
       </div>
       {rules && (
-        <p className="text-xs text-gray-500 mb-4">
+        <p className="text-xs text-gray-500 mb-3">
           ℹ️ Max {rules.bookingMaxHours}h per booking · {rules.bookingBufferMinutes} min gap between bookings · book up to {rules.bookingAdvanceDays} days ahead · {rules.bookingMinNoticeMinutes} min notice required.
         </p>
       )}

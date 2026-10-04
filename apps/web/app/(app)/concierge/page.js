@@ -59,7 +59,7 @@ export default function ConciergeDashboardPage() {
   const pendingModules = Object.entries(s.modules || {}).filter(([, v]) => !v).map(([k]) => k);
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
+    <div className="p-6 max-w-7xl mx-auto space-y-3">
       <PageHeader title="🛎️ Concierge Dashboard" subtitle="Service requests, SLA, ratings aur revenue" />
 
       {pendingModules.length > 0 && (
@@ -68,7 +68,7 @@ export default function ConciergeDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard label="Open Requests" value={s.openRequests ?? 0} icon="📋" accent="blue" />
         <StatCard label="SLA Breaches" value={s.slaBreaches ?? 0} icon="⏱️" accent={s.slaBreaches ? 'red' : 'green'} />
         <StatCard label="Avg Completion" value={s.avgCompletionHours != null ? `${s.avgCompletionHours}h` : '—'} icon="⚡" accent="violet" />
@@ -77,9 +77,9 @@ export default function ConciergeDashboardPage() {
         <StatCard label="Done (30d)" value={s.byStatus?.done ?? 0} icon="✅" accent="indigo" />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-          <h3 className="font-bold text-gray-900 mb-4">🔥 Top Services (30d)</h3>
+          <h3 className="font-bold text-gray-900 mb-3">🔥 Top Services (30d)</h3>
           {s.topServices?.length ? (
             <div className="space-y-3">
               {s.topServices.map((t, i) => (
@@ -94,7 +94,7 @@ export default function ConciergeDashboardPage() {
           )}
         </div>
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-          <h3 className="font-bold text-gray-900 mb-4">🔗 Quick Links</h3>
+          <h3 className="font-bold text-gray-900 mb-3">🔗 Quick Links</h3>
           <div className="grid grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
               <a key={q.href} href={q.href} className="rounded-xl border border-gray-200 bg-gray-100 p-4 hover:border-indigo-400/40 hover:bg-gray-100 transition-all">
@@ -107,7 +107,7 @@ export default function ConciergeDashboardPage() {
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-        <h3 className="font-bold text-gray-900 mb-4">📋 Open Requests (preview)</h3>
+        <h3 className="font-bold text-gray-900 mb-3">📋 Open Requests (preview)</h3>
         {open.length ? (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">

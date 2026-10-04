@@ -48,7 +48,7 @@ export default function SaasAdminPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-4">
+          <div className="grid grid-cols-2 lg:grid-cols-5 gap-3 mb-3">
             {[
               ['Organizations', overview?.tenants || 0],
               ['Total Users', overview?.users || 0],
@@ -63,7 +63,7 @@ export default function SaasAdminPage() {
             ))}
           </div>
           {overview?.byPlan && Object.keys(overview.byPlan).length > 0 && (
-            <div className="card-premium p-4 mb-4">
+            <div className="card-premium p-4 mb-3">
               <h3 className="font-bold text-gray-900 mb-2 text-sm">Tenants by Plan</h3>
               <div className="flex gap-2 flex-wrap">
                 {Object.entries(overview.byPlan).map(([plan, count]) => (

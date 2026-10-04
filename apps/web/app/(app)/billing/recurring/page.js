@@ -50,7 +50,7 @@ function RecurringInvoiceForm({ members, onSave, saving, error }) {
   };
 
   return (
-    <form onSubmit={submit} className="space-y-4">
+    <form onSubmit={submit} className="space-y-3">
       {error && <ErrorBanner message={error} />}
       <Field label="Member">
         <select className="input" value={form.memberId} onChange={set('memberId')} required>
@@ -63,7 +63,7 @@ function RecurringInvoiceForm({ members, onSave, saving, error }) {
       <Field label="Title">
         <input className="input" value={form.title} onChange={set('title')} placeholder="e.g. Monthly membership" required maxLength={200} />
       </Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Amount (Rs)">
           <input type="number" min="1" step="0.01" className="input" value={form.amount} onChange={set('amount')} required />
         </Field>
@@ -73,7 +73,7 @@ function RecurringInvoiceForm({ members, onSave, saving, error }) {
           </select>
         </Field>
       </div>
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-3 gap-3">
         <Field label="Day of month">
           <input type="number" min="1" max="28" className="input" value={form.dayOfMonth} onChange={set('dayOfMonth')} required />
         </Field>
@@ -169,7 +169,7 @@ export default function RecurringInvoicesPage() {
         action={<button className="btn-primary" onClick={() => setModalOpen(true)}>+ New recurring invoice</button>}
       />
       {error && <ErrorBanner message={error} />}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['all', 'active', 'paused', 'cancelled'].map((s) => (
           <button
             key={s}

@@ -88,7 +88,7 @@ export default function RemindersPage() {
         }
       />
       <ErrorBanner message={error} onRetry={refresh} />
-      {genResult && <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3 mb-4">{genResult}</div>}
+      {genResult && <div className="bg-green-50 border border-green-200 text-green-700 text-sm rounded-lg px-4 py-3 mb-3">{genResult}</div>}
 
       <div className="card">
         <DataTable

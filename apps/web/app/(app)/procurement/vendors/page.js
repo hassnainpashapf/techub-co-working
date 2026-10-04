@@ -112,14 +112,14 @@ export default function VendorsPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid-4 mb-4">
+      <div className="grid-4 mb-3">
         <StatCard title="Total Vendors" value={vendors.length} />
         <StatCard title="Active" value={active.length} />
         <StatCard title="Categories" value={new Set(vendors.map((v) => v.category)).size} />
         <StatCard title="Rated" value={withRating.length} />
       </div>
 
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex flex-wrap gap-2 items-center">
           <input
             className="input max-w-xs" placeholder="🔍 Naam, company, email, phone..."
@@ -174,7 +174,7 @@ export default function VendorsPage() {
       {modal && (
         <Modal title={modal === 'add' ? 'Naya Vendor' : 'Vendor Edit'} onClose={() => setModal(null)}>
           {modal !== 'add' && (
-            <div className="flex gap-2 mb-4">
+            <div className="flex gap-2 mb-3">
               <button className={vtab === 'details' ? 'pill pill-active' : 'pill'} onClick={() => setVtab('details')}>Details</button>
               <button className={vtab === 'perf' ? 'pill pill-active' : 'pill'} onClick={() => setVtab('perf')}>Performance & Ratings</button>
             </div>
@@ -224,7 +224,7 @@ export default function VendorsPage() {
               </div>
             </div>
           )}
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn-primary" disabled={saving || !form.name} onClick={save}>{saving ? 'Saving...' : 'Save'}</button>
           </div>

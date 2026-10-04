@@ -66,8 +66,8 @@ export default function LostAnalysisPage() {
       {loading && <Spinner />}
 
       {!loading && data && (
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard label={`Lost leads (last ${days} days)`} value={data.totalLost} accent="red" />
             <StatCard label="Avg days to lost" value={data.avgDaysToLost ?? '—'} accent="amber" />
             <StatCard label="Top lost reason" value={data.byReason?.slice().sort((a, b) => b.count - a.count)[0]?.label || '—'} accent="blue" />
@@ -75,7 +75,7 @@ export default function LostAnalysisPage() {
 
           {/* Reason breakdown */}
           <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Reason breakdown</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Reason breakdown</h3>
             {data.totalLost === 0 ? (
               <EmptyState title="No lost leads" hint="Is period me koi lead lost nahi hui — pipeline healthy hai." />
             ) : (
@@ -103,7 +103,7 @@ export default function LostAnalysisPage() {
 
           {/* Funnel drop-off */}
           <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Funnel drop-off (leads created in period)</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Funnel drop-off (leads created in period)</h3>
             <div className="space-y-3">
               {data.funnel.map((f) => (
                 <div key={f.stage}>
@@ -124,7 +124,7 @@ export default function LostAnalysisPage() {
 
           {/* Source-wise loss rate */}
           <div className="rounded-xl bg-white/60 border border-gray-200 p-5">
-            <h3 className="text-sm font-semibold text-gray-900 mb-4">Source-wise loss rate</h3>
+            <h3 className="text-sm font-semibold text-gray-900 mb-3">Source-wise loss rate</h3>
             {data.bySource.length === 0 ? (
               <EmptyState title="No data" hint="Is period me koi leads nahi bani." />
             ) : (

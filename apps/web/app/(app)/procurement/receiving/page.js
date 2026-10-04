@@ -109,14 +109,14 @@ export default function ReceivingPage() {
 
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Pending POs" value={stats.pending} tone="blue" />
         <StatCard label="Complete GRNs" value={stats.complete} tone="green" />
         <StatCard label="Partial / Mismatch" value={stats.partial} tone="amber" />
         <StatCard label="Total GRNs" value={stats.total} tone="slate" />
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[
           { key: 'pending', label: `Pending (${stats.pending})` },
           { key: 'history', label: `History (${stats.total})` },

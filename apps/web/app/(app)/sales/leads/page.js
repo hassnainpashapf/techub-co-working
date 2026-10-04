@@ -103,7 +103,7 @@ function LeadForm({ initial, users, onSave, saving }) {
   return (
     <form onSubmit={save}>
       <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required placeholder="Prospect name" /></Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Phone"><input className="input" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} placeholder="0300-1234567" /></Field>
         <Field label="Email"><input type="email" className="input" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder="prospect@example.com" /></Field>
         <Field label="Company"><input className="input" value={f.company} onChange={(e) => setF({ ...f, company: e.target.value })} placeholder="Company / org" /></Field>
@@ -201,7 +201,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
     <div className="fixed inset-0 z-50">
       <div className="absolute inset-0 bg-gray-900/50" onClick={onClose} />
       <div className="absolute right-0 top-0 h-full w-full max-w-md bg-white border-l border-gray-200 p-6 overflow-y-auto">
-        <div className="flex items-start justify-between mb-4">
+        <div className="flex items-start justify-between mb-3">
           <div>
             <h2 className="text-lg font-semibold">{lead.name}</h2>
             <p className="text-sm text-gray-500">{lead.company || 'No company'}</p>
@@ -219,7 +219,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           <button className="btn-ghost" onClick={onClose}>✕</button>
         </div>
 
-        <div className="mb-4 rounded-lg border border-gray-200 p-4">
+        <div className="mb-3 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Change stage</p>
           <select
             className="input w-full"
@@ -231,7 +231,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
           </select>
         </div>
 
-        <div className="mb-4 flex gap-2 border-b border-gray-200">
+        <div className="mb-3 flex gap-2 border-b border-gray-200">
           <button className={tab === 'activity' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('activity')}>🕘 Activity</button>
           <button className={tab === 'followups' ? 'btn-ghost border-b-2 border-[#0f766e] !rounded-none' : 'btn-ghost !text-slate-500'} onClick={() => setTab('followups')}>🔔 Follow-ups</button>
         </div>
@@ -241,7 +241,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         ) : (
         <>
 
-        <div className="mb-4 rounded-lg border border-gray-200 p-4">
+        <div className="mb-3 rounded-lg border border-gray-200 p-4">
           <p className="text-sm font-medium mb-2">Log activity</p>
           <form onSubmit={addActivity} className="space-y-3">
             <select className="input w-full" value={type} onChange={(e) => setType(e.target.value)}>
@@ -259,7 +259,7 @@ function ActivityDrawer({ lead, users, onClose, onActivityAdded, onStageChanged 
         <p className="text-sm font-medium mb-3">Timeline</p>
         {error && <ErrorBanner message={error} />}
         {loading ? (
-          <div className="flex justify-center py-5"><Spinner /></div>
+          <div className="flex justify-center py-3"><Spinner /></div>
         ) : activities.length === 0 ? (
           <EmptyState title="No activity yet" hint="Log the first call, email or tour above." />
         ) : (
@@ -443,7 +443,7 @@ export default function LeadsPage() {
   });
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Leads"
         sub="Sales pipeline — capture prospects, move stages, log every touchpoint."
@@ -452,7 +452,7 @@ export default function LeadsPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Total Leads" value={stats.total} accent="blue" />
         <StatCard label="New" value={stats.fresh} accent="purple" />
         <StatCard label="In Pipeline" value={stats.pipeline} accent="amber" />

@@ -142,7 +142,7 @@ export default function DocumentsPage() {
           : <button className="btn-primary" onClick={() => setShowCnForm(true)}>+ Issue Credit Note</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[['docs', `Documents (${docs.length})`], ['credits', `Credit Notes (${cns.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
             className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>

@@ -144,13 +144,13 @@ export default function IncidentsPage() {
         actions={<button onClick={() => { setForm(emptyForm); setModal({ mode: 'add' }); }} className="rounded-lg bg-gradient-to-r from-[#0f766e] to-indigo-600 px-4 py-2 text-sm font-semibold text-gray-900">+ Report Incident</button>}
       />
 
-      <div className="mb-4 grid gap-4 md:grid-cols-3">
+      <div className="mb-3 grid gap-3 md:grid-cols-3">
         <StatCard label="Open / Investigating" value={summary.open || 0} accent="blue" icon="📂" />
         <StatCard label="Critical (open)" value={summary.critical || 0} accent="red" icon="🚨" />
         <StatCard label="Resolved (30d)" value={summary.resolved30d || 0} accent="green" icon="✅" />
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div className="mb-3 flex flex-wrap gap-2">
         <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className="rounded-lg bg-white border border-gray-200 px-3 py-2 text-sm text-gray-900">
           <option value="">All statuses</option>
           {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
@@ -217,7 +217,7 @@ export default function IncidentsPage() {
       {modal?.mode === 'detail' && modal.incident && (
         <Modal title={modal.incident.title} onClose={() => setModal(null)}>
           {msg && <p className="mb-3 text-xs text-rose-700">{msg}</p>}
-          <div className="mb-4 flex flex-wrap gap-2">
+          <div className="mb-3 flex flex-wrap gap-2">
             <Badge tone={toneOf(SEVERITIES, modal.incident.severity)}>{labelOf(SEVERITIES, modal.incident.severity)}</Badge>
             <Badge tone={toneOf(STATUSES, modal.incident.status)}>{labelOf(STATUSES, modal.incident.status)}</Badge>
             <Badge tone="slate">{labelOf(CATEGORIES, modal.incident.category)}</Badge>
@@ -228,11 +228,11 @@ export default function IncidentsPage() {
             <div><span className="text-gray-900/40">Reported by:</span> {modal.incident.reportedByName || '—'}</div>
             <div><span className="text-gray-900/40">Member:</span> {modal.incident.involvedMember?.name || '—'}</div>
           </div>
-          <p className="mt-4 whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-900">{modal.incident.description}</p>
+          <p className="mt-3 whitespace-pre-wrap rounded-lg border border-gray-200 bg-white p-3 text-sm text-gray-900">{modal.incident.description}</p>
           {modal.incident.resolution && (
             <div className="mt-3"><div className="text-xs font-semibold text-emerald-700">Resolution</div><p className="mt-1 whitespace-pre-wrap text-sm text-gray-600">{modal.incident.resolution}</p></div>
           )}
-          <div className="mt-4">
+          <div className="mt-3">
             <div className="text-xs font-semibold text-gray-500">Status workflow</div>
             <div className="mt-2 flex flex-wrap gap-2">
               {NEXT[modal.incident.status].map((s) => (

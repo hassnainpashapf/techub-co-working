@@ -65,7 +65,7 @@ export default function SalesDashboardPage() {
   useEffect(() => { load(); }, [load]);
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       <PageHeader
         title="Sales Dashboard"
         sub="Funnel, conversion aur team performance"
@@ -76,19 +76,19 @@ export default function SalesDashboardPage() {
         <div className="flex justify-center py-16"><Spinner /></div>
       ) : funnel ? (
         <>
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
             <StatCard label="Open Leads" value={funnel.open ?? 0} accent="blue" />
             <StatCard label="Won (Booked)" value={funnel.won ?? 0} accent="green" />
             <StatCard label="Lost" value={funnel.lost ?? 0} accent="red" />
             <StatCard label="Conversion Rate" value={`${funnel.conversionRate ?? 0}%`} accent="violet" />
           </div>
 
-          <div className="grid lg:grid-cols-2 gap-4">
+          <div className="grid lg:grid-cols-2 gap-3">
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
               <h3 className="font-semibold text-gray-900 mb-1">Pipeline Funnel</h3>
-              <p className="text-xs text-gray-500 mb-4">Stage-wise leads + conversion</p>
+              <p className="text-xs text-gray-500 mb-3">Stage-wise leads + conversion</p>
               <FunnelChart counts={funnel.counts || {}} />
-              <div className="mt-4 flex flex-wrap gap-2 text-xs">
+              <div className="mt-3 flex flex-wrap gap-2 text-xs">
                 <span className="text-gray-500">Avg days in stage:</span>
                 {['new', 'contacted', 'visit'].map((s) => (
                   <Badge key={s} tone="slate">
@@ -101,7 +101,7 @@ export default function SalesDashboardPage() {
 
             <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
               <h3 className="font-semibold text-gray-900 mb-1">Deal Cycle</h3>
-              <p className="text-xs text-gray-500 mb-4">Won leads ka avg close time (created → closed)</p>
+              <p className="text-xs text-gray-500 mb-3">Won leads ka avg close time (created → closed)</p>
               <div className="flex items-baseline gap-2">
                 <span className="text-5xl font-bold text-emerald-700">
                   {funnel.avgDays?.booked != null ? funnel.avgDays.booked : '—'}
@@ -113,7 +113,7 @@ export default function SalesDashboardPage() {
                 <span className="text-red-700 font-semibold">{funnel.lost ?? 0} lost</span> ·{' '}
                 {funnel.total ?? 0} total leads
               </p>
-              <div className="mt-4 h-2 rounded-full bg-gray-100 overflow-hidden">
+              <div className="mt-3 h-2 rounded-full bg-gray-100 overflow-hidden">
                 <div
                   className="h-full bg-gradient-to-r from-emerald-400 to-emerald-500"
                   style={{ width: `${Math.min(100, funnel.conversionRate ?? 0)}%` }}
@@ -124,7 +124,7 @@ export default function SalesDashboardPage() {
 
           <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
             <h3 className="font-semibold text-gray-900 mb-1">Salesperson Leaderboard</h3>
-            <p className="text-xs text-gray-500 mb-4">Pichlay 30 din me won deals per assignee</p>
+            <p className="text-xs text-gray-500 mb-3">Pichlay 30 din me won deals per assignee</p>
             {board.length === 0 ? (
               <p className="text-sm text-slate-500">Abhi koi won deal nahi.</p>
             ) : (

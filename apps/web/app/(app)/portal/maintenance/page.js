@@ -60,7 +60,7 @@ export default function PortalMaintenancePage() {
       {rows.length === 0 ? (
         <EmptyState title="No requests yet" hint="Spot a leaking tap or a broken chair? Report it here and we'll fix it." />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {rows.map((r) => (
             <div key={r.id} className="card-premium p-5">
               <div className="flex items-start justify-between gap-2 mb-2">

@@ -80,7 +80,7 @@ export default function LeadFollowupTab({ leadId }) {
   const past = rows.filter((r) => r.status !== 'pending');
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <ErrorBanner message={error} onClose={() => setError('')} />
       <form onSubmit={add} className="card p-4 space-y-3">
         <h3 className="font-semibold text-sm">Naya Follow-up</h3>

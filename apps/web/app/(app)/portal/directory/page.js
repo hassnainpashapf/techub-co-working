@@ -29,7 +29,7 @@ function MemberCard({ member, index }) {
   const company = member.company?.name || member.companyName;
   return (
     <div className="card-premium p-5 hover:border-[#0f766e]/30 transition-colors">
-      <div className="flex items-center gap-4 mb-3">
+      <div className="flex items-center gap-3 mb-3">
         <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${grad} border border-gray-200 flex items-center justify-center text-gray-900 font-bold`}>
           {initials(member.name)}
         </div>
@@ -91,7 +91,7 @@ export default function DirectoryPage() {
         sub="Connect with fellow members. Only members who opted in are listed — no contact details are shared."
       />
 
-      <div className="flex flex-col sm:flex-row gap-3 mb-4">
+      <div className="flex flex-col sm:flex-row gap-3 mb-3">
         <input
           className="input sm:max-w-sm"
           placeholder="Search name or company…"
@@ -101,7 +101,7 @@ export default function DirectoryPage() {
       </div>
 
       {tags.length > 0 && (
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mb-3">
           <button
             onClick={() => setActiveTag('')}
             className={`text-xs px-3 py-1.5 rounded-full border transition-colors ${
@@ -135,7 +135,7 @@ export default function DirectoryPage() {
       ) : members.length === 0 ? (
         <EmptyState title="No members found" hint="Try a different search — or be the first to opt in from your portal profile." />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {members.map((m, i) => (
             <MemberCard key={m.id} member={m} index={i} />
           ))}

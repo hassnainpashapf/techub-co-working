@@ -64,10 +64,10 @@ export default function EmployeeDocumentsTab({ employeeId }) {
     setUploading(false);
   };
 
-  if (loading) return <div className="py-6"><Spinner /></div>;
+  if (loading) return <div className="py-4"><Spinner /></div>;
 
   return (
-    <div className="text-sm space-y-4">
+    <div className="text-sm space-y-3">
       {err && <ErrorBanner message={err} />}
       {missing.length > 0 && (
         <div className="p-3 rounded-lg bg-amber-50 border border-amber-200 text-amber-700">

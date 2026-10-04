@@ -80,8 +80,8 @@ export default function OnboardingPage() {
     return (
       <div className="p-6 max-w-2xl mx-auto">
         <PageHeader title="🎉 Tenant tayyar hai" sub={`${result.tenant.name} onboard ho gaya`} />
-        <div className="card-premium p-6 mt-4">
-          <div className="grid grid-cols-2 gap-3 text-sm mb-4">
+        <div className="card-premium p-6 mt-3">
+          <div className="grid grid-cols-2 gap-3 text-sm mb-3">
             <div><span className="text-gray-500">Tenant:</span> <b className="text-gray-900">{result.tenant.name}</b></div>
             <div><span className="text-gray-500">Slug:</span> <b className="text-gray-900">{result.tenant.slug}</b></div>
             <div><span className="text-gray-500">Admin:</span> <b className="text-gray-900">{result.admin.name}</b></div>
@@ -89,7 +89,7 @@ export default function OnboardingPage() {
             <div><span className="text-gray-500">Plan:</span> <Badge tone="blue">{result.subscription.plan} (trial)</Badge></div>
             <div><span className="text-gray-500">Trial ends:</span> <b className="text-gray-900">{new Date(result.subscription.trialEndsAt).toLocaleDateString()}</b></div>
           </div>
-          <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-4">
+          <div className="rounded-xl border border-amber-400/40 bg-amber-50 p-4 mb-3">
             <p className="text-xs text-amber-700/80 mb-1">⚠️ Temporary password — sirf ek dafa dikhega. Copy kar ke admin ko de dein:</p>
             <div className="flex items-center gap-3">
               <code className="text-2xl font-mono font-bold text-gray-900 tracking-wider">{result.tempPassword}</code>
@@ -97,7 +97,7 @@ export default function OnboardingPage() {
             </div>
           </div>
           {seeded && (
-            <div className={`text-sm rounded-xl p-3 mb-4 ${seeded.seeded ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
+            <div className={`text-sm rounded-xl p-3 mb-3 ${seeded.seeded ? 'bg-emerald-50 border border-emerald-200 text-emerald-700' : 'bg-red-50 border border-red-200 text-red-700'}`}>
               {seeded.seeded
                 ? `✓ Demo data seed ho gaya: ${seeded.units} units, ${seeded.members} members.`
                 : `Demo seed nahi ho saka: ${seeded.error || 'unknown error'}`}
@@ -106,7 +106,7 @@ export default function OnboardingPage() {
           <p className="text-xs text-gray-500">Welcome email admin ko bhej di gayi hai (temp password ke sath). Pehle login par password change lazmi hoga.</p>
           <button
             onClick={() => { setResult(null); setSeeded(null); setStep(0); setForm({ name: '', slug: '', plan: 'starter', adminName: '', adminEmail: '', seedDemo: true }); }}
-            className="btn-primary mt-4"
+            className="btn-primary mt-3"
           >
             + Ek aur tenant onboard karo
           </button>
@@ -120,7 +120,7 @@ export default function OnboardingPage() {
       <PageHeader title="Tenant Onboarding" sub="Naya workspace 3 steps me tayyar karo" />
 
       {/* stepper */}
-      <div className="flex items-center gap-2 mt-4 mb-4">
+      <div className="flex items-center gap-2 mt-3 mb-3">
         {STEPS.map((label, i) => (
           <div key={label} className="flex items-center gap-2 flex-1">
             <div className={`h-8 w-8 rounded-full flex items-center justify-center text-sm font-bold ${i <= step ? 'bg-[#0f766e] text-white' : 'bg-slate-700 text-gray-500'}`}>{i + 1}</div>
@@ -134,7 +134,7 @@ export default function OnboardingPage() {
 
       <div className="card-premium p-6">
         {step === 0 && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Tenant ka naam">
               <input className="input" value={form.name} onChange={(e) => { set('name', e.target.value); if (!form.slugTouched) set('slug', slugify(e.target.value)); }} placeholder="e.g. Techub Gulberg" />
             </Field>
@@ -155,7 +155,7 @@ export default function OnboardingPage() {
         )}
 
         {step === 1 && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Admin ka naam">
               <input className="input" value={form.adminName} onChange={(e) => set('adminName', e.target.value)} placeholder="e.g. Ahmed Khan" />
             </Field>
@@ -167,7 +167,7 @@ export default function OnboardingPage() {
         )}
 
         {step === 2 && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="rounded-xl bg-gray-100/60 p-4 text-sm space-y-1.5">
               <p><span className="text-gray-500">Tenant:</span> <b className="text-gray-900">{form.name}</b> <span className="text-slate-500 font-mono">({form.slug})</span></p>
               <p><span className="text-gray-500">Plan:</span> <b className="text-gray-900 capitalize">{form.plan}</b> — 14 din trial</p>
@@ -185,7 +185,7 @@ export default function OnboardingPage() {
           </div>
         )}
 
-        <div className="flex justify-between mt-4">
+        <div className="flex justify-between mt-3">
           <button onClick={back} disabled={step === 0 || busy} className="btn-secondary disabled:opacity-40">← Peeche</button>
           {step < 2 ? (
             <button onClick={next} disabled={!validStep()} className="btn-primary disabled:opacity-40">Agla →</button>

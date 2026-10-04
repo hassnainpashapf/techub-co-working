@@ -154,14 +154,14 @@ export default function ComplianceDocumentsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <StatCard label="Expiring soon" value={counts.expiring} accent="amber" />
         <StatCard label="Expired" value={counts.expired} accent="red" />
         <StatCard label="Valid" value={counts.valid} accent="emerald" />
       </div>
 
       {alerts.length > 0 && (
-        <div className="card-premium p-5 mb-4 border-l-4 border-l-amber-400">
+        <div className="card-premium p-5 mb-3 border-l-4 border-l-amber-400">
           <h2 className="text-gray-900 font-bold mb-3">⚠️ Expiring in 30 days</h2>
           <div className="space-y-2">
             {alerts.map((d) => (
@@ -178,7 +178,7 @@ export default function ComplianceDocumentsPage() {
       )}
 
       <div className="card-premium p-5">
-        <h2 className="text-gray-900 font-bold mb-4">All tracked documents</h2>
+        <h2 className="text-gray-900 font-bold mb-3">All tracked documents</h2>
         {loading ? <div className="flex justify-center py-10"><Spinner /></div> : docs.length === 0 ? (
           <p className="text-gray-500 text-sm">No documents with expiry tracking yet. Click "Add document" to start.</p>
         ) : (

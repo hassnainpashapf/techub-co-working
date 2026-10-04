@@ -46,7 +46,7 @@ export default function ExpenseTrendsPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="Expense Trends" subtitle="Category-wise spend over time with spike detection">
         <div className="flex gap-2">
           {[6, 12].map((m) => (
@@ -63,7 +63,7 @@ export default function ExpenseTrendsPage() {
 
       {data && data.categories.length > 0 && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard label="Total spend" value={fmt(data.grandTotal)} />
             <StatCard label="Fastest growing" value={data.topGrowing[0] ? data.topGrowing[0].category.replace(/_/g, ' ') : '—'}
               sub={data.topGrowing[0] ? `+${data.topGrowing[0].pct.toFixed(1)}% MoM` : ''} />
@@ -72,7 +72,7 @@ export default function ExpenseTrendsPage() {
           </div>
 
           <div className="card-premium p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h3 className="text-gray-900 font-bold">Top 5 categories</h3>
               <div className="flex gap-3 flex-wrap">
                 {top5.map((c, i) => (
@@ -102,7 +102,7 @@ export default function ExpenseTrendsPage() {
           )}
 
           <div className="card-premium p-6">
-            <h3 className="text-gray-900 font-bold mb-4">Category breakdown</h3>
+            <h3 className="text-gray-900 font-bold mb-3">Category breakdown</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>

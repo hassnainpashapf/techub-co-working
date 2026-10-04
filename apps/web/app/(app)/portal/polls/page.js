@@ -39,13 +39,13 @@ export default function PortalPollsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Community Polls" subtitle="Your opinion matters — vote!" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : polls.length === 0 ? (
         <EmptyState icon="🗳️" title="No polls right now" text="Check back later — the community team posts polls here." />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {polls.map((p) => (
             <div key={p.id} className="card-premium p-5">
               <div className="flex items-center justify-between mb-3">
@@ -54,7 +54,7 @@ export default function PortalPollsPage() {
                   <span className="text-xs text-slate-500">Closes {new Date(p.closesAt).toLocaleString()}</span>
                 )}
               </div>
-              <p className="text-gray-900 font-semibold mb-4">{p.question}</p>
+              <p className="text-gray-900 font-semibold mb-3">{p.question}</p>
               {p.status === 'open' ? (
                 <div className="space-y-2">
                   {(p.options || []).map((o) => {

@@ -118,13 +118,13 @@ export default function ExitsPage() {
         <button onClick={openModal} className="btn-primary">+ Initiate exit</button>
       } />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Total exits" value={exits.length} />
         <StatCard label="In progress" value={pending} />
         <StatCard label="Completed" value={exits.filter((x) => x.status === 'completed').length} />
         <StatCard label="Resignations" value={exits.filter((x) => x.type === 'resignation').length} />
       </div>
-      <div className="flex gap-3 mb-4 flex-wrap">
+      <div className="flex gap-3 mb-3 flex-wrap">
         <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} className="input">
           <option value="all">All statuses</option>
           {STATUSES.map((s) => <option key={s.value} value={s.value}>{s.label}</option>)}
@@ -136,7 +136,7 @@ export default function ExitsPage() {
         <DataTable columns={cols} rows={exits} onRowClick={(x) => openDetail(x.id)} />}
 
       <Modal open={showModal} onClose={() => setShowModal(false)} title="Initiate exit">
-        <div className="space-y-4">
+        <div className="space-y-3">
           <Field label="Employee">
             <select value={form.employeeId} onChange={(e) => setForm({ ...form, employeeId: e.target.value })} className="input">
               <option value="">Select…</option>
@@ -163,7 +163,7 @@ export default function ExitsPage() {
 
       <Modal open={!!detail} onClose={() => setDetail(null)} title="Exit detail" wide>
         {detail && (
-          <div className="space-y-5">
+          <div className="space-y-3">
             <div className="flex items-center gap-3">
               <div>
                 <div className="font-semibold text-lg">{detail.exit.employee?.name}</div>

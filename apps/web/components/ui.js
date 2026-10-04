@@ -7,7 +7,7 @@
 export function Spinner({ size = 'md' }) {
   const sizes = { sm: 'h-4 w-4', md: 'h-8 w-8', lg: 'h-12 w-12' };
   return (
-    <div className="flex items-center justify-center py-5">
+    <div className="flex items-center justify-center py-3">
       <div
         className={`animate-spin rounded-full border-2 border-gray-200 border-t-[#0f766e] ${sizes[size] || sizes.md}`}
       />
@@ -17,7 +17,7 @@ export function Spinner({ size = 'md' }) {
 
 export function PageHeader({ title, sub, actions }) {
   return (
-    <div className="flex flex-wrap items-start justify-between gap-3 mb-4">
+    <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
       <div>
         <h1 className="text-[24px] 4xl:text-[32px] font-bold text-gray-900 tracking-tight">{title}</h1>
         {sub && <p className="text-[13.5px] 4xl:text-[15px] text-gray-500 mt-1">{sub}</p>}
@@ -194,7 +194,7 @@ export function Modal({ title, onClose, children, open }) {
 export function EmptyState({ title, hint, icon }) {
   return (
     <div className="text-center py-14 px-6">
-      <div className="mx-auto w-14 h-14 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-2xl mb-4 text-gray-400">
+      <div className="mx-auto w-14 h-14 rounded-xl bg-gray-100 border border-gray-200 flex items-center justify-center text-2xl mb-3 text-gray-400">
         {icon || '📭'}
       </div>
       <p className="font-semibold text-gray-900 text-[15px]">{title || 'Nothing here yet'}</p>
@@ -206,7 +206,7 @@ export function EmptyState({ title, hint, icon }) {
 export function ErrorBanner({ message, onRetry }) {
   if (!message) return null;
   return (
-    <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-4 flex items-center justify-between gap-3">
+    <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-xl px-4 py-3 mb-3 flex items-center justify-between gap-3">
       <span>{message}</span>
       {onRetry && (
         <button onClick={onRetry} className="btn-sm btn-secondary shrink-0">
@@ -219,7 +219,7 @@ export function ErrorBanner({ message, onRetry }) {
 
 export function Field({ label, children }) {
   return (
-    <div className="mb-4">
+    <div className="mb-3">
       <label className="block text-[13px] font-medium text-gray-700 mb-1.5">{label}</label>
       {children}
     </div>

@@ -79,7 +79,7 @@ function ReportForm({ initial, onSave, saving }) {
       <Field label="Recipients * (comma separated emails)">
         <input className="input" value={f.recipients} onChange={(e) => setF({ ...f, recipients: e.target.value })} required placeholder="owner@company.com, finance@company.com" />
       </Field>
-      <label className="flex items-center gap-3 mb-4 cursor-pointer">
+      <label className="flex items-center gap-3 mb-3 cursor-pointer">
         <button type="button" role="switch" aria-checked={f.isActive} onClick={() => setF({ ...f, isActive: !f.isActive })}
           className={`w-11 h-6 rounded-full relative transition-colors ${f.isActive ? 'bg-[#0f766e]' : 'bg-gray-100'}`}>
           <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-all ${f.isActive ? 'left-[22px]' : 'left-0.5'}`} />
@@ -166,7 +166,7 @@ export default function ScheduledReportsPage() {
       {reports.length === 0 ? (
         <EmptyState title="No scheduled reports" hint="Create one to get occupancy, revenue or P&L reports in your inbox automatically." />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {reports.map((r) => (
             <div key={r.id} className="card-premium p-5">
               <div className="flex items-start justify-between mb-3">
@@ -179,7 +179,7 @@ export default function ScheduledReportsPage() {
                 <Badge tone={r.isActive ? 'green' : 'slate'}>{r.isActive ? 'Active' : 'Paused'}</Badge>
               </div>
               <p className="text-gray-500 text-xs mb-1">To: {(r.recipients || []).join(', ')}</p>
-              <p className="text-slate-500 text-xs mb-4">
+              <p className="text-slate-500 text-xs mb-3">
                 Last sent: {r.lastSentAt ? new Date(r.lastSentAt).toLocaleString() : 'Never'}
               </p>
               <div className="flex flex-wrap gap-2">

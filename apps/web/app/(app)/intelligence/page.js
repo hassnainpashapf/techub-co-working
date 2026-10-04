@@ -30,7 +30,7 @@ function Donut({ positive, neutral, negative }) {
   ];
   let off = 0;
   return (
-    <div className="flex items-center gap-4">
+    <div className="flex items-center gap-3">
       <svg width="140" height="140" viewBox="0 0 140 140">
         <circle cx="70" cy="70" r={r} fill="none" stroke="rgba(0,0,0,0.06)" strokeWidth="18" />
         {segs.map((s, i) => {
@@ -92,12 +92,12 @@ export default function IntelligencePage() {
   const attn = (insights.unreadCount || 0) + (anomalies.items || []).length + (sentiment.negative || 0);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="🧠 Intelligence" subtitle="AI insights, anomalies, sentiment aur pricing hints — sab ek jagah" />
 
       {err && <ErrorBanner message={err} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         <StatCard title="Unread Insights" value={insights.available ? insights.unreadCount : '—'} icon="💡" />
         <StatCard title="Anomalies (30d)" value={(anomalies.items || []).length} icon="🚨" />
         <StatCard title="Negative Feedback" value={sentiment.available ? sentiment.negative : '—'} icon="😟" />
@@ -110,10 +110,10 @@ export default function IntelligencePage() {
         </div>
       )}
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-3">
         {/* Insights */}
         <div className="rounded-2xl border border-gray-200 bg-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">💡 Weekly Insights</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">💡 Weekly Insights</h3>
           {!insights.available ? (
             <p className="text-gray-500 text-sm">Insights engine abhi merge nahi hua.</p>
           ) : visibleInsights.length === 0 ? (
@@ -143,7 +143,7 @@ export default function IntelligencePage() {
 
         {/* Anomalies */}
         <div className="rounded-2xl border border-gray-200 bg-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">🚨 Anomaly Alerts</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">🚨 Anomaly Alerts</h3>
           {(anomalies.items || []).length === 0 ? (
             <EmptyState title="Pichle 30 din me koi anomaly nahi" />
           ) : (
@@ -161,7 +161,7 @@ export default function IntelligencePage() {
 
         {/* Sentiment */}
         <div className="rounded-2xl border border-gray-200 bg-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">😊 Feedback Sentiment</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">😊 Feedback Sentiment</h3>
           {!sentiment.available ? (
             <p className="text-gray-500 text-sm">Feedback module available nahi.</p>
           ) : (
@@ -171,7 +171,7 @@ export default function IntelligencePage() {
                 <p className="text-xs text-slate-500 mt-3">Rating se andaza (sentiment engine merge ke baad asal scores).</p>
               )}
               {(sentiment.recent || []).length > 0 && (
-                <div className="mt-4 space-y-2">
+                <div className="mt-3 space-y-2">
                   <p className="text-sm font-medium text-red-700">Action needed — negative feedback:</p>
                   {sentiment.recent.map((f) => (
                     <div key={f.id} className="rounded-lg border border-gray-200 bg-gray-100 p-3 text-sm">
@@ -187,7 +187,7 @@ export default function IntelligencePage() {
 
         {/* Pricing hints */}
         <div className="rounded-2xl border border-gray-200 bg-gray-100 p-5">
-          <h3 className="font-semibold text-gray-900 mb-4">💰 Smart Pricing Hints</h3>
+          <h3 className="font-semibold text-gray-900 mb-3">💰 Smart Pricing Hints</h3>
           {!pricing.available ? (
             <p className="text-gray-500 text-sm">Pricing data available nahi.</p>
           ) : (pricing.hints || []).length === 0 ? (

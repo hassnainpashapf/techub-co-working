@@ -78,7 +78,7 @@ export default function ImportPage() {
     <div>
       <PageHeader title="Import Data" sub="Bulk import members and units from CSV files." />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {TABS.map((t) => (
           <button
             key={t.key}
@@ -90,15 +90,15 @@ export default function ImportPage() {
         ))}
       </div>
 
-      {error && <div className="mb-4"><ErrorBanner message={error} /></div>}
+      {error && <div className="mb-3"><ErrorBanner message={error} /></div>}
 
-      <div className="card-premium p-6 mb-4">
+      <div className="card-premium p-6 mb-3">
         <h3 className="text-gray-900 font-semibold mb-2">1. Download template</h3>
-        <p className="text-sm text-gray-500 mb-4">Use the template so columns match. First row must be the header row.</p>
+        <p className="text-sm text-gray-500 mb-3">Use the template so columns match. First row must be the header row.</p>
         <button onClick={downloadTemplate} className="btn-secondary">⬇ Download {active.label} template</button>
       </div>
 
-      <div className="card-premium p-6 mb-4">
+      <div className="card-premium p-6 mb-3">
         <h3 className="text-gray-900 font-semibold mb-2">2. Choose CSV file</h3>
         <input
           type="file"
@@ -107,7 +107,7 @@ export default function ImportPage() {
           className="text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#0f766e]/20 file:text-teal-700 hover:file:bg-[#0f766e]/30"
         />
         {preview.length > 0 && (
-          <div className="mt-4 overflow-x-auto">
+          <div className="mt-3 overflow-x-auto">
             <p className="text-xs text-gray-500 mb-2">Preview (first {preview.length - 1} data rows):</p>
             <table className="w-full text-sm">
               <thead>
@@ -131,8 +131,8 @@ export default function ImportPage() {
           {busy ? 'Importing…' : `Import ${active.label}`}
         </button>
         {result && (
-          <div className="mt-4">
-            <div className="flex gap-4 text-sm mb-3">
+          <div className="mt-3">
+            <div className="flex gap-3 text-sm mb-3">
               <span className="text-emerald-700 font-semibold">✅ Imported: {result.imported}</span>
               <span className="text-amber-700 font-semibold">⏭ Skipped (duplicates): {result.skipped}</span>
               <span className="text-red-700 font-semibold">❌ Errors: {(result.errors || []).length}</span>

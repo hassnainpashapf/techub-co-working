@@ -23,7 +23,7 @@ function PoliciesBanner() {
     } catch {}
   };
   return (
-    <div className="card-premium p-5 mb-4 border-amber-200" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
+    <div className="card-premium p-5 mb-3 border-amber-200" style={{ borderColor: 'rgba(245,158,11,.3)' }}>
       <p className="text-amber-800 font-bold mb-2">📋 {pending.length} policy document{pending.length > 1 ? 's' : ''} pending — parh kar acknowledge karein</p>
       <div className="space-y-2">
         {pending.map((p) => (
@@ -90,7 +90,7 @@ function PortalBookingModal({ onClose, onDone }) {
     <Modal title="Book a Space" onClose={onClose}>
       <form onSubmit={submit}>
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>
         )}
         <Field label="Space">
           <select className="input" value={unitId} onChange={(e) => setUnitId(e.target.value)} required>
@@ -159,13 +159,13 @@ function VisitorInviteModal({ onClose, onDone }) {
         <div className="text-center py-4">
           <p className="text-emerald-700 font-bold text-lg mb-2">✓ Invite created</p>
           <p className="text-gray-500 text-sm mb-3">Share this code with your visitor for fast check-in at reception:</p>
-          <p className="text-3xl font-mono font-bold tracking-widest text-gray-900 bg-gray-100 border border-gray-200 rounded-xl py-4 mb-4">{code}</p>
+          <p className="text-3xl font-mono font-bold tracking-widest text-gray-900 bg-gray-100 border border-gray-200 rounded-xl py-4 mb-3">{code}</p>
           <button onClick={onDone} className="btn-primary">Done</button>
         </div>
       ) : (
         <form onSubmit={submit}>
           {error && (
-            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+            <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>
           )}
           <Field label="Visitor name">
             <input className="input" value={visitorName} onChange={(e) => setVisitorName(e.target.value)} required placeholder="Guest name" />
@@ -230,8 +230,8 @@ function AnnouncementsFeed() {
   const visible = showAll ? items : items.slice(0, 3);
 
   return (
-    <div className="card-premium p-5 mt-4" id="announcements">
-      <div className="flex items-center justify-between mb-4">
+    <div className="card-premium p-5 mt-3" id="announcements">
+      <div className="flex items-center justify-between mb-3">
         <h2 className="text-gray-900 font-bold">📢 Announcements</h2>
         {unread > 0 && <span className="text-xs font-bold bg-[#0f766e]/20 border border-[#0f766e]/40 text-teal-700 rounded-full px-2.5 py-0.5">{unread} new</span>}
       </div>
@@ -315,10 +315,10 @@ function DirectoryProfileSection() {
   }
 
   return (
-    <div className="card-premium p-5 mt-4">
+    <div className="card-premium p-5 mt-3">
       <h2 className="text-gray-900 font-bold mb-1">Directory Profile 🤝</h2>
-      <p className="text-gray-500 text-xs mb-4">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
-      <label className="flex items-center gap-3 mb-4 cursor-pointer">
+      <p className="text-gray-500 text-xs mb-3">Opt in to appear in the member directory. Only your name, company, bio and tags are shown — never email or phone.</p>
+      <label className="flex items-center gap-3 mb-3 cursor-pointer">
         <button
           type="button"
           role="switch"
@@ -343,7 +343,7 @@ function DirectoryProfileSection() {
               placeholder="What do you do? What are you looking for?"
             />
           </div>
-          <div className="mb-4">
+          <div className="mb-3">
             <label className="block text-xs font-semibold text-gray-600 mb-1.5">Tags (comma separated)</label>
             <input
               className="input"
@@ -408,9 +408,9 @@ function CalendarFeedSection() {
   };
 
   return (
-    <div className="card-premium p-5 mt-4">
+    <div className="card-premium p-5 mt-3">
       <h2 className="text-gray-900 font-bold mb-1">📅 Add to Calendar</h2>
-      <p className="text-gray-500 text-sm mb-4">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
+      <p className="text-gray-500 text-sm mb-3">Subscribe to your upcoming bookings in Google, Apple or Outlook calendar. The feed updates automatically.</p>
       {loading ? (
         <p className="text-slate-500 text-sm">Loading…</p>
       ) : !feed ? (
@@ -455,7 +455,7 @@ function NextBookingCard({ booking, onCheckIn, checkingIn }) {
       <h2 className="text-gray-900 font-bold text-lg">{booking.title}</h2>
       <p className="text-gray-600 text-sm mt-1">{booking.unit?.code} • {booking.unit?.type}</p>
       <p className="text-gray-500 text-sm">🕙 {fmtDateTime(booking.startAt)} → {new Date(booking.endAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</p>
-      <div className="mt-4">
+      <div className="mt-3">
         {checkedIn ? (
           <span className="inline-flex items-center gap-1.5 text-sm font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg px-4 py-2">
             ✓ Checked in
@@ -490,9 +490,9 @@ function InvoicesSection({ reloadKey }) {
   const open = invoices.filter((i) => ['unpaid', 'partial'].includes(i.status));
 
   return (
-    <div className="card-premium p-5 mt-4" id="invoices">
+    <div className="card-premium p-5 mt-3" id="invoices">
       <h2 className="text-gray-900 font-bold mb-1">🧾 My Invoices</h2>
-      <p className="text-gray-500 text-sm mb-4">
+      <p className="text-gray-500 text-sm mb-3">
         {open.length === 0 ? 'All clear — no unpaid invoices. 🎉' : `${open.length} unpaid — pay at the front desk or via bank transfer.`}
       </p>
       {loading ? <Spinner /> : open.length === 0 ? null : (
@@ -596,7 +596,7 @@ export default function PortalPage() {
   return (
     <div className="max-w-3xl mx-auto">
       {/* HERO */}
-      <div className="relative overflow-hidden rounded-2xl p-6 mb-4 bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
+      <div className="relative overflow-hidden rounded-2xl p-6 mb-3 bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
         <div className="absolute -top-10 -right-10 w-40 h-40 rounded-full bg-[#0f766e]/20 blur-3xl" />
         <div className="absolute -bottom-12 -left-8 w-40 h-40 rounded-full bg-teal-600/20 blur-3xl" />
         <div className="relative">
@@ -620,7 +620,7 @@ export default function PortalPage() {
       <PoliciesBanner />
 
       {/* NEXT BOOKING + BALANCE */}
-      <div className="grid md:grid-cols-2 gap-4 mb-4 mt-4">
+      <div className="grid md:grid-cols-2 gap-3 mb-3 mt-3">
         <NextBookingCard booking={nextBooking} onCheckIn={checkIn} checkingIn={checkingIn} />
         <div className="rounded-2xl border border-gray-200 bg-white p-5 flex flex-col justify-between shadow-[0_1px_3px_rgba(0,0,0,0.06)]">
           <div>
@@ -635,7 +635,7 @@ export default function PortalPage() {
           {unpaidTotal > 0 && (
             <button
               onClick={() => quickAction('anchor-invoices')}
-              className="btn-primary text-sm mt-4 self-start"
+              className="btn-primary text-sm mt-3 self-start"
             >
               Pay now →
             </button>
@@ -645,7 +645,7 @@ export default function PortalPage() {
 
       {/* QUICK ACTIONS */}
       <h2 className="text-gray-900 font-bold mb-3">⚡ Quick Actions</h2>
-      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-4">
+      <div className="grid grid-cols-3 md:grid-cols-6 gap-3 mb-3">
         {QUICK_ACTIONS.map((a) => (
           <button
             key={a.key}
@@ -659,7 +659,7 @@ export default function PortalPage() {
       </div>
 
       {/* STATS */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Upcoming Bookings" value={upcomingBookings.length} accent="blue" />
         <StatCard label="Open Tickets" value={openTickets.length} accent="amber" />
         <StatCard label="Unpaid Amount" value={fmtMoney(unpaidTotal)} accent={unpaidTotal > 0 ? 'red' : 'emerald'} />
@@ -667,7 +667,7 @@ export default function PortalPage() {
       </div>
 
       {loyalty && Number(loyalty.balance || 0) > 0 && (
-        <a href="/portal/loyalty" className="block card-premium p-4 mb-4 hover:border-teal-500/40 transition">
+        <a href="/portal/loyalty" className="block card-premium p-4 mb-3 hover:border-teal-500/40 transition">
           <div className="flex items-center justify-between">
             <p className="text-sm text-gray-900">⭐ You have <span className="font-bold text-teal-700">{Number(loyalty.balance).toLocaleString()} loyalty points</span> ({fmtMoney(Number(loyalty.balance) * Number(loyalty.pointValue || 1))} value)</p>
             <span className="text-sm text-teal-700 underline shrink-0">View →</span>
@@ -677,7 +677,7 @@ export default function PortalPage() {
 
       {/* MY BOOKINGS */}
       <div className="card-premium p-5" id="bookings">
-        <div className="flex items-center justify-between mb-4">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-gray-900 font-bold">My Upcoming Bookings</h2>
           <button onClick={() => setShowBook(true)} className="text-xs text-teal-700 hover:text-teal-700 underline">+ Book new</button>
         </div>
@@ -719,8 +719,8 @@ export default function PortalPage() {
       <InvoicesSection reloadKey={loading} />
 
       {/* OPEN TICKETS */}
-      <div className="card-premium p-5 mt-4">
-        <div className="flex items-center justify-between mb-4">
+      <div className="card-premium p-5 mt-3">
+        <div className="flex items-center justify-between mb-3">
           <h2 className="text-gray-900 font-bold">My Open Tickets</h2>
           <a href="/tickets" className="text-xs text-teal-700 hover:text-teal-700 underline">View all →</a>
         </div>
@@ -747,9 +747,9 @@ export default function PortalPage() {
       <AnnouncementsFeed />
 
       {/* Profile */}
-      <div className="card-premium p-5 mt-4">
-        <h2 className="text-gray-900 font-bold mb-4">My Profile</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+      <div className="card-premium p-5 mt-3">
+        <h2 className="text-gray-900 font-bold mb-3">My Profile</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 text-sm">
           <div><p className="text-slate-500 text-xs">Name</p><p className="text-gray-900">{member.name}</p></div>
           <div><p className="text-slate-500 text-xs">Email</p><p className="text-gray-900 break-all">{member.email || '—'}</p></div>
           <div><p className="text-slate-500 text-xs">Phone</p><p className="text-gray-900">{member.phone}</p></div>

@@ -160,7 +160,7 @@ export default function AccessDeskPage() {
   const blocked = blockedReason(member);
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🛎️ Access Desk" sub="Reception — member access, PIN, schedules, manual entry, visitor passes" />
 
       {err && <ErrorBanner message={err} />}
@@ -196,9 +196,9 @@ export default function AccessDeskPage() {
       {loading && <Spinner />}
 
       {member && !loading && (
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-3 lg:grid-cols-2">
           {/* Access status + credentials */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-4">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-gray-900">{member.name} — access status</h3>
               {blocked
@@ -260,7 +260,7 @@ export default function AccessDeskPage() {
           </div>
 
           {/* Schedule */}
-          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-4">
+          <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 space-y-3">
             <h3 className="font-semibold text-gray-900">🕒 Access schedule</h3>
             {schedules.length > 0 && (
               <div className="space-y-2">
@@ -336,7 +336,7 @@ export default function AccessDeskPage() {
           <div className="text-center text-4xl font-mono tracking-[0.5em] text-emerald-700 bg-black/40 rounded-lg py-4">
             {pinModal.pin}
           </div>
-          <button className="btn-primary w-full mt-4" onClick={() => setPinModal(null)}>Ho gaya</button>
+          <button className="btn-primary w-full mt-3" onClick={() => setPinModal(null)}>Ho gaya</button>
         </Modal>
       )}
     </div>

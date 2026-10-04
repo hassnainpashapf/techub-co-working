@@ -85,7 +85,7 @@ export default function MemberAccessTab({ memberId }) {
         rows={creds}
         empty={{ title: 'No credentials', hint: 'Issue a PIN to give this member door access.' }}
       />
-      <h3 className="font-semibold text-gray-900 mb-2 mt-5">🕐 Access Schedules ({schedules.length})</h3>
+      <h3 className="font-semibold text-gray-900 mb-2 mt-3">🕐 Access Schedules ({schedules.length})</h3>
       <DataTable
         columns={[
           { key: 'door', label: 'Door', render: (s) => s.door?.name || 'All doors' },

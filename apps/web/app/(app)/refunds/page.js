@@ -85,7 +85,7 @@ export default function RefundsPage() {
         action={<button className="btn-primary" onClick={() => setShowForm(true)}>+ Request Refund</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[{ v: '', l: 'All' }, ...Object.keys(TONES).map((s) => ({ v: s, l: s[0].toUpperCase() + s.slice(1) }))].map((s) => (
           <button key={s.v} onClick={() => setStatusFilter(s.v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${statusFilter === s.v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>

@@ -145,7 +145,7 @@ export default function GreenInitiativesPage() {
   ] : [];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader
         title="🌱 Green Initiatives"
         sub="Sustainability goals — energy, water, waste aur awareness"
@@ -154,7 +154,7 @@ export default function GreenInitiativesPage() {
       {error && <ErrorBanner message={error} />}
 
       {stats.length > 0 && (
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
           {stats.map((s) => (
             <div key={s.label} className="card-premium p-4">
               <div className="text-xs text-gray-500">{s.label}</div>
@@ -216,14 +216,14 @@ export default function GreenInitiativesPage() {
 
       {(modal?.mode === 'add' || modal?.mode === 'edit') && (
         <Modal title={modal.mode === 'add' ? 'Nayi Initiative' : 'Edit Initiative'} onClose={() => setModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Title *">
               <input className="input-premium" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} placeholder="e.g. Solar panels lagana" />
             </Field>
             <Field label="Description">
               <textarea className="input-premium" rows={3} value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Category">
                 <select className="input-premium" value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })}>
                   {CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}
@@ -237,7 +237,7 @@ export default function GreenInitiativesPage() {
                 </Field>
               )}
             </div>
-            <div className="grid grid-cols-3 gap-4">
+            <div className="grid grid-cols-3 gap-3">
               <Field label="Target value">
                 <input type="number" min="0" className="input-premium" value={form.targetValue} onChange={(e) => setForm({ ...form, targetValue: e.target.value })} placeholder="e.g. 100" />
               </Field>
@@ -248,7 +248,7 @@ export default function GreenInitiativesPage() {
                 <input className="input-premium" value={form.unit} onChange={(e) => setForm({ ...form, unit: e.target.value })} placeholder="kWh / % / trees" />
               </Field>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Start date">
                 <input type="date" className="input-premium" value={form.startDate} onChange={(e) => setForm({ ...form, startDate: e.target.value })} />
               </Field>
@@ -266,7 +266,7 @@ export default function GreenInitiativesPage() {
 
       {modal?.mode === 'progress' && (
         <Modal title={`📈 Progress — ${modal.item?.title}`} onClose={() => setModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="text-sm text-gray-500">
               Target: {modal.item?.targetValue ?? '—'}{modal.item?.unit ? ` ${modal.item.unit}` : ''}
             </div>

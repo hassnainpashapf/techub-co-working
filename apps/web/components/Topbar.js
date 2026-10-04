@@ -172,7 +172,7 @@ export default function Topbar({ onMenuClick, sidebarOpen }) {
           {dropOpen && results && (
             <div className="absolute right-0 top-full mt-2 w-[340px] max-h-[420px] overflow-y-auto rounded-xl border border-gray-200 bg-white shadow-xl shadow-gray-200/60 z-50">
               {totalHits === 0 ? (
-                <div className="px-4 py-6 text-center text-[13px] text-gray-500">No results for “{query.trim()}”</div>
+                <div className="px-4 py-4 text-center text-[13px] text-gray-500">No results for “{query.trim()}”</div>
               ) : (
                 groups.map((g) => (
                   <div key={g.key} className="py-1.5">

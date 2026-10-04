@@ -141,7 +141,7 @@ export default function MetersPage() {
 
       {readingsModal && (
         <Modal title={`📊 Readings — ${readingsModal.meter.name}`} onClose={() => setReadingsModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <div className="flex gap-2">
               <Field label="New Reading">
                 <input type="number" step="0.01" className="input-premium w-full" value={newReading}
@@ -168,7 +168,7 @@ export default function MetersPage() {
 
       {modal && (
         <Modal title={modal.mode === 'add' ? 'Naya Meter' : 'Meter Edit Karein'} onClose={() => setModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Meter Name *">
               <input className="input-premium w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="e.g. Main Electricity Meter" />
             </Field>
@@ -177,7 +177,7 @@ export default function MetersPage() {
                 {TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}
               </select>
             </Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Unit (optional)">
                 <select className="input-premium w-full" value={form.unitId} onChange={(e) => setForm({ ...form, unitId: e.target.value })}>
                   <option value="">Shared / Building level</option>

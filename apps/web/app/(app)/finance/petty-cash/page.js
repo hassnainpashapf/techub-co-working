@@ -86,13 +86,13 @@ export default function PettyCashPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-3">
         <StatCard label="Current Balance" value={`Rs ${bal.toLocaleString()}`} accent={bal >= 0 ? 'green' : 'red'} sub={bal >= 0 ? 'Healthy' : 'Negative!'} />
         <StatCard label="Total In" value={`Rs ${Number(summary.totalIn || 0).toLocaleString()}`} accent="blue" />
         <StatCard label="Total Out" value={`Rs ${Number(summary.totalOut || 0).toLocaleString()}`} accent="amber" />
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['', 'in', 'out'].map((t) => (
           <button
             key={t}
@@ -133,7 +133,7 @@ export default function PettyCashPage() {
 
       {modal && (
         <Modal title={modal === 'in' ? 'Record Cash In' : 'Record Cash Out'} onClose={() => setModal(null)}>
-          <form onSubmit={submit} className="space-y-4">
+          <form onSubmit={submit} className="space-y-3">
             <Field label="Amount (Rs)">
               <input type="number" min="1" step="any" className="input" value={form.amount}
                 onChange={(e) => setForm({ ...form, amount: e.target.value })} required />

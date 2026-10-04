@@ -147,7 +147,7 @@ export default function WorkshopsPage() {
   if (loading) return <div className="flex justify-center py-20"><Spinner size="lg" /></div>;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       <PageHeader
         title="Live Workshops"
         subtitle="Schedule live sessions, manage seats aur bookings"
@@ -172,7 +172,7 @@ export default function WorkshopsPage() {
 
       {/* Member view */}
       {!isStaff && tab === 'upcoming' && (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {(upcoming || []).map((w) => (
             <div key={w.id} className="card">
               <div className="flex items-start justify-between gap-3">
@@ -203,7 +203,7 @@ export default function WorkshopsPage() {
       )}
 
       {!isStaff && tab === 'mine' && (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {mine.map((b) => (
             <div key={b.id} className="card flex items-center justify-between">
               <div>
@@ -228,7 +228,7 @@ export default function WorkshopsPage() {
       {/* Staff view */}
       {isStaff && (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatCard title="Total workshops" value={all.length} />
             <StatCard title="Scheduled" value={all.filter((w) => w.status === 'scheduled').length} />
             <StatCard title="Ongoing" value={all.filter((w) => w.status === 'ongoing').length} />

@@ -18,7 +18,7 @@ function CompanyForm({ initial, onSave, saving }) {
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave(f); }}>
       <Field label="Company Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required placeholder="e.g. Acme Pvt Ltd" /></Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Industry"><input className="input" value={f.industry} onChange={(e) => setF({ ...f, industry: e.target.value })} placeholder="e.g. Software" /></Field>
         <Field label="Website"><input className="input" value={f.website} onChange={(e) => setF({ ...f, website: e.target.value })} placeholder="https://example.com" /></Field>
         <Field label="Email"><input type="email" className="input" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder="info@company.com" /></Field>
@@ -26,7 +26,7 @@ function CompanyForm({ initial, onSave, saving }) {
       </div>
       <Field label="Address"><input className="input" value={f.address} onChange={(e) => setF({ ...f, address: e.target.value })} placeholder="Office address" /></Field>
       <Field label="Notes"><textarea className="input" rows={2} value={f.notes} onChange={(e) => setF({ ...f, notes: e.target.value })} placeholder="Any notes…" /></Field>
-      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-3">
         <input type="checkbox" checked={f.isActive} onChange={(e) => setF({ ...f, isActive: e.target.checked })} className="accent-teal-600" />
         Active
       </label>
@@ -38,7 +38,7 @@ function CompanyForm({ initial, onSave, saving }) {
 function CompanyDetail({ company, onClose, onEdit, onDelete }) {
   return (
     <div>
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div>
           <h3 className="text-xl font-bold text-gray-900">{company.name}</h3>
           <div className="flex items-center gap-2 mt-1">
@@ -48,13 +48,13 @@ function CompanyDetail({ company, onClose, onEdit, onDelete }) {
           </div>
         </div>
       </div>
-      <div className="grid grid-cols-2 gap-3 text-sm mb-4">
+      <div className="grid grid-cols-2 gap-3 text-sm mb-3">
         {company.email && <div><div className="text-xs text-slate-500">Email</div><div className="text-gray-800">{company.email}</div></div>}
         {company.phone && <div><div className="text-xs text-slate-500">Phone</div><div className="text-gray-800">{company.phone}</div></div>}
         {company.website && <div><div className="text-xs text-slate-500">Website</div><a href={company.website} target="_blank" rel="noreferrer" className="text-teal-700 hover:underline">{company.website}</a></div>}
         {company.address && <div className="col-span-2"><div className="text-xs text-slate-500">Address</div><div className="text-gray-800">{company.address}</div></div>}
       </div>
-      {company.notes && <p className="text-sm text-gray-500 mb-4">{company.notes}</p>}
+      {company.notes && <p className="text-sm text-gray-500 mb-3">{company.notes}</p>}
       <h4 className="text-sm font-semibold text-gray-800 mb-2">Linked Members</h4>
       {company.members?.length ? (
         <ul className="space-y-1.5 max-h-48 overflow-y-auto">
@@ -66,7 +66,7 @@ function CompanyDetail({ company, onClose, onEdit, onDelete }) {
           ))}
         </ul>
       ) : <p className="text-sm text-slate-500 mb-2">No members linked yet.</p>}
-      <div className="flex gap-2 mt-5">
+      <div className="flex gap-2 mt-3">
         <button className="btn-secondary flex-1" onClick={onEdit}>Edit</button>
         <button className="btn-danger flex-1" onClick={onDelete}>Delete</button>
         <button className="btn-ghost" onClick={onClose}>Close</button>
@@ -166,7 +166,7 @@ export default function CompaniesPage() {
         }
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <form onSubmit={onSearch} className="flex gap-2 mb-4">
+      <form onSubmit={onSearch} className="flex gap-2 mb-3">
         <input className="input flex-1" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search companies by name or industry…" />
         <button type="submit" className="btn-secondary">Search</button>
       </form>

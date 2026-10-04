@@ -141,7 +141,7 @@ export default function InventoryPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {/* Phase 29: low-stock alert banner */}
       {!loading && tab === 'items' && lowStock.length > 0 && (
-        <div className="mb-4 flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-50 px-4 py-3">
+        <div className="mb-3 flex items-center gap-3 rounded-xl border border-red-500/40 bg-red-50 px-4 py-3">
           <span className="text-xl">⚠️</span>
           <div className="flex-1">
             <div className="text-sm font-semibold text-red-700">{lowStock.length} item{lowStock.length > 1 ? 's' : ''} low on stock</div>
@@ -151,7 +151,7 @@ export default function InventoryPage() {
           </div>
         </div>
       )}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[['items', `Inventory (${items.length})`], ['assets', `Assets (${assets.length})`]].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
             className={`px-4 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>

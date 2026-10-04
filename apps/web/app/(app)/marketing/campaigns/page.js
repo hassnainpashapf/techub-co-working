@@ -135,14 +135,14 @@ export default function CampaignsPage() {
         <button className="btn-primary" onClick={() => { setEditing(null); setShowForm(true); }}>+ New campaign</button>
       } />
       {error && <ErrorBanner message={error} onRetry={load} />}
-      {notice && <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{notice}</div>}
+      {notice && <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700">{notice}</div>}
       {loading ? <Spinner /> : rows.length === 0 ? (
         <EmptyState title="No campaigns yet" hint="Create your first campaign to email members in bulk." />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {rows.map((c) => (
             <div key={c.id} className="card-premium p-5">
-              <div className="flex items-start justify-between gap-4 flex-wrap">
+              <div className="flex items-start justify-between gap-3 flex-wrap">
                 <div>
                   <div className="flex items-center gap-2">
                     <h3 className="text-lg font-bold text-gray-900">{c.name}</h3>

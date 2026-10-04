@@ -43,7 +43,7 @@ export default function ForecastPage() {
   const a = data?.assumptions;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader
         title="Occupancy Forecast"
         sub="History vs projected occupancy — simple trend math, no black box"
@@ -61,7 +61,7 @@ export default function ForecastPage() {
 
       {data && !loading && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             <StatCard label="Current occupancy" value={`${(a.currentOccupancy * 100).toFixed(1)}%`} accent="blue" />
             <StatCard label={`Forecast (${months} mo)`} value={`${(a.forecastOccupancy * 100).toFixed(1)}%`} sub={`trend ${(data.trendPerMonth * 100).toFixed(2)} pts/mo`} accent="amber" />
             <div className="card-premium p-5 flex items-center justify-between">
@@ -75,7 +75,7 @@ export default function ForecastPage() {
           </div>
 
           <div className="card-premium p-6">
-            <div className="flex items-center gap-5 mb-4 text-xs text-gray-500">
+            <div className="flex items-center gap-3 mb-3 text-xs text-gray-500">
               <span className="flex items-center gap-1.5"><span className="w-6 h-0.5 bg-[#0f766e] rounded" /> History</span>
               <span className="flex items-center gap-1.5"><span className="w-6 border-t-2 border-dashed border-amber-500" /> Forecast</span>
             </div>
@@ -86,7 +86,7 @@ export default function ForecastPage() {
             )}
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
             <div className="card-premium p-6">
               <h3 className="font-bold text-gray-900 mb-3">📋 How this is calculated</h3>
               <ul className="text-sm text-gray-600 space-y-2 list-disc pl-5">

@@ -91,12 +91,12 @@ export default function SmsCampaignsPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       {provider && !provider.configured && (
-        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-4 text-sm text-amber-700">
+        <div className="rounded-xl border border-amber-200 bg-amber-50 p-4 mb-3 text-sm text-amber-700">
           ⚠️ <b>Console mode:</b> {provider.message}
         </div>
       )}
       {provider && provider.configured && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 mb-4 text-sm text-emerald-700">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 mb-3 text-sm text-emerald-700">
           ✅ Twilio connected — real SMS delivery active.
         </div>
       )}
@@ -155,7 +155,7 @@ export default function SmsCampaignsPage() {
             <Field label={`Message — ${c.chars} chars · ${c.segments} segment${c.segments > 1 ? 's' : ''} (${c.encoding})`}>
               <textarea className="input" rows={4} value={message} onChange={(e) => setMessage(e.target.value)} required maxLength={1000} placeholder="Assalam o Alaikum! ..." />
             </Field>
-            <div className="flex justify-end gap-2 mt-4">
+            <div className="flex justify-end gap-2 mt-3">
               <button type="button" className="btn-ghost" onClick={() => setShowModal(false)}>Cancel</button>
               <button type="submit" className="btn-primary" disabled={saving}>{saving ? 'Saving…' : 'Save Draft'}</button>
             </div>

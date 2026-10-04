@@ -76,7 +76,7 @@ export default function FormsListPage() {
       />
       {err && <ErrorBanner message={err} onRetry={() => { setErr(''); load(); }} />}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-gray-900">{stats.totalForms ?? '—'}</div><div className="text-xs text-gray-500">Total Forms</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-green-300">{stats.publishedForms ?? '—'}</div><div className="text-xs text-gray-500">Published</div></div>
           <div className="card p-4 text-center"><div className="text-2xl font-bold text-teal-700">{stats.submissions30d ?? '—'}</div><div className="text-xs text-gray-500">Responses (30d)</div></div>
@@ -86,7 +86,7 @@ export default function FormsListPage() {
       {loading ? <Spinner /> : forms.length === 0 ? (
         <EmptyState title="Koi form nahi" hint="Naya Form banao — membership application, survey, feedback, kuch bhi." />
       ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">
           {forms.map((f) => (
             <div key={f.id} className="card p-5">
               <div className="flex items-start justify-between gap-2">
@@ -97,7 +97,7 @@ export default function FormsListPage() {
                 <Badge tone={STATUS_TONES[f.status] || 'slate'}>{STATUS_LABELS[f.status] || f.status}</Badge>
               </div>
               <p className="text-sm text-gray-500 mt-2 line-clamp-2">{f.description || '—'}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-3">
                 <Link href={`/forms/${f.id}`} className="btn-secondary text-xs">✏️ Builder</Link>
                 <Link href={`/forms/${f.id}/responses`} className="btn-secondary text-xs">📥 Responses</Link>
                 {f.status !== 'published' ? (

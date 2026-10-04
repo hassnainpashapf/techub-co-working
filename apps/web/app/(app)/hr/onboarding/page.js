@@ -107,7 +107,7 @@ export default function OnboardingPage() {
   ];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Employee Onboarding"
         sub="Naye staff ke liye checklist-based onboarding"
@@ -115,7 +115,7 @@ export default function OnboardingPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Templates" value={templates.length} accent="blue" icon="📋" />
         <StatCard label="In Progress" value={inProgress.length} accent="amber" icon="⏳" />
         <StatCard label="Completed" value={completed.length} accent="green" icon="✅" />
@@ -123,9 +123,9 @@ export default function OnboardingPage() {
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Onboarding Templates</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">Onboarding Templates</h2>
         {loading ? <Spinner /> : templates.length === 0 ? <EmptyState title="Koi template nahi" hint="Pehla template banao taake naye employees ka onboarding auto-start ho" /> : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-3">
             {templates.map((t) => (
               <div key={t.id} className="rounded-lg border border-gray-200/60 bg-white p-4">
                 <div className="flex items-start justify-between mb-2">
@@ -141,7 +141,7 @@ export default function OnboardingPage() {
       </div>
 
       <div className="rounded-xl border border-gray-200 bg-white p-5">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">Active Onboardings</h2>
+        <h2 className="text-lg font-semibold text-gray-900 mb-3">Active Onboardings</h2>
         {loading ? <Spinner /> : onboardings.length === 0 ? <EmptyState title="Koi onboarding nahi" hint="Employees page se naya employee banne par default template auto-start hoga" /> : (
           <DataTable columns={obCols} rows={onboardings} empty="Koi onboarding nahi" />
         )}
@@ -149,7 +149,7 @@ export default function OnboardingPage() {
 
       {modal === 'template' && (
         <Modal title="New Onboarding Template" onClose={() => setModal(null)}>
-          <form onSubmit={saveTemplate} className="space-y-4">
+          <form onSubmit={saveTemplate} className="space-y-3">
             <Field label="Template Name">
               <input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" placeholder="e.g. Receptionist Onboarding" />
             </Field>

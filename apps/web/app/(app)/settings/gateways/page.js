@@ -70,9 +70,9 @@ export default function GatewaysPage() {
       <PageHeader title="Payment Gateways" subtitle="Online payments accept karne ke liye gateways configure karein" />
 
       {error && <ErrorBanner message={error} />}
-      {testMsg && <div className="mb-4 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{testMsg}</div>}
+      {testMsg && <div className="mb-3 p-3 rounded-lg bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm">{testMsg}</div>}
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
         {gateways.map((g) => {
           const doc = SETUP_DOCS[g.name] || { title: g.displayName, steps: [] };
           const isOpen = open === g.name;
@@ -107,9 +107,9 @@ export default function GatewaysPage() {
         })}
       </div>
 
-      <div className="mt-4 rounded-2xl border border-gray-200 bg-gray-50 p-5">
+      <div className="mt-3 rounded-2xl border border-gray-200 bg-gray-50 p-5">
         <h3 className="font-semibold text-gray-900 mb-2">Test payment flow</h3>
-        <p className="text-sm text-gray-500 mb-4">
+        <p className="text-sm text-gray-500 mb-3">
           Manual gateway hamesha ready hota hai. Member billing page par "Pay Online" dabakar reference hasil karta hai.
         </p>
         <button onClick={testManualFlow} disabled={testing} className="btn-primary btn-sm">
@@ -117,7 +117,7 @@ export default function GatewaysPage() {
         </button>
       </div>
 
-      <div className="mt-4 text-xs text-slate-500">
+      <div className="mt-3 text-xs text-slate-500">
         Webhook signature security: har gateway ka webhook HMAC-SHA256 signature verify karta hai.
         Production me <code className="text-gray-600">GATEWAY_WEBHOOK_SECRET</code> env lazmi set karein.
       </div>

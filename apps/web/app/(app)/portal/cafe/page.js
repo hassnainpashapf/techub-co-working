@@ -127,7 +127,7 @@ export default function PortalCafePage() {
   const activeOrders = orders.filter((o) => ['pending', 'preparing', 'ready'].includes(o.status));
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Café" subtitle="Order food & drinks from your desk" />
 
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}

@@ -157,7 +157,7 @@ export default function PurchaseOrdersPage() {
       />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-3 gap-3 mb-4">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <StatCard label="Total POs" value={stats.total} />
         <StatCard label="Pending Approval" value={stats.pending} />
         <StatCard label="PO Value" value={fmtMoney(stats.value)} />

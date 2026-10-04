@@ -55,7 +55,7 @@ export default function LocationsComparePage() {
   const worst = rows.length > 1 ? rows[rows.length - 1] : null;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Locations Comparison"
         subtitle="Building-wise performance: occupancy, revenue, expenses and net"
@@ -77,7 +77,7 @@ export default function LocationsComparePage() {
         <EmptyState title="No buildings" message="Add buildings to compare locations." />
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             <StatCard label="Total Revenue" value={fmt(totals.revenue)} accent="green" />
             <StatCard label="Total Expenses" value={fmt(totals.expenses)} accent="red" />
             <StatCard label="Net Profit" value={fmt(totals.net)} accent={totals.net >= 0 ? 'green' : 'red'} />
@@ -85,9 +85,9 @@ export default function LocationsComparePage() {
           </div>
 
           <div className="card-premium p-6">
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3">
               <h2 className="text-lg font-bold text-gray-900">Revenue vs Expenses</h2>
-              <div className="flex items-center gap-4 text-xs text-gray-500">
+              <div className="flex items-center gap-3 text-xs text-gray-500">
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-emerald-500 inline-block" /> Revenue</span>
                 <span className="flex items-center gap-1.5"><span className="w-2.5 h-2.5 rounded bg-rose-500 inline-block" /> Expenses</span>
               </div>
@@ -95,7 +95,7 @@ export default function LocationsComparePage() {
             <HDGroupedBarChart data={rows.map(r=>({label:r.name,values:[r.revenue,r.expensesAllocated]}))} height={190} colors={['#10b981','#f43f5e']} />
           </div>
 
-          <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-3">
             {rows.map((r) => {
               const isBest = best && r.buildingId === best.buildingId;
               const isWorst = worst && r.buildingId === worst.buildingId;

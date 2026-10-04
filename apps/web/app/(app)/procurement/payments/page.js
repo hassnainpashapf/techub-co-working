@@ -81,7 +81,7 @@ export default function VendorPaymentsPage() {
   const outstanding = selectedBill ? Number(selectedBill.amount) - Number(selectedBill.paidAmount || 0) : 0;
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Vendor Payments" sub="Bill payments record karein aur AP aging dekhein"
         actions={<button className={btnPrimary} onClick={() => { setError(''); setShowPay(true); }}>+ Record Payment</button>} />
       {error && <ErrorBanner message={error} />}
@@ -99,7 +99,7 @@ export default function VendorPaymentsPage() {
 
       {tab === 'aging' && aging && !loading && (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
             <StatCard label="Total outstanding" value={fmt(aging.totals.total)} accent="blue" />
             {BUCKETS.map((b) => (
               <StatCard key={b.key} label={b.label} value={fmt(aging.totals[b.key])} accent={b.accent} />

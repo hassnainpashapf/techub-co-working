@@ -93,14 +93,14 @@ export default function WifiPage() {
       />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Active" value={counts.active} accent="green" />
         <StatCard label="Used" value={counts.used} accent="blue" />
         <StatCard label="Expired" value={counts.expired} accent="amber" />
         <StatCard label="Revoked" value={counts.revoked} accent="red" />
       </div>
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-3">
         {['', 'active', 'used', 'expired', 'revoked'].map((s) => (
           <button
             key={s || 'all'}
@@ -125,7 +125,7 @@ export default function WifiPage() {
       </div>
 
       {copied === 'codes' && (
-        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-4">
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-700 mb-3">
           ✅ New codes generated and copied to clipboard!
         </div>
       )}
@@ -159,8 +159,8 @@ export default function WifiPage() {
       {showGen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4" onClick={() => setShowGen(false)}>
           <div className="card-premium w-full max-w-md p-6" onClick={(e) => e.stopPropagation()}>
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Generate Vouchers</h2>
-            <form onSubmit={generate} className="space-y-4">
+            <h2 className="text-xl font-bold text-gray-900 mb-3">Generate Vouchers</h2>
+            <form onSubmit={generate} className="space-y-3">
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-semibold text-gray-600 mb-1.5">Count (1–100)</label>

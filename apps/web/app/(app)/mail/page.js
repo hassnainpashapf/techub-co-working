@@ -99,14 +99,14 @@ export default function MailPage() {
       } />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Pending pickup" value={pending} accent={pending > 0 ? 'amber' : 'emerald'} />
         <StatCard label="Received" value={counts.received || 0} accent="amber" />
         <StatCard label="Notified" value={counts.notified || 0} accent="blue" />
         <StatCard label="Collected" value={counts.collected || 0} accent="emerald" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         {['', 'received', 'notified', 'collected'].map((s) => (
           <button key={s} onClick={() => setFilter(s)} className={`px-3 py-1.5 rounded-full text-sm font-semibold ${filter === s ? 'bg-teal-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
             {s === '' ? 'All' : s[0].toUpperCase() + s.slice(1)}

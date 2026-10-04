@@ -168,8 +168,8 @@ function RuleModal({ rule, onClose, onSaved }) {
             onRemove={() => setActions(actions.filter((_, j) => j !== i))} />
         ))}
       </div>
-      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-teal-700 hover:text-teal-700 mb-4">+ Add action</button>
-      <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+      <button onClick={() => setActions([...actions, { type: 'send_email' }])} className="text-sm text-teal-700 hover:text-teal-700 mb-3">+ Add action</button>
+      <label className="flex items-center gap-2 text-sm text-gray-600 mb-3">
         <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} className="accent-[#0f766e]" />
         Rule active
       </label>
@@ -224,7 +224,7 @@ export default function AutomationPage() {
         actions={<button onClick={() => setModal({})} className="btn-primary">+ New rule</button>} />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Rules" value={rules.length} accent="blue" />
         <StatCard label="Active" value={rules.filter((r) => r.isActive).length} accent="emerald" />
         <StatCard label="Fired (recent)" value={runs.length} accent="violet" />
@@ -234,7 +234,7 @@ export default function AutomationPage() {
       {rules.length === 0 ? (
         <EmptyState title="No automation rules yet" hint="Create your first rule — e.g. create a task when an invoice is 7+ days overdue." />
       ) : (
-        <div className="space-y-3 mb-5">
+        <div className="space-y-3 mb-3">
           {rules.map((r) => (
             <div key={r.id} className="card-premium p-4 flex flex-wrap items-center gap-3">
               <div className="flex-1 min-w-[200px]">
@@ -255,7 +255,7 @@ export default function AutomationPage() {
       )}
 
       {testResult && (
-        <div className="card-premium p-5 mb-5">
+        <div className="card-premium p-5 mb-3">
           <h2 className="text-gray-900 font-bold mb-3">🧪 Dry-run: {testResult.rule.name}</h2>
           <p className="text-sm text-gray-500 mb-3">
             Conditions matched: <Badge tone={testResult.conditionsMatched ? 'emerald' : 'red'}>{testResult.conditionsMatched ? 'Yes' : 'No'}</Badge>
@@ -269,7 +269,7 @@ export default function AutomationPage() {
       )}
 
       <div className="card-premium p-5">
-        <h2 className="text-gray-900 font-bold mb-4">Recent runs</h2>
+        <h2 className="text-gray-900 font-bold mb-3">Recent runs</h2>
         {runs.length === 0 ? (
           <p className="text-slate-500 text-sm">No runs yet.</p>
         ) : (

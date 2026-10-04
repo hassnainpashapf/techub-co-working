@@ -131,7 +131,7 @@ export default function VendorContractsPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="grid-4 mb-4">
+      <div className="grid-4 mb-3">
         <StatCard title="Active" value={stats.counts.active || 0} />
         <StatCard title="Expired" value={stats.counts.expired || 0} />
         <StatCard title="30 din me expire" value={stats.expiring30d || 0} />
@@ -139,7 +139,7 @@ export default function VendorContractsPage() {
       </div>
 
       {timeline.length > 0 && (
-        <div className="card mb-4">
+        <div className="card mb-3">
           <div className="font-semibold mb-3">⏳ Expiry Timeline</div>
           <div className="flex flex-col gap-2">
             {timeline.map((c) => {
@@ -159,7 +159,7 @@ export default function VendorContractsPage() {
         </div>
       )}
 
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex gap-2 items-center">
           {[
             { value: 'all', label: 'Sab' },
@@ -227,7 +227,7 @@ export default function VendorContractsPage() {
           <label className="flex items-center gap-2 mt-3 text-sm">
             <input type="checkbox" checked={form.autoRenew} onChange={(e) => setF('autoRenew', e.target.checked)} /> Auto-renew enabled
           </label>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn-ghost" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn-primary" disabled={saving || !form.vendorId || !form.title || !form.endDate} onClick={save}>
               {saving ? 'Saving...' : 'Save'}
@@ -242,7 +242,7 @@ export default function VendorContractsPage() {
           <Field label="Nayi end date">
             <input type="date" className="input" value={renewDate} onChange={(e) => setRenewDate(e.target.value)} />
           </Field>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn-ghost" onClick={() => setModal(null)}>Cancel</button>
             <button className="btn-primary" disabled={saving || !renewDate} onClick={doRenew}>
               {saving ? 'Renewing...' : '🔄 Renew'}

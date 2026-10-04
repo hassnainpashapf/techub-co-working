@@ -140,7 +140,7 @@ export default function AttendancePage() {
       <ErrorBanner message={error} onRetry={() => window.location.reload()} />
 
       {/* Check in/out */}
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <h2 className="font-semibold text-gray-900">My attendance</h2>
@@ -164,8 +164,8 @@ export default function AttendancePage() {
       </div>
 
       {/* Records */}
-      <div className="card mb-4">
-        <div className="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div className="card mb-3">
+        <div className="flex flex-wrap items-center justify-between gap-3 mb-3">
           <h2 className="font-semibold text-gray-900">Attendance records</h2>
           <input type="date" className="input !w-auto" value={date} onChange={(e) => setDate(e.target.value)} />
         </div>
@@ -193,7 +193,7 @@ export default function AttendancePage() {
       </div>
 
       {/* Leaves */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div className="card">
           <h2 className="font-semibold text-gray-900 mb-3">Apply for leave</h2>
           <form onSubmit={applyLeave}>
@@ -204,7 +204,7 @@ export default function AttendancePage() {
             <Field label="Reason"><textarea className="input" rows="3" value={leaveForm.reason} onChange={(e) => setLeaveForm({ ...leaveForm, reason: e.target.value })} required placeholder="Reason for leave" /></Field>
             <button type="submit" className="btn-primary" disabled={submitting}>{submitting ? 'Submitting…' : 'Submit request'}</button>
           </form>
-          <h3 className="font-semibold text-gray-900 mt-4 mb-2">My leaves</h3>
+          <h3 className="font-semibold text-gray-900 mt-3 mb-2">My leaves</h3>
           <DataTable
             columns={[
               { key: 'from', label: 'From', render: (r) => (r.from ? String(r.from).slice(0, 10) : '—') },

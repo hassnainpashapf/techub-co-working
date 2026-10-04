@@ -73,7 +73,7 @@ export default function CommsDashboardPage() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="📡 Communication Hub" subtitle="Tamam channels ki analytics ek jagah" />
 
       {error && <ErrorBanner message={error} />}
@@ -84,23 +84,23 @@ export default function CommsDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {cards.map((c) => (
           <StatCard key={c.label} label={c.label} value={c.value} icon={c.icon} />
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-2 gap-4">
+      <div className="grid lg:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-          <h3 className="font-semibold mb-4">Channel Breakdown (30 din)</h3>
+          <h3 className="font-semibold mb-3">Channel Breakdown (30 din)</h3>
           <ChannelBars data={s.byChannel} />
           {s.failedCount > 0 && (
-            <div className="mt-4 text-sm text-red-700">⚠️ {s.failedCount} messages fail hue</div>
+            <div className="mt-3 text-sm text-red-700">⚠️ {s.failedCount} messages fail hue</div>
           )}
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-          <h3 className="font-semibold mb-4">Top Active Members</h3>
+          <h3 className="font-semibold mb-3">Top Active Members</h3>
           {!s.topMembers || !s.topMembers.length ? (
             <EmptyState title="Abhi koi activity nahi" />
           ) : (
@@ -120,7 +120,7 @@ export default function CommsDashboardPage() {
       </div>
 
       <div className="rounded-2xl border border-gray-200 bg-gray-50 p-5">
-        <h3 className="font-semibold mb-4">Quick Links</h3>
+        <h3 className="font-semibold mb-3">Quick Links</h3>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           {[
             { href: '/comms/inbox', label: '📥 Team Inbox', desc: 'Conversations + assign' },

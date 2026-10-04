@@ -69,7 +69,7 @@ function DataPrivacySection({ member, onChanged }) {
   }
 
   return (
-    <div className="rounded-2xl border border-gray-200 bg-white p-4 mt-4">
+    <div className="rounded-2xl border border-gray-200 bg-white p-4 mt-3">
       <h3 className="font-semibold text-gray-900 mb-1">Data &amp; Privacy</h3>
       <p className="text-xs text-gray-500 mb-3">
         Export all member data as JSON (password hashes are never included). Anonymization replaces
@@ -99,7 +99,7 @@ function DataPrivacySection({ member, onChanged }) {
             <input className="input" value={confirmName} onChange={(e) => setConfirmName(e.target.value)}
               placeholder="Member name" disabled={busy} />
           </Field>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button onClick={() => { setShowAnon(false); setConfirmName(''); }} disabled={busy}
               className="px-3 py-1.5 rounded-lg text-xs font-medium border border-gray-200 text-gray-600 hover:bg-gray-100">
               Cancel
@@ -253,7 +253,7 @@ function MemberDetail({ member, onClose, onChanged }) {
     const exceeded = limit != null && balance > limit;
     const pct = limit ? Math.min(100, (balance / limit) * 100) : 0;
     return (
-      <div className={`rounded-2xl border p-4 mb-5 ${exceeded ? 'border-red-500/40 bg-red-50' : 'border-gray-200 bg-white'}`}>
+      <div className={`rounded-2xl border p-4 mb-3 ${exceeded ? 'border-red-500/40 bg-red-50' : 'border-gray-200 bg-white'}`}>
         <div className="flex items-center justify-between text-sm mb-2">
           <span className="text-gray-600 font-medium">Credit</span>
           {exceeded && <span className="text-[11px] font-bold text-red-700 bg-red-500/20 px-2 py-0.5 rounded-full">LIMIT EXCEEDED</span>}
@@ -299,7 +299,7 @@ function MemberDetail({ member, onClose, onChanged }) {
       finally { setBusy(false); }
     }
     return (
-      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 mb-5">
+      <div className="rounded-xl border border-gray-200 bg-gray-50 p-4 mb-3">
         <div className="flex items-center justify-between mb-2">
           <span className="text-sm text-gray-600 font-medium">Loyalty Points</span>
           <span className="text-lg font-bold text-teal-700">{Number(data.balance || 0).toLocaleString()} pts</span>
@@ -349,7 +349,7 @@ function MemberDetail({ member, onClose, onChanged }) {
       ) : (
         <div>
           {error && <ErrorBanner message={error} />}
-          <div className="flex gap-2 mb-5">
+          <div className="flex gap-2 mb-3">
             {['overview', 'timeline', 'access', 'comms'].map((t) => (
               <button key={t} onClick={() => setTab(t)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-medium border capitalize ${tab === t ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
@@ -367,7 +367,7 @@ function MemberDetail({ member, onClose, onChanged }) {
           <div>
           <CreditBar m={m} />
           <LoyaltyCard memberId={m.id} />
-          <div className="grid grid-cols-2 gap-3 text-sm mb-5">
+          <div className="grid grid-cols-2 gap-3 text-sm mb-3">
             <div><p className="text-xs text-gray-500">Phone</p><p className="font-medium">{m.phone || '—'}</p></div>
             <div><p className="text-xs text-gray-500">Email</p><p className="font-medium">{m.email || '—'}</p></div>
             <div><p className="text-xs text-gray-500">CNIC</p><p className="font-medium">{m.cnic || '—'}</p></div>
@@ -375,7 +375,7 @@ function MemberDetail({ member, onClose, onChanged }) {
             <div><p className="text-xs text-gray-500">Emergency contact</p><p className="font-medium">{m.emergencyContact || '—'}</p></div>
             <div><p className="text-xs text-gray-500">Status</p><Badge tone={STATUS_TONE[m.status] || 'slate'}>{m.status || '—'}</Badge></div>
           </div>
-          {m.notes && <p className="text-sm text-gray-500 bg-gray-100 rounded-lg p-3 mb-5">{m.notes}</p>}
+          {m.notes && <p className="text-sm text-gray-500 bg-gray-100 rounded-lg p-3 mb-3">{m.notes}</p>}
 
           <h3 className="font-semibold text-gray-900 mb-2">Contracts ({contracts.length})</h3>
           <DataTable
@@ -422,7 +422,7 @@ function MemberDetail({ member, onClose, onChanged }) {
             </Modal>
           )}
 
-          <h3 className="font-semibold text-gray-900 mb-2 mt-5">Invoices ({invoices.length})</h3>
+          <h3 className="font-semibold text-gray-900 mb-2 mt-3">Invoices ({invoices.length})</h3>
           <DataTable
             columns={[
               { key: 'no', label: 'Invoice', render: (r) => r.number || r.id?.slice(0, 8) || '—' },
@@ -658,7 +658,7 @@ export default function MembersPage() {
 
       {/* Phase 29 Track 4: contracts expiring soon */}
       {expiring.length > 0 && (
-        <div className="card mb-4 border-amber-200">
+        <div className="card mb-3 border-amber-200">
           <div className="flex items-center gap-2 mb-3">
             <span className="text-lg">⏳</span>
             <h3 className="font-semibold text-gray-900">Contracts expiring soon ({expiring.length})</h3>
@@ -684,7 +684,7 @@ export default function MembersPage() {
         </div>
       )}
 
-      <div className="card mb-4">
+      <div className="card mb-3">
         <div className="flex flex-wrap gap-3 items-center">
           <input
             className="input max-w-xs"
@@ -713,7 +713,7 @@ export default function MembersPage() {
       <div className="card">
         {/* Phase 38 Track 5: extended bulk actions bar */}
         {canBulk && selectedIds.length > 0 && (
-          <div className="flex flex-wrap items-center gap-3 mb-4 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
+          <div className="flex flex-wrap items-center gap-3 mb-3 p-3 rounded-xl bg-[#0f766e]/10 border border-[#0f766e]/30">
             <span className="text-sm font-semibold text-teal-700">{selectedIds.length} selected</span>
             <select className="input max-w-[180px] !w-auto" value={bulkAction} onChange={(e) => setBulkAction(e.target.value)}>
               <option value="suspend">Suspend (on hold)</option>
@@ -733,7 +733,7 @@ export default function MembersPage() {
         )}
         {/* Phase 38 Track 5: bulk result summary */}
         {bulkResult && (
-          <div className="mb-4 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm">
+          <div className="mb-3 p-3 rounded-xl bg-emerald-50 border border-emerald-200 text-sm">
             <span className="text-emerald-700 font-medium">{bulkResult.done} done</span>
             {bulkResult.failed.length > 0 && (
               <span className="text-amber-700"> — {bulkResult.failed.length} failed ({bulkResult.failed.slice(0, 5).map((f) => f.reason || f.id).join(', ')}{bulkResult.failed.length > 5 ? '…' : ''})</span>
@@ -783,7 +783,7 @@ export default function MembersPage() {
           <Field label="Message">
             <textarea className="input" rows={5} value={bulkBody} onChange={(e) => setBulkBody(e.target.value)} placeholder={'Hi everyone,\n\n…'} />
           </Field>
-          <p className="text-xs text-gray-500 mb-4">Members without an email address are skipped automatically.</p>
+          <p className="text-xs text-gray-500 mb-3">Members without an email address are skipped automatically.</p>
           <div className="flex justify-end gap-2">
             <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
             <button
@@ -803,7 +803,7 @@ export default function MembersPage() {
           <Field label="Tag">
             <input className="input" value={bulkTag} onChange={(e) => setBulkTag(e.target.value)} placeholder="vip" maxLength={40} />
           </Field>
-          <p className="text-xs text-gray-500 mb-4">Tag is stored on the member's notes as [tag:name]. Duplicates are skipped.</p>
+          <p className="text-xs text-gray-500 mb-3">Tag is stored on the member's notes as [tag:name]. Duplicates are skipped.</p>
           <div className="flex justify-end gap-2">
             <button className="btn-secondary" onClick={() => setBulkModal(null)}>Cancel</button>
             <button
@@ -820,7 +820,7 @@ export default function MembersPage() {
       {/* Phase 29 Track 4: renew contract modal */}
       {renewTarget && (
         <Modal title={`Renew contract — ${renewTarget.member?.name || ''} (${renewTarget.unit?.code || ''})`} onClose={() => setRenewTarget(null)}>
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-500 mb-3">
             Current ends <b className="text-gray-900">{String(renewTarget.endDate).slice(0, 10)}</b>. A new contract will start the next day; the old one will be marked expired.
           </p>
           <Field label="New end date">
@@ -829,7 +829,7 @@ export default function MembersPage() {
           <Field label="Rent amount (optional — keep current if empty)">
             <input type="number" min="0" step="0.01" className="input" value={renewRent} onChange={(e) => setRenewRent(e.target.value)} placeholder={String(renewTarget.rentAmount ?? '')} />
           </Field>
-          <div className="flex justify-end gap-2 mt-4">
+          <div className="flex justify-end gap-2 mt-3">
             <button className="btn-secondary" onClick={() => setRenewTarget(null)}>Cancel</button>
             <button className="btn-primary" disabled={!renewDate || renewing} onClick={handleRenew}>
               {renewing ? 'Renewing…' : 'Renew contract'}

@@ -115,7 +115,7 @@ export default function PortalFeedbackPage() {
     <div>
       <PageHeader title="Feedback" subtitle="Apni raye dein — hum behtar banayenge" />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[
           { v: 'board', l: '🗳️ Suggestions Board' },
           { v: 'mine', l: '📝 My Feedback' },
@@ -135,28 +135,28 @@ export default function PortalFeedbackPage() {
         ))}
       </div>
 
-      {error && <div className="mb-4"><ErrorBanner message={error} /></div>}
+      {error && <div className="mb-3"><ErrorBanner message={error} /></div>}
 
       {tab === 'new' && (
-        <div className="card-premium p-6 mb-4 max-w-2xl">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">Naya feedback</h2>
-          {done && <div className="mb-4 text-sm text-emerald-700">✅ Shukriya! Aap ka feedback mil gaya.</div>}
+        <div className="card-premium p-6 mb-3 max-w-2xl">
+          <h2 className="text-lg font-bold text-gray-900 mb-3">Naya feedback</h2>
+          {done && <div className="mb-3 text-sm text-emerald-700">✅ Shukriya! Aap ka feedback mil gaya.</div>}
           <form onSubmit={submit}>
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Category</label>
               <select className="input" value={category} onChange={(e) => setCategory(e.target.value)}>
                 {CATS.map((c) => <option key={c.v} value={c.v}>{c.l}</option>)}
               </select>
             </div>
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Title (optional)</label>
               <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Mukhtasar unwan…" maxLength={200} />
             </div>
-            <div className="mb-4">
+            <div className="mb-3">
               <label className="block text-xs font-semibold text-gray-600 mb-1.5">Details</label>
               <textarea className="input" rows={4} value={body} onChange={(e) => setBody(e.target.value)} placeholder="Apni tajweez ya shikayat likhein…" required />
             </div>
-            <label className="flex items-center gap-3 mb-5 cursor-pointer">
+            <label className="flex items-center gap-3 mb-3 cursor-pointer">
               <button
                 type="button"
                 role="switch"
@@ -178,7 +178,7 @@ export default function PortalFeedbackPage() {
       {tab === 'board' && (
         <div>
           <h2 className="text-lg font-bold text-gray-900 mb-3">Community suggestions</h2>
-          <p className="text-sm text-gray-500 mb-4">Members ki tajaveez — achi lage to 👍 upvote karein.</p>
+          <p className="text-sm text-gray-500 mb-3">Members ki tajaveez — achi lage to 👍 upvote karein.</p>
           {loading ? <Spinner /> : board.length === 0 ? (
             <EmptyState title="Abhi koi suggestion nahi" />
           ) : (

@@ -29,7 +29,7 @@ function LeadForm({ initial, onSave, saving }) {
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, budget: f.budget === '' ? null : Number(f.budget) }); }}>
       <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required placeholder="Lead name" /></Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Phone"><input className="input" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} placeholder="0300-1234567" /></Field>
         <Field label="Email"><input type="email" className="input" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder="lead@example.com" /></Field>
         <Field label="Company"><input className="input" value={f.company} onChange={(e) => setF({ ...f, company: e.target.value })} placeholder="Company" /></Field>
@@ -141,7 +141,7 @@ function ConvertModal({ lead, onClose, onDone }) {
           {result.contract && (
             <div className="text-sm text-gray-500 mt-2">Contract created — {result.contract.unitId ? `unit ${result.contract.unitId}` : ''} from {new Date(result.contract.startDate).toLocaleDateString()}</div>
           )}
-          <a href="/members" className="btn-primary inline-block mt-4" onClick={() => { onClose(); onDone(); }}>
+          <a href="/members" className="btn-primary inline-block mt-3" onClick={() => { onClose(); onDone(); }}>
             View member →
           </a>
         </div>
@@ -162,7 +162,7 @@ function ConvertModal({ lead, onClose, onDone }) {
               {units.map((u) => <option key={u.id} value={u.id}>{u.code} — Rs {Number(u.monthlyPrice).toLocaleString()}/mo</option>)}
             </select>
           </Field>
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-2 gap-3">
             <Field label="Start date">
               <input type="date" className="input" value={f.startDate} onChange={(e) => setF({ ...f, startDate: e.target.value })} />
             </Field>
@@ -256,7 +256,7 @@ export default function LeadsPage() {
         subtitle="Sales pipeline — drag leads through stages"
         action={<button onClick={() => setModal('create')} className="btn-primary">+ Add Lead</button>}
       />
-      <div className="mb-4 max-w-sm">
+      <div className="mb-3 max-w-sm">
         <input
           className="input"
           placeholder="Search name, company, phone, email…"
@@ -267,7 +267,7 @@ export default function LeadsPage() {
       </div>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-5 gap-3">
           {STAGES.map((st) => {
             const items = leads.filter((l) => l.stage === st.key);
             return (
@@ -279,7 +279,7 @@ export default function LeadsPage() {
                 {items.map((lead) => (
                   <LeadCard key={lead.id} lead={lead} onMove={move} onEdit={setModal} onConvert={convert} onDelete={del} />
                 ))}
-                {items.length === 0 && <div className="text-xs text-gray-500 text-center py-6">No leads</div>}
+                {items.length === 0 && <div className="text-xs text-gray-500 text-center py-4">No leads</div>}
               </div>
             );
           })}

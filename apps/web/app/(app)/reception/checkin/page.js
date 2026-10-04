@@ -187,17 +187,17 @@ export default function ReceptionCheckinPage() {
 
       {error && <ErrorBanner message={error} onRetry={() => setError('')} />}
       {notice && (
-        <div className="mb-4 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+        <div className="mb-3 rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
           {notice}
         </div>
       )}
 
-      <div className="grid gap-4 lg:grid-cols-2">
+      <div className="grid gap-3 lg:grid-cols-2">
         {/* Member search + check-in/out */}
         <div className="card">
           <h3 className="text-base font-semibold text-gray-900 mb-1">Member check-in</h3>
-          <p className="text-sm text-gray-500 mb-4">Search by name or phone, then tap a button.</p>
-          <form onSubmit={searchMembers} className="flex gap-2 mb-4">
+          <p className="text-sm text-gray-500 mb-3">Search by name or phone, then tap a button.</p>
+          <form onSubmit={searchMembers} className="flex gap-2 mb-3">
             <input
               className="input flex-1 text-lg py-3"
               placeholder="Type name or phone…"
@@ -229,14 +229,14 @@ export default function ReceptionCheckinPage() {
                   </div>
                   <div className="flex gap-2 shrink-0">
                     <button
-                      className="btn bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3 text-base font-semibold"
+                      className="btn bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-3 text-base font-semibold"
                       disabled={busyMember === m.id}
                       onClick={() => memberAction(m, 'check-in')}
                     >
                       {busyMember === m.id ? '…' : 'Check in'}
                     </button>
                     <button
-                      className="btn bg-amber-600 hover:bg-amber-500 text-white px-5 py-3 text-base font-semibold"
+                      className="btn bg-amber-600 hover:bg-amber-500 text-white px-4 py-3 text-base font-semibold"
                       disabled={busyMember === m.id}
                       onClick={() => memberAction(m, 'check-out')}
                     >
@@ -250,10 +250,10 @@ export default function ReceptionCheckinPage() {
         </div>
 
         {/* QR + visitor walk-in */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="card">
             <h3 className="text-base font-semibold text-gray-900 mb-1">Scan member QR</h3>
-            <p className="text-sm text-gray-500 mb-4">
+            <p className="text-sm text-gray-500 mb-3">
               Paste the token from the member's digital ID card (camera scan coming soon).
             </p>
             <form onSubmit={scanQr} className="flex gap-2">
@@ -271,7 +271,7 @@ export default function ReceptionCheckinPage() {
 
           <div className="card">
             <h3 className="text-base font-semibold text-gray-900 mb-1">Visitor walk-in</h3>
-            <p className="text-sm text-gray-500 mb-4">Quick check-in for visitors without an invite.</p>
+            <p className="text-sm text-gray-500 mb-3">Quick check-in for visitors without an invite.</p>
             <form onSubmit={walkInVisitor} className="space-y-3">
               <Field label="Name *">
                 <input
@@ -325,12 +325,12 @@ export default function ReceptionCheckinPage() {
       </div>
 
       {/* Who's in */}
-      <div className="mt-4">
-        <div className="grid gap-4 sm:grid-cols-2 mb-4">
+      <div className="mt-3">
+        <div className="grid gap-3 sm:grid-cols-2 mb-3">
           <StatCard label="Members inside" value={insideMembers.length} accent="green" icon="👥" />
           <StatCard label="Visitors inside" value={insideVisitors.length} accent="blue" icon="🧳" />
         </div>
-        <div className="grid gap-4 lg:grid-cols-2">
+        <div className="grid gap-3 lg:grid-cols-2">
           <div className="card">
             <div className="flex items-center justify-between mb-3">
               <h3 className="text-base font-semibold text-gray-900">Members inside</h3>

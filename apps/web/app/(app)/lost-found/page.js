@@ -94,12 +94,12 @@ export default function LostFoundStaffPage() {
 
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard title="Open items" value={counts.open} accent="blue" />
         <StatCard title="Claimed" value={counts.claimed} accent="green" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         <div className="flex gap-1 p-1 rounded-xl bg-gray-100 border border-gray-200">
           {[{ v: 'open', l: 'Open' }, { v: 'claimed', l: 'Claimed' }, { v: 'expired', l: 'Expired' }].map((t) => (
             <button
@@ -130,7 +130,7 @@ export default function LostFoundStaffPage() {
       ) : items.length === 0 ? (
         <EmptyState title="Koi item nahi" hint="Is tab me koi item nahi hai." />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
           {items.map((it) => (
             <div key={it.id} className="card-premium p-5 flex flex-col">
               <div className="flex items-start justify-between gap-2 mb-2">

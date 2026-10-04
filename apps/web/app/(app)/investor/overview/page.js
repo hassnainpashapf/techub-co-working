@@ -12,7 +12,7 @@ function RichStatCard({ label, value, sub, icon, grad, topBorder }) {
   return (
     <div className={`group relative overflow-hidden rounded-2xl bg-white border border-gray-200 shadow-[0_1px_3px_rgba(0,0,0,0.06)] p-5 hover:shadow-[0_14px_34px_-12px_rgba(15,118,110,0.28)] hover:-translate-y-1 hover:border-teal-200 transition-all duration-300`}>
       <div className={`absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r ${topBorder}`} />
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-3">
         <div>
           <p className="text-[11.5px] font-bold uppercase tracking-[0.12em] text-gray-500">{label}</p>
         </div>
@@ -78,7 +78,7 @@ function DualTrendChart({ labels, revenue, expenses, height = 280 }) {
           </text>
         ))}
       </svg>
-      <div className="absolute top-1 left-1 flex items-center gap-4 text-[12px] font-bold">
+      <div className="absolute top-1 left-1 flex items-center gap-3 text-[12px] font-bold">
         <span className="flex items-center gap-1.5 text-teal-700"><span className="w-3 h-[3px] rounded bg-teal-600" /> Revenue</span>
         <span className="flex items-center gap-1.5 text-amber-600"><span className="w-3 h-[3px] rounded bg-amber-500" /> Expenses</span>
       </div>
@@ -94,7 +94,7 @@ function SegmentDonut({ data, size = 190, centerLabel = 'Total' }) {
   let offset = 0;
   const palette = ['#22c55e', '#f59e0b', '#ef4444', '#3b82f6', '#8b5cf6'];
   return (
-    <div className="flex flex-col sm:flex-row items-center gap-4">
+    <div className="flex flex-col sm:flex-row items-center gap-3">
       <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
         <div className="absolute inset-0 rounded-full bg-gradient-to-br from-teal-50 to-emerald-50 blur-sm" />
         <svg viewBox="0 0 160 160" className="relative w-full h-full -rotate-90 drop-shadow-sm">
@@ -114,7 +114,7 @@ function SegmentDonut({ data, size = 190, centerLabel = 'Total' }) {
             return el;
           })}
         </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center px-5 text-center">
+        <div className="absolute inset-0 flex flex-col items-center justify-center px-4 text-center">
           <span className="text-[20px] font-bold text-gray-900 tracking-tight leading-tight">Rs {fmtNum(total)}</span>
           <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.15em] mt-1">{centerLabel}</span>
         </div>
@@ -248,7 +248,7 @@ export default function InvestorOverviewPage() {
           ]}
       />
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 4xl:gap-4 mb-4 4xl:mb-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <RichStatCard
           label="Revenue" value={money(revenueMTD)} sub="this month"
           icon="💰" grad="from-teal-500 to-emerald-600" topBorder="from-teal-500 to-emerald-400"
@@ -267,8 +267,8 @@ export default function InvestorOverviewPage() {
         />
       </div>
 
-      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5 mb-4 4xl:mb-5">
-        <div className="flex items-start justify-between mb-5">
+      <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5 mb-3 4xl:mb-3">
+        <div className="flex items-start justify-between mb-3">
           <div className="flex items-center gap-3.5">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-teal-500 to-emerald-600 shadow-lg shadow-teal-500/25">💹</span>
             <div>
@@ -283,9 +283,9 @@ export default function InvestorOverviewPage() {
         <DualTrendChart labels={trendLabels} revenue={trendRevenue} expenses={trendExpenses} height={280} />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 4xl:gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 4xl:gap-3">
         <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
-          <div className="flex items-center gap-3.5 mb-4">
+          <div className="flex items-center gap-3.5 mb-3">
             <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-violet-500 to-purple-600 shadow-lg shadow-violet-500/25">🍩</span>
             <div>
               <h3 className="text-[17px] 4xl:text-[20px] font-bold text-gray-900 tracking-tight">Invoice Status</h3>
@@ -296,7 +296,7 @@ export default function InvestorOverviewPage() {
         </div>
 
         <div className="rounded-3xl bg-white border border-gray-200 shadow-[0_2px_8px_rgba(0,0,0,0.04)] p-6 4xl:p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3.5">
               <span className="w-11 h-11 rounded-2xl flex items-center justify-center text-xl text-white bg-gradient-to-br from-amber-500 to-orange-600 shadow-lg shadow-amber-500/25">⏳</span>
               <div>
@@ -331,7 +331,7 @@ export default function InvestorOverviewPage() {
             </div>
           ) : (
             <div className="flex flex-col items-center justify-center py-14 text-center">
-              <span className="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center text-3xl mb-4 shadow-inner">🎉</span>
+              <span className="w-16 h-16 rounded-3xl bg-gradient-to-br from-emerald-100 to-teal-100 flex items-center justify-center text-3xl mb-3 shadow-inner">🎉</span>
               <p className="text-[15px] font-bold text-gray-800">All clear — no pending dues</p>
               <p className="text-[12.5px] text-gray-500 font-medium mt-1 max-w-[240px]">
                 Every invoice is paid. Nothing outstanding right now.

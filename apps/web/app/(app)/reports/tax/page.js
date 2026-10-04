@@ -60,7 +60,7 @@ export default function TaxReportsPage() {
         }
       />
 
-      <div className="flex flex-wrap items-end gap-3 mb-5">
+      <div className="flex flex-wrap items-end gap-3 mb-3">
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -77,7 +77,7 @@ export default function TaxReportsPage() {
 
       {!loading && !error && data && (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
             <StatCard label="Total Invoiced" value={fmt(data.totalInvoiced)} sub={`${data.invoiceCount} invoices`} accent="blue" />
             <StatCard label="Tax Amount" value={fmt(data.totalTax)} sub={`@ ${data.taxRate}%`} accent="green" />
             <StatCard label="Total Paid" value={fmt(data.totalPaid)} accent="green" />
@@ -86,7 +86,7 @@ export default function TaxReportsPage() {
 
           <div className="card-premium p-6">
             <h2 className="text-lg font-bold text-gray-900 mb-1">Monthly Tax</h2>
-            <p className="text-xs text-gray-500 mb-4">Tax amount per month in the selected period</p>
+            <p className="text-xs text-gray-500 mb-3">Tax amount per month in the selected period</p>
             {data.byMonth.length === 0 ? (
               <EmptyState title="No data" hint="No invoices found in this period." />
             ) : (

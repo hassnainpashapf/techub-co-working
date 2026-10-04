@@ -61,7 +61,7 @@ function NewsletterForm({ initial, onSave, saving }) {
       e.preventDefault();
       onSave({ title: f.title, subject: f.subject, segment: f.segment, sections: f.sections });
     }}>
-      <div className="grid gap-4 md:grid-cols-2">
+      <div className="grid gap-3 md:grid-cols-2">
         <Field label="Newsletter title *">
           <input className="input" value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} required maxLength={200} />
         </Field>
@@ -110,7 +110,7 @@ function NewsletterForm({ initial, onSave, saving }) {
         ))}
       </div>
 
-      <button className="btn-primary mt-4 w-full" disabled={saving}>{saving ? 'Saving…' : 'Save newsletter'}</button>
+      <button className="btn-primary mt-3 w-full" disabled={saving}>{saving ? 'Saving…' : 'Save newsletter'}</button>
     </form>
   );
 }
@@ -189,10 +189,10 @@ export default function NewslettersPage() {
         <button className="btn-primary" onClick={() => { setEditing(null); setShowForm(true); }}>+ New newsletter</button>
       </PageHeader>
 
-      {notice && <div className="mb-4 rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-200">{notice}</div>}
+      {notice && <div className="mb-3 rounded-xl border border-green-500/30 bg-green-500/10 p-3 text-sm text-green-200">{notice}</div>}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="mb-4 grid gap-4 sm:grid-cols-3">
+      <div className="mb-3 grid gap-3 sm:grid-cols-3">
         <StatCard title="Total newsletters" value={rows.length} />
         <StatCard title="Sent" value={sent} />
         <StatCard title="Emails sent (last batch)" value={rows.reduce((a, r) => a + (r.sentCount || 0), 0)} />

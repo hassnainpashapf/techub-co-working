@@ -69,7 +69,7 @@ export default function JobsPage() {
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-3">
         {FILTERS.map((f) => (
           <button
             key={f || 'all'}
@@ -100,7 +100,7 @@ export default function JobsPage() {
             </thead>
             <tbody>
               {jobs.length === 0 && (
-                <tr><td colSpan={6} className="px-4 py-5 text-center text-gray-500">No jobs found.</td></tr>
+                <tr><td colSpan={6} className="px-4 py-3 text-center text-gray-500">No jobs found.</td></tr>
               )}
               {jobs.map((j) => (
                 <tr key={j.id} className="border-b border-gray-200 hover:bg-gray-50">

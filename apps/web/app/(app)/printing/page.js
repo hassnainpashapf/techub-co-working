@@ -79,13 +79,13 @@ export default function PrintingPage() {
       <PageHeader title="Printing Credits" subtitle={`Quota overview — ${month}`} />
       {error && <ErrorBanner message={error} />}
       {msg && (
-        <div className={`rounded-xl border p-4 text-sm mb-4 ${msg.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700'}`}>
+        <div className={`rounded-xl border p-4 text-sm mb-3 ${msg.ok ? 'border-emerald-200 bg-emerald-50 text-emerald-700' : 'border-red-200 bg-red-50 text-red-700'}`}>
           {msg.text}
         </div>
       )}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-3">
         <div className="card-premium p-5">
-          <h2 className="text-lg font-bold text-gray-900 mb-4">🖨️ Quick log print job</h2>
+          <h2 className="text-lg font-bold text-gray-900 mb-3">🖨️ Quick log print job</h2>
           <form onSubmit={submit} className="space-y-3">
             <Field label="Member">
               <input

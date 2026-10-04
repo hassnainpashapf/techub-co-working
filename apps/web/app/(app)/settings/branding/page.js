@@ -83,12 +83,12 @@ export default function BrandingPage() {
     <div>
       <PageHeader title="Branding" subtitle="Your organization's identity" />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      {msg && <div className="mb-4 bg-green-500/10 border border-green-500/30 text-green-300 text-sm rounded-xl px-4 py-3">{msg}</div>}
+      {msg && <div className="mb-3 bg-green-500/10 border border-green-500/30 text-green-300 text-sm rounded-xl px-4 py-3">{msg}</div>}
       {loading ? <Spinner /> : (
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
           <div className="card-premium p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Logo</h3>
-            <div className="w-32 h-32 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden mb-4">
+            <h3 className="font-semibold text-gray-900 mb-3">Logo</h3>
+            <div className="w-32 h-32 rounded-2xl bg-gray-100 border border-gray-200 flex items-center justify-center overflow-hidden mb-3">
               {hasLogo && slug ? (
                 <img src={`${API_BASE}/branding/${slug}/logo?t=${logoTick}`} alt="Logo" className="max-w-full max-h-full object-contain" />
               ) : (
@@ -103,7 +103,7 @@ export default function BrandingPage() {
             <p className="text-[11px] text-slate-500 mt-2">PNG, JPG, WebP or SVG — max 5MB</p>
           </div>
           <div className="card-premium p-6 lg:col-span-2">
-            <h3 className="font-semibold text-gray-900 mb-4">Organization Details</h3>
+            <h3 className="font-semibold text-gray-900 mb-3">Organization Details</h3>
             <form onSubmit={save}>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">
                 <Field label="Organization name"><input className="input" value={f.name} onChange={set('name')} /></Field>

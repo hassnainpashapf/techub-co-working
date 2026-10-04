@@ -68,7 +68,7 @@ export default function SecurityPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Login Security" sub="New-device login alerts and IP allowlist" />
 
       {error && <ErrorBanner message={error} onRetry={() => load()} />}

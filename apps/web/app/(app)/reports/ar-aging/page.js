@@ -110,14 +110,14 @@ export default function ARAgingPage() {
         <Spinner />
       ) : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
             <StatCard label="Total AR" value={money(totals.total)} accent="blue" />
             <StatCard label="90+ days at risk" value={money(totals.d90plus)} accent="red" />
             <StatCard label="Current (0–30d)" value={money(totals.current)} accent="green" />
             <StatCard label="Members owing" value={rows.length} accent="amber" />
           </div>
 
-          <div className="card-premium p-5 mb-4">
+          <div className="card-premium p-5 mb-3">
             <h3 className="text-sm font-semibold text-gray-800 mb-3">Outstanding by aging bucket</h3>
             <HDBarChart data={BUCKETS.map(b=>({label:b.label,value:Number(totals[b.key]||0)}))} barColors={BUCKETS.map(b=>b.color)} height={180} />
           </div>

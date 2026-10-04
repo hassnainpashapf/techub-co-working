@@ -67,8 +67,8 @@ function CreateModal({ onClose, onCreated }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm" onClick={onClose}>
       <div className="card-premium p-6 w-full max-w-lg" onClick={(e) => e.stopPropagation()}>
-        <h3 className="text-gray-900 font-semibold mb-4">New poll</h3>
-        <form onSubmit={submit} className="space-y-4">
+        <h3 className="text-gray-900 font-semibold mb-3">New poll</h3>
+        <form onSubmit={submit} className="space-y-3">
           <div>
             <label className="text-xs text-gray-500">Question</label>
             <input className="input mt-1" value={question} onChange={(e) => setQuestion(e.target.value)} placeholder="What should we improve first?" maxLength={500} />
@@ -98,7 +98,7 @@ function CreateModal({ onClose, onCreated }) {
               <label className="text-xs text-gray-500">Closes at (optional)</label>
               <input type="datetime-local" className="input mt-1" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} />
             </div>
-            <label className="flex items-center gap-2 text-sm text-gray-600 pt-5">
+            <label className="flex items-center gap-2 text-sm text-gray-600 pt-3">
               <input type="checkbox" checked={openNow} onChange={(e) => setOpenNow(e.target.checked)} /> Open immediately
             </label>
           </div>
@@ -158,14 +158,14 @@ export default function PollsPage() {
   const totalVotes = polls.reduce((s, p) => s + (p.totalVotes || 0), 0);
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Community Polls"
         subtitle="Ask members, get real answers"
         action={<button className="btn-primary" onClick={() => setShowCreate(true)}>+ New poll</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
         <StatCard label="Open polls" value={openCount} icon="🗳️" />
         <StatCard label="Closed" value={closedCount} icon="📦" />
         <StatCard label="Total votes" value={totalVotes} icon="📊" />
@@ -173,7 +173,7 @@ export default function PollsPage() {
       {loading ? <Spinner /> : polls.length === 0 ? (
         <EmptyState icon="🗳️" title="No polls yet" text="Create the first poll to hear your community." />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {polls.map((p) => (
             <div key={p.id} className="card-premium p-5">
               <div className="flex items-start justify-between gap-3">

@@ -81,7 +81,7 @@ export default function SystemHealthPage() {
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard
           label="Database"
           value={dbOk ? (dbSlow ? 'Slow' : 'Healthy') : 'Down'}
@@ -103,7 +103,7 @@ export default function SystemHealthPage() {
         />
       </div>
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         <StatCard label="Cache hits" value={cacheStats.hits ?? '—'} sub={`${(cacheStats.hitRate ?? 0) * 100}% hit rate`} accent="slate" />
         <StatCard label="Cache misses" value={cacheStats.misses ?? '—'} sub={`${cacheStats.size ?? 0}/${cacheStats.max ?? 0} entries`} accent="slate" />
         <StatCard label="Email queue" value={metrics?.emailQueueDepth ?? '—'} sub="pending emails (24h window)" accent="slate" />
@@ -114,7 +114,7 @@ export default function SystemHealthPage() {
         Failed jobs <span className="text-slate-500 font-normal">(last 24h)</span>
       </h3>
       {failed.length === 0 ? (
-        <p className="text-sm text-slate-500 bg-gray-100 border border-gray-200 rounded-xl px-4 py-6 text-center">
+        <p className="text-sm text-slate-500 bg-gray-100 border border-gray-200 rounded-xl px-4 py-4 text-center">
           No failed jobs in the last 24 hours 🎉
         </p>
       ) : (

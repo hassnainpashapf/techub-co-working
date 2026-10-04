@@ -114,7 +114,7 @@ export default function MessagesPage() {
         <button className="btn-primary" onClick={() => { setShowNew(true); loadMembers(); }}>+ New chat</button>
       } />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid md:grid-cols-3 gap-4 mt-4" style={{ minHeight: 520 }}>
+      <div className="grid md:grid-cols-3 gap-3 mt-3" style={{ minHeight: 520 }}>
         <div className="card-premium p-3 overflow-y-auto" style={{ maxHeight: 620 }}>
           {convs.length === 0 && <EmptyState title="No conversations" hint="Start a new chat with a member." />}
           {convs.map((c) => (

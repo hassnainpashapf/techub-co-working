@@ -44,7 +44,7 @@ export default function LockerDashboardPage() {
   const expiring = s.expiring7d || [];
 
   return (
-    <div className="p-6 max-w-7xl mx-auto space-y-4">
+    <div className="p-6 max-w-7xl mx-auto space-y-3">
       <PageHeader title="🔐 Locker Dashboard" subtitle="Occupancy, rentals, revenue aur expiring rentals" />
 
       {pendingModules.length > 0 && (
@@ -53,7 +53,7 @@ export default function LockerDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard label="Total Lockers" value={s.total ?? 0} icon="🔐" accent="blue" />
         <StatCard label="Occupancy" value={s.occupancyPct != null ? `${s.occupancyPct}%` : '—'} icon="📊" accent="indigo" sub={`${s.occupied ?? 0} occupied · ${s.available ?? 0} available`} />
         <StatCard label="Active Rentals" value={s.activeRentals ?? 0} icon="📝" accent="violet" />
@@ -62,10 +62,10 @@ export default function LockerDashboardPage() {
         <StatCard label="Waitlist" value={s.waitlistCount ?? 0} icon="🪑" accent="amber" sub={s.maintenanceOpen ? `${s.maintenanceOpen} open maintenance` : ''} />
       </div>
 
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200/60 bg-white/80 p-5">
           <h3 className="text-base font-semibold text-gray-900 mb-1">⏳ Expiring in 7 days</h3>
-          <p className="text-xs text-gray-500 mb-4">Renew ya release follow-up karein</p>
+          <p className="text-xs text-gray-500 mb-3">Renew ya release follow-up karein</p>
           {expiring.length === 0 ? (
             <EmptyState title="Koi expiring rental nahi" />
           ) : (
@@ -92,7 +92,7 @@ export default function LockerDashboardPage() {
 
         <div className="rounded-2xl border border-gray-200/60 bg-white/80 p-5">
           <h3 className="text-base font-semibold text-gray-900 mb-1">🚀 Quick Links</h3>
-          <p className="text-xs text-gray-500 mb-4">Locker management shortcuts</p>
+          <p className="text-xs text-gray-500 mb-3">Locker management shortcuts</p>
           <div className="grid gap-2">
             {QUICK_LINKS.map((q) => (
               <a key={q.href} href={q.href} className="flex items-center justify-between rounded-xl bg-gray-100/40 px-4 py-3 hover:bg-slate-700/40 transition">

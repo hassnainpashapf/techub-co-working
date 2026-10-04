@@ -29,7 +29,7 @@ function TrendBars({ trend }) {
   const max = Math.max(1, ...trend.map((t) => t.total || 0));
   return (
     <div className="card p-5">
-      <h3 className="text-sm font-semibold text-gray-900 mb-4">📊 Mahana Istemaal (pichhle 6 mahine)</h3>
+      <h3 className="text-sm font-semibold text-gray-900 mb-3">📊 Mahana Istemaal (pichhle 6 mahine)</h3>
       <div className="flex items-end gap-3 h-40">
         {trend.map((t, i) => (
           <div key={i} className="flex-1 flex flex-col items-center gap-1">
@@ -86,7 +86,7 @@ export default function PortalUsagePage() {
   if (loading) return <div className="p-6"><Spinner /></div>;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="⚡ Meri Utility Usage" sub="Meters, readings aur utility bills — sab ek jagah" />
 
       {error && <ErrorBanner message={error} />}
@@ -97,7 +97,7 @@ export default function PortalUsagePage() {
       )}
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <StatCard title="Meters" value={stats.meters} icon="🔌" />
           <StatCard title="Utility Bills" value={stats.bills} icon="🧾" />
           <StatCard title="Baqaya" value={fmtMoney(stats.unpaid)} icon="⏳" tone="amber" />
@@ -107,11 +107,11 @@ export default function PortalUsagePage() {
 
       {/* Meters */}
       <div className="card p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">🔌 Mere Meters</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">🔌 Mere Meters</h3>
         {!(data?.meters || []).length ? (
           <EmptyState title="Koi meter nahi" text="Aap ke unit par abhi koi utility meter register nahi hai." />
         ) : (
-          <div className="grid md:grid-cols-2 gap-4">
+          <div className="grid md:grid-cols-2 gap-3">
             {(data.meters || []).map((m) => (
               <div key={m.id} className="rounded-xl border border-gray-200 bg-gray-100 p-4">
                 <div className="flex items-center justify-between mb-2">
@@ -142,7 +142,7 @@ export default function PortalUsagePage() {
 
       {/* Bills */}
       <div className="card p-5">
-        <h3 className="text-sm font-semibold text-gray-900 mb-4">🧾 Meri Utility Bills</h3>
+        <h3 className="text-sm font-semibold text-gray-900 mb-3">🧾 Meri Utility Bills</h3>
         {!(data?.bills || []).length ? (
           <EmptyState title="Koi bill nahi" text="Abhi tak koi utility bill generate nahi hua." />
         ) : (

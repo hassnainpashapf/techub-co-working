@@ -44,7 +44,7 @@ function CourseCard({ course, enrolled, completed, slugMap, onEnroll, enrolling 
         {course.lessonCount ?? ''} lessons
         {course.durationMin ? ` · ${course.durationMin} min` : ''}
       </div>
-      <div className="mt-4 flex items-center gap-2">
+      <div className="mt-3 flex items-center gap-2">
         {slug ? (
           <Link
             href={`/portal/academy/${slug}`}
@@ -141,13 +141,13 @@ export default function AcademyPortalPage() {
     <div className="p-6 max-w-6xl mx-auto">
       <PageHeader title="Academy" sub="Courses seekho, progress track karo, certificates hasil karo" />
 
-      {error ? <div className="mt-4"><ErrorBanner message={error} onRetry={load} /></div> : null}
+      {error ? <div className="mt-3"><ErrorBanner message={error} onRetry={load} /></div> : null}
 
       {/* Continue learning */}
       {inProgress.length > 0 ? (
-        <div className="mt-4">
+        <div className="mt-3">
           <h2 className="text-gray-900 font-bold text-lg">Continue learning</h2>
-          <div className="mt-3 grid gap-4 md:grid-cols-2">
+          <div className="mt-3 grid gap-3 md:grid-cols-2">
             {inProgress.map((e) => {
               const slug = slugMap[e.courseId];
               return (
@@ -158,7 +158,7 @@ export default function AcademyPortalPage() {
                   </div>
                   <div className="mt-3"><ProgressBar pct={e.progressPct} /></div>
                   {slug ? (
-                    <Link href={`/portal/academy/${slug}`} className="mt-4 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700">
+                    <Link href={`/portal/academy/${slug}`} className="mt-3 inline-block px-4 py-2 rounded-xl text-sm font-semibold text-gray-900 bg-gradient-to-r from-[#0f766e] to-teal-700">
                       Continue →
                     </Link>
                   ) : null}
@@ -171,7 +171,7 @@ export default function AcademyPortalPage() {
 
       {/* Completed */}
       {done.length > 0 ? (
-        <div className="mt-5">
+        <div className="mt-3">
           <h2 className="text-gray-900 font-bold text-lg">Completed</h2>
           <div className="mt-3 flex flex-wrap gap-2">
             {done.map((e) => (
@@ -182,7 +182,7 @@ export default function AcademyPortalPage() {
       ) : null}
 
       {/* Catalog */}
-      <div className="mt-5 flex flex-wrap items-end justify-between gap-3">
+      <div className="mt-3 flex flex-wrap items-end justify-between gap-3">
         <h2 className="text-gray-900 font-bold text-lg">Course catalog</h2>
         <div className="flex flex-wrap gap-2">
           <input
@@ -201,9 +201,9 @@ export default function AcademyPortalPage() {
       </div>
 
       {filtered.length === 0 ? (
-        <div className="mt-4"><EmptyState title="Koi course nahi mila" hint="Search ya filters badal kar dobara try karo." /></div>
+        <div className="mt-3"><EmptyState title="Koi course nahi mila" hint="Search ya filters badal kar dobara try karo." /></div>
       ) : (
-        <div className="mt-4 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-3 grid gap-3 md:grid-cols-2 lg:grid-cols-3">
           {filtered.map((c) => (
             <CourseCard
               key={c.id}

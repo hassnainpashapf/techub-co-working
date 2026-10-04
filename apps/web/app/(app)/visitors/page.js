@@ -117,7 +117,7 @@ export default function VisitorsPage() {
         action={<button className="btn-primary" onClick={() => setShowForm(true)}>+ Check In</button>}
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="flex gap-2 mb-4 flex-wrap items-center">
+      <div className="flex gap-2 mb-3 flex-wrap items-center">
         {[['walkin', 'Walk-in'], ['prereg', 'Pre-registered']].map(([v, l]) => (
           <button key={v} onClick={() => setTab(v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${tab === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>
@@ -132,7 +132,7 @@ export default function VisitorsPage() {
         )}
       </div>
       {tab === 'walkin' ? (<>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[['today', 'Today'], ['inside', 'Inside Now'], ['all', 'All']].map(([v, l]) => (
           <button key={v} onClick={() => setFilter(v)}
             className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${filter === v ? 'border-teal-500/60 bg-teal-600/20 text-violet-700' : 'border-gray-200 text-gray-500 hover:bg-gray-100'}`}>

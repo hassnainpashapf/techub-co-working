@@ -75,7 +75,7 @@ function InvoiceDetailModal({ invoiceId, onClose }) {
       ) : error ? (
         <ErrorBanner message={error} />
       ) : inv ? (
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex flex-wrap gap-2 items-center">
             <Badge tone={STATUS_TONE[inv.status] || 'slate'}>{inv.status}</Badge>
             {isOverdue(inv) && <Badge tone="red">Overdue</Badge>}
@@ -180,7 +180,7 @@ function PayClaimModal({ invoice, onClose, onDone }) {
 
   return (
     <Modal title={`Pay ${invoice.number}`} onClose={onClose}>
-      <div className="bg-[#0f766e]/10 border border-[#0f766e]/30 rounded-xl p-4 text-sm text-gray-600 mb-4">
+      <div className="bg-[#0f766e]/10 border border-[#0f766e]/30 rounded-xl p-4 text-sm text-gray-600 mb-3">
         <div className="font-semibold text-teal-700 mb-1">How to pay</div>
         <ol className="list-decimal list-inside space-y-1 text-gray-600">
           <li>Transfer <strong className="text-gray-900">{fmtMoney(remaining(invoice))}</strong> via bank transfer, JazzCash or Easypaisa — or pay cash at reception.</li>
@@ -188,7 +188,7 @@ function PayClaimModal({ invoice, onClose, onDone }) {
           <li>Our finance team will verify and record your payment.</li>
         </ol>
       </div>
-      <form onSubmit={submit} className="space-y-4">
+      <form onSubmit={submit} className="space-y-3">
         {error && <ErrorBanner message={error} />}
         <div className="grid grid-cols-2 gap-3">
           <Field label="Method">
@@ -232,7 +232,7 @@ function InvoiceCard({ inv, onView, onPay, onPdf }) {
           {overdue && <Badge tone="red">Overdue</Badge>}
         </div>
       </div>
-      <div className="flex items-end justify-between mb-4">
+      <div className="flex items-end justify-between mb-3">
         <div>
           <div className="text-gray-500 text-xs">Total</div>
           <div className="text-gray-900 font-bold text-lg">{fmtMoney(inv.amount)}</div>
@@ -362,7 +362,7 @@ export default function PortalInvoicesPage() {
 
       {error && <ErrorBanner message={error} />}
       {claimSent && (
-        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl px-4 py-3 mb-4">
+        <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 text-sm rounded-xl px-4 py-3 mb-3">
           ✓ Payment claim sent — finance will verify and record it shortly.
         </div>
       )}
@@ -371,13 +371,13 @@ export default function PortalInvoicesPage() {
         <div className="py-16 flex justify-center"><Spinner /></div>
       ) : (
         <>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-3">
             <StatCard label="Total due" value={fmtMoney(totalDue)} accent="amber" />
             <StatCard label="Overdue invoices" value={String(overdueCount)} accent={overdueCount > 0 ? 'red' : 'green'} />
             <StatCard label="All invoices" value={String(invoices.length)} accent="blue" />
           </div>
 
-          <div className="flex gap-2 mb-5 overflow-x-auto">
+          <div className="flex gap-2 mb-3 overflow-x-auto">
             {tabs.map((t) => (
               <button
                 key={t.id}
@@ -394,7 +394,7 @@ export default function PortalInvoicesPage() {
           </div>
 
           {tab !== 'payments' && (
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="grid gap-3 sm:grid-cols-2">
               {(tab === 'open' ? open : paid).map((inv) => (
                 <InvoiceCard
                   key={inv.id}

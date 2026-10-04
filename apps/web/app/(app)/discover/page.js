@@ -53,7 +53,7 @@ const money = (n) => `Rs ${Math.round(Number(n || 0)).toLocaleString()}`;
 function FilterSection({ title, children, defaultOpen = false }) {
   const [open, setOpen] = useState(defaultOpen);
   return (
-    <div className="border-b border-gray-200 pb-5 mb-5">
+    <div className="border-b border-gray-200 pb-3 mb-3">
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center justify-between w-full text-gray-900 text-[15px] font-semibold mb-1 hover:text-teal-700 transition-colors"
@@ -63,7 +63,7 @@ function FilterSection({ title, children, defaultOpen = false }) {
           <polyline points="6 9 12 15 18 9" />
         </svg>
       </button>
-      <div className={`grid transition-all duration-300 ease-out ${open ? 'grid-rows-[1fr] opacity-100 mt-4' : 'grid-rows-[0fr] opacity-0'}`}>
+      <div className={`grid transition-all duration-300 ease-out ${open ? 'grid-rows-[1fr] opacity-100 mt-3' : 'grid-rows-[0fr] opacity-0'}`}>
         <div className="overflow-hidden">{children}</div>
       </div>
     </div>
@@ -78,7 +78,7 @@ function formatDateDisplay(iso) {
 
 function DateField({ label, value, onChange }) {
   return (
-    <div className="mb-4">
+    <div className="mb-3">
       <label className="block text-[13px] text-gray-900 font-semibold mb-1.5">{label}</label>
       <div className="relative">
         <input
@@ -141,7 +141,7 @@ function BookingModal({ unit, onClose, onDone }) {
     <Modal title={`Book ${unit.code}`} onClose={onClose}>
       <form onSubmit={submit}>
         {error && (
-          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>
+          <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>
         )}
         <Field label="Title">
           <input className="input" value={title} onChange={(e) => setTitle(e.target.value)} placeholder={`Booking — ${unit.code}`} />
@@ -228,7 +228,7 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
           {amenities.join(', ')}
         </p>
-        <div className="flex items-end justify-between mt-4">
+        <div className="flex items-end justify-between mt-3">
           <div>
             <p className="text-[12px] text-slate-500">Start from</p>
             <p className="text-gray-900 text-[22px] font-bold leading-tight">{money(price)}<span className="text-[12px] font-normal text-slate-500">{duration.suffix}</span></p>
@@ -236,7 +236,7 @@ function BookingCard({ unit, index, duration, onBook, isFav, onToggleFav }) {
           <button
             onClick={() => onBook(unit)}
             disabled={!unit.isAvailable}
-            className={`px-5 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border transition-all duration-200 active:scale-95 ${unit.isAvailable ? 'border-[#0f766e]/70 text-white bg-[#0f766e]/10 hover:bg-[#0f766e] hover:shadow-[0_0_24px_rgba(15,118,110,0.5)]' : 'border-gray-200 text-slate-500 bg-gray-50 cursor-not-allowed'}`}
+            className={`px-4 py-2 rounded-xl text-[13.5px] font-semibold whitespace-nowrap border transition-all duration-200 active:scale-95 ${unit.isAvailable ? 'border-[#0f766e]/70 text-white bg-[#0f766e]/10 hover:bg-[#0f766e] hover:shadow-[0_0_24px_rgba(15,118,110,0.5)]' : 'border-gray-200 text-slate-500 bg-gray-50 cursor-not-allowed'}`}
           >
             Book now
           </button>
@@ -394,7 +394,7 @@ export default function DiscoverPage() {
 
   return (
     <div className="animate-fadeUp">
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
+      <div className="flex items-center justify-between flex-wrap gap-3 mb-3">
         <h1 className="text-gray-900 text-[26px] 4xl:text-[34px] font-bold tracking-tight">Available co-workspace</h1>
         <div className="flex items-center gap-2">
           <div className="flex rounded-xl border border-gray-200 overflow-hidden bg-gray-50">
@@ -410,15 +410,15 @@ export default function DiscoverPage() {
       </div>
 
       {bookedMsg && (
-        <div className="mb-4 bg-gradient-to-r from-green-500/15 to-emerald-500/10 border border-green-500/30 text-green-300 text-sm font-medium rounded-xl px-4 py-3 animate-fadeUp shadow-[0_0_24px_rgba(34,197,94,0.15)]">
+        <div className="mb-3 bg-gradient-to-r from-green-500/15 to-emerald-500/10 border border-green-500/30 text-green-300 text-sm font-medium rounded-xl px-4 py-3 animate-fadeUp shadow-[0_0_24px_rgba(34,197,94,0.15)]">
           {bookedMsg}
         </div>
       )}
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
-      <div className="flex gap-5">
+      <div className="flex gap-3">
         <div className="w-[300px] shrink-0">
-          <div className="relative mb-4">
+          <div className="relative mb-3">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#64748b" strokeWidth="2" strokeLinecap="round" className="absolute left-3.5 top-1/2 -translate-y-1/2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
             <input
               value={search}
@@ -498,12 +498,12 @@ export default function DiscoverPage() {
             <MapView units={filtered} onBook={setBookingUnit} />
           ) : filtered.length === 0 ? (
             <div className="text-center py-20 text-slate-500">
-              <p className="text-5xl mb-4">🏢</p>
+              <p className="text-5xl mb-3">🏢</p>
               <p className="text-lg font-medium text-gray-600">No workspaces match</p>
               <p className="text-sm mt-1">Try adjusting your filters.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-5 4xl:gap-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 4xl:grid-cols-5 gap-3 4xl:gap-3">
               {filtered.map((u, i) => (
                 <BookingCard key={u.id} unit={u} index={i} duration={duration} onBook={setBookingUnit} isFav={favorites.has(u.id)} onToggleFav={toggleFav} />
               ))}

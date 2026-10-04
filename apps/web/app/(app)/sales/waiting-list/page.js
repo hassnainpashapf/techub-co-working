@@ -32,7 +32,7 @@ function EntryForm({ initial, onSave, saving }) {
   return (
     <form onSubmit={(e) => { e.preventDefault(); onSave({ ...f, priority: Number(f.priority) || 0 }); }}>
       <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required placeholder="Prospect name" /></Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Phone"><input className="input" value={f.phone} onChange={(e) => setF({ ...f, phone: e.target.value })} placeholder="0300-1234567" /></Field>
         <Field label="Email"><input type="email" className="input" value={f.email} onChange={(e) => setF({ ...f, email: e.target.value })} placeholder="prospect@example.com" /></Field>
         <Field label="Desired Space Type"><input className="input" value={f.desiredType} onChange={(e) => setF({ ...f, desiredType: e.target.value })} placeholder="e.g. Private office" /></Field>
@@ -165,13 +165,13 @@ export default function WaitingListPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mb-3">
         {STATUSES.map((s) => (
           <StatCard key={s.key} label={s.label} value={stats[s.key] || 0} accent={s.tone} />
         ))}
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-4">
+      <div className="flex flex-wrap gap-3 mb-3">
         <input className="input max-w-xs" value={search} onChange={(e) => setSearch(e.target.value)} placeholder="Search name / phone / email…" />
         <select className="input max-w-[180px]" value={status} onChange={(e) => setStatus(e.target.value)}>
           <option value="">All statuses</option>
@@ -254,7 +254,7 @@ export default function WaitingListPage() {
       )}
       {offerEntry && (
         <Modal title={`Offer space to ${offerEntry.name}`} onClose={() => setOfferEntry(null)}>
-          <p className="text-sm text-gray-500 mb-4">An email{offerEntry.phone ? ' + SMS' : ''} will be sent. They get <b className="text-gray-900">48 hours</b> to claim, then the offer lapses automatically.</p>
+          <p className="text-sm text-gray-500 mb-3">An email{offerEntry.phone ? ' + SMS' : ''} will be sent. They get <b className="text-gray-900">48 hours</b> to claim, then the offer lapses automatically.</p>
           <Field label="Unit code (optional)"><input className="input" value={unitCode} onChange={(e) => setUnitCode(e.target.value)} placeholder="e.g. PO-204" /></Field>
           <div className="flex justify-end gap-2">
             <button onClick={() => setOfferEntry(null)} className="btn-secondary">Cancel</button>
@@ -264,7 +264,7 @@ export default function WaitingListPage() {
       )}
       {convertEntry && (
         <Modal title={`Convert ${convertEntry.name} to Member`} onClose={() => setConvertEntry(null)}>
-          <p className="text-sm text-gray-500 mb-4">A member record will be created from this entry.</p>
+          <p className="text-sm text-gray-500 mb-3">A member record will be created from this entry.</p>
           <Field label="Phone *"><input className="input" value={convertPhone} onChange={(e) => setConvertPhone(e.target.value)} required placeholder="0300-1234567" /></Field>
           <div className="flex justify-end gap-2">
             <button onClick={() => setConvertEntry(null)} className="btn-secondary">Cancel</button>

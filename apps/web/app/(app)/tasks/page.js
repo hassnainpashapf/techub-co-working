@@ -152,7 +152,7 @@ export default function TasksPage() {
       />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['all', 'pending', 'in_progress', 'done'].map((s) => (
           <button
             key={s}

@@ -134,7 +134,7 @@ export default function AssetsPage() {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader
         title="Asset Management"
         subtitle="Track furniture, IT & AV assets — check out to members, flag maintenance"
@@ -142,7 +142,7 @@ export default function AssetsPage() {
       />
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
         <StatCard label="Total" value={items.length} />
         <StatCard label="Available" value={summary.available || 0} accent="green" />
         <StatCard label="In Use" value={summary.in_use || 0} accent="blue" />
@@ -215,9 +215,9 @@ export default function AssetsPage() {
 
       {modal === 'add' && (
         <Modal title="Add Asset" onClose={() => setModal(null)}>
-          <form onSubmit={submitAdd} className="space-y-4">
+          <form onSubmit={submitAdd} className="space-y-3">
             <Field label="Name"><input className="input" value={form.name} onChange={set('name')} required maxLength={120} placeholder="e.g. Dell Latitude 5440" /></Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Category">
                 <select className="input" value={form.category} onChange={set('category')}>
                   {CATEGORIES.map((c) => <option key={c.v} value={c.v}>{c.label}</option>)}
@@ -225,7 +225,7 @@ export default function AssetsPage() {
               </Field>
               <Field label="Serial number"><input className="input" value={form.serialNumber} onChange={set('serialNumber')} maxLength={80} /></Field>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Purchase date"><input type="date" className="input" value={form.purchaseDate} onChange={set('purchaseDate')} /></Field>
               <Field label="Value (Rs)"><input type="number" min="0" step="0.01" className="input" value={form.value} onChange={set('value')} /></Field>
             </div>
@@ -237,7 +237,7 @@ export default function AssetsPage() {
 
       {modal === 'checkout' && target && (
         <Modal title={`Check out — ${target.name}`} onClose={() => { setModal(null); setTarget(null); }}>
-          <form onSubmit={submitCheckout} className="space-y-4">
+          <form onSubmit={submitCheckout} className="space-y-3">
             <Field label="Member">
               <select className="input" value={coForm.memberId} onChange={setCo('memberId')}>
                 <option value="">Select member…</option>
@@ -252,7 +252,7 @@ export default function AssetsPage() {
 
       {modal === 'return' && target && (
         <Modal title={`Return — ${target.name}`} onClose={() => { setModal(null); setTarget(null); }}>
-          <form onSubmit={submitReturn} className="space-y-4">
+          <form onSubmit={submitReturn} className="space-y-3">
             <Field label="Condition note (optional)">
               <textarea className="input" rows={3} value={retForm.condition} onChange={(e) => setRetForm({ condition: e.target.value })} placeholder="e.g. Minor scratch on lid, works fine" maxLength={500} />
             </Field>

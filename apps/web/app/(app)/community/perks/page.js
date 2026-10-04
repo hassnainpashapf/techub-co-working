@@ -90,7 +90,7 @@ export default function PerksManagePage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader
         title="Perks & Benefits"
         sub="Partner discounts for your members"
@@ -98,7 +98,7 @@ export default function PerksManagePage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
         <StatCard label="Total perks" value={perks.length} accent="blue" />
         <StatCard label="Active" value={activeCount} accent="green" />
         <StatCard label="Total claims" value={totalClaims} accent="violet" />
@@ -137,18 +137,18 @@ export default function PerksManagePage() {
 
       {modal && (
         <Modal title={modal === 'add' ? 'New perk' : `Edit — ${modal.title}`} onClose={() => setModal(null)}>
-          <form onSubmit={save} className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
+          <form onSubmit={save} className="space-y-3">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Partner name *"><input value={form.partnerName} onChange={(e) => setForm({ ...form, partnerName: e.target.value })} required maxLength={120} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
               <Field label="Category"><select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900">{CATEGORIES.map((c) => <option key={c.value} value={c.value}>{c.label}</option>)}</select></Field>
             </div>
             <Field label="Title *"><input value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required maxLength={160} placeholder="Free protein shake every week" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
             <Field label="Description"><textarea value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} rows={3} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Discount text *"><input value={form.discountText} onChange={(e) => setForm({ ...form, discountText: e.target.value })} required maxLength={80} placeholder="20% off" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
               <Field label="Redeem code"><input value={form.code} onChange={(e) => setForm({ ...form, code: e.target.value })} maxLength={120} placeholder="TECHUB20" className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
             </div>
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-3">
               <Field label="Expiry date"><input type="date" value={form.expiryDate} onChange={(e) => setForm({ ...form, expiryDate: e.target.value })} className="w-full rounded-lg bg-gray-100 px-3 py-2 text-gray-900" /></Field>
               <Field label="Status"><label className="flex items-center gap-2 text-sm text-gray-600"><input type="checkbox" checked={form.isActive} onChange={(e) => setForm({ ...form, isActive: e.target.checked })} /> Active</label></Field>
             </div>

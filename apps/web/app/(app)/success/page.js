@@ -66,7 +66,7 @@ export default function SuccessDashboardPage() {
   const modules = data?.modules || {};
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Member Success" subtitle="Onboarding, health, feedback aur win-back ka overview" />
 
       {err && <ErrorBanner message={err} />}
@@ -77,7 +77,7 @@ export default function SuccessDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard label="Active Journeys" value={stats.activeJourneys ?? '—'} icon="🛬" />
         <StatCard label="Avg Health Score" value={stats.healthSample ? `${stats.avgHealthScore}/100` : '—'} icon="💓" />
         <StatCard label="At-Risk Members" value={stats.atRiskCount ?? '—'} icon="🚨" />
@@ -86,9 +86,9 @@ export default function SuccessDashboardPage() {
         <StatCard label="Open Tasks" value={stats.openSuccessTasks ?? '—'} icon="📝" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-gray-900">🚨 At-Risk Members</h3>
             <Badge tone={atRisk.length ? 'red' : 'green'}>{atRisk.length} flagged</Badge>
           </div>
@@ -130,7 +130,7 @@ export default function SuccessDashboardPage() {
         </div>
 
         <div className="card p-5">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">⚡ Quick Links</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">⚡ Quick Links</h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             {QUICK_LINKS.map((q) => (
               <a key={q.label} href={q.href} className="card p-4 hover:border-indigo-500/50 transition-colors">
@@ -139,7 +139,7 @@ export default function SuccessDashboardPage() {
               </a>
             ))}
           </div>
-          <div className="mt-4 text-sm text-gray-600 space-y-1">
+          <div className="mt-3 text-sm text-gray-600 space-y-1">
             <div>💓 Health sample: <span className="text-gray-900 font-semibold">{stats.healthSample ?? 0}</span> members</div>
             <div>📊 NPS responses (30d): <span className="text-gray-900 font-semibold">{stats.npsResponses ?? 0}</span></div>
             <div>📩 Win-back campaigns: <span className="text-gray-900 font-semibold">{stats.winbackCampaigns ?? 0}</span></div>

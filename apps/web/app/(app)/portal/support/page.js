@@ -160,7 +160,7 @@ export default function PortalSupportPage() {
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
       {msg && <p className="text-sm text-emerald-700 mb-3">{msg}</p>}
 
-      <div className="grid grid-cols-3 gap-3 mb-5">
+      <div className="grid grid-cols-3 gap-3 mb-3">
         <div className="card-premium p-4 text-center">
           <p className="text-2xl font-bold text-teal-700">{openCount}</p>
           <p className="text-xs text-gray-500">Open</p>
@@ -178,7 +178,7 @@ export default function PortalSupportPage() {
       {tickets.length === 0 ? (
         <EmptyState title="No tickets yet" hint="Something needs fixing or you have a question? Raise a ticket and we'll take care of it." />
       ) : (
-        <div className="grid md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-3">
           {tickets.map((t) => (
             <button key={t.id} onClick={() => openDetail(t.id)} className="card-premium p-5 text-left hover:border-[#0f766e]/40 transition w-full">
               <div className="flex items-start justify-between gap-2 mb-2">
@@ -248,10 +248,10 @@ export default function PortalSupportPage() {
                 <Badge tone={PRIORITY_TONE[detail.priority] || 'slate'}>{detail.priority}</Badge>
                 <span className="text-slate-500 self-center">{detail.category}{detail.unit?.code ? ` · ${detail.unit.code}` : ''}{detail.assignedTo?.name ? ` · Assigned to ${detail.assignedTo.name}` : ''}</span>
               </div>
-              {detail.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-4">{detail.description}</p>}
+              {detail.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-3">{detail.description}</p>}
 
               <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-2">Conversation</p>
-              <div className="space-y-3 max-h-72 overflow-y-auto mb-4 pr-1">
+              <div className="space-y-3 max-h-72 overflow-y-auto mb-3 pr-1">
                 {(detail.comments || []).map((c) => {
                   const r = parseRating(c.body);
                   if (r) {

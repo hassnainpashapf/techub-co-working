@@ -67,7 +67,7 @@ export default function AccountingExportPage() {
       <PageHeader title="Accounting Export" sub="Xero / QuickBooks compatible CSV exports" />
       {error && <ErrorBanner message={error} />}
 
-      <div className="card-premium p-5 mb-4 flex flex-wrap items-end gap-4">
+      <div className="card-premium p-5 mb-3 flex flex-wrap items-end gap-3">
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1.5">From</label>
           <input type="date" className="input" value={from} onChange={(e) => setFrom(e.target.value)} />
@@ -79,12 +79,12 @@ export default function AccountingExportPage() {
         <p className="text-xs text-gray-500">Dates optional — blank means all records.</p>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
         {FORMATS.map((f) => (
           <div key={f.key} className="card-premium p-5 flex flex-col">
             <div className="text-3xl mb-3">{f.icon}</div>
             <h3 className="text-lg font-bold text-gray-900 mb-1">{f.title}</h3>
-            <p className="text-xs text-gray-500 mb-4 flex-1">{f.desc}</p>
+            <p className="text-xs text-gray-500 mb-3 flex-1">{f.desc}</p>
             <button
               className="btn-primary w-full"
               disabled={busy === f.key}

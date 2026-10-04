@@ -134,7 +134,7 @@ export default function QuotationsPage() {
       />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-5 gap-3 mb-3">
         <StatCard label="Draft" value={counts.draft || 0} accent="slate" />
         <StatCard label="Sent" value={counts.sent || 0} accent="blue" />
         <StatCard label="Accepted" value={counts.accepted || 0} accent="green" />
@@ -142,7 +142,7 @@ export default function QuotationsPage() {
         <StatCard label="Open Value (sent)" value={fmtMoney(stats?.openValue)} accent="violet" sub={stats?.pastDue ? `${stats.pastDue} past validity` : ''} />
       </div>
 
-      <div className="flex gap-2 mb-4 flex-wrap">
+      <div className="flex gap-2 mb-3 flex-wrap">
         <button className={`btn-pill ${!status ? 'active' : ''}`} onClick={() => setStatus('')}>All</button>
         {STATUSES.map((s) => (
           <button key={s.key} className={`btn-pill ${status === s.key ? 'active' : ''}`} onClick={() => setStatus(s.key)}>{s.label}</button>

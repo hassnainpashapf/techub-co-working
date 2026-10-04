@@ -64,8 +64,8 @@ export default function CurrencySettingsPage() {
     <div className="p-6 max-w-3xl">
       <PageHeader title="Currency Settings" subtitle="Base currency, enabled currencies and FX source" />
       {error && <ErrorBanner message={error} />}
-      {msg && <div className="mb-4 rounded-lg border border-emerald-500/40 bg-emerald-50 px-4 py-3 text-emerald-700">{msg}</div>}
-      <form onSubmit={save} className="space-y-4 rounded-2xl border border-gray-200 bg-gray-50 p-6">
+      {msg && <div className="mb-3 rounded-lg border border-emerald-500/40 bg-emerald-50 px-4 py-3 text-emerald-700">{msg}</div>}
+      <form onSubmit={save} className="space-y-3 rounded-2xl border border-gray-200 bg-gray-50 p-6">
         <Field label="Base currency (reporting)">
           <select
             value={form.baseCurrency}

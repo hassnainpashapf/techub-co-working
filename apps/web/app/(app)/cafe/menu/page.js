@@ -111,19 +111,19 @@ export default function CafeMenuPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="🍽️ Cafe Menu" subtitle="Categories aur menu items manage karein" />
 
       {error && <ErrorBanner message={error} />}
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Categories" value={categories.length} />
         <StatCard label="Total Items" value={items.length} />
         <StatCard label="Available" value={availableCount} />
         <StatCard label="Unavailable" value={items.length - availableCount} />
       </div>
 
-      <div className="grid md:grid-cols-[240px_1fr] gap-4">
+      <div className="grid md:grid-cols-[240px_1fr] gap-3">
         {/* Categories column */}
         <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-3 h-fit">
           <div className="flex items-center justify-between">
@@ -150,7 +150,7 @@ export default function CafeMenuPage() {
         </div>
 
         {/* Items column */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <div className="flex flex-wrap gap-3 items-center">
             <input
               value={search} onChange={(e) => setSearch(e.target.value)}
@@ -163,7 +163,7 @@ export default function CafeMenuPage() {
           {filteredItems.length === 0 ? (
             <EmptyState title="Koi item nahi mila" />
           ) : (
-            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid sm:grid-cols-2 xl:grid-cols-3 gap-3">
               {filteredItems.map((it) => (
                 <div key={it.id} className="rounded-xl border border-gray-200 bg-white p-4 space-y-2">
                   <div className="flex items-start justify-between gap-2">
@@ -198,7 +198,7 @@ export default function CafeMenuPage() {
       {/* Category modal */}
       {catModal && (
         <Modal title={catModal === 'add' ? 'Nayi Category' : 'Category Edit'} onClose={() => setCatModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Name"><input value={catForm.name} onChange={(e) => setCatForm({ ...catForm, name: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
             <Field label="Sort Order"><input type="number" value={catForm.sortOrder} onChange={(e) => setCatForm({ ...catForm, sortOrder: Number(e.target.value) })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm" /></Field>
             <label className="flex items-center gap-2 text-sm text-gray-600">
@@ -215,7 +215,7 @@ export default function CafeMenuPage() {
       {/* Item modal */}
       {itemModal && (
         <Modal title={itemModal === 'add' ? 'Naya Item' : 'Item Edit'} onClose={() => setItemModal(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Category">
               <select value={itemForm.categoryId} onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })} className="w-full px-3 py-2 rounded-lg bg-white border border-gray-200 text-gray-900 text-sm">
                 <option value="">— Select —</option>

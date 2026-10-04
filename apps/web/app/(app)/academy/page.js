@@ -39,12 +39,12 @@ export default function AcademyDashboardPage() {
   const popular = data?.popularCourses || [];
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-3">
       <PageHeader title="Academy Dashboard" subtitle="Courses, enrollments, completions aur workshops ka overview" />
 
       {err && <ErrorBanner message={err} />}
 
-      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
         <StatCard title="Published Courses" value={stats.publishedCourses ?? '—'} icon="📚" />
         <StatCard title="Active Enrollments" value={stats.activeEnrollments ?? '—'} icon="🎓" />
         <StatCard title="Completions (30d)" value={stats.completions30d ?? '—'} icon="✅" />
@@ -53,9 +53,9 @@ export default function AcademyDashboardPage() {
         <StatCard title="Upcoming Workshops" value={stats.upcomingWorkshops ?? '—'} icon="🎥" />
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-3">
         <div className="card p-5">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-3">
             <h3 className="text-lg font-semibold text-gray-900">🔥 Popular Courses</h3>
             <a href="/academy/courses" className="btn btn-secondary btn-sm">All Courses</a>
           </div>
@@ -79,7 +79,7 @@ export default function AcademyDashboardPage() {
         </div>
 
         <div className="card p-5">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">⚡ Quick Links</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mb-3">⚡ Quick Links</h3>
           <div className="grid grid-cols-2 gap-3">
             <a href="/academy/courses" className="p-4 rounded-xl bg-gray-100 hover:bg-gray-100 transition border border-gray-200 hover:border-[#0f766e]/40">
               <div className="text-2xl mb-1">📚</div>

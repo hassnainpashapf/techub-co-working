@@ -51,7 +51,7 @@ function ScheduleForm({ initial, leads, hosts, onSave, saving, preLeadId }) {
           ))}
         </select>
       </Field>
-      <div className="grid grid-cols-2 gap-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field label="Date *"><input type="date" className="input [color-scheme:dark]" value={f.date} onChange={(e) => setF({ ...f, date: e.target.value })} required /></Field>
         <Field label="Time *"><input type="time" className="input [color-scheme:dark]" value={f.time} onChange={(e) => setF({ ...f, time: e.target.value })} required /></Field>
         <Field label="Duration">
@@ -201,13 +201,13 @@ export default function ToursPage() {
         actions={<button className="btn-primary" onClick={() => setShowAdd(true)}>+ Schedule Tour</button>}
       />
       {error && <ErrorBanner message={error} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Today" value={stats.today} icon="📅" />
         <StatCard label="Upcoming" value={stats.upcoming} icon="⏰" />
         <StatCard label="Completed" value={stats.completed} icon="✅" />
         <StatCard label="No Shows" value={stats.noShow} icon="⚠️" />
       </div>
-      <div className="flex flex-wrap items-center gap-2 mb-4">
+      <div className="flex flex-wrap items-center gap-2 mb-3">
         {['today', 'upcoming', 'past', 'all'].map((t) => (
           <button key={t} className={`chip ${tab === t ? 'chip-active' : ''}`} onClick={() => setTab(t)}>
             {t.charAt(0).toUpperCase() + t.slice(1)}
@@ -222,7 +222,7 @@ export default function ToursPage() {
       {loading ? <Spinner /> : filtered.length === 0 ? (
         <EmptyState title="No tours here" body={tab === 'today' ? 'No tours scheduled for today.' : 'Try a different filter.'} />
       ) : (
-        <div className="grid gap-4">
+        <div className="grid gap-3">
           {filtered.map((t) => (
             <div key={t.id} className="card p-4 flex flex-col md:flex-row md:items-center gap-3">
               <div className="flex-1">
@@ -272,7 +272,7 @@ export default function ToursPage() {
 
       {completing && (
         <Modal title={`Complete Tour — ${completing.lead?.name}`} onClose={() => setCompleting(null)}>
-          <div className="grid gap-4">
+          <div className="grid gap-3">
             <Field label="Outcome">
               <select className="input" value={outcome} onChange={(e) => setOutcome(e.target.value)}>
                 {OUTCOMES.map((o) => <option key={o.key} value={o.key}>{o.label}</option>)}

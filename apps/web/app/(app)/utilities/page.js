@@ -61,7 +61,7 @@ export default function UtilitiesDashboardPage() {
   const gs = s.greenScore || null;
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="🔌 Utilities Dashboard" sub="Meters, consumption, cost aur sustainability" actions={
         <button onClick={load} className="btn-secondary">↻ Refresh</button>
       } />
@@ -73,7 +73,7 @@ export default function UtilitiesDashboardPage() {
         </div>
       )}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-5 gap-3">
         <StatCard label="Utility cost (30d)" value={s.cost30d != null ? `Rs ${Number(s.cost30d).toLocaleString()}` : '—'} accent="blue" />
         <StatCard label="Active meters" value={s.activeMeters ?? '—'} accent="violet" />
         <StatCard label="Unbilled meters" value={s.unbilled ? s.unbilled.meters : '—'} accent="amber" />
@@ -81,19 +81,19 @@ export default function UtilitiesDashboardPage() {
         <StatCard label="🌱 Green score" value={gs ? `${gs.score}/100` : '—'} accent="green" />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">📊 Consumption (30 din)</h3>
+          <h3 className="text-lg font-semibold mb-3">📊 Consumption (30 din)</h3>
           <Bars items={s.byType30d} />
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">🌱 Sustainability</h3>
+          <h3 className="text-lg font-semibold mb-3">🌱 Sustainability</h3>
           {!gs ? (
             <EmptyState title="Green score ke liye data nahi" />
           ) : (
             <div className="space-y-3">
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
                 <div className="text-5xl font-bold text-green-300">{gs.score}</div>
                 <div className="text-sm text-gray-500">/ 100<br />{gs.note}</div>
               </div>
@@ -104,9 +104,9 @@ export default function UtilitiesDashboardPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-3">
         <div className="xl:col-span-2 rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">🚨 Active Alerts ({s.activeAlertCount || 0})</h3>
+          <h3 className="text-lg font-semibold mb-3">🚨 Active Alerts ({s.activeAlertCount || 0})</h3>
           {!(s.activeAlerts || []).length ? (
             <EmptyState title="Koi active alert nahi" />
           ) : (
@@ -122,7 +122,7 @@ export default function UtilitiesDashboardPage() {
         </div>
 
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
-          <h3 className="text-lg font-semibold mb-4">⚡ Quick Links</h3>
+          <h3 className="text-lg font-semibold mb-3">⚡ Quick Links</h3>
           <div className="space-y-2">
             <Link href="/utilities/meters" className="block rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100">🔌 Meters & Readings</Link>
             <Link href="/utilities/green" className="block rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100">🌱 Green Initiatives</Link>
@@ -130,7 +130,7 @@ export default function UtilitiesDashboardPage() {
             <Link href="/portal/usage" className="block rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 text-sm hover:bg-gray-100">👤 Member usage (portal)</Link>
           </div>
           {s.unbilled && s.unbilled.meters > 0 && (
-            <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            <div className="mt-3 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
               {s.unbilled.meters} meters ka pichhle 30 din ka bill nahi bana — ~{s.unbilled.totalConsumption.toLocaleString()} units unbilled.
             </div>
           )}

@@ -137,19 +137,19 @@ export default function PlansPage() {
       />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-5">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4 gap-3">
           {plans.map((plan) => (
             <div key={plan.id} className="card-premium p-6 relative">
               {!plan.isActive && <div className="absolute top-4 right-4"><Badge tone="slate">Inactive</Badge></div>}
               <div className="text-sm text-gray-500">{CYCLE_LABELS[plan.billingCycle] || plan.billingCycle}{plan.unitType ? ` · ${UNIT_TYPE_LABELS[plan.unitType]}` : ''}</div>
               <h3 className="text-xl font-bold text-gray-900 mt-1">{plan.name}</h3>
               {plan.description && <p className="text-sm text-gray-600 mt-1">{plan.description}</p>}
-              <div className="mt-4 flex items-baseline gap-1">
+              <div className="mt-3 flex items-baseline gap-1">
                 <span className="text-3xl font-extrabold text-gray-900">{fmt(plan.price)}</span>
                 <span className="text-sm text-gray-500">/{plan.billingCycle === 'monthly' ? 'mo' : plan.billingCycle === 'yearly' ? 'yr' : 'qtr'}</span>
               </div>
               {plan.features?.length > 0 && (
-                <ul className="mt-4 space-y-1.5">
+                <ul className="mt-3 space-y-1.5">
                   {plan.features.map((f, i) => (
                     <li key={i} className="text-sm text-gray-800 flex items-start gap-2">
                       <span className="text-emerald-400 mt-0.5">✓</span>{f}
@@ -157,7 +157,7 @@ export default function PlansPage() {
                   ))}
                 </ul>
               )}
-              <div className="mt-4 pt-4 border-t border-gray-200 flex items-center justify-between">
+              <div className="mt-3 pt-4 border-t border-gray-200 flex items-center justify-between">
                 <span className="text-xs text-gray-500">{plan._count?.contracts || 0} active contracts</span>
                 {canWrite && (
                   <div className="flex gap-2">

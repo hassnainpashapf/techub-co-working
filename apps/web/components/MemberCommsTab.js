@@ -61,7 +61,7 @@ export default function MemberCommsTab({ memberId, memberPhone, memberEmail }) {
   return (
     <div>
       {error && <ErrorBanner message={error} />}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         <button onClick={() => setShowSend(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-teal-600/20 border border-teal-500/40 text-violet-700 hover:bg-teal-600/30">✉️ Message bhejein</button>
         <button onClick={() => setShowCall(true)} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-blue-500/20 border border-blue-400/40 text-blue-700 hover:bg-blue-500/30">📞 Log call</button>
         {tel && <a href={tel} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-emerald-500/20 border border-emerald-400/40 text-emerald-700 hover:bg-emerald-500/30">📱 Call karein</a>}

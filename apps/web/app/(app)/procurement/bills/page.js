@@ -160,7 +160,7 @@ export default function VendorBillsPage() {
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
 
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
           <StatCard title="Outstanding" value={fmtMoney(stats.outstanding)} />
           <StatCard title="Overdue" value={`${stats.overdueCount || 0} — ${fmtMoney(stats.overdueValue)}`} tone="red" />
           <StatCard title="Pending" value={stats.counts?.pending || 0} />
@@ -168,7 +168,7 @@ export default function VendorBillsPage() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-3">
         <input className="input max-w-xs" placeholder="Search bill no / vendor…" value={search} onChange={(e) => setSearch(e.target.value)} />
         {['', 'pending', 'approved', 'paid', 'disputed'].map((s) => (
           <button key={s} className={`btn-ghost text-xs ${status === s ? '!bg-[#0f766e]/20 !text-teal-700' : ''}`} onClick={() => setStatus(s)}>

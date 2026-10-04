@@ -57,7 +57,7 @@ export default function PortalPerksPage() {
 
   if (loading) return <Spinner />;
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6 space-y-3">
       <PageHeader title="Member Perks" sub="Exclusive deals from our partners — just for you" />
       {error && <ErrorBanner message={error} onRetry={load} />}
 
@@ -73,7 +73,7 @@ export default function PortalPerksPage() {
       {perks.length === 0 ? (
         <EmptyState title="No perks yet" hint="New partner deals will appear here soon." />
       ) : (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {perks.map((p) => {
             return (
               <div key={p.id} className="rounded-2xl border border-gray-200 bg-gradient-to-br from-white/10 to-white/5 p-5 shadow-lg">
@@ -89,7 +89,7 @@ export default function PortalPerksPage() {
                   <span>{catLabel(p.category)}</span>
                   <span>Expires: {fmtDate(p.expiryDate)}</span>
                 </div>
-                <div className="mt-4">
+                <div className="mt-3">
                   {revealed[p.id] ? (
                     <div className="rounded-lg border border-dashed border-amber-400/50 bg-amber-400/10 px-3 py-2 text-center">
                       <div className="text-xs text-amber-700">Your code:</div>

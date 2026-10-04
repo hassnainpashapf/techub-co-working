@@ -170,7 +170,7 @@ export default function CoursesPage() {
         <div>
           <button onClick={() => { setSelected(null); setLessons([]); }} className="btn-secondary text-xs mb-3">← Sab courses</button>
           {builderLoading ? <Spinner /> : (
-            <div className="grid lg:grid-cols-3 gap-4">
+            <div className="grid lg:grid-cols-3 gap-3">
               <div className="card p-5">
                 <h3 className="font-semibold text-gray-900 mb-3">Course Details</h3>
                 <div className="space-y-2 text-sm">
@@ -184,7 +184,7 @@ export default function CoursesPage() {
                   <p className="text-gray-500 text-xs">{selected.description || '—'}</p>
                   <div className="text-xs text-gray-500">{lessons.length} lessons {selected.durationMin ? `• ~${selected.durationMin} min` : ''}</div>
                 </div>
-                <div className="flex flex-wrap gap-2 mt-4">
+                <div className="flex flex-wrap gap-2 mt-3">
                   {selected.isPublished ? (
                     <button onClick={() => handlePublish(selected.id, false)} className="btn-secondary text-xs">⏸ Unpublish</button>
                   ) : (
@@ -227,7 +227,7 @@ export default function CoursesPage() {
       ) : loading ? <Spinner /> : courses.length === 0 ? (
         <EmptyState title="Koi course nahi" hint="Naya Course banao — staff training, member onboarding, workshops, kuch bhi." />
       ) : (
-        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+        <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-3">
           {courses.map((c) => (
             <div key={c.id} className="card p-5">
               <div className="flex items-start justify-between gap-2">
@@ -241,7 +241,7 @@ export default function CoursesPage() {
                 </div>
               </div>
               <p className="text-sm text-gray-500 mt-2 line-clamp-2">{c.description || '—'}</p>
-              <div className="flex flex-wrap gap-2 mt-4">
+              <div className="flex flex-wrap gap-2 mt-3">
                 <button onClick={() => openBuilder(c.id)} className="btn-secondary text-xs">✏️ Builder</button>
                 {c.isPublished ? (
                   <button onClick={() => handlePublish(c.id, false)} className="btn-secondary text-xs">⏸ Unpublish</button>

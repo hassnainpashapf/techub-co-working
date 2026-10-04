@@ -48,11 +48,11 @@ function CancelModal({ booking, onClose, onDone }) {
   };
   return (
     <Modal title="Cancel booking?" onClose={onClose}>
-      {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
+      {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>}
       <p className="text-gray-600 text-sm mb-2">
         <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> — {fmtRange(booking)}
       </p>
-      <p className="text-gray-500 text-xs mb-4">
+      <p className="text-gray-500 text-xs mb-3">
         Policy: bookings can be cancelled any time before they start. The slot is released immediately for other members.
       </p>
       <div className="flex justify-end gap-2">
@@ -90,8 +90,8 @@ function RescheduleModal({ booking, onClose, onDone }) {
   return (
     <Modal title="Reschedule booking" onClose={onClose}>
       <form onSubmit={submit}>
-        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-4">{error}</div>}
-        <p className="text-gray-600 text-sm mb-4">
+        {error && <div className="bg-red-50 border border-red-200 text-red-700 text-sm rounded-lg px-4 py-3 mb-3">{error}</div>}
+        <p className="text-gray-600 text-sm mb-3">
           <span className="text-gray-900 font-semibold">{booking.unit?.code}</span> · {booking.unit?.type}
         </p>
         <div className="grid grid-cols-3 gap-3">
@@ -108,7 +108,7 @@ function RescheduleModal({ booking, onClose, onDone }) {
         <p className="text-slate-500 text-xs mt-3">
           Booking rules apply (max duration, advance notice, buffer between bookings). Overlapping slots are rejected.
         </p>
-        <div className="flex justify-end gap-2 mt-4">
+        <div className="flex justify-end gap-2 mt-3">
           <button type="button" className="btn-secondary" onClick={onClose}>Close</button>
           <button type="submit" className="btn-primary" disabled={busy}>{busy ? 'Saving…' : 'Save new time'}</button>
         </div>
@@ -137,7 +137,7 @@ function BookingCard({ booking, onCancel, onReschedule, past }) {
         <div className="text-gray-600 text-sm">📅 {fmtRange(booking)}</div>
         <div className="text-gray-500 text-xs mt-1">⏱ Duration: {durationHrs(booking)}</div>
         {!past && booking.status === 'confirmed' && (
-          <div className="flex gap-2 mt-4">
+          <div className="flex gap-2 mt-3">
             <button className="btn-secondary flex-1 text-sm" onClick={() => onReschedule(booking)}>Reschedule</button>
             <button className="btn-danger flex-1 text-sm" onClick={() => onCancel(booking)}>Cancel</button>
           </div>
@@ -149,7 +149,7 @@ function BookingCard({ booking, onCancel, onReschedule, past }) {
 
 function SkeletonGrid() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
       {[0, 1, 2].map((i) => (
         <div key={i} className="card-premium overflow-hidden animate-pulse">
           <div className="h-32 sm:h-36 bg-slate-700/40" />
@@ -204,7 +204,7 @@ export default function PortalBookingsPage() {
         )}
       />
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {tabs.map((t) => (
           <button
             key={t.key}
@@ -230,7 +230,7 @@ export default function PortalBookingsPage() {
           hint={tab === 'upcoming' ? 'Book a space to see it here' : 'Your booking history will appear here'}
         />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {bookings.map((b) => (
             <BookingCard
               key={b.id}

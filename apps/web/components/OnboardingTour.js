@@ -228,7 +228,7 @@ export default function OnboardingTour() {
           <button onClick={finish} className="text-slate-500 hover:text-gray-900 text-lg leading-none" aria-label="Skip tour">×</button>
         </div>
         <h3 className="text-gray-900 font-bold text-[16px] mb-1.5">{step.title}</h3>
-        <p className="text-gray-600 text-[13.5px] leading-relaxed mb-4">{step.text}</p>
+        <p className="text-gray-600 text-[13.5px] leading-relaxed mb-3">{step.text}</p>
         <div className="flex items-center justify-between">
           <div className="flex gap-1.5">
             {STEPS.map((_, i) => (

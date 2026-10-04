@@ -76,7 +76,7 @@ export default function AuditLogsPage() {
       <PageHeader title="Audit Logs" sub="Immutable record of all important actions" />
 
       {/* Tabs */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[
           { id: 'logs', label: 'Logs' },
           { id: 'retention', label: 'Retention' },
@@ -94,7 +94,7 @@ export default function AuditLogsPage() {
       {tab === 'retention' ? <RetentionTab /> : (
       <>
       {/* Filters */}
-      <div className="card-premium p-4 mb-4 grid grid-cols-2 md:grid-cols-6 gap-3">
+      <div className="card-premium p-4 mb-3 grid grid-cols-2 md:grid-cols-6 gap-3">
         <div>
           <label className="block text-xs font-semibold text-gray-600 mb-1">From</label>
           <input type="date" className="input" value={f.from} onChange={(e) => setF({ ...f, from: e.target.value })} />
@@ -181,7 +181,7 @@ export default function AuditLogsPage() {
       )}
 
       {pages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-4">
+        <div className="flex items-center justify-center gap-2 mt-3">
           <button className="btn-secondary" disabled={page <= 1} onClick={() => fetchLogs(page - 1)}>‹ Prev</button>
           <span className="text-sm text-gray-500">Page {page} of {pages} ({total} total)</span>
           <button className="btn-secondary" disabled={page >= pages} onClick={() => fetchLogs(page + 1)}>Next ›</button>
@@ -257,7 +257,7 @@ function RetentionTab() {
     <div>
       {error && <ErrorBanner message={error} />}
       {result && (
-        <div className="card-premium p-4 mb-4 text-sm text-gray-800">
+        <div className="card-premium p-4 mb-3 text-sm text-gray-800">
           {result.message
             ? result.message
             : `Archived ${result.archived ?? 0} logs, deleted ${result.deleted ?? 0} rows.`}
@@ -266,7 +266,7 @@ function RetentionTab() {
       )}
 
       {/* Settings */}
-      <div className="card-premium p-4 mb-4">
+      <div className="card-premium p-4 mb-3">
         <div className="text-sm font-semibold text-gray-900 mb-1">Retention window</div>
         <div className="text-xs text-gray-500 mb-3">
           Logs older than this are archived to a verified JSONL file and then deleted. Default 365 days (min 30, max 3650).

@@ -147,7 +147,7 @@ export default function ConciergeBoardPage() {
   const cancelledCount = filtered.filter((r) => r.status === 'cancelled').length;
 
   return (
-    <div className="space-y-5">
+    <div className="space-y-3">
       <PageHeader
         title="Concierge Board"
         sub="Service requests ko drag kar ke aagay barhayein"
@@ -181,7 +181,7 @@ export default function ConciergeBoardPage() {
       {loading ? (
         <div className="flex justify-center py-16"><Spinner /></div>
       ) : (
-        <div className="flex gap-4 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
+        <div className="flex gap-3 overflow-x-auto pb-4 -mx-1 px-1 snap-x">
           {COLUMNS.map((col) => (
             <div
               key={col.key}
@@ -198,7 +198,7 @@ export default function ConciergeBoardPage() {
               </div>
               <div className="space-y-2 min-h-[120px]">
                 {grouped[col.key].length === 0 && (
-                  <div className="text-xs text-slate-500 text-center py-6">Koi request nahi</div>
+                  <div className="text-xs text-slate-500 text-center py-4">Koi request nahi</div>
                 )}
                 {grouped[col.key].map((r) => {
                   const sla = slaInfo(r);
@@ -263,13 +263,13 @@ export default function ConciergeBoardPage() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-900/50 p-4" onClick={() => setAssignReq(null)}>
           <div className="w-full max-w-sm rounded-2xl border border-gray-200 bg-white p-5" onClick={(e) => e.stopPropagation()}>
             <h3 className="font-semibold text-gray-900 mb-1">Assign request</h3>
-            <p className="text-xs text-gray-500 mb-4 truncate">{assignReq.title}</p>
+            <p className="text-xs text-gray-500 mb-3 truncate">{assignReq.title}</p>
             <label className="text-xs text-gray-500">Staff member</label>
             <select value={assignee} onChange={(e) => setAssignee(e.target.value)} className="input w-full mt-1">
               <option value="">Unassigned</option>
               {staffList.map((u) => <option key={u.id} value={u.id}>{u.name} ({u.role})</option>)}
             </select>
-            <div className="mt-4 flex justify-end gap-2">
+            <div className="mt-3 flex justify-end gap-2">
               <button onClick={() => setAssignReq(null)} className="btn-ghost">Cancel</button>
               <button onClick={doAssign} disabled={assigning} className="btn-primary disabled:opacity-50">
                 {assigning ? 'Saving…' : 'Save'}

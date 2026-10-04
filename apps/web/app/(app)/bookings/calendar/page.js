@@ -274,7 +274,7 @@ export default function BookingCalendarPage() {
           </div>
         }
       />
-      <h2 className="text-xl font-bold text-gray-900 mb-4">{title}</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-3">{title}</h2>
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
       {loading ? <Spinner /> : view === 'week' ? (
         <WeekView weekStart={weekCursor} bookings={bookings} onSelect={setSelected} />

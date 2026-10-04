@@ -12,7 +12,7 @@ function fmt(d) { try { return d ? new Date(d).toLocaleString('en-PK', { timeZon
 
 function Section({ title, hint, children, action }) {
   return (
-    <div className="mb-4">
+    <div className="mb-3">
       <div className="flex items-center justify-between mb-2">
         <h4 className="font-bold text-gray-900">{title}</h4>
         {action}
@@ -49,7 +49,7 @@ function TicketsTab({ eventId }) {
     <Section title="Ticket types" hint="Sale pricing and limits per event." action={<button className="btn-primary text-sm" onClick={() => setShowForm(!showForm)}>+ Type</button>}>
       {err && <ErrorBanner message={err} />}
       {showForm && (
-        <form onSubmit={save} className="grid grid-cols-2 gap-3 mb-4 p-3 rounded-xl bg-gray-100">
+        <form onSubmit={save} className="grid grid-cols-2 gap-3 mb-3 p-3 rounded-xl bg-gray-100">
           <Field label="Name *"><input className="input" value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} required maxLength={80} placeholder="Early Bird" /></Field>
           <Field label="Price (Rs) *"><input type="number" min={0} step="0.01" className="input" value={f.price} onChange={(e) => setF({ ...f, price: e.target.value })} required /></Field>
           <Field label="Quantity *"><input type="number" min={1} className="input" value={f.quantity} onChange={(e) => setF({ ...f, quantity: e.target.value })} required /></Field>
@@ -206,7 +206,7 @@ function AnalyticsTab({ eventId }) {
         ))}
       </div>
       {stats.byType && stats.byType.length > 0 && (
-        <div className="mt-4">
+        <div className="mt-3">
           <h4 className="font-bold text-gray-900 mb-2 text-sm">Sales by ticket type</h4>
           {stats.byType.map((b) => (
             <div key={b.name} className="flex items-center justify-between rounded-xl bg-gray-100 px-3 py-2 mb-1">
@@ -224,7 +224,7 @@ export default function EventTicketingTabs({ eventId }) {
   const [tab, setTab] = useState('Tickets');
   return (
     <div>
-      <div className="flex gap-2 mb-4 border-b border-gray-200 pb-2">
+      <div className="flex gap-2 mb-3 border-b border-gray-200 pb-2">
         {TABS.map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`text-sm px-3 py-1.5 rounded-full ${tab === t ? 'bg-teal-700 text-white font-semibold' : 'text-gray-500 hover:text-gray-900'}`}>{t}</button>
         ))}

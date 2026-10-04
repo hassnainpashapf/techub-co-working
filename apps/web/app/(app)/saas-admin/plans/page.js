@@ -46,7 +46,7 @@ export default function SaaSPlansPage() {
       {loading ? <Spinner /> : plans.length === 0 ? <EmptyState title="No plans" hint="Plans will be seeded automatically." /> : (
         <DataTable columns={columns} rows={plans} empty="No plans found." />
       )}
-      <p className="text-xs text-slate-500 mt-4">Plans are seeded automatically (starter / growth / enterprise). Tenants are put on Starter by default; they can upgrade from Settings → Subscription.</p>
+      <p className="text-xs text-slate-500 mt-3">Plans are seeded automatically (starter / growth / enterprise). Tenants are put on Starter by default; they can upgrade from Settings → Subscription.</p>
     </div>
   );
 }

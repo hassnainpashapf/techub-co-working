@@ -213,8 +213,8 @@ export default function LegalTemplatesPage() {
 
       {showModal && (
         <Modal title={editing ? `✏️ ${editing.name} (v${editing.version})` : '📄 Naya Contract Template'} onClose={() => setShowModal(false)}>
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-4">
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="space-y-3">
               <Field label="Naam">
                 <input className="input-premium w-full" value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Membership Agreement" />
               </Field>
@@ -270,7 +270,7 @@ export default function LegalTemplatesPage() {
 
       {signT && (
         <Modal title={`📝 Send for signing — ${signT.name}`} onClose={() => setSignT(null)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             {signResult ? (
               <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
                 <div className="text-emerald-700 font-medium mb-2">✅ Signing request bhej di gayi</div>

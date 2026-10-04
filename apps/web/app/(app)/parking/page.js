@@ -140,13 +140,13 @@ export default function ParkingPage() {
         <button className="btn-primary" onClick={() => setShowForm(true)}>+ Add spot</button>
       } />
       {error && <ErrorBanner message={error} onClose={() => setError('')} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Total spots" value={spots.length} accent="blue" />
         <StatCard label="Free" value={counts.free} accent="green" />
         <StatCard label="Occupied" value={counts.occupied} accent="red" />
         <StatCard label="Reserved" value={counts.reserved} accent="amber" />
       </div>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {['all', 'free', 'occupied', 'reserved'].map((f) => (
           <button key={f} onClick={() => setFilter(f)}
             className={`px-4 py-1.5 rounded-full text-sm font-semibold capitalize transition ${filter === f ? 'bg-[#0f766e] text-white' : 'bg-gray-100 text-gray-600 hover:bg-slate-700'}`}>
@@ -157,7 +157,7 @@ export default function ParkingPage() {
       {loading ? <Spinner /> : shown.length === 0 ? (
         <EmptyState title="No spots" hint="Add parking spots to get started." />
       ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
           {shown.map((s) => {
             const active = s.assignments?.[0];
             return (

@@ -69,7 +69,7 @@ export default function SettingsPage() {
       <PageHeader title="Settings" sub="Tenant configuration key-values" />
       <ErrorBanner message={error} onRetry={refresh} />
 
-      <div className="card mb-4">
+      <div className="card mb-3">
         <h2 className="font-semibold text-gray-900 mb-3">{editingKey ? `Edit: ${editingKey}` : 'Add / update setting'}</h2>
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4">

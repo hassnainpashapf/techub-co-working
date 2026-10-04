@@ -66,13 +66,13 @@ export default function MaintenanceRequestsPage() {
     <div>
       <PageHeader title="Maintenance Requests" sub="Fault reports from members" />
       {error && <ErrorBanner message={error} onRetry={() => { setError(''); load(); }} />}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-5">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
         <StatCard label="Open" value={open} accent="blue" />
         <StatCard label="In progress" value={inProg} accent="amber" />
         <StatCard label="Urgent (pending)" value={urgent} accent="red" />
         <StatCard label="Total" value={rows.length} accent="slate" />
       </div>
-      <div className="card-premium p-4 mb-4 flex flex-wrap gap-3 items-end">
+      <div className="card-premium p-4 mb-3 flex flex-wrap gap-3 items-end">
         <Field label="Status">
           <select className="input" value={status} onChange={(e) => setStatus(e.target.value)}>
             <option value="">All</option>
@@ -135,7 +135,7 @@ export default function MaintenanceRequestsPage() {
         <Modal title={selected.title} onClose={() => setSelected(null)}>
           {note && <p className="text-sm text-gray-600 mb-3">{note}</p>}
           {selected.description && <p className="text-sm text-gray-600 whitespace-pre-wrap mb-3">{selected.description}</p>}
-          <div className="grid grid-cols-2 gap-3 text-sm mb-4">
+          <div className="grid grid-cols-2 gap-3 text-sm mb-3">
             <div><span className="text-slate-500">Priority:</span> <Badge tone={PRIORITY_TONE[selected.priority]}>{selected.priority}</Badge></div>
             <div><span className="text-slate-500">Status:</span> <Badge tone={STATUS_TONE[selected.status]}>{selected.status.replace('_', ' ')}</Badge></div>
             <div><span className="text-slate-500">Location:</span> <span className="text-gray-800">{selected.location || '—'}</span></div>

@@ -447,7 +447,7 @@ export default function Sidebar() {
   return (
     <aside className="w-[288px] shrink-0 bg-white flex flex-col h-screen sticky top-0 border-r border-gray-200 relative">
       {/* Brand */}
-      <div className="px-5 pt-5 pb-4 flex items-center gap-3">
+      <div className="px-4 pt-3 pb-4 flex items-center gap-3">
         <div className="w-10 h-10 rounded-xl bg-[#134e4a] flex items-center justify-center text-white text-lg font-extrabold">
           T
         </div>
@@ -468,7 +468,7 @@ export default function Sidebar() {
           <>
             <p className="px-3.5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
             {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
-            <p className="px-3.5 pt-5 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
+            <p className="px-3.5 pt-3 pb-2 text-[11px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}

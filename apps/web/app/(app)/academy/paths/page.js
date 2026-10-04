@@ -122,7 +122,7 @@ export default function LearningPathsPage() {
       {paths.length === 0 ? (
         <EmptyState title="No learning paths yet" hint={isStaff ? 'Create a path and add courses in order.' : 'Check back soon — paths will appear here.'} />
       ) : (
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-3 md:grid-cols-2">
           {paths.map((p) => {
             const open = !!expanded[p.id];
             const courseList = p.courses || [];
@@ -176,7 +176,7 @@ export default function LearningPathsPage() {
       )}
       {showForm && (
         <Modal title={editing ? 'Edit Learning Path' : 'New Learning Path'} onClose={() => setShowForm(false)}>
-          <div className="space-y-4">
+          <div className="space-y-3">
             <Field label="Title">
               <input
                 className="w-full rounded-lg border border-gray-200 bg-gray-100 px-3 py-2 text-gray-900"

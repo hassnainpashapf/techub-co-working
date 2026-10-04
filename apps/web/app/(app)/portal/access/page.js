@@ -79,7 +79,7 @@ export default function MyAccessPage() {
   const pendingMig = data?.pendingMigration || [];
 
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-4">
+    <div className="p-6 max-w-5xl mx-auto space-y-3">
       <PageHeader
         title="🔐 My Access"
         sub={data?.member ? `${data.member.name} · ${data.member.status}` : 'Entry access overview'}
@@ -92,7 +92,7 @@ export default function MyAccessPage() {
       )}
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <StatCard label="Active Credentials" value={creds.length} accent="blue" icon="🔑" />
         <StatCard label="Access Schedules" value={schedules.length} accent="violet" icon="🕒" />
         <StatCard label="Entries (30 din)" value={entries.length} accent="green" icon="🚪" />
@@ -100,7 +100,7 @@ export default function MyAccessPage() {
       </div>
 
       {/* Credentials + Schedules */}
-      <div className="grid md:grid-cols-2 gap-4">
+      <div className="grid md:grid-cols-2 gap-3">
         <div className="rounded-2xl border border-gray-200 bg-white p-5">
           <h3 className="font-semibold mb-3">🔑 Meri Credentials</h3>
           {creds.length === 0 ? (
@@ -143,8 +143,8 @@ export default function MyAccessPage() {
       {/* Request visitor pass */}
       <div className="rounded-2xl border border-gray-200 bg-white p-5">
         <h3 className="font-semibold mb-1">🎫 Visitor Day Pass Request</h3>
-        <p className="text-sm text-gray-500 mb-4">Mehmaan ke liye pass mangwayein — reception approve karegi to QR pass milega.</p>
-        <form onSubmit={submitRequest} className="grid md:grid-cols-2 gap-4">
+        <p className="text-sm text-gray-500 mb-3">Mehmaan ke liye pass mangwayein — reception approve karegi to QR pass milega.</p>
+        <form onSubmit={submitRequest} className="grid md:grid-cols-2 gap-3">
           <Field label="Visitor ka naam *">
             <input className="input" value={form.visitorName} onChange={(e) => setForm({ ...form, visitorName: e.target.value })} required minLength={2} maxLength={120} />
           </Field>
@@ -163,7 +163,7 @@ export default function MyAccessPage() {
             </Field>
           </div>
           <div className="md:col-span-2">
-            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-[#0f766e] to-teal-700 px-5 py-2.5 font-medium disabled:opacity-50">
+            <button type="submit" disabled={submitting} className="rounded-xl bg-gradient-to-r from-[#0f766e] to-teal-700 px-4 py-2.5 font-medium disabled:opacity-50">
               {submitting ? 'Bhej rahe hain…' : 'Request bhejein'}
             </button>
             {formMsg && (
@@ -173,7 +173,7 @@ export default function MyAccessPage() {
         </form>
 
         {passes.length > 0 && (
-          <div className="mt-5 space-y-2">
+          <div className="mt-3 space-y-2">
             <h4 className="text-sm font-medium text-gray-600">Meri requests</h4>
             {passes.map((p) => (
               <div key={p.id} className="flex items-center justify-between rounded-xl bg-black/30 p-3 text-sm">

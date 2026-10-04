@@ -71,10 +71,10 @@ export default function CelebrationsPage() {
           </button>
         }
       />
-      {triggerMsg && <div className="mb-4 text-sm text-emerald-700">{triggerMsg}</div>}
+      {triggerMsg && <div className="mb-3 text-sm text-emerald-700">{triggerMsg}</div>}
       {error && <ErrorBanner message={error} />}
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {[['celebrations', '🎉 Celebrations'], ['milestones', '🏆 Milestones']].map(([id, label]) => (
           <button key={id} onClick={() => setTab(id)}
             className={`px-3 py-1.5 rounded-lg text-sm ${tab === id ? 'bg-teal-700 text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-100'}`}>
@@ -84,7 +84,7 @@ export default function CelebrationsPage() {
       </div>
 
       {tab === 'milestones' ? <MilestonesList limit={20} /> : (<>
-      <div className="flex gap-2 mb-4">
+      <div className="flex gap-2 mb-3">
         {DAY_OPTS.map((d) => (
           <button
             key={d}
@@ -98,7 +98,7 @@ export default function CelebrationsPage() {
 
       {loading ? <Spinner /> : (
         <>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-3">
             <StatCard label="🎂 Birthdays" value={bdays} />
             <StatCard label="🎉 Anniversaries" value={annivs} />
             <StatCard label="📅 Upcoming" value={items.length} />
@@ -119,7 +119,7 @@ export default function CelebrationsPage() {
             />
           )}
 
-          <h3 className="text-lg font-semibold text-gray-900 mt-5 mb-3">Recently sent</h3>
+          <h3 className="text-lg font-semibold text-gray-900 mt-3 mb-3">Recently sent</h3>
           {log.length === 0 ? <EmptyState title="Abhi kuch nahi bheja" message="Jab birthday/anniversary emails jayengi to yahan log dikhega." /> : (
             <DataTable
               columns={[
