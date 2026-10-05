@@ -164,3 +164,5 @@ asal chalta hua product:
   aur demo login se andar jao (password: `demo1234`).
 
 <!-- Cloudflare Pages now deploys straight from git (native GitHub integration). -->
+
+<!-- pages-git-trigger 2026-10-05 -->
