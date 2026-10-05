@@ -415,7 +415,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         <a
           href={item.path}
           onClick={item.children ? (e) => { e.preventDefault(); setOpenMenu(expanded ? '' : item.key); } : closeMobile}
-          className={`flex items-center gap-2 pl-4 pr-3 py-1.5 rounded-lg text-[13px] transition-all duration-200 group ${
+          className={`flex items-center gap-3 pl-4 pr-3 py-3 rounded-lg text-[14px] transition-all duration-200 group ${
             active
               ? 'text-[#0f766e] font-bold bg-teal-50'
               : 'text-gray-800 hover:text-gray-900 hover:bg-gray-100 font-bold'
@@ -440,7 +440,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
                   key={child.path}
                   href={child.path}
                   onClick={closeMobile}
-                  className={`block px-3 py-1 rounded-md text-[12.5px] transition-all duration-200 ${
+                  className={`block px-3 py-2 rounded-md text-[13px] transition-all duration-200 ${
                     childActive
                       ? 'text-teal-800 font-bold bg-teal-50'
                       : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100 font-semibold'
@@ -493,9 +493,9 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
           </>
         ) : (
           <>
-            <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
+            <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
             {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
-            <p className="px-3 pt-2 pb-1 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
+            <p className="px-3 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}
