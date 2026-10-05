@@ -483,8 +483,9 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         </div>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 px-3 space-y-0.5 overflow-y-auto pb-4">
+      {/* Nav — stretched to fill the full sidebar height */}
+      <nav className="flex-1 px-3 overflow-y-auto pb-4">
+        <div className="min-h-full flex flex-col justify-evenly gap-1">
         {user.role === 'member' ? (
           <>
             <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
@@ -498,20 +499,8 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
             {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
           </>
         )}
-      </nav>
-
-      {/* User profile — pinned to bottom */}
-      <div className="px-3 pb-4">
-        <div className="flex items-center gap-2.5 rounded-xl border border-gray-200 bg-gray-50 px-3 py-2.5">
-          <div className="w-9 h-9 rounded-full bg-[#134e4a] flex items-center justify-center text-white text-sm font-bold shrink-0">
-            {(user.name || user.email || 'U').charAt(0).toUpperCase()}
-          </div>
-          <div className="min-w-0 flex-1">
-            <p className="text-[13px] font-semibold text-gray-900 truncate">{user.name || user.email}</p>
-            <p className="text-[11px] text-gray-500 capitalize truncate">{(user.role || '').replace(/_/g, ' ')}</p>
-          </div>
         </div>
-      </div>
+      </nav>
     </aside>
     </>
   );
