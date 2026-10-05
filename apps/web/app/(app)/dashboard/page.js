@@ -327,28 +327,24 @@ function StaffDashboard() {
 
   return (
     <div>
-      <PageHeader title="Dashboard" sub="Overview of your coworking space" />
-
-      {/* Android app download */}
-      <a
-        href="/Techub-debug.apk"
-        download
-        className="card p-4 mb-3 flex items-center gap-4 hover:border-[#0f766e]/40 transition-colors group"
-      >
-        <span className="w-11 h-11 rounded-xl bg-[#0f766e]/10 text-[#0f766e] flex items-center justify-center shrink-0">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-            <rect x="7" y="2" width="10" height="20" rx="2.5" />
-            <line x1="11" y="18.5" x2="13" y="18.5" />
-          </svg>
-        </span>
-        <span className="flex-1 min-w-0">
-          <span className="block text-sm font-semibold text-gray-900">Techub Android App</span>
-          <span className="block text-xs text-gray-500">Download the APK and install it on your phone — v1.0, 5.6 MB</span>
-        </span>
-        <span className="px-4 py-2 rounded-lg bg-[#0f766e] text-white text-sm font-medium group-hover:bg-[#0d655e] transition-colors shrink-0">
-          Download
-        </span>
-      </a>
+      <PageHeader
+        title="Dashboard"
+        sub="Overview of your coworking space"
+        actions={
+          <a
+            href="/Techub-debug.apk"
+            download
+            className="flex items-center gap-2.5 pl-1.5 pr-4 py-1.5 rounded-xl border border-gray-200 bg-white hover:border-[#0f766e]/50 hover:shadow-sm transition-all"
+            title="Download the Techub Android app"
+          >
+            <img src="/techub-icon.png" alt="Techub app" className="w-9 h-9 rounded-lg" />
+            <span className="text-left">
+              <span className="block text-[13px] font-semibold text-gray-900 leading-tight">Android App</span>
+              <span className="block text-[11px] text-[#0f766e] font-medium leading-tight">Download APK</span>
+            </span>
+          </a>
+        }
+      />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 4xl:gap-3 mb-3 4xl:mb-3">
         <StatCard

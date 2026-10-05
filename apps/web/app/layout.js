@@ -30,9 +30,10 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <head>
         <title>Techub Co-Working</title>
+        <link rel="icon" type="image/png" href="/techub-icon.png" />
         <link rel="manifest" href="/manifest.webmanifest" />
         <meta name="theme-color" content="#0f766e" />
-        <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+        <link rel="apple-touch-icon" href="/techub-icon.png" />
         <meta name="apple-mobile-web-app-title" content="Techub" />
         <meta name="mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-capable" content="yes" />
