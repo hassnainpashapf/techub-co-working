@@ -50,7 +50,7 @@ const ICONS = {
 };
 
 const NAV_MAIN = [
-  { key: 'overview', label: 'Overview', path: '/dashboard', icon: 'overview' },
+  { key: 'overview', cat: 'Overview', label: 'Overview', path: '/dashboard', icon: 'overview' },
   {
     key: 'workspaces', label: 'Workspaces', path: '/spaces', icon: 'workspaces',
     children: [
@@ -63,18 +63,17 @@ const NAV_MAIN = [
       { label: 'Floor Plan', path: '/spaces/floorplan' },
     ],
   },
-  { key: 'team', label: 'Team', path: '/users', icon: 'team',
+  { key: 'team', cat: 'People', label: 'Team', path: '/users', icon: 'team',
     children: [
       { label: 'Team Overview', path: '/team' },
       { label: 'Team Members', path: '/users' },
       { label: 'Attendance', path: '/attendance' },
-      { label: 'Scan QR', path: '/attendance/scan' },
       { label: 'Check-in Desk', path: '/reception/checkin' },
       { label: 'Mobile', path: '/mobile' },
       { label: 'Shifts', path: '/staff/shifts' },
     ],
   },
-  { key: 'investor', label: 'Investor', path: '/finance', icon: 'investor',
+  { key: 'investor', cat: 'Business', label: 'Investor', path: '/finance', icon: 'investor',
     children: [
       { label: 'Investor Overview', path: '/investor/overview' },
       { label: 'Finance Overview', path: '/finance' },
@@ -106,7 +105,7 @@ const NAV_MAIN = [
       { label: 'Accounting Export', path: '/finance/accounting-export' },
     ],
   },
-  { key: 'school', label: 'School', path: '/members', icon: 'school',
+  { key: 'school', cat: 'People', label: 'School', path: '/members', icon: 'school',
     children: [
       { label: 'School Overview', path: '/school/overview' },
       { label: 'Members', path: '/members' },
@@ -117,7 +116,7 @@ const NAV_MAIN = [
       { label: 'Referrals', path: '/referrals' },
     ],
   },
-  { key: 'launchpad', label: 'Launchpad', path: '/tasks', icon: 'launchpad',
+  { key: 'launchpad', cat: 'Operations', label: 'Launchpad', path: '/tasks', icon: 'launchpad',
     children: [
       { label: 'Launchpad Overview', path: '/launchpad/overview' },
       { label: 'Tasks', path: '/tasks' },
@@ -137,21 +136,21 @@ const NAV_MAIN = [
       { label: 'Reminders', path: '/reminders' },
     ],
   },
-  { key: 'message', label: 'Message', path: '/message/overview', icon: 'message',
+  { key: 'message', cat: 'Engage', label: 'Message', path: '/message/overview', icon: 'message',
     children: [
       { label: 'Message Overview', path: '/message/overview' },
       { label: 'Reminders', path: '/reminders' },
     ],
   },
-  { key: 'forms', label: 'Forms & Surveys', path: '/forms', icon: 'message',
+  { key: 'forms', cat: 'Engage', label: 'Forms & Surveys', path: '/forms', icon: 'message',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'All Forms', path: '/forms' },
     ],
   },
-  { key: 'intelligence', label: 'Intelligence', path: '/intelligence', icon: 'insights',
+  { key: 'intelligence', cat: 'Engage', label: 'Intelligence', path: '/intelligence', icon: 'insights',
     roles: ['ceo', 'admin', 'super_admin', 'manager'] },
-  { key: 'access', label: 'Access', path: '/access', icon: 'shield',
+  { key: 'access', cat: 'Operations', label: 'Access', path: '/access', icon: 'shield',
     roles: ['ceo', 'admin', 'super_admin', 'manager', 'ops'],
     children: [
       { label: 'Access Dashboard', path: '/access' },
@@ -159,9 +158,9 @@ const NAV_MAIN = [
       { label: 'Day Passes', path: '/access/passes' },
     ],
   },
-  { key: 'accessdesk', label: 'Access Desk', path: '/access/desk', icon: 'shield',
+  { key: 'accessdesk', cat: 'Operations', label: 'Access Desk', path: '/access/desk', icon: 'shield',
     roles: ['ceo', 'admin', 'super_admin', 'manager', 'ops', 'receptionist'] },
-  { key: 'comms', label: 'Communication', path: '/comms', icon: 'message',
+  { key: 'comms', cat: 'Engage', label: 'Communication', path: '/comms', icon: 'message',
     roles: ['ceo', 'admin', 'super_admin', 'manager', 'receptionist', 'ops'],
     children: [
       { label: 'Communication Hub', path: '/comms' },
@@ -169,9 +168,9 @@ const NAV_MAIN = [
       { label: 'SMS Campaigns', path: '/comms/sms' },
     ],
   },
-  { key: 'feedback', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
-  { key: 'announcements', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
-  { key: 'legal', label: '⚖️ Legal & Compliance', path: '/legal', icon: 'shield',
+  { key: 'feedback', cat: 'Engage', label: 'Feedback', path: '/feedback', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
+  { key: 'announcements', cat: 'Engage', label: 'Announcements', path: '/announcements', icon: 'message', roles: ['ceo', 'admin', 'manager', 'super_admin'] },
+  { key: 'legal', cat: 'Admin', label: '⚖️ Legal & Compliance', path: '/legal', icon: 'shield',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Legal Dashboard', path: '/legal' },
@@ -181,7 +180,7 @@ const NAV_MAIN = [
       { label: 'Incident Reports', path: '/legal/incidents' },
     ],
   },
-  { key: 'utilities', label: '⚡ Utilities', path: '/utilities', icon: 'workspaces',
+  { key: 'utilities', cat: 'Operations', label: '⚡ Utilities', path: '/utilities', icon: 'workspaces',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Utilities Dashboard', path: '/utilities' },
@@ -189,7 +188,7 @@ const NAV_MAIN = [
       { label: '🌱 Green Initiatives', path: '/utilities/green' },
     ],
   },
-  { key: 'academy', label: '🎓 Academy', path: '/academy', icon: 'school',
+  { key: 'academy', cat: 'People', label: '🎓 Academy', path: '/academy', icon: 'school',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Academy Dashboard', path: '/academy' },
@@ -198,14 +197,14 @@ const NAV_MAIN = [
       { label: '🎤 Workshops', path: '/academy/workshops' },
     ],
   },
-  { key: 'success', label: '🌱 Member Success', path: '/success', icon: 'team',
+  { key: 'success', cat: 'People', label: '🌱 Member Success', path: '/success', icon: 'team',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Success Dashboard', path: '/success' },
       { label: '🚀 Onboarding', path: '/success/onboarding' },
     ],
   },
-  { key: 'concierge', label: '🛎️ Concierge', path: '/concierge', icon: 'message',
+  { key: 'concierge', cat: 'Operations', label: '🛎️ Concierge', path: '/concierge', icon: 'message',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Concierge Dashboard', path: '/concierge' },
@@ -213,7 +212,7 @@ const NAV_MAIN = [
       { label: '📋 Staff Board', path: '/concierge/board' },
     ],
   },
-  { key: 'lockers', label: '🔐 Lockers', path: '/lockers/dashboard', icon: 'workspaces',
+  { key: 'lockers', cat: 'Spaces', label: '🔐 Lockers', path: '/lockers/dashboard', icon: 'workspaces',
     roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Locker Dashboard', path: '/lockers/dashboard' },
@@ -253,8 +252,8 @@ const NAV_MEMBER = [
 ];
 
 const NAV_OTHERS = [
-  { key: 'messages', label: 'Messages', path: '/messages', icon: 'message' },
-  { key: 'community', label: 'Community', path: '/community/celebrations', icon: 'team', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
+  { key: 'messages', cat: 'Engage', label: 'Messages', path: '/messages', icon: 'message' },
+  { key: 'community', cat: 'Engage', label: 'Community', path: '/community/celebrations', icon: 'team', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Celebrations', path: '/community/celebrations' },
       { label: 'Perks & Benefits', path: '/community/perks' },
@@ -263,7 +262,7 @@ const NAV_OTHERS = [
       { label: 'Engagement', path: '/community/engagement' },
     ],
   },
-  { key: 'saas', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', chevron: true, roles: ['super_admin'],
+  { key: 'saas', cat: 'Admin', label: 'SaaS Admin', path: '/saas-admin', icon: 'settings', chevron: true, roles: ['super_admin'],
     children: [
       { label: 'Overview', path: '/saas-admin' },
       { label: 'Plans', path: '/saas-admin/plans' },
@@ -271,19 +270,19 @@ const NAV_OTHERS = [
       { label: 'Tenants', path: '/admin/tenants' },
     ],
   },
-  { key: 'marketing', label: 'Marketing', path: '/marketing/campaigns', icon: 'message', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
+  { key: 'marketing', cat: 'Business', label: 'Marketing', path: '/marketing/campaigns', icon: 'message', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Email Campaigns', path: '/marketing/campaigns' },
       { label: 'SMS Campaigns', path: '/marketing/sms' },
     ],
   },
-  { key: 'developers', label: 'Developers', path: '/developers/api-docs', icon: 'settings', chevron: true, roles: ['ceo', 'admin', 'super_admin'],
+  { key: 'developers', cat: 'Admin', label: 'Developers', path: '/developers/api-docs', icon: 'settings', chevron: true, roles: ['ceo', 'admin', 'super_admin'],
     children: [
       { label: 'API Docs', path: '/developers/api-docs' },
       { label: 'API Usage', path: '/developers/usage' },
     ],
   },
-  { key: 'sales', label: 'Sales', path: '/sales/leads', icon: 'investor', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'receptionist'],
+  { key: 'sales', cat: 'Business', label: 'Sales', path: '/sales/leads', icon: 'investor', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'receptionist'],
     children: [
       { label: 'Sales Dashboard', path: '/sales/dashboard' },
       { label: 'Leads', path: '/sales/leads' },
@@ -295,7 +294,7 @@ const NAV_OTHERS = [
       { label: 'Waiting List', path: '/sales/waiting-list' },
     ],
   },
-  { key: 'procurement', label: 'Procurement', path: '/procurement/dashboard', icon: 'investor', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'finance'],
+  { key: 'procurement', cat: 'Business', label: 'Procurement', path: '/procurement/dashboard', icon: 'investor', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'finance'],
     children: [
       { label: 'Dashboard', path: '/procurement/dashboard' },
       { label: 'Vendors', path: '/procurement/vendors' },
@@ -306,7 +305,7 @@ const NAV_OTHERS = [
       { label: 'Vendor Contracts', path: '/procurement/contracts' },
     ],
   },
-  { key: 'cafe', label: 'Cafeteria', path: '/cafe/dashboard', icon: 'support', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'finance'],
+  { key: 'cafe', cat: 'Business', label: 'Cafeteria', path: '/cafe/dashboard', icon: 'support', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager', 'finance'],
     children: [
       { label: 'Dashboard', path: '/cafe/dashboard' },
       { label: 'Menu', path: '/cafe/menu' },
@@ -314,12 +313,12 @@ const NAV_OTHERS = [
       { label: 'Meal Plans', path: '/cafe/meal-plans' },
     ],
   },
-  { key: 'compliance', label: 'Compliance', path: '/compliance/documents', icon: 'settings', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
+  { key: 'compliance', cat: 'Admin', label: 'Compliance', path: '/compliance/documents', icon: 'settings', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Documents', path: '/compliance/documents' },
     ],
   },
-  { key: 'hr', label: 'HR', path: '/hr/dashboard', icon: 'team', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
+  { key: 'hr', cat: 'Admin', label: 'HR', path: '/hr/dashboard', icon: 'team', chevron: true, roles: ['ceo', 'admin', 'super_admin', 'manager'],
     children: [
       { label: 'Dashboard', path: '/hr/dashboard' },
       { label: 'Employees', path: '/hr/employees' },
@@ -332,7 +331,7 @@ const NAV_OTHERS = [
       { label: 'Exits & Offboarding', path: '/hr/exits' },
     ],
   },
-  { key: 'settings', label: 'Settings', path: '/settings', icon: 'settings', chevron: true,
+  { key: 'settings', cat: 'Admin', label: 'Settings', path: '/settings', icon: 'settings', chevron: true,
     children: [
       { label: 'General', path: '/settings' },
       { label: 'Branding', path: '/settings/branding' },
@@ -362,7 +361,7 @@ const NAV_OTHERS = [
       { label: 'Currency', path: '/settings/currency' },
     ],
   },
-  { key: 'support', label: 'Support', path: '/reports', icon: 'support' },
+  { key: 'support', cat: 'Admin', label: 'Support', path: '/reports', icon: 'support' },
 ];
 
 export default function Sidebar({ mobileOpen = false, onClose } = {}) {
@@ -461,7 +460,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
       {/* Mobile backdrop */}
       {mobileOpen && (
         <div
-          className="fixed inset-0 bg-black/40 z-40 lg:hidden"
+          className="fixed top-0 left-0 inset-viewport bg-black/40 z-40 lg:hidden"
           onClick={closeMobile}
           aria-hidden="true"
         />
@@ -483,7 +482,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         </div>
       </div>
 
-      {/* Nav — fills the full sidebar height: MAIN at top, OTHERS pinned to bottom */}
+      {/* Nav — grouped by category, Admin pinned to bottom */}
       <nav className="flex-1 flex flex-col px-3 overflow-y-auto pb-4">
         {user.role === 'member' ? (
           <>
@@ -493,12 +492,32 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         ) : (
           <>
             <div className="shrink-0">
-              <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
-              {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
+              {['Overview', 'Spaces', 'People', 'Operations', 'Business', 'Engage'].map((cat) => {
+                const items = [...NAV_MAIN, ...NAV_OTHERS].filter(
+                  (i) => i.cat === cat && (!i.roles || i.roles.includes(user.role))
+                );
+                if (!items.length) return null;
+                return (
+                  <div key={cat}>
+                    <p className="px-3 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400 first:pt-1">{cat}</p>
+                    {items.map(renderItem)}
+                  </div>
+                );
+              })}
             </div>
             <div className="mt-auto shrink-0">
-              <p className="px-3 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
-              {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
+              {(() => {
+                const items = [...NAV_MAIN, ...NAV_OTHERS].filter(
+                  (i) => i.cat === 'Admin' && (!i.roles || i.roles.includes(user.role))
+                );
+                if (!items.length) return null;
+                return (
+                  <div>
+                    <p className="px-3 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Admin</p>
+                    {items.map(renderItem)}
+                  </div>
+                );
+              })()}
             </div>
           </>
         )}

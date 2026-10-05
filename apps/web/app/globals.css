@@ -34,6 +34,11 @@
     height: calc(100vh / var(--app-zoom));
   }
 }
+/* Full-viewport fixed overlay compensated for body zoom */
+.inset-viewport {
+  width: calc(100vw / var(--app-zoom));
+  height: calc(100vh / var(--app-zoom));
+}
 
 /* Custom scrollbar - light */
 ::-webkit-scrollbar {
