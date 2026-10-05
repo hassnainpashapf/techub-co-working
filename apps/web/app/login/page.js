@@ -53,9 +53,9 @@ export default function LoginPage() {
   const brandName = brand?.brandName || 'Techub Co-Working';
 
   return (
-    <div className="min-h-screen flex bg-[#f4f5f7]">
+    <div className="min-h-screen lg:h-screen flex bg-[#f4f5f7]">
       {/* Left — brand showcase */}
-      <div className="hidden lg:flex w-[52%] min-h-screen self-stretch relative overflow-hidden flex-col justify-between p-12 text-white"
+      <div className="hidden lg:flex w-[52%] h-full relative overflow-hidden flex-col justify-between p-12 text-white"
         style={{ background: 'linear-gradient(150deg, #0b2e2b 0%, #134e4a 45%, #0f766e 100%)' }}>
         {/* Ambient shapes */}
         <div className="pointer-events-none absolute inset-0">
@@ -116,7 +116,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right — login form */}
-      <div className="flex-1 flex items-center justify-center px-6 py-10 relative overflow-hidden">
+      <div className="flex-1 flex items-center justify-center px-6 py-10 relative overflow-x-hidden overflow-y-auto">
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute -top-32 right-0 w-[420px] h-[320px] bg-teal-200/40 blur-[120px] rounded-full" />
           <div className="absolute bottom-0 left-1/4 w-[380px] h-[300px] bg-teal-100/50 blur-[120px] rounded-full" />
