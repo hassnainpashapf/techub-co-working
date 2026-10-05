@@ -7,10 +7,22 @@ import PwaInstall from '../components/PwaInstall';
 import IosInstallGuide from '../components/IosInstallGuide';
 
 export default function RootLayout({ children }) {
-  // Register service worker (production only)
+  // Register service worker (production only) — force update check so new
+  // deploys replace stale cached assets automatically.
   useEffect(() => {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js').catch(() => {});
+      navigator.serviceWorker.register('/sw.js').then((reg) => {
+        reg.update().catch(() => {});
+        reg.onupdatefound = () => {
+          const worker = reg.installing;
+          if (!worker) return;
+          worker.onstatechange = () => {
+            if (worker.state === 'activated' && navigator.serviceWorker.controller) {
+              window.location.reload();
+            }
+          };
+        };
+      }).catch(() => {});
     }
   }, []);
 
