@@ -484,8 +484,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
       </div>
 
       {/* Nav — fills the full sidebar height: MAIN at top, OTHERS pinned to bottom */}
-      <nav className="flex-1 px-3 overflow-y-auto pb-4">
-        <div className="min-h-full flex flex-col">
+      <nav className="flex-1 flex flex-col px-3 overflow-y-auto pb-4">
         {user.role === 'member' ? (
           <>
             <p className="px-3 pb-1.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">My Space</p>
@@ -493,17 +492,16 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
           </>
         ) : (
           <>
-            <div>
+            <div className="shrink-0">
               <p className="px-3 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Main</p>
               {NAV_MAIN.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
             </div>
-            <div className="mt-auto">
+            <div className="mt-auto shrink-0">
               <p className="px-3 pt-4 pb-2 text-[10px] font-bold uppercase tracking-[0.14em] text-gray-400">Others</p>
               {NAV_OTHERS.filter((i) => !i.roles || i.roles.includes(user.role)).map(renderItem)}
             </div>
           </>
         )}
-        </div>
       </nav>
     </aside>
     </>
