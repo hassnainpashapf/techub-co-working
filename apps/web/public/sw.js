@@ -1,5 +1,5 @@
 /* Techub Coworking — service worker (Phase 30) */
-const STATIC_CACHE = 'techub-static-v1';
+const STATIC_CACHE = 'techub-static-v2';
 const OFFLINE_URL = '/offline.html';
 
 // ---- Phase 33: Web Push notifications ------------------------------------
@@ -81,19 +81,19 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // Static assets (same-origin): cache-first
+  // Static assets (same-origin): network-first, fall back to cache.
+  // (cache-first would serve stale JS/CSS forever after each deploy)
   if (url.origin === self.location.origin) {
     event.respondWith(
-      caches.match(request).then((cached) => {
-        if (cached) return cached;
-        return fetch(request).then((res) => {
+      fetch(request)
+        .then((res) => {
           if (res && res.status === 200) {
             const copy = res.clone();
             caches.open(STATIC_CACHE).then((cache) => cache.put(request, copy));
           }
           return res;
-        });
-      })
+        })
+        .catch(() => caches.match(request))
     );
   }
 });
