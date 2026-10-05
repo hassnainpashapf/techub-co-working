@@ -162,3 +162,5 @@ asal chalta hua product:
   `docker compose up -d`, `npm install`, `npx prisma migrate dev`,
   `npm run seed`, `npm run dev`. Phir browser me `localhost:3000` kholo
   aur demo login se andar jao (password: `demo1234`).
+
+<!-- Cloudflare Pages now deploys straight from git (native GitHub integration). -->
