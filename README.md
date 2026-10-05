@@ -166,3 +166,5 @@ asal chalta hua product:
 <!-- Cloudflare Pages now deploys straight from git (native GitHub integration). -->
 
 <!-- pages-git-trigger 2026-10-05 -->
+
+<!-- deploy-verify trigger 20:10 PKT -->
