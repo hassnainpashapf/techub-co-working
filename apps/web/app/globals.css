@@ -17,6 +17,24 @@
   }
 }
 
+/* Viewport-height utilities compensated for the body zoom above.
+   Plain h-screen/min-h-screen render at 90% visually under zoom:0.9,
+   leaving a white strip — these divide by the zoom factor instead. */
+:root {
+  --app-zoom: 0.9;
+}
+.h-viewport {
+  height: calc(100vh / var(--app-zoom));
+}
+.min-h-viewport {
+  min-height: calc(100vh / var(--app-zoom));
+}
+@media (min-width: 1024px) {
+  .lg\:h-viewport {
+    height: calc(100vh / var(--app-zoom));
+  }
+}
+
 /* Custom scrollbar - light */
 ::-webkit-scrollbar {
   width: 10px;

@@ -467,7 +467,7 @@ export default function Sidebar({ mobileOpen = false, onClose } = {}) {
         />
       )}
       <aside
-        className={`w-[260px] shrink-0 bg-white flex flex-col h-screen border-r border-gray-200 relative
+        className={`w-[260px] shrink-0 bg-white flex flex-col h-viewport border-r border-gray-200 relative
           fixed inset-y-0 left-0 z-50 transition-transform duration-300 ease-out
           ${mobileOpen ? 'translate-x-0' : '-translate-x-full'}
           lg:static lg:z-auto lg:translate-x-0 lg:sticky lg:top-0`}

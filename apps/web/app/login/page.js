@@ -53,7 +53,7 @@ export default function LoginPage() {
   const brandName = brand?.brandName || 'Techub Co-Working';
 
   return (
-    <div className="min-h-screen lg:h-screen flex bg-[#f4f5f7]">
+    <div className="min-h-screen lg:h-viewport flex bg-[#f4f5f7]">
       {/* Left — brand showcase */}
       <div className="hidden lg:flex w-[52%] h-full relative overflow-hidden flex-col justify-between p-12 text-white"
         style={{ background: 'linear-gradient(150deg, #0b2e2b 0%, #134e4a 45%, #0f766e 100%)' }}>
